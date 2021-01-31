@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "vite-ssg build",
     "serve": "vite preview",
-    "lint:tsc": "vuedx-typecheck .",
+    "lint:types": "vuedx-typecheck .",
     "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore .",
-    "lint:style": "stylelint src/**/*.{vue,scss}"
+    "lint:style": "stylelint src/**/*.{vue,scss}",
+    "commit": "cz"
   },
   "dependencies": {
     "prism-theme-vars": "^0.1.4",
@@ -46,5 +47,10 @@
     "vite-plugin-md": "^0.4.2",
     "vite-plugin-pages": "^0.1.8",
     "vite-ssg": "^0.5.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-emoji"
+    }
   }
 }
