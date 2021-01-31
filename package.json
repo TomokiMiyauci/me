@@ -1,0 +1,28 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "commit": "cz",
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-lerna-scopes": "^11.0.0",
+    "commitizen": "^4.2.3",
+    "commitlint-config-gitmoji": "^2.2.1",
+    "cz-emoji": "^1.3.1",
+    "husky": "^5.0.8",
+    "lerna": "^3.22.1",
+    "prettier": "^2.2.1"
+  },
+  "workspaces": [
+    "frontend"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-emoji"
+    }
+  }
+}
