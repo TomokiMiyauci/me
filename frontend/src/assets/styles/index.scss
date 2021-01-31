@@ -4,3 +4,11 @@
 html {
   @apply antialiased;
 }
+
+#nprogress {
+  @apply pointer-events-none;
+
+  .bar {
+    @apply bg-white lg:bg-green-500 opacity-75 fixed h-0.5 lg:h-1 w-full top-0 left-0;
+  }
+}
