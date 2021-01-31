@@ -457,6 +457,16 @@
   resolved "https://registry.yarnpkg.com/@gitmoji/parser-opts/-/parser-opts-1.2.5.tgz"
   integrity sha512-Imxx7OjuZH374H7wNMBEwJ9i1U/0xGEPxjcyYfX47fKzdWZ57UNmiYEC4HoAV8sDpGi4AG0uU4o4NgOiQP1sEg==
 
+"@iconify/json-tools@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@iconify/json-tools/-/json-tools-1.0.10.tgz#d9a7050dbbe8bb29d684d4b3f9446ed2d0bea3cc"
+  integrity sha512-LFelJDOLZ6JHlmlAkgrvmcu4hpNPB91KYcr4f60D/exzU1eNOb4/KCVHIydGHIQFaOacIOD+Xy+B7P1z812cZg==
+
+"@iconify/json@^1.1.294":
+  version "1.1.294"
+  resolved "https://registry.yarnpkg.com/@iconify/json/-/json-1.1.294.tgz#2696352e8548c3cec9084213633b008ae0941702"
+  integrity sha512-4h+jUC2ZAtUHScR3XzbhtCyo1wExQsnokILHWqvzeTogUk/8c1jdINQHYBMq8tWdGBokvoAuPttsR1Ldaw50bg==
+
 "@intlify/cli@^0.1.2":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@intlify/cli/-/cli-0.1.3.tgz#a26ced72511169b39be6f512ef1a5dd8db6fa371"
@@ -8622,6 +8632,22 @@ vfile@^4.0.0:
     is-buffer "^2.0.0"
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
+
+vite-plugin-components@^0.6.6:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/vite-plugin-components/-/vite-plugin-components-0.6.6.tgz#7b097c5c0d964eb8f2bd281dcfffb91cf2356ec7"
+  integrity sha512-tOcWm/2T+XUImJ8yFZb/i8dUWXNoraqDdKrBBpfbHGg3MES0T6AN1315iuKYHTG71fwKI0OGElw3S9B04ZUwPA==
+  dependencies:
+    debug "^4.3.2"
+    fast-glob "^3.2.4"
+    minimatch "^3.0.4"
+
+vite-plugin-icons@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-icons/-/vite-plugin-icons-0.2.1.tgz#6d2d4d1271428e6347b96a7d9b51dbe9f87f1f8f"
+  integrity sha512-ZIJ8G2AHwEDt4oDST46E6Uy7W2EtVyoe1hzmJMkutbq3esUkcYVoYydT6Y12lhq1ppnVnShkbc0XzfKqolfCSg==
+  dependencies:
+    "@iconify/json-tools" "^1.0.10"
 
 vite-plugin-md@^0.4.2:
   version "0.4.2"
