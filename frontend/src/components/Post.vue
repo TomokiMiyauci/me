@@ -8,7 +8,10 @@
       >
         {{ title }}
       </h1>
-      <p>{{ readingTime }}</p>
+
+      <p>
+        <span> {{ date.toLocaleString() }},</span>{{ readingTime.text }}
+      </p>
     </div>
     <img :src="cover" />
   </div>
@@ -18,10 +21,11 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
+import { useRoute } from 'vue-router'
 
-const { frontmatter } = defineProps<{
-  frontmatter: { title?: string; cover?: string; readingTime: number }
-}>()
+const { meta } = useRoute()
+defineProps<{ frontmatter: unknown }>()
 
-const { title, cover, readingTime } = frontmatter
+const { title, cover, readingTime, updatedAt } = meta.frontmatter
+const date = new Date(Date.parse(updatedAt))
 </script>
