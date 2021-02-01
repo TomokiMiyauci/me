@@ -1,5 +1,7 @@
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import vue from '@vitejs/plugin-vue'
+import { readFileSync } from 'fs'
+import matter from 'gray-matter'
 import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
@@ -25,13 +27,23 @@ const config = defineConfig({
       extensions: ['vue', 'md'],
       importMode(path) {
         return path === '/' ? 'sync' : 'async'
+      },
+      extendRoute(route) {
+        const { meta, component } = route
+        const path = resolve(__dirname, component.slice(1))
+        const md = readFileSync(path, 'utf-8')
+        const { data } = matter(md)
+        route.meta = Object.assign(meta || {}, { frontmatter: data })
+
+        return route
       }
     }),
     vueI18n({
       include: resolve(__dirname, '@/locales/**')
     }),
     Markdown({
-      wrapperClasses: 'prose prose-sm m-auto',
+      wrapperComponent: 'post',
+      wrapperClasses: 'prose m-auto',
       headEnabled: true,
       markdownItSetup(md) {
         md.use(Prism)

@@ -1,7 +1,11 @@
 <template>
-  <router-view />
+  <nav-bar class="h-24" />
+
+  <main>
+    <router-view />
+  </main>
 </template>
 
 <script setup lang="ts">
-const a = 1
+import NavBar from '@/components/app/NavBar.vue'
 </script>
