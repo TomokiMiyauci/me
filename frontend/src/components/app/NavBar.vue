@@ -3,10 +3,13 @@
     <div
       class="container h-full px-6 mx-auto flex justify-between items-center"
     >
-      <router-link class="text-7xl text-green-500" to="/" tag="h1">
-        Intellisense
+      <router-link class="text-5xl text-white" to="/" tag="h1">
+        miyauci.me
       </router-link>
-      <mdi-account class="align-middle w-10 h-10 text-white" />
+
+      <router-link class="text-white text-2xl capitalize" to="/posts">
+        blog
+      </router-link>
     </div>
   </header>
 </template>
