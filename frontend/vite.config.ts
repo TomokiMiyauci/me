@@ -10,6 +10,8 @@ import Components from 'vite-plugin-components'
 import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
 import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
+import { VitePWA } from 'vite-plugin-pwa'
+
 const config = defineConfig({
   alias: {
     '@': resolve(__dirname, 'src')
@@ -55,7 +57,8 @@ const config = defineConfig({
         md.use(Prism)
       }
     }),
-    ViteIcons()
+    ViteIcons(),
+    VitePWA()
   ]
 })
 
