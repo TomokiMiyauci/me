@@ -27,23 +27,23 @@ jobs:
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn --check-files --frozen-lockfile --non-interactive
 
-  lint-types:
-    needs: setup
-    runs-on: ubuntu-latest
+  # lint-types:
+  #   needs: setup
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Restore node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+  #     - name: Restore node_modules
+  #       id: node_modules_cache_id
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: '**/node_modules'
+  #         key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
-      - name: Lint by tsc
-        run: yarn lerna run --scope frontend lint:types
+  #     - name: Lint by tsc
+  #       run: yarn lerna run --scope frontend lint:types
 
   lint-script:
     needs: setup
@@ -117,7 +117,7 @@ jobs:
           path: frontend/dist
 
   deploy:
-    needs: [lint-types, lint-script, lint-style, build]
+    needs: [lint-script, lint-style, build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
