@@ -81,6 +81,24 @@ jobs:
       - name: Lint by Stylelint
         run: yarn lerna run --scope frontend lint:style
 
+  lint-markdown:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+
+      - name: Lint by Markdown Lint
+        run: yarn lerna run --scope frontend lint:markdown
+
   build:
     needs: setup
     runs-on: ubuntu-latest
@@ -117,7 +135,7 @@ jobs:
           path: frontend/dist
 
   deploy:
-    needs: [lint-script, lint-style, build]
+    needs: [lint-script, lint-style, lint-markdown, build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
