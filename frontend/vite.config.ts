@@ -12,6 +12,10 @@ import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const namedCodeBlocks = require('markdown-it-named-code-blocks')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const emoji = require('markdown-it-emoji')
 const config = defineConfig({
   alias: {
     '@': resolve(__dirname, 'src')
@@ -47,14 +51,16 @@ const config = defineConfig({
       }
     }),
     vueI18n({
-      include: resolve(__dirname, '@/locales/**')
+      include: resolve(__dirname, './src/locales/**')
     }),
     Markdown({
       wrapperComponent: 'post',
       wrapperClasses: 'prose m-auto',
       headEnabled: true,
-      markdownItSetup(md) {
+      markdownItSetup: (md) => {
         md.use(Prism)
+        md.use(namedCodeBlocks)
+        md.use(emoji)
       }
     }),
     ViteIcons(),
