@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pb-84 pt-8 sm:pt-16">
+  <div class="pb-84 pt-8 sm:pt-16">
     <div class="prose mb-5 mx-auto">
       <router-link v-if="!isWhitelist" to="/ja/posts">←記事一覧</router-link>
       <h1
