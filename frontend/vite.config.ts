@@ -2,6 +2,7 @@ import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import vue from '@vitejs/plugin-vue'
 import { readFileSync, statSync } from 'fs'
 import matter from 'gray-matter'
+import anchor from 'markdown-it-anchor'
 import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
@@ -63,6 +64,12 @@ const config = defineConfig({
         md.use(Prism)
         md.use(namedCodeBlocks, { isEnableInlineCss: true })
         md.use(emoji)
+        md.use(anchor, {
+          permalink: true,
+          permalinkBefore: true,
+          permalinkSymbol: '#',
+          permalinkAttrs: () => ({ 'aria-hidden': true })
+        })
       }
     }),
     ViteIcons(),
