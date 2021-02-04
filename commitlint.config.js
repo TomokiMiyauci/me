@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['gitmoji', '@commitlint/config-lerna-scopes'],
+  extends: ['@commitlint/config-lerna-scopes'],
   parserPreset: {
     parserOpts: {
       headerPattern: /^(:\w*:)(?: \((.*?)\))?\s((?:.*(?=\())|.*)(?:\(#(\d*)\))?/,
