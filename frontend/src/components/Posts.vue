@@ -10,22 +10,30 @@
         <div class="title text-lg">
           {{ meta.frontmatter.title }}
         </div>
-        <!-- <div class="time opacity-50 text-sm -mt-1">
-          {{ formatDate(route.meta.frontmatter.date) }}
-          <span v-if="route.meta.frontmatter.duration"
-            >· {{ route.meta.frontmatter.duration }}</span
-          >
-        </div> -->
+        <div class="time opacity-50 no-underline text-sm -mt-1">
+          <span class="mr-4 no-underline"
+            >{{ formatDate(meta.frontmatter.updatedAt).toLocaleDateString() }}
+          </span>
+          {{ meta.frontmatter.readingTime.text }}
+        </div>
       </li>
     </router-link>
   </ul>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { RouteRecordNormalized } from 'vue-router'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+import { isStartWithSlashJaSlash } from '@/functions/utils'
+const { path } = useRoute()
+const { getRoutes } = useRouter()
+const formatDate = (val: string): Date => new Date(Date.parse(val))
+
+const lang = isStartWithSlashJaSlash(path) ? 'ja' : 'en'
+const prefix = lang === 'ja' ? '/ja/posts/' : '/posts'
 const filterPosts = ({ meta, path }: RouteRecordNormalized) =>
-  path.startsWith('/posts') && meta.frontmatter
-const posts = useRouter().getRoutes().filter(filterPosts)
+  path.startsWith(prefix) && meta.frontmatter
+const posts = computed(() => getRoutes().filter(filterPosts))
 </script>
