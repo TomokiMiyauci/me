@@ -41,6 +41,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-vue": "^7.5.0",
     "gray-matter": "^4.0.2",
+    "markdown-it-anchor": "^7.0.1",
     "markdown-it-emoji": "^2.0.0",
     "markdown-it-named-code-blocks": "^0.1.0",
     "markdown-it-prism": "^2.1.4",
