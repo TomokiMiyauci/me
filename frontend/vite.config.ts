@@ -45,6 +45,9 @@ const config = defineConfig({
           updatedAt: statSync(path).ctime
         }
         route.meta = Object.assign(meta || {}, { frontmatter })
+        if (route.name === '404') {
+          route.path = '/:pathMatch(.*)*'
+        }
 
         return route
       }
