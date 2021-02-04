@@ -2,6 +2,7 @@ import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import vue from '@vitejs/plugin-vue'
 import { readFileSync, statSync } from 'fs'
 import matter from 'gray-matter'
+import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
@@ -12,8 +13,6 @@ import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const namedCodeBlocks = require('markdown-it-named-code-blocks')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -59,7 +58,7 @@ const config = defineConfig({
       headEnabled: true,
       markdownItSetup: (md) => {
         md.use(Prism)
-        md.use(namedCodeBlocks)
+        md.use(namedCodeBlocks, { isEnableInlineCss: true })
         md.use(emoji)
       }
     }),
