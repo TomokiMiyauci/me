@@ -57,7 +57,7 @@ const config = defineConfig({
       include: resolve(__dirname, './src/locales/**')
     }),
     Markdown({
-      wrapperComponent: 'post',
+      wrapperComponent: 'markdown-resolver',
       wrapperClasses: 'prose m-auto',
       headEnabled: true,
       markdownItSetup: (md) => {
