@@ -13,9 +13,9 @@
         >{{ readingTime.text }}
       </p>
       <img
-        class="rounded mt-6 shadow hover:shadow-md transition-shadow duration-200"
-        alt="thumbnail"
-        :src="thumbnail"
+        class="rounded mx-auto mt-6 shadow hover:shadow-md transition-shadow duration-200"
+        alt="icatch"
+        :src="icatch"
       />
     </div>
   </div>
@@ -27,6 +27,6 @@
 import { useRoute } from 'vue-router'
 const { meta } = useRoute()
 
-const { title, thumbnail, readingTime, updatedAt } = meta.frontmatter
+const { title, icatch, readingTime, updatedAt } = meta.frontmatter
 const date = new Date(Date.parse(updatedAt))
 </script>
