@@ -11,4 +11,6 @@ const i18n = createI18n({
   }
 })
 
+const DEFAULT_LOCALE = 'en'
+export { DEFAULT_LOCALE }
 export default i18n

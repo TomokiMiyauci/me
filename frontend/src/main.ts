@@ -7,7 +7,7 @@ import { RouterScrollBehavior } from 'vue-router'
 
 import App from '@/App.vue'
 import GlobalRegister from '@/plugins/global-register'
-import i18n from '@/plugins/i18n'
+import i18n, { DEFAULT_LOCALE } from '@/plugins/i18n'
 const scrollBehavior: RouterScrollBehavior = (_, __, savedPosition) => {
   if (savedPosition) return savedPosition
   else return { top: 0 }
@@ -23,7 +23,21 @@ export const createApp = ViteSSG(
       router.beforeEach(() => {
         NProgress.start()
       })
+
       router.afterEach(() => {
+        console.log(i18n.global.locale.value)
+        const fallbackLocales = i18n.global.availableLocales.filter(
+          (locale) => locale !== DEFAULT_LOCALE
+        )
+
+        if (router.currentRoute.value.path.startsWith('/ja/')) {
+          if (i18n.global.locale.value !== 'ja') {
+            i18n.global.locale.value = 'ja'
+          }
+        } else if (i18n.global.locale.value !== 'en') {
+          i18n.global.locale.value = 'en'
+        }
+
         NProgress.done()
       })
     }
