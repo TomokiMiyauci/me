@@ -7967,6 +7967,11 @@ markdown-it-emoji@^2.0.0:
   resolved "https://registry.yarnpkg.com/markdown-it-emoji/-/markdown-it-emoji-2.0.0.tgz#3164ad4c009efd946e98274f7562ad611089a231"
   integrity sha512-39j7/9vP/CPCKbEI44oV8yoPJTpvfeReTn/COgRhSpNrjWF3PfP/JUxxB0hxV6ynOY8KH8Y8aX9NMDdo6z+6YQ==
 
+markdown-it-highlight-lines@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/markdown-it-highlight-lines/-/markdown-it-highlight-lines-1.0.2.tgz#33ecf51cd9d9e741cd86f583cb95b67de81fc9c7"
+  integrity sha512-9Pyt/B+Ca3QBSXDS/znmojy/k6HDe8FJlJwIj/BKgvxE3MQWK9GHQCJJT5Lb1er23svZT99kJ/YRhLpDK+5GUQ==
+
 markdown-it-named-code-blocks@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/markdown-it-named-code-blocks/-/markdown-it-named-code-blocks-0.1.0.tgz#ea935a151e5d4de2f11a760b5b2b24221df58067"
@@ -7980,6 +7985,11 @@ markdown-it-prism@^2.1.4:
   integrity sha512-KjQBiGkSQPivHN7+kDxQy6qKJe3YWLfHqaD97XGVCkwlt2w6zrbJh9xuQvn+sFGhJxiMwIjjHspFIi0YRrLQtQ==
   dependencies:
     prismjs "1.23.0"
+
+markdown-it-table-of-contents@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/markdown-it-table-of-contents/-/markdown-it-table-of-contents-0.5.2.tgz#2f941d386c277887910f2c7a8a16f5a17acb829c"
+  integrity sha512-6o+rxSwzXmXCUn1n8QGTSpgbcnHBG6lUU8x7A5Cssuq5vbfzTfitfGPvQ5PZkp+gP1NGS/DR2rkYqJPn0rbZ1A==
 
 markdown-it@12.0.2:
   version "12.0.2"
