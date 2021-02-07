@@ -1,4 +1,3 @@
-import type { Locale } from 'vue-i18n'
 import type { RouteRecordRaw } from 'vue-router'
 
 import {
