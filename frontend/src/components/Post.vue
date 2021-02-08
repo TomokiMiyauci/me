@@ -25,8 +25,23 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-const { meta } = useRoute()
+const { meta, fullPath } = useRoute()
+import { useHead } from '@vueuse/head'
+const domain = 'https://miyauchi.dev'
+const url = `${domain}${fullPath}`
 
 const { title, icatch, readingTime, updatedAt } = meta.frontmatter
+useHead({
+  meta: [
+    { property: 'og:image', content: icatch },
+    {
+      property: 'og:type',
+      content: 'article'
+    },
+    { name: 'og:url', content: url },
+    { name: 'og:site_name', content: "Tomoki Miyauchi's Blog" },
+    { name: 'twitter:card', content: 'summary_large_image' }
+  ]
+})
 const date = new Date(Date.parse(updatedAt))
 </script>
