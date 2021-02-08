@@ -1,9 +1,9 @@
 <template>
   <header class="bg-gray-800 px-4 py-1">
     <div
-      class="container h-full px-6 mx-auto flex justify-between items-center"
+      class="container h-full sm:px-6 mx-auto flex justify-between items-center"
     >
-      <router-link class="text-4xl text-white" :to="'/'" tag="h1">
+      <router-link class="text-2xl sm:text-4xl text-white" :to="'/'" tag="h1">
         miyauci.me
       </router-link>
 
@@ -20,9 +20,11 @@
             {{ locale }}
           </option>
         </select>
-        <router-link to="/ja/posts" class="text-2xl capitalize text-white">{{
-          t('blog')
-        }}</router-link>
+        <router-link
+          to="/ja/posts"
+          class="text-xl sm:text-2xl capitalize text-white"
+          >{{ t('blog') }}</router-link
+        >
       </span>
     </div>
   </header>
