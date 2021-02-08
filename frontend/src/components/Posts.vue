@@ -44,7 +44,7 @@ const { getRoutes } = useRouter()
 const formatDate = (val: string): Date => new Date(Date.parse(val))
 
 const lang = isStartWithSlashJaSlash(path) ? 'ja' : 'en'
-const prefix = lang === 'ja' ? '/ja/posts/' : '/posts'
+const prefix = lang === 'ja' ? '/ja/posts/' : '/posts/'
 const filterPosts = ({ meta, path }: RouteRecordNormalized) =>
   path.startsWith(prefix) && meta.frontmatter
 const posts = computed(() => getRoutes().filter(filterPosts))

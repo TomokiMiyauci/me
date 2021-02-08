@@ -8,9 +8,13 @@
         {{ title }}
       </h1>
 
-      <p class="mt-2 prose">
-        <span class="mr-4"> {{ date.toLocaleDateString() }}</span
-        >{{ readingTime.text }}
+      <p class="mt-2 flex gap-4 text-gray-500 prose">
+        <span class="inline-flex gap-2 items-center"
+          ><mdi-cached /> {{ date.toLocaleDateString() }}</span
+        >
+        <span class="inline-flex gap-2 items-center">
+          <mdi-timer-sand /><span>{{ readingTime.minutes }}{{ t('min') }}</span>
+        </span>
       </p>
       <img
         class="rounded mx-auto mt-6 shadow hover:shadow-md transition-shadow duration-200"
@@ -24,8 +28,11 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+const { t } = useI18n()
 const { meta, fullPath } = useRoute()
+
 import { useHead } from '@vueuse/head'
 const domain = 'https://miyauchi.dev'
 const url = `${domain}${fullPath}`
@@ -45,3 +52,10 @@ useHead({
 })
 const date = new Date(Date.parse(updatedAt))
 </script>
+
+<i18n lang="yml">
+en:
+  min: min
+ja:
+  min: 分
+</i18n>

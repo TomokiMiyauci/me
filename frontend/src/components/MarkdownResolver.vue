@@ -17,8 +17,8 @@ import { useRoute } from 'vue-router'
 
 import Post from '@/components/Post.vue'
 const { path } = useRoute()
-const rootPath = ['/', '/ja']
-const postsPath = rootPath.map((path) => `${path}/posts`)
+const rootPath = ['/', '/ja/']
+const postsPath = rootPath.map((path) => `${path}posts`)
 const postPath = postsPath.map((path) => `${path}/`)
 const isProfile = computed(() => rootPath.includes(path))
 const isPosts = computed(() => postsPath.includes(path))
