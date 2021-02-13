@@ -6,7 +6,7 @@
       <router-link
         v-for="{ path, meta } in posts"
         :key="path"
-        class="rounded-md overflow-hidden shadow hover:shadow-lg hover:bg-gray-50 transition duration-200 flex"
+        class="rounded-md overflow-hidden shadow hover:shadow-lg hover:bg-gray-50 transition duration-200 flex mb-4"
         :to="path"
       >
         <img
