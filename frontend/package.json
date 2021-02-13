@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@iconify/json": "^1.1.294",
-    "@intlify/vite-plugin-vue-i18n": "1.0.0-beta.12",
+    "@intlify/vite-plugin-vue-i18n": "^1.0.0-beta.16",
     "@tailwindcss/typography": "^0.4.0",
     "@types/jest": "^26.0.20",
     "@types/markdown-it": "^12.0.1",
