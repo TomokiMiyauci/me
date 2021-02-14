@@ -170,8 +170,6 @@ footer: MIT Licensed | Copyright © 2019-present Evan You
 ---
 title: Hello
 ---
-
-## Introduction
 ```
 
 ```html
@@ -261,7 +259,7 @@ module.exports = {
 ### base
 
 `base`プロパティは、 GitHub ページなどのサブパスの下にサイトをデプロイする場合に設定する必要があります。
-例えば`<https://foo.github.io/bar/>`という URL にデプロイする場合、`/bar/`  を設定します。
+例えば`https://foo.github.io/bar/`という URL にデプロイする場合、`/bar/`  を設定します。
 
 ```js:config.js
 module.exports = {

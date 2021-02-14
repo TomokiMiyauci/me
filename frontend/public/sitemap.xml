@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9'>
+<urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xhtml="http://www.w3.org/1999/xhtml">>
 <url>
 <loc>https://miyauchi.dev</loc>
 <lastmod>2021-02-14</lastmod>
@@ -7,10 +7,32 @@
 <priority>1.0</priority>
 </url>
 <url>
-<loc>https://miyauchi.dev/ja/posts</loc>
-<lastmod>2021-02-04</lastmod>
-<changefreq>hourly</changefreq>
-<priority>1.0</priority>
+  <loc>https://miyauchi.dev/posts</loc>
+  <xhtml:link
+  rel="alternate"
+  hreflang="en"
+  href="https://miyauchi.dev/posts" />
+<xhtml:link
+  rel="alternate"
+  hreflang="ja"
+  href="https://miyauchi.dev/ja/posts" />
+  <lastmod>2021-02-15</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts</loc>
+  <xhtml:link
+  rel="alternate"
+  hreflang="en"
+  href="https://miyauchi.dev/posts" />
+<xhtml:link
+  rel="alternate"
+  hreflang="ja"
+  href="https://miyauchi.dev/ja/posts" />
+  <lastmod>2021-02-15</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
 </url>
 <url>
 <loc>https://miyauchi.dev/ja/posts/deploy-spa-ssg</loc>
@@ -19,9 +41,31 @@
 <priority>1.0</priority>
 </url>
 <url>
-<loc>https://miyauchi.dev/ja/posts/start-vitepress</loc>
-<lastmod>2021-02-14</lastmod>
-<changefreq>hourly</changefreq>
-<priority>1.0</priority>
+  <loc>https://miyauchi.dev/ja/posts/start-vitepress</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/start-vitepress" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/start-vitepress" />
+  <lastmod>2021-02-14</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/posts/start-vitepress</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/start-vitepress" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/start-vitepress" />
+  <lastmod>2021-02-15</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
 </url>
 </urlset>
