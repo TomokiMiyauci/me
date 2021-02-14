@@ -1,6 +1,6 @@
 ---
-title: Vitepressでドキュメントを作ろう
-icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613246169/start-vitepress/icatch.png
+title: VitePressでドキュメントを作ろう
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613316561/start-vitepress/icatch.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-vitepress/cover.png
 ---
 
@@ -8,8 +8,8 @@ thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-v
 
 ## はじめに
 
-こんにちは。みなさんはドキュメントを作成する際、どんなツールを使っていますか？今回、紹介するのは Vitepress という静的サイトジェネレーターです。
-Vitepress は Vue ベースで SSG ができるためドキュメントの生成などに便利です。
+こんにちは。みなさんはドキュメントを作成する際、どんなツールを使っていますか？今回、紹介するのは VitePress という静的サイトジェネレーターです。
+VitePress は Vue ベースで SSG ができるためドキュメントの生成などに便利です。
 [公式](https://vitepress.vuejs.org/)では、次のように紹介しています。
 
 > VitePress is VuePress' little brother, built on top of Vite.
@@ -30,7 +30,7 @@ vitepress v0.12.0
 まずは開発環境を作ります。Node.js やパッケージマネージャーはインストール済みとして進めます。
 また、パッケージマネージャーに Yarn を前提するので適宜読み替えてください。
 
-さて、適当なディレクトリに Vitepress をインストールします。
+さて、適当なディレクトリに VitePress をインストールします。
 
 ```bash
 yarn add -D vitepress
@@ -62,7 +62,7 @@ echo '# Hello VitePress' > docs/index.md
 
 ## ファイル構造
 
-まずは Vitepress のファイル構造を理解しましょう。Vitepress ではドキュメントルートから次のようなファイル構造にする必要があります。
+まずは VitePress のファイル構造を理解しましょう。VitePress ではドキュメントルートから次のようなファイル構造にする必要があります。
 
 ```bash
 docs
@@ -93,7 +93,7 @@ docs
 
 ## レイアウト
 
-Vitepress には２つの組み込みレイアウトがあります。これらは`.md`のフロントマッターから制御できます。
+VitePress には２つの組み込みレイアウトがあります。これらは`.md`のフロントマッターから制御できます。
 
 ### ホームレイアウト
 
@@ -245,7 +245,7 @@ module.exports = {
 ### lang
 
 `lang`プロパティでは`html`タグの`lang`属性を変更できます。
-`$siteByRoute`や`$site`といった Vitepress 用の組み込み属性に追加されるので、
+`$siteByRoute`や`$site`といった VitePress 用の組み込み属性に追加されるので、
 `.vue`コンポーネントを作って組み込む際にも使えます。
 
 ### title
@@ -509,7 +509,7 @@ module.exports = {
 ## カスタムコンポーネント
 
 マークダウンに Vue コンポーネントを使いたいこともあるでしょう。
-Vitepress ではもちろんそのケースもほとんど設定せずにできます。
+VitePress ではもちろんそのケースもほとんど設定せずにできます。
 まずは、`.vitepress`ディレクトリ以下に`components`ディレクトリを作り、
 そこに適当なコンポーネントを作ります。`components`という名称は何でも大丈夫です。
 
@@ -564,7 +564,7 @@ export default {
 ```
 
 `index.js`の`enhanceApp`というプロパティに Vue インスタンスが渡されるので、グローバルコンポーネントとして設定します。
-また、`Theme`は Vitepress デフォルトのレイアウト等を使う場合は必須です。
+また、`Theme`は VitePress デフォルトのレイアウト等を使う場合は必須です。
 
 あとはマークダウンファイルに直接コンポーネントを配置します。
 
@@ -632,7 +632,7 @@ export default {}
 
 ## まとめ
 
-Vitepress でドキュメントの作成を見てきました。
+VitePress でドキュメントの作成を見てきました。
 
 現在、Vitepress はミニマムということにかなりこだわっており、その役割をドキュメントの生成に専念させるのか、ブログ用などのために機能の追加を行うのか議論されています。
 まだまだ、発展の余地があり細かいところにバグはありますが、今後の動向にも期待したいです。
