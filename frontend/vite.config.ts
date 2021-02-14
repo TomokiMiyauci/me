@@ -65,7 +65,8 @@ const config = defineConfig({
         md.use(namedCodeBlocks, { isEnableInlineCss: true })
         md.use(emoji)
         md.use(tableOfContents, {
-          includeLevel: [2, 3]
+          includeLevel: [2, 3],
+          containerHeaderHtml: '<div class="p-2">目次</div>'
         })
         md.use(anchor, {
           permalink: true,

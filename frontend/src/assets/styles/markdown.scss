@@ -71,6 +71,26 @@ a {
   }
 }
 
+p > .table-of-contents {
+  @apply shadow fixed rounded-md right-4 hidden xl:block xl:w-72 hover:shadow-md transition duration-200 top-28;
+
+  > ul {
+    @apply bg-white px-2 m-0;
+
+    li {
+      @apply m-0;
+
+      &::before {
+        content: none;
+      }
+
+      > a {
+        @apply no-underline;
+      }
+    }
+  }
+}
+
 h1,
 h2,
 h3,

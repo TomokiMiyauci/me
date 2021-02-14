@@ -1,7 +1,13 @@
 <template>
   <div class="pb-84 pt-8 sm:pt-16">
     <div class="mb-5 mx-auto" style="max-width: 65ch">
-      <router-link to="/ja/posts">←記事一覧</router-link>
+      <router-link to="/ja/posts">
+        <button
+          class="shadow rounded-full p-2 focus:ring-2 hover:bg-gray-50 transition duration-200 focus:outline-none"
+        >
+          <mdi-chevron-left class="w-8 h-8" />
+        </button>
+      </router-link>
       <h1
         class="xl:text-10xl mt-4 font-bold text-4xl sm:text-5xl md:text-6xl lg:text-4xl mb-0 leading-none dark:text-gray-800 text-gray-800"
       >
