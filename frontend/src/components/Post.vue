@@ -1,11 +1,11 @@
 <template>
-  <div class="pb-84 pt-8 sm:pt-16">
+  <div class="pb-84 pt-4 sm:pt-16">
     <div class="mb-5 mx-auto" style="max-width: 65ch">
       <router-link to="/ja/posts">
         <button
-          class="shadow rounded-full p-2 focus:ring-2 hover:bg-gray-50 transition duration-200 focus:outline-none"
+          class="shadow flex items-center rounded-full p-2 focus:ring-2 hover:bg-gray-50 transition duration-200 focus:outline-none"
         >
-          <mdi-chevron-left class="w-8 h-8" />
+          <mdi-chevron-left class="w-7 h-7" />
         </button>
       </router-link>
       <h1
