@@ -5,8 +5,6 @@ icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613316
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-vitepress/cover.png
 ---
 
-[[toc]]
-
 ## Introduction
 
 Hello. What tools do you use to create your documents? This time, I introduces a static site generator called VitePress.

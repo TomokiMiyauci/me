@@ -5,8 +5,6 @@ icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/c_scale,f_auto,q_auto,
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/c_scale,f_auto,q_auto,w_256/v1612608124/deploy-spa-ssg/thumbnail.png
 ---
 
-[[toc]]
-
 ## はじめに
 
 SPA や SSG のビルド時のアウトプットには違いがあります。ファイル構造が異なるために、ウェブサーバーへ設定をしないと、リロード時に 404 が出たりすることもあります。

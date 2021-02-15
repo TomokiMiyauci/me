@@ -5,8 +5,6 @@ icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613316
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-vitepress/cover.png
 ---
 
-[[toc]]
-
 ## はじめに
 
 こんにちは。みなさんはドキュメントを作成する際、どんなツールを使っていますか？今回、紹介するのは VitePress という静的サイトジェネレーターです。
