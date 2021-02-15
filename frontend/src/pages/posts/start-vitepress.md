@@ -9,7 +9,7 @@ thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-v
 
 Hello. What tools do you use to create your documents? This time, I introduces a static site generator called VitePress.
 VitePress is Vue based and he can do SSG, which is useful for document generation etc.
-[Official] (<https://vitepress.vuejs.org/>) introduces as follows.
+[Official](https://vitepress.vuejs.org) introduces as follows.
 
 > VitePress is VuePress' little brother, built on top of Vite.
 
@@ -248,13 +248,13 @@ module.exports = {
 
 ### lang
 
-The `lang` property allows you to change the`lang` attribute of the `html` tag.
-Since it is added to the built-in attributes for VitePress such as `$siteByRoute` and`$site`,
+The `lang` property allows you to change the `lang` attribute of the `html` tag.
+Since it is added to the built-in attributes for VitePress such as `$siteByRoute` and `$site`,
 It can also be used to create and embed `.vue` components.
 
 ### title
 
-The `title` property allows you to set the project name for the`title` in the `head` tag.
+The `title` property allows you to set the project name for the `title` in the `head` tag.
 
 ```html
 <head>
@@ -287,7 +287,7 @@ However, if it is in `description` in the front matter of Markdown, that will ta
 
 ### head
 
-The `head` property allows you to insert a`head` tag.
+The `head` property allows you to insert a `head` tag.
 This is useful when you want to set it for the entire project instead of setting it for each page.
 It is a double array and it is a little difficult to understand, so I will give an example.
 
@@ -429,7 +429,7 @@ module.exports = {
 }
 ```
 
-In addition, if it is not in `locales`, it will fall back to the property of`themeConfig`.
+In addition, if it is not in `locales`, it will fall back to the property of `themeConfig`.
 `editLinks` is common across languages, so you can set it as in the example above.
 
 Not only `themeConfig` but also `head` tags can be multilingualized. For example, to make the `description` property multilingual:
@@ -449,7 +449,7 @@ module.exports = {
 
 In summary, `config.js` looks like as below.
 
-The point is that the `locales` property can be set in both the part that modifies the`head` tag and the `themeConfig` property.
+The point is that the `locales` property can be set in both the part that modifies the `head` tag and the `themeConfig` property.
 Some OGP tags etc. are omitted, so please add them as appropriate.
 
 ```js:config.js
