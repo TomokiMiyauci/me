@@ -4,6 +4,7 @@ const BASE_DIR = join(__dirname, 'src')
 const VUE_FILE = join('**', '*.vue')
 const TS_FILE = join('**', '*.ts')
 const typography = require('@tailwindcss/typography')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   purge: {
@@ -19,7 +20,18 @@ module.exports = {
   },
   darkMode: 'media',
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        teal: colors.teal
+      },
+
+      fontSize: {
+        '7xl': '5rem',
+        '8xl': '6rem',
+        '9xl': '7rem',
+        '10xl': '8rem'
+      }
+    }
   },
   variants: {
     extend: {}
