@@ -1,16 +1,16 @@
 <template>
-  <header class="bg-gray-800 px-4 py-1">
+  <header class="dark:bg-gray-700 text-gray-700 dark:text-white px-4 py-1">
     <div
       class="container h-full sm:px-6 mx-auto flex justify-between items-center"
     >
-      <router-link class="text-2xl sm:text-4xl text-white" :to="'/'" tag="h1">
+      <router-link class="text-2xl sm:text-4xl" :to="'/'" tag="h1">
         miyauci.me
       </router-link>
 
       <span>
         <select
           v-model="locale"
-          class="mr-3 rounded p-2 uppercase cursor-pointer focus:outline-none focus:ring-1"
+          class="mr-3 dark:text-gray-700 rounded p-2 uppercase cursor-pointer focus:outline-none focus:ring-1"
         >
           <option
             v-for="locale in availableLocales"
@@ -20,11 +20,9 @@
             {{ locale }}
           </option>
         </select>
-        <router-link
-          to="/ja/posts"
-          class="text-xl sm:text-2xl capitalize text-white"
-          >{{ t('blog') }}</router-link
-        >
+        <router-link to="/ja/posts" class="text-xl sm:text-2xl capitalize">{{
+          t('blog')
+        }}</router-link>
       </span>
     </div>
   </header>

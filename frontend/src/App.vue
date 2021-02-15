@@ -1,7 +1,7 @@
 <template>
   <nav-bar class="h-14 sm:h-24" />
 
-  <main class="px-2">
+  <main>
     <router-view />
   </main>
 
