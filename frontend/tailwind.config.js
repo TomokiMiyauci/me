@@ -34,7 +34,16 @@ module.exports = {
     }
   },
   variants: {
-    extend: {}
+    extend: {
+      boxShadow: [
+        'responsive',
+        'group-hover',
+        'focus-within',
+        'hover',
+        'focus',
+        'dark'
+      ]
+    }
   },
   plugins: [typography]
 }
