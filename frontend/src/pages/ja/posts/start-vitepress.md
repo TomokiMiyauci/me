@@ -1,5 +1,6 @@
 ---
 title: VitePressでドキュメントを作ろう
+description: VitePress の基本的な使い方から、ドキュメントにはまだ記載のない多言語対応、ホームページレイアウト、メタタグのインジェクション、カスタムコンポーネント、カスタム CSS の適応方法ついて紹介します。
 icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613316561/start-vitepress/icatch.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-vitepress/cover.png
 ---
