@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-green-400 via-gray-300 from-white dark:from-gray-700 dark:to-gray-700 to-white"
+    class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-green-400 via-gray-300 from-white dark:from-gray-700 dark:to-green-400 to-white"
   >
     <div class="container mx-auto dark:text-gray-100 text-gray-800">
       <!-- <router-link to="/ja/posts">
@@ -38,22 +38,37 @@
     </div>
   </div>
 
-  <div class="px-2 mt-10">
+  <div
+    class="px-2 xl:flex xl:gap-16 2xl:gap-48 flex-row mx-auto mt-10"
+    style="max-width: 65ch"
+  >
     <slot />
+    <div class="hidden xl:block">
+      <toc class="sticky top-10 w-60" :url="url" :toc="toc" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-const { t } = useI18n()
-const { meta, fullPath } = useRoute()
 
+import Toc from '@/components/Toc.vue'
+const { t } = useI18n()
+const { meta, path } = useRoute()
+console.log(useRoute().path)
 import { useHead } from '@vueuse/head'
 const domain = 'https://miyauchi.dev'
-const url = `${domain}${fullPath}`
+const url = `${domain}${path}`
 
-const { title, description, icatch, readingTime, updatedAt } = meta.frontmatter
+const {
+  title,
+  description,
+  icatch,
+  readingTime,
+  toc,
+  updatedAt
+} = meta.frontmatter
 useHead({
   meta: [
     { property: 'og:image', content: icatch },
