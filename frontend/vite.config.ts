@@ -15,6 +15,8 @@ import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
 import WindiCSS from 'vite-plugin-windicss'
+
+import { getToc } from './src/functions/markdown/toc'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -42,10 +44,12 @@ const config = defineConfig({
         const { meta, component } = route
         const path = resolve(__dirname, component.slice(1))
         const md = readFileSync(path, 'utf-8')
+        const toc = getToc(md)
 
         const { data, content } = matter(md)
         const frontmatter = {
           ...data,
+          toc,
           readingTime: readtime(content, 200),
           updatedAt: statSync(path).ctime
         }
