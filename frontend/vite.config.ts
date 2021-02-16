@@ -30,7 +30,7 @@ const config = defineConfig({
       include: [/\.vue$/, /\.md$/]
     }),
     ...WindiCSS({
-      safelist: 'prose prose-sm m-auto'
+      safelist: 'prose prose-sm m-auto hidden xl:block'
     }),
     Components({
       customComponentResolvers: ViteIconsResolver({
