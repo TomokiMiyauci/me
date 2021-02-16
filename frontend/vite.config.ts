@@ -14,6 +14,7 @@ import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
 import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
+import WindiCSS from 'vite-plugin-windicss'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -23,6 +24,9 @@ const config = defineConfig({
   plugins: [
     vue({
       include: [/\.vue$/, /\.md$/]
+    }),
+    ...WindiCSS({
+      safelist: 'prose prose-sm m-auto'
     }),
     Components({
       customComponentResolvers: ViteIconsResolver({

@@ -1,4 +1,5 @@
 import '@/assets/styles/index.scss'
+import 'windi.css'
 
 import NProgress from 'nprogress'
 import routes from 'vite-plugin-pages/client'
