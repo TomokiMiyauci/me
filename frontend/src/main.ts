@@ -2,7 +2,7 @@ import '@/assets/styles/index.scss'
 import 'windi.css'
 
 import NProgress from 'nprogress'
-import routes from 'vite-plugin-pages/client'
+import routes from 'pages-generated'
 import { ViteSSG } from 'vite-ssg'
 import { RouterScrollBehavior } from 'vue-router'
 
