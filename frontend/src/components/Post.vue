@@ -1,6 +1,6 @@
 <template>
   <div
-    class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-teal-700 via-gray-300 from-white dark:from-gray-700 dark:to-gray-700 to-white"
+    class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-green-400 via-gray-300 from-white dark:from-gray-700 dark:to-gray-700 to-white"
   >
     <div class="container mx-auto dark:text-gray-100 text-gray-800">
       <!-- <router-link to="/ja/posts">
