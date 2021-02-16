@@ -20,8 +20,10 @@ import { getToc } from './src/functions/markdown/toc'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
-  alias: {
-    '@': resolve(__dirname, 'src')
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
   },
   plugins: [
     vue({

@@ -69,7 +69,7 @@
     "vite-plugin-pages": "^0.4.3",
     "vite-plugin-pwa": "^0.4.1",
     "vite-plugin-windicss": "^0.1.12",
-    "vite-ssg": "^0.5.2"
+    "vite-ssg": "^0.8.8"
   },
   "config": {
     "commitizen": {
