@@ -79,6 +79,12 @@ useHead({
     { name: 'og:url', content: url },
     { name: 'og:site_name', content: "Tomoki Miyauchi's Blog" },
     { name: 'twitter:card', content: 'summary_large_image' }
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: url
+    }
   ]
 })
 const date = new Date(Date.parse(updatedAt))
