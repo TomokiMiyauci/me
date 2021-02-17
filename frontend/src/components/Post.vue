@@ -37,7 +37,6 @@
       />
     </div>
   </div>
-
   <div
     class="px-2 xl:flex xl:gap-16 2xl:gap-48 flex-row mx-auto mt-10"
     style="max-width: 65ch"
@@ -50,17 +49,20 @@
 </template>
 
 <script setup lang="ts">
+import routes from 'pages-generated'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import Toc from '@/components/Toc.vue'
+import { resolve } from '@/functions/resolver'
 const { t } = useI18n()
 const { meta, path } = useRoute()
-console.log(useRoute().path)
+
 import { useHead } from '@vueuse/head'
 const domain = 'https://miyauchi.dev'
 const url = `${domain}${path}`
-
+const en = resolve({ path, routes }, 'en')
+const ja = resolve({ path, routes }, 'ja')
 const {
   title,
   description,
@@ -84,6 +86,21 @@ useHead({
     {
       rel: 'canonical',
       href: url
+    },
+    {
+      rel: 'alternate',
+      hreflang: 'en',
+      href: `${domain}${en}`
+    },
+    {
+      rel: 'alternate',
+      hreflang: 'ja',
+      href: `${domain}${ja}`
+    },
+    {
+      rel: 'alternate',
+      hreflang: 'x-default',
+      href: `${domain}${en}`
     }
   ]
 })
