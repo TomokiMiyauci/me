@@ -3,7 +3,7 @@
     <div
       class="container h-full sm:px-6 mx-auto flex justify-between items-center"
     >
-      <router-link class="text-2xl sm:text-4xl" :to="'/'" tag="h1">
+      <router-link class="text-2xl sm:text-4xl" :to="localePath('/')" tag="h1">
         miyauci.me
       </router-link>
 
@@ -20,15 +20,18 @@
             {{ locale }}
           </option>
         </select>
-        <router-link to="/ja/posts" class="text-xl sm:text-2xl capitalize">{{
-          t('blog')
-        }}</router-link>
+        <router-link
+          :to="localePath('/posts')"
+          class="text-xl sm:text-2xl capitalize"
+          >{{ t('blog') }}</router-link
+        >
       </span>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import routes from 'pages-generated'
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
@@ -36,6 +39,9 @@ import { useRouter } from 'vue-router'
 import { resolve } from '@/functions/resolver'
 // import { isStartWithSlash, startWith } from '@/functions/utils'
 const { locale, availableLocales, t } = useI18n()
+const localePath = (path: string) => {
+  return resolve({ path, routes }, locale.value as 'ja' | 'en')
+}
 const { replace, currentRoute, getRoutes } = useRouter()
 
 watch(locale, (now) => {

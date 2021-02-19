@@ -5,10 +5,9 @@
 
   <posts v-else-if="isPosts" />
 
-  <template v-else-if="isProfile">
-    <h1 class="prose mx-auto mt-10">{{ frontmatter.title }}</h1>
+  <profile v-else-if="isProfile">
     <slot />
-  </template>
+  </profile>
 </template>
 
 <script setup lang="ts">
@@ -16,13 +15,18 @@ import { computed, defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 
 import Post from '@/components/Post.vue'
+import Profile from '@/components/Profile.vue'
+import { isEndsWithSlash } from '@/functions/utils'
 const { path } = useRoute()
-const rootPath = ['/', '/ja/']
-const postsPath = rootPath.map((path) => `${path}posts`)
+const rootPath = ['/', '/ja']
+const postsPath = rootPath.map((path) => {
+  const _path = isEndsWithSlash(path) ? path : `${path}/`
+  return `${_path}posts`
+})
 const postPath = postsPath.map((path) => `${path}/`)
 const isProfile = computed(() => rootPath.includes(path))
 const isPosts = computed(() => postsPath.includes(path))
 const isPost = computed(() => postPath.some((_path) => path.startsWith(_path)))
 
-const { frontmatter } = defineProps<{ frontmatter: { title: string } }>()
+defineProps<{ frontmatter: { title: string } }>()
 </script>

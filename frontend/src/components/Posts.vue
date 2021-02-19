@@ -34,11 +34,14 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { RouteRecordNormalized } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router'
 
 import { isStartWithSlashJaSlash } from '@/functions/utils'
+const { locale } = useI18n()
 const { path } = useRoute()
 const { getRoutes } = useRouter()
 const formatDate = (val: string): Date => new Date(Date.parse(val))
@@ -48,4 +51,39 @@ const prefix = lang === 'ja' ? '/ja/posts/' : '/posts/'
 const filterPosts = ({ meta, path }: RouteRecordNormalized) =>
   path.startsWith(prefix) && meta.frontmatter
 const posts = computed(() => getRoutes().filter(filterPosts))
+
+const jaPath = 'https://miyauchi.dev/ja/posts'
+const enPath = 'https://miyauchi.dev/posts'
+
+const content = locale.value === 'ja' ? jaPath : enPath
+useHead({
+  meta: [
+    { name: 'description', content: "Tomoki Miyauchi's Blog" },
+    { property: 'og:title', content: 'Tomoki Miyauchi' },
+    { property: 'og:description', content: "Tomoki Miyauchi's Blog" },
+    { property: 'og:image', content: 'https://miyauchi.dev/logo.png' },
+    { property: 'og:site_name', content: 'TM Blog' }
+  ],
+  link: [
+    {
+      ref: 'canonical',
+      content
+    },
+    {
+      ref: 'alternate',
+      hreflang: 'en',
+      href: enPath
+    },
+    {
+      ref: 'alternate',
+      hreflang: 'ja',
+      href: jaPath
+    },
+    {
+      ref: 'alternate',
+      hreflang: 'x-default',
+      href: enPath
+    }
+  ]
+})
 </script>
