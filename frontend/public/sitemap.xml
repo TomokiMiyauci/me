@@ -2,7 +2,29 @@
 <urlset xmlns='https://www.sitemaps.org/schemas/sitemap/0.9' xmlns:xhtml="http://www.w3.org/1999/xhtml">
 <url>
   <loc>https://miyauchi.dev</loc>
-  <lastmod>2021-02-14</lastmod>
+  <xhtml:link
+  rel="alternate"
+  hreflang="en"
+  href="https://miyauchi.dev" />
+  <xhtml:link
+  rel="alternate"
+  hreflang="ja"
+  href="https://miyauchi.dev/ja" />
+  <lastmod>2021-02-19</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/ja</loc>
+  <xhtml:link
+  rel="alternate"
+  hreflang="en"
+  href="https://miyauchi.dev" />
+  <xhtml:link
+  rel="alternate"
+  hreflang="ja"
+  href="https://miyauchi.dev/ja" />
+  <lastmod>2021-02-19</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -16,7 +38,7 @@
   rel="alternate"
   hreflang="ja"
   href="https://miyauchi.dev/ja/posts" />
-  <lastmod>2021-02-15</lastmod>
+  <lastmod>2021-02-19</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -30,7 +52,7 @@
   rel="alternate"
   hreflang="ja"
   href="https://miyauchi.dev/ja/posts" />
-  <lastmod>2021-02-15</lastmod>
+  <lastmod>2021-02-19</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -50,7 +72,7 @@
     rel="alternate"
     hreflang="ja"
     href="https://miyauchi.dev/ja/posts/start-vitepress" />
-  <lastmod>2021-02-14</lastmod>
+  <lastmod>2021-02-19</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -64,7 +86,7 @@
     rel="alternate"
     hreflang="ja"
     href="https://miyauchi.dev/ja/posts/start-vitepress" />
-  <lastmod>2021-02-15</lastmod>
+  <lastmod>2021-02-19</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
