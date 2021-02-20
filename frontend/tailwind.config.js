@@ -19,5 +19,9 @@ module.exports = {
     }
   },
 
+  variants: {
+    width: ['responsive', 'hover']
+  },
+
   plugins: [typography]
 }
