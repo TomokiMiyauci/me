@@ -48,9 +48,11 @@ export const fileDialog = (
 ```
 
 The point is, if you just want to call the file dialog, you don't need to render the input element.
-Instead, you can generate the same event as when you create an input element with `createElement` and click on the input tag with `click` type=file.
+Instead, you can generate the same event as when you create an input element with `createElement`,
+and click on the input tag with `click` type=file.
 
-After firing the `onchange` event, the `input` property allows you to access the file selected in the file dialog in the `files` property.
+After firing the `onchange` event,
+the `input` property allows you to access the file selected in the file dialog in the `files` property.
 As it accepts `FileList` or `null` as the type, it branches off for a null check.
 
 Because `onchange` can be handled synchronously by wrapping it with Promise,
