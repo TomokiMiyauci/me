@@ -113,3 +113,11 @@ en:
 ja:
   min: 分
 </i18n>
+
+<style>
+@media (min-width: 1024px) {
+  .min {
+    min-width: 65ch;
+  }
+}
+</style>

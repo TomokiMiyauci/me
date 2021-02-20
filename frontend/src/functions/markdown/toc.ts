@@ -1,5 +1,5 @@
 import remark from 'remark'
-
+import remarkFrontmatter from 'remark-frontmatter'
 type Depth = 1 | 2 | 3 | 4 | 5 | 6
 
 type Children = {
@@ -16,8 +16,8 @@ type Toc = {
 }
 
 const getToc = (val: string): Toc[] => {
-  const ast = remark().parse(val).children as Children[]
-  const target = ast
+  const ast = remark().use(remarkFrontmatter).parse(val).children as Children[]
+  return ast
     .filter(({ type }) => type === 'heading')
     .map(({ children, depth }) => {
       const value = children[0].value
@@ -28,8 +28,6 @@ const getToc = (val: string): Toc[] => {
         hash: `#${value.toLowerCase().replace(/ /g, '-')}`
       }
     })
-  target.splice(0, 1)
-  return target
 }
 
 export { getToc, Toc }
