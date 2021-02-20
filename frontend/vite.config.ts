@@ -15,6 +15,7 @@ import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import { VitePWA } from 'vite-plugin-pwa'
 import WindiCSS from 'vite-plugin-windicss'
+import svgLoader from 'vite-svg-loader'
 
 import { getToc } from './src/functions/markdown/toc'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -29,6 +30,7 @@ const config = defineConfig({
     vue({
       include: [/\.vue$/, /\.md$/]
     }),
+    svgLoader(),
     ...WindiCSS({
       safelist: 'prose prose-sm m-auto hidden xl:block sticky top-10 w-60'
     }),

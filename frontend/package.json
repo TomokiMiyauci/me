@@ -69,7 +69,8 @@
     "vite-plugin-pages": "^0.4.3",
     "vite-plugin-pwa": "^0.4.1",
     "vite-plugin-windicss": "^0.1.12",
-    "vite-ssg": "^0.8.8"
+    "vite-ssg": "^0.8.8",
+    "vite-svg-loader": "^1.4.2"
   },
   "config": {
     "commitizen": {
