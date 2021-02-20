@@ -90,4 +90,32 @@
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts/file-dialog</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/file-dialog" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/file-dialog" />
+  <lastmod>2021-02-20</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/posts/file-dialog</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/file-dialog" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/file-dialog" />
+  <lastmod>2021-02-20</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
 </urlset>
