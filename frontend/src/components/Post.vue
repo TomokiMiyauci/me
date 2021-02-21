@@ -56,6 +56,7 @@
       :title="prev.title"
       :description="prev.description"
       :img="prev.thumbnail"
+      alt="next article thumbnail"
       :to="prev.path"
     />
 
@@ -64,6 +65,7 @@
       :title="next.title"
       :description="next.description"
       :img="next.thumbnail"
+      alt="next article thumbnail"
       :to="next.path"
     />
   </div>
