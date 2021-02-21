@@ -46,6 +46,27 @@
       <toc class="sticky top-10 w-60" :url="url" :toc="toc" />
     </div>
   </div>
+
+  <div class="mx-auto mt-10" style="max-width: 65ch">
+    <h3 class="text-2xl px-2 mb-4 sm:mb-8 font-bold capitalize">
+      {{ t('title') }}
+    </h3>
+    <article-headline
+      v-if="prev"
+      :title="prev.title"
+      :description="prev.description"
+      :img="prev.thumbnail"
+      :to="prev.path"
+    />
+
+    <article-headline
+      v-if="next"
+      :title="next.title"
+      :description="next.description"
+      :img="next.thumbnail"
+      :to="next.path"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -53,6 +74,7 @@ import routes from 'pages-generated'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import Toc from '@/components/Toc.vue'
 import { resolve } from '@/functions/resolver'
 const { t } = useI18n()
@@ -69,7 +91,9 @@ const {
   icatch,
   readingTime,
   toc,
-  updatedAt
+  updatedAt,
+  next,
+  prev
 } = meta.frontmatter
 useHead({
   meta: [
@@ -110,8 +134,10 @@ const date = new Date(Date.parse(updatedAt))
 <i18n lang="yml">
 en:
   min: min
+  title: other articles
 ja:
   min: 分
+  title: 他の記事
 </i18n>
 
 <style>
