@@ -3,41 +3,19 @@
     <div class="mb-5 mx-auto" style="max-width: 65ch">
       <h1 class="text-2xl mb-4">Blog</h1>
 
-      <router-link
+      <article-headline
         v-for="{ path, meta } in posts"
         :key="path"
-        class="rounded-md overflow-hidden shadow hover:shadow-lg hover:bg-gray-50 transition duration-200 flex mb-4"
+        :title="meta.frontmatter.title"
+        :description="meta.frontmatter.description"
+        :img="meta.frontmatter.thumbnail"
+        alt="thumbnail"
+        :reading-time="meta.frontmatter.readingTime.text"
         :to="path"
-      >
-        <img
-          class="w-16 h-16 m-2 sm:m-3 rounded sm:w-32 sm:h-32"
-          :src="meta.frontmatter.thumbnail"
-        />
-
-        <div class="p-1 sm:p-2 flex gap-2 flex-col justify-between">
-          <div class="sm:space-y-1">
-            <h2
-              class="hover:text-green-500 line-clamp-2 transition duration-200 text-xl sm:text-2xl"
-            >
-              {{ meta.frontmatter.title }}
-            </h2>
-
-            <p class="text-gray-500 line-clamp-2">
-              {{ meta.frontmatter.description }}
-            </p>
-            <!-- <router-link class="hidden sm:inline" :to="path"
-              >もっと読む</router-link
-            > -->
-          </div>
-
-          <div class="time opacity-50 no-underline text-sm -mt-1">
-            <span class="mr-4 no-underline"
-              >{{ formatDate(meta.frontmatter.updatedAt).toLocaleDateString() }}
-            </span>
-            {{ meta.frontmatter.readingTime.text }}
-          </div>
-        </div>
-      </router-link>
+        :updated-at="
+          formatDate(meta.frontmatter.updatedAt).toLocaleDateString()
+        "
+      />
     </div>
   </div>
 </template>
@@ -49,6 +27,7 @@ import { useI18n } from 'vue-i18n'
 import type { RouteRecordNormalized } from 'vue-router'
 import { useRoute, useRouter } from 'vue-router'
 
+import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import { isStartWithSlashJaSlash } from '@/functions/utils'
 const { locale } = useI18n()
 const { path } = useRoute()
