@@ -1,6 +1,6 @@
 <template>
   <h1
-    class="text-2xl md:text-5xl from-gray-700 text-gray-50 via-gray-800 to-purple-800 bg-gradient-to-b shadow text-center py-10 md:p-32"
+    class="text-2xl md:text-5xl from-gray-700 text-gray-50 via-gray-800 to-purple-800 bg-gradient-to-b shadow-xl text-center py-10 md:p-32"
   >
     Hello. I am {{ meta.frontmatter.title }}.
   </h1>

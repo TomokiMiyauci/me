@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-84 pt-8 sm:pt-16">
+  <div class="pb-84 pt-8 px-2 sm:pt-16">
     <div class="mb-5 mx-auto" style="max-width: 65ch">
       <h1 class="text-2xl mb-4">Blog</h1>
 
@@ -10,16 +10,25 @@
         :to="path"
       >
         <img
-          class="w-14 h-14 rounded-md sm:w-32 sm:h-32"
+          class="w-16 h-16 m-2 sm:m-3 rounded sm:w-32 sm:h-32"
           :src="meta.frontmatter.thumbnail"
         />
 
-        <div class="sm:py-2 pl-4 flex flex-col justify-between">
-          <h2
-            class="hover:text-green-500 transition duration-200 text-xl sm:text-2xl"
-          >
-            {{ meta.frontmatter.title }}
-          </h2>
+        <div class="p-1 sm:p-2 flex gap-2 flex-col justify-between">
+          <div class="sm:space-y-1">
+            <h2
+              class="hover:text-green-500 line-clamp-2 transition duration-200 text-xl sm:text-2xl"
+            >
+              {{ meta.frontmatter.title }}
+            </h2>
+
+            <p class="text-gray-500 line-clamp-2">
+              {{ meta.frontmatter.description }}
+            </p>
+            <!-- <router-link class="hidden sm:inline" :to="path"
+              >もっと読む</router-link
+            > -->
+          </div>
 
           <div class="time opacity-50 no-underline text-sm -mt-1">
             <span class="mr-4 no-underline"
