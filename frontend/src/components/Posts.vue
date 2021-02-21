@@ -29,7 +29,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import { isStartWithSlashJaSlash } from '@/functions/utils'
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { path } = useRoute()
 const { getRoutes } = useRouter()
 const formatDate = (val: string): Date => new Date(Date.parse(val))
@@ -42,12 +42,13 @@ const posts = computed(() => getRoutes().filter(filterPosts))
 
 const jaPath = 'https://miyauchi.dev/ja/posts'
 const enPath = 'https://miyauchi.dev/posts'
-
+const title = `${t('blog')} | Tomoki Miyauchi`
 const content = locale.value === 'ja' ? jaPath : enPath
 useHead({
+  title,
   meta: [
-    { name: 'description', content: "Tomoki Miyauchi's Blog" },
-    { property: 'og:title', content: 'Tomoki Miyauchi' },
+    { name: 'description', content: t('description') },
+    { property: 'og:title', content: title },
     { property: 'og:description', content: "Tomoki Miyauchi's Blog" },
     { property: 'og:image', content: 'https://miyauchi.dev/logo.png' },
     { property: 'og:site_name', content: 'TM Blog' }
@@ -75,3 +76,13 @@ useHead({
   ]
 })
 </script>
+
+<i18n lang="yml">
+en:
+  blog: Blog
+  description: Tomoki Miyauchi's technical blog. Mainly aim to disseminate technical and useful information such as information on the latest technology related to the Web and introduction of what was created as a project. I will send live information with a lot of actual code.
+
+ja:
+  blog: ブログ
+  description: Tomoki Miyauchiの技術ブログです。主にWebに関する最新技術の情報や、プロジェクトとして作ったものの紹介など、技術的で役立つ情報の発信を目指します。実際のコードを多めに、生きた情報の発信をします。
+</i18n>

@@ -51,7 +51,7 @@ import { useRoute } from 'vue-router'
 import Vite from '@/assets/svgs/vite.svg'
 import { useLocalePath } from '@/composites'
 const { localePath } = useLocalePath()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const jaPath = 'https://miyauchi.dev/ja'
 const enPath = 'https://miyauchi.dev'
@@ -60,6 +60,8 @@ const content = locale.value === 'ja' ? jaPath : enPath
 
 const { meta } = useRoute()
 useHead({
+  title: `${t('home')} | Tomoki Miyauchi`,
+  meta: [{ name: 'description', content: t('description') }],
   link: [
     {
       ref: 'canonical',
@@ -83,3 +85,12 @@ useHead({
   ]
 })
 </script>
+
+<i18n lang="yml">
+en:
+  home: Home
+  description: This is Tomoki Miyauchi's personal site. You can check the activity record of Tomoki Miyauchi such as technical blog and list of projects. The site is made up of Vite and SSG and is focused on internationalization.
+ja:
+  home: ホーム
+  description: Tomoki Miyauchiの個人サイトです。技術ブログや、プロジェクトの一覧などTomoki Miyauchiが行った活動記録を確認できます。サイトはViteとSSGで作られており、国際化に力を入れています。
+</i18n>

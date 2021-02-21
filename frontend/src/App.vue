@@ -16,9 +16,8 @@ import NavBar from '@/components/app/NavBar.vue'
 import TheFooter from '@/components/app/TheFooter.vue'
 const { locale } = useI18n()
 useHead({
-  htmlAttrs: [{ lang: locale.value }],
+  htmlAttrs: [{ lang: locale }],
   meta: [
-    { name: 'description', content: "Tomoki Miyauchi's Portfolio" },
     { name: 'author', content: 'Tomoki Miyauchi' },
     { name: 'copyright', content: '2021 ©Tomoki Miyauchi' },
     { property: 'og:title', content: 'Tomoki Miyauchi' },
