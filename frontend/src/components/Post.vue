@@ -71,20 +71,32 @@
 
 <script setup lang="ts">
 import routes from 'pages-generated'
+import urlJoin from 'url-join'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import Toc from '@/components/Toc.vue'
+import type { Locale } from '@/constants'
+import { DOMAIN } from '@/constants'
 import { resolve } from '@/functions/resolver'
-const { t } = useI18n()
-const { meta, path } = useRoute()
+const { t, locale } = useI18n()
+const { meta, path, fullPath } = useRoute()
 
 import { useHead } from '@vueuse/head'
-const domain = 'https://miyauchi.dev'
-const url = `${domain}${path}`
+const url = urlJoin(DOMAIN, path)
 const en = resolve({ path, routes }, 'en')
 const ja = resolve({ path, routes }, 'ja')
+
+const root = urlJoin(
+  DOMAIN,
+  resolve({ path: '/', routes }, locale.value as Locale)
+)
+const blog = urlJoin(
+  DOMAIN,
+  resolve({ path: '/posts', routes }, locale.value as Locale)
+)
+console.log(root, blog)
 const {
   title,
   description,
@@ -95,6 +107,31 @@ const {
   next,
   prev
 } = meta.frontmatter
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: t('home'),
+      item: root
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: t('blog'),
+      item: blog
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: title,
+      item: urlJoin(DOMAIN, fullPath)
+    }
+  ]
+}
 useHead({
   meta: [
     { property: 'og:image', content: icatch },
@@ -114,17 +151,23 @@ useHead({
     {
       rel: 'alternate',
       hreflang: 'en',
-      href: `${domain}${en}`
+      href: `${DOMAIN}${en}`
     },
     {
       rel: 'alternate',
       hreflang: 'ja',
-      href: `${domain}${ja}`
+      href: `${DOMAIN}${ja}`
     },
     {
       rel: 'alternate',
       hreflang: 'x-default',
-      href: `${domain}${en}`
+      href: `${DOMAIN}${en}`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(breadcrumb)
     }
   ]
 })
@@ -135,9 +178,13 @@ const date = new Date(Date.parse(updatedAt))
 en:
   min: min
   title: other articles
+  home: Home
+  blog: Blog
 ja:
   min: 分
   title: 他の記事
+  home: ホーム
+  blog: ブログ
 </i18n>
 
 <style>
