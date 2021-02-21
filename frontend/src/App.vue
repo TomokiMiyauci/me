@@ -19,6 +19,8 @@ useHead({
   htmlAttrs: [{ lang: locale.value }],
   meta: [
     { name: 'description', content: "Tomoki Miyauchi's Portfolio" },
+    { name: 'author', content: 'Tomoki Miyauchi' },
+    { name: 'copyright', content: '2021 ©Tomoki Miyauchi' },
     { property: 'og:title', content: 'Tomoki Miyauchi' },
     { property: 'og:description', content: "Tomoki Miyauchi's Portfolio" },
     { property: 'og:image', content: 'https://miyauchi.dev/logo.png' },
