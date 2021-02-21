@@ -1,7 +1,10 @@
 import type { Locale } from 'vue-i18n'
 import type { RouteRecordRaw } from 'vue-router'
 
-import { isStartWithSlash } from '@/functions/utils'
+import { isStartWithSlash } from '../utils'
+
+const verdictLocale = (val: string): AvailableLocale[number] =>
+  val.startsWith('/ja') ? 'ja' : 'en'
 
 const tailingSlash = (val: string): string =>
   isTailingSlash(val) ? val.slice(0, -1) : val
@@ -82,4 +85,4 @@ const discoverPlainPath = (
 const isTailingSlash = (val: string): boolean =>
   val.length > 1 && val.slice(-1) === '/'
 
-export { discoverPlainPath, pathResolver, resolve }
+export { discoverPlainPath, pathResolver, resolve, verdictLocale }

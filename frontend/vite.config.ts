@@ -17,7 +17,10 @@ import { VitePWA } from 'vite-plugin-pwa'
 import WindiCSS from 'vite-plugin-windicss'
 import svgLoader from 'vite-svg-loader'
 
+import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
+import { verdictLocale } from './src/functions/resolver'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -45,7 +48,29 @@ const config = defineConfig({
         return path === '/' ? 'sync' : 'async'
       },
       extendRoute(route) {
-        const { meta, component } = route
+        const { meta, component, path: p } = route
+        const locale = verdictLocale(p)
+        const fileStats = getStats(locale)
+
+        const index = fileStats.findIndex(
+          (file) => file.component === component
+        )
+        const nextFullPath = fileStats[index + 1]?.fullpath
+        const prevFullPath = fileStats[index - 1]?.fullpath
+
+        const next = nextFullPath
+          ? {
+              ...matter(readFileSync(nextFullPath, 'utf-8')).data,
+              path: fileStats[index + 1]?.path
+            }
+          : undefined
+
+        const prev = prevFullPath
+          ? {
+              ...matter(readFileSync(prevFullPath, 'utf-8')).data,
+              path: fileStats[index - 1]?.path
+            }
+          : undefined
         const path = resolve(__dirname, component.slice(1))
         const md = readFileSync(path, 'utf-8')
         const toc = getToc(md)
@@ -54,6 +79,8 @@ const config = defineConfig({
         const frontmatter = {
           ...data,
           toc,
+          next,
+          prev,
           readingTime: readtime(content, 200),
           updatedAt: statSync(path).ctime
         }
