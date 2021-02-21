@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const colors = require('windicss/colors')
 const typography = require('windicss/plugin/typography')
-
+const lineClamp = require('windicss/plugin/line-clamp')
 module.exports = {
   darkMode: 'media',
   theme: {
@@ -23,5 +23,5 @@ module.exports = {
     width: ['responsive', 'hover']
   },
 
-  plugins: [typography]
+  plugins: [typography, lineClamp]
 }
