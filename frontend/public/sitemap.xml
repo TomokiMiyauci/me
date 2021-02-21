@@ -38,7 +38,7 @@
   rel="alternate"
   hreflang="ja"
   href="https://miyauchi.dev/ja/posts" />
-  <lastmod>2021-02-19</lastmod>
+  <lastmod>2021-02-21</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -52,7 +52,7 @@
   rel="alternate"
   hreflang="ja"
   href="https://miyauchi.dev/ja/posts" />
-  <lastmod>2021-02-19</lastmod>
+  <lastmod>2021-02-21</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
@@ -115,6 +115,34 @@
     hreflang="ja"
     href="https://miyauchi.dev/ja/posts/file-dialog" />
   <lastmod>2021-02-20</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts/typescript-conditional-types</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/typescript-conditional-types" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/typescript-conditional-types" />
+  <lastmod>2021-02-21</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/posts/typescript-conditional-types</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/typescript-conditional-types" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/typescript-conditional-types" />
+  <lastmod>2021-02-21</lastmod>
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
