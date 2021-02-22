@@ -2,7 +2,7 @@
   <div
     class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-green-400 via-gray-300 from-white dark:from-gray-700 dark:to-green-400 to-white"
   >
-    <div class="container mx-auto dark:text-gray-100 text-gray-800">
+    <div class="container xl:px-24 mx-auto dark:text-gray-100 text-gray-800">
       <!-- <router-link to="/ja/posts">
         <button
           class="shadow flex items-center rounded-full p-2 focus:ring-2 hover:bg-gray-50 transition duration-200 focus:outline-none"
@@ -10,8 +10,10 @@
           <mdi-chevron-left class="w-7 h-7" />
         </button>
       </router-link> -->
+      <breadcrumb class="mb-4" :breadcumb="breadcrumbList" />
+
       <h1
-        class="xl:text-10xl xl:px-24 text-4xl sm:text-5xl md:text-6xl lg:text-8xl mb-4 leading-none dark:text-gray-200 text-gray-800"
+        class="xl:text-10xl text-4xl sm:text-5xl md:text-6xl lg:text-8xl mb-4 leading-none dark:text-gray-200 text-gray-800"
       >
         {{ title }}
       </h1>
@@ -78,6 +80,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import ArticleHeadline from '@/components/ArticleHeadline.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 import Toc from '@/components/Toc.vue'
 import type { Locale } from '@/constants'
 import { DOMAIN } from '@/constants'
@@ -90,15 +93,11 @@ const url = urlJoin(DOMAIN, path)
 const en = resolve({ path, routes }, 'en')
 const ja = resolve({ path, routes }, 'ja')
 
-const root = urlJoin(
-  DOMAIN,
-  resolve({ path: '/', routes }, locale.value as Locale)
-)
-const blog = urlJoin(
-  DOMAIN,
-  resolve({ path: '/posts', routes }, locale.value as Locale)
-)
-console.log(root, blog)
+const root = resolve({ path: '/', routes }, locale.value as Locale)
+const rootURL = urlJoin(DOMAIN, root)
+const blog = resolve({ path: '/posts', routes }, locale.value as Locale)
+const blogURL = urlJoin(DOMAIN, blog)
+
 const {
   title,
   description,
@@ -109,8 +108,12 @@ const {
   next,
   prev
 } = meta.frontmatter
-
-const breadcrumb = {
+const breadcrumbList = [
+  { to: root, home: true },
+  { to: blog, text: t('blog') },
+  { to: fullPath, text: title }
+]
+const richText = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
@@ -118,13 +121,13 @@ const breadcrumb = {
       '@type': 'ListItem',
       position: 1,
       name: t('home'),
-      item: root
+      item: rootURL
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: t('blog'),
-      item: blog
+      item: blogURL
     },
     {
       '@type': 'ListItem',
@@ -169,7 +172,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify(breadcrumb)
+      children: JSON.stringify(richText)
     }
   ]
 })
