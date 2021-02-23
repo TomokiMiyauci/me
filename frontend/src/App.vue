@@ -5,7 +5,7 @@
     <router-view />
   </main>
 
-  <the-footer class="px-2" />
+  <the-footer />
 </template>
 
 <script setup lang="ts">

@@ -12,7 +12,7 @@
     <div class="p-1 sm:p-2 flex gap-2 flex-col justify-between">
       <div class="sm:space-y-1">
         <h2
-          class="hover:text-green-500 line-clamp-2 transition duration-200 text-xl sm:text-2xl"
+          class="hover:text-green-500 text-gray-700 line-clamp-2 transition duration-200 text-xl sm:text-2xl"
         >
           {{ title }}
         </h2>

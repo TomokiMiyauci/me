@@ -97,7 +97,7 @@ const config = defineConfig({
     }),
     Markdown({
       wrapperComponent: 'markdown-resolver',
-      wrapperClasses: 'prose m-auto min',
+      wrapperClasses: 'prose m-auto dark:prose-dark min',
       headEnabled: true,
       markdownItSetup: (md) => {
         md.use(Prism)

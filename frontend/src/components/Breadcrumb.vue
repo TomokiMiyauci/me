@@ -3,12 +3,12 @@
     <li
       v-for="({ to, text, home }, index) in breadcumb"
       :key="to"
-      class="inline"
+      class="inline dark:text-gray-100"
     >
       <router-link
         class="hover:text-green-400 transition duration-200"
         :to="to"
-        active-class="hover:text-white"
+        active-class="hover:text-gray-800 dark:hover:text-white"
       >
         <mdi-home v-if="home" />
         {{ text }}

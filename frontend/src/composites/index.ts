@@ -38,4 +38,8 @@ const useLocalePath = (): {
   }
 }
 
-export { useLocalePath }
+import { useDark } from '@vueuse/core'
+
+const isDark = useDark()
+
+export { isDark, useLocalePath }

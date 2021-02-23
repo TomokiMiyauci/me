@@ -1,15 +1,8 @@
 <template>
   <div
-    class="px-2 py-4 pt-8 dark:shadow-2xl bg-gradient-to-b dark:via-green-400 via-gray-300 from-white dark:from-gray-700 dark:to-green-400 to-white"
+    class="px-2 pt-2 pb-4 xl:pb-12 dark:shadow-2xl bg-gradient-to-b via-gray-300 from-white dark:from-gray-700 dark:to-gray-700 dark:via-teal-700 to-white"
   >
-    <div class="container xl:px-24 mx-auto dark:text-gray-100 text-gray-800">
-      <!-- <router-link to="/ja/posts">
-        <button
-          class="shadow flex items-center rounded-full p-2 focus:ring-2 hover:bg-gray-50 transition duration-200 focus:outline-none"
-        >
-          <mdi-chevron-left class="w-7 h-7" />
-        </button>
-      </router-link> -->
+    <div class="container xl:px-24 mx-auto text-gray-800">
       <breadcrumb class="mb-4" :breadcumb="breadcrumbList" />
 
       <h1
@@ -18,12 +11,14 @@
         {{ title }}
       </h1>
 
-      <p class="xl:mt-16 xl:px-32 xl:text-3xl">
+      <p
+        class="xl:mt-10 text-gray-600 dark:text-gray-100 sm:text-xl md:text-2xl xl:text-3xl"
+      >
         {{ description }}
       </p>
 
       <p
-        class="flex mx-auto justify-center gap-4 dark:text-gray-100 text-gray-800 mt-4 prose"
+        class="flex mx-auto justify-center gap-4 dark:text-gray-100 text-gray-800 my-3 sm:mt-4 prose"
       >
         <span class="inline-flex gap-2 items-center"
           ><mdi-cached /> {{ date.toLocaleDateString() }}</span
@@ -33,14 +28,14 @@
         </span>
       </p>
       <img
-        class="rounded mx-auto mt-6 shadow hover:shadow-md transition-shadow duration-200"
+        class="rounded mx-auto shadow hover:shadow-xl transition-shadow duration-200"
         alt="icatch"
         :src="icatch"
       />
     </div>
   </div>
   <div
-    class="px-2 xl:flex xl:gap-16 2xl:gap-48 flex-row mx-auto mt-10"
+    class="px-2 dark:text-white xl:flex xl:gap-16 2xl:gap-48 flex-row mx-auto mt-10"
     style="max-width: 65ch"
   >
     <slot />
@@ -49,8 +44,10 @@
     </div>
   </div>
 
-  <div class="mx-auto mt-10" style="max-width: 65ch">
-    <h3 class="text-2xl px-2 mb-4 sm:mb-8 font-bold capitalize">
+  <div style="max-width: 65ch" class="px-2 mx-auto">
+    <h3
+      class="text-2xl dark:text-gray-700 mt-10 mb-4 sm:mb-8 font-bold capitalize"
+    >
       {{ t('title') }}
     </h3>
     <article-headline
