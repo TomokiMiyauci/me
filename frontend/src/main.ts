@@ -7,6 +7,7 @@ import { ViteSSG } from 'vite-ssg'
 import { RouterScrollBehavior } from 'vue-router'
 
 import App from '@/App.vue'
+import clarity from '@/plugins/clarity'
 import GlobalRegister from '@/plugins/global-register'
 import i18n from '@/plugins/i18n'
 const scrollBehavior: RouterScrollBehavior = (_, __, savedPosition) => {
@@ -21,6 +22,7 @@ export const createApp = ViteSSG(
     app.use(GlobalRegister).use(i18n)
 
     if (isClient) {
+      app.use(clarity)
       router.beforeEach(() => {
         NProgress.start()
       })
