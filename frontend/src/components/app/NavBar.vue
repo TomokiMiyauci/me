@@ -7,10 +7,15 @@
         miyauci.me
       </router-link>
 
-      <span>
+      <span class="space-x-4 flex items-center">
+        <router-link
+          :to="localePath('/posts')"
+          class="text-xl sm:text-2xl capitalize"
+          >{{ t('blog') }}</router-link
+        >
         <select
           v-model="locale"
-          class="mr-3 dark:text-gray-700 rounded p-2 uppercase cursor-pointer focus:outline-none focus:ring-1"
+          class="mr-3 dark:text-gray-700 p-2 rounded uppercase cursor-pointer focus:outline-none focus:ring-2"
         >
           <option
             v-for="locale in availableLocales"
@@ -20,11 +25,15 @@
             {{ locale }}
           </option>
         </select>
-        <router-link
-          :to="localePath('/posts')"
-          class="text-xl sm:text-2xl capitalize"
-          >{{ t('blog') }}</router-link
+
+        <button
+          class="outline-none focus:outline-none rounded p-1 transition duration-200 focus:ring-2"
+          title="Toggle Color Scheme"
+          @click="toggleDark"
         >
+          <ri-moon-line v-show="isDark" />
+          <ri-sun-line v-show="!isDark" />
+        </button>
       </span>
     </div>
   </header>
@@ -36,7 +45,11 @@ import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
+import { isDark } from '@/composites'
 import { resolve } from '@/functions/resolver'
+const toggleDark = () => {
+  isDark.value = !isDark.value
+}
 // import { isStartWithSlash, startWith } from '@/functions/utils'
 const { locale, availableLocales, t } = useI18n()
 const localePath = (path: string) => {
