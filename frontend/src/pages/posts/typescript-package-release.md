@@ -12,7 +12,8 @@ icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1605456609/typescript
 ## Introduction
 
 I will show you how to expose Node.js packages written in Typescript to the NPM registry.
-I will walk you through the process of publishing a generic package, assuming `tsc` as the compiler and `CommonJS` as the target.
+I will walk you through the process of publishing a generic package,
+assuming `tsc` as the compiler and `CommonJS` as the target.
 
 This article is especially recommended for the following people.
 
@@ -211,7 +212,8 @@ After the package has been successfully published, let's install the published p
 yarn add <package-name>
 ```
 
-You can import them by `import` or `require` like normal packages. Depending on the editor, type information may also be shown.
+You can import them by `import` or `require` like normal packages.
+Depending on the editor, type information may also be shown.
 
 Also, if you check the installed package from node_modules, you will see the following information.
 
