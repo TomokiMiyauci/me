@@ -18,13 +18,13 @@
       </p>
 
       <p
-        class="flex mx-auto justify-center gap-4 dark:text-gray-100 text-gray-800 my-3 sm:mt-4 prose"
+        class="flex mx-auto justify-center space-x-4 dark:text-gray-100 text-gray-800 my-3 sm:mt-4 prose"
       >
-        <span class="inline-flex gap-2 items-center"
-          ><mdi-cached /> {{ date.toLocaleDateString() }}</span
-        >
-        <span class="inline-flex gap-2 items-center">
-          <mdi-timer-sand /><span>{{ readingTime.minutes }}{{ t('min') }}</span>
+        <span><mdi-cached class="mr-2" /> {{ date.toLocaleDateString() }}</span>
+        <span>
+          <mdi-timer-sand class="mr-2" /><span
+            >{{ readingTime.minutes }}{{ t('min') }}</span
+          >
         </span>
       </p>
       <img
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div
-    class="px-2 dark:text-white xl:flex xl:gap-16 2xl:gap-48 flex-row mx-auto mt-10"
+    class="px-2 dark:text-white xl:flex xl:space-x-14 2xl:space-x-48 flex-row mx-auto mt-10"
     style="max-width: 65ch"
   >
     <slot />

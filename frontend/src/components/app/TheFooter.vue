@@ -3,14 +3,14 @@
     class="px-2 py-12 bg-gradient-to-b from-white via-gray-200 to-gray-400"
   >
     <div
-      class="m-auto container sm:px-6 flex-col-reverse items-center md:flex-row flex gap-3 md:justify-between"
+      class="m-auto container sm:px-6 flex-col-reverse items-center md:flex-row flex md:justify-between"
     >
       <span class="text-sm text-gray-600">
         {{ new Date().getFullYear() }} ©Tomoki Miyauchi</span
       >
 
       <div
-        class="flex flex-col text-gray-600 md:flex-row md:gap-7 items-center gap-3"
+        class="flex flex-col text-gray-600 md:flex-row items-center md:space-x-7"
       >
         <router-link :to="localePath(currentRoute.path, switchedLocale)">
           <emojione-flag-for-united-kingdom
@@ -19,7 +19,7 @@
           />
           <emojione-flag-for-japan v-else class="w-8 h-8" />
         </router-link>
-        <div class="space-x-3">
+        <div class="my-4 space-x-4">
           <a
             href="https://www.npmjs.com/~miyauci"
             target="_brank"
