@@ -82,6 +82,7 @@ import Toc from '@/components/Toc.vue'
 import type { Locale } from '@/constants'
 import { DOMAIN } from '@/constants'
 import { resolve } from '@/functions/resolver'
+import { useFragmentObserver } from '@/functions/side-effects/fragment-observer'
 const { t, locale } = useI18n()
 const { meta, path, fullPath } = useRoute()
 
@@ -94,6 +95,8 @@ const root = resolve({ path: '/', routes }, locale.value as Locale)
 const rootURL = urlJoin(DOMAIN, root)
 const blog = resolve({ path: '/posts', routes }, locale.value as Locale)
 const blogURL = urlJoin(DOMAIN, blog)
+
+useFragmentObserver('h2 > a, h3 > a, h4 > a')
 
 const {
   title,
