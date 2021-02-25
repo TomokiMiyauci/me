@@ -16,6 +16,7 @@
   "dependencies": {
     "@kahirokunn/ts-curry": "^1.0.3",
     "@vueuse/core": "^4.2.1",
+    "@vueuse/head": "^0.3.1",
     "nprogress": "^0.2.0",
     "prism-theme-vars": "^0.1.4",
     "vue": "^3.0.5",
@@ -72,7 +73,7 @@
     "vite-plugin-md": "^0.5.1",
     "vite-plugin-pages": "^0.4.4",
     "vite-plugin-pwa": "^0.5.2",
-    "vite-plugin-windicss": "^0.4.3",
+    "vite-plugin-windicss": "^0.5.0",
     "vite-ssg": "^0.8.9",
     "vite-svg-loader": "^1.4.2"
   },
