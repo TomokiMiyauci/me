@@ -85,16 +85,18 @@ import { resolve } from '@/functions/resolver'
 import { useFragmentObserver } from '@/functions/side-effects/fragment-observer'
 const { t, locale } = useI18n()
 const { meta, path, fullPath } = useRoute()
+const domain = import.meta.env.PROD ? DOMAIN : 'http://localhost:3000'
 
 import { useHead } from '@vueuse/head'
-const url = urlJoin(DOMAIN, path)
+
+const url = urlJoin(domain, path)
 const en = resolve({ path, routes }, 'en')
 const ja = resolve({ path, routes }, 'ja')
 
 const root = resolve({ path: '/', routes }, locale.value as Locale)
-const rootURL = urlJoin(DOMAIN, root)
+const rootURL = urlJoin(domain, root)
 const blog = resolve({ path: '/posts', routes }, locale.value as Locale)
-const blogURL = urlJoin(DOMAIN, blog)
+const blogURL = urlJoin(domain, blog)
 
 useFragmentObserver('h2 > a, h3 > a, h4 > a')
 
@@ -133,7 +135,7 @@ const richText = {
       '@type': 'ListItem',
       position: 3,
       name: title,
-      item: urlJoin(DOMAIN, fullPath)
+      item: urlJoin(domain, fullPath)
     }
   ]
 }
@@ -156,17 +158,17 @@ useHead({
     {
       rel: 'alternate',
       hreflang: 'en',
-      href: `${DOMAIN}${en}`
+      href: urlJoin(domain, en)
     },
     {
       rel: 'alternate',
       hreflang: 'ja',
-      href: `${DOMAIN}${ja}`
+      href: urlJoin(domain, ja)
     },
     {
       rel: 'alternate',
       hreflang: 'x-default',
-      href: `${DOMAIN}${en}`
+      href: urlJoin(domain, en)
     }
   ],
   script: [

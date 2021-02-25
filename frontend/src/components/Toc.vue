@@ -10,13 +10,14 @@
         class="hover:translate-x-2 delay-100 transform transition duration-200"
         :class="{ 'ml-4': depth === 3, 'ml-8': depth === 4 }"
       >
-        <a :href="`${url}${hash}`">{{ title }}</a>
+        <a :href="urlJoin(url, hash)">{{ title }}</a>
       </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import urlJoin from 'url-join'
 import { defineProps } from 'vue'
 import { useI18n } from 'vue-i18n'
 
