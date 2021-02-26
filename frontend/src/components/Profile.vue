@@ -56,7 +56,7 @@ const { locale, t } = useI18n()
 const jaPath = 'https://miyauchi.dev/ja'
 const enPath = 'https://miyauchi.dev'
 
-const content = locale.value === 'ja' ? jaPath : enPath
+const href = locale.value === 'ja' ? jaPath : enPath
 
 const { meta } = useRoute()
 useHead({
@@ -65,7 +65,7 @@ useHead({
   link: [
     {
       ref: 'canonical',
-      content
+      href
     },
     {
       ref: 'alternate',

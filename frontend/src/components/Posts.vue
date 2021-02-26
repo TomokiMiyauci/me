@@ -43,7 +43,7 @@ const posts = computed(() => getRoutes().filter(filterPosts))
 const jaPath = 'https://miyauchi.dev/ja/posts'
 const enPath = 'https://miyauchi.dev/posts'
 const title = `${t('blog')} | Tomoki Miyauchi`
-const content = locale.value === 'ja' ? jaPath : enPath
+const href = locale.value === 'ja' ? jaPath : enPath
 useHead({
   title,
   meta: [
@@ -56,7 +56,7 @@ useHead({
   link: [
     {
       ref: 'canonical',
-      content
+      href
     },
     {
       ref: 'alternate',
