@@ -11,12 +11,23 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 import NavBar from '@/components/app/NavBar.vue'
 import TheFooter from '@/components/app/TheFooter.vue'
 const { locale } = useI18n()
+
+const { currentRoute } = useRouter()
+if (currentRoute.value.path.startsWith('/ja')) {
+  if (locale.value !== 'ja') {
+    locale.value = 'ja'
+  }
+} else if (locale.value !== 'en') {
+  locale.value = 'en'
+}
+
 useHead({
-  htmlAttrs: [{ lang: locale }],
+  htmlAttrs: [{ lang: locale.value === 'ja' ? 'ja' : 'en' }],
   meta: [
     { name: 'author', content: 'Tomoki Miyauchi' },
     { name: 'copyright', content: '2021 ©Tomoki Miyauchi' },

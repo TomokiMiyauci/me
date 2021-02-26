@@ -28,14 +28,6 @@ export const createApp = ViteSSG(
       })
 
       router.afterEach(() => {
-        if (router.currentRoute.value.path.startsWith('/ja')) {
-          if (i18n.global.locale.value !== 'ja') {
-            i18n.global.locale.value = 'ja'
-          }
-        } else if (i18n.global.locale.value !== 'en') {
-          i18n.global.locale.value = 'en'
-        }
-
         NProgress.done()
       })
     }
