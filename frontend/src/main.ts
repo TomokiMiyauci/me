@@ -10,6 +10,7 @@ import App from '@/App.vue'
 import clarity from '@/plugins/clarity'
 import GlobalRegister from '@/plugins/global-register'
 import i18n from '@/plugins/i18n'
+
 const scrollBehavior: RouterScrollBehavior = (_, __, savedPosition) => {
   if (savedPosition) return savedPosition
   else return { top: 0 }

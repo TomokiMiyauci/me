@@ -47,17 +47,19 @@ import { useRouter } from 'vue-router'
 
 import { isDark } from '@/composites'
 import { resolve } from '@/functions/resolver'
+import i18n from '@/plugins/i18n'
 const toggleDark = () => {
   isDark.value = !isDark.value
 }
-// import { isStartWithSlash, startWith } from '@/functions/utils'
+import { useHead } from '@vueuse/head'
+
 const { locale, availableLocales, t } = useI18n()
 const localePath = (path: string) => {
   return resolve({ path, routes }, locale.value as 'ja' | 'en')
 }
 const { replace, currentRoute, getRoutes } = useRouter()
-
 watch(locale, (now) => {
+  i18n.global.locale.value = now
   const path = resolve(
     {
       path: currentRoute.value.path,
@@ -66,6 +68,10 @@ watch(locale, (now) => {
     now as any
   )
   replace(path)
+})
+
+useHead({
+  htmlAttrs: [{ lang: locale }]
 })
 </script>
 

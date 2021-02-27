@@ -27,7 +27,7 @@ const useLocalePath = (): {
       }
 
       default: {
-        return 'ja'
+        return 'en'
       }
     }
   })
