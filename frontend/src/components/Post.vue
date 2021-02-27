@@ -132,9 +132,7 @@ const richResult = jsonld({
       name: title,
       url: urlJoin(domain, fullPath)
     }
-  ]
-})
-const rechResult2 = jsonld({
+  ],
   blogPosting: {
     headline: title,
     description,
@@ -185,10 +183,6 @@ useHead({
     {
       type: 'application/ld+json',
       children: JSON.stringify(richResult)
-    },
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(rechResult2)
     }
   ]
 })
