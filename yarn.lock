@@ -5261,7 +5261,7 @@ esbuild-register@^2.0.0:
     source-map-support "^0.5.19"
     strip-json-comments "^3.1.1"
 
-esbuild@^0.8.47, esbuild@^0.8.52:
+esbuild@^0.8.52:
   version "0.8.52"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.8.52.tgz#6dabf11c517af449a96d66da20dfc204ee7b5294"
   integrity sha512-b5KzFweLLXoXQwdC/e2+Z80c8uo2M5MgP7yQEEebkFw6In4T9CvYcNoM2ElvJt8ByO04zAZUV0fZkXmXoi2s9A==
@@ -8257,11 +8257,6 @@ markdown-it-prism@^2.1.4:
   dependencies:
     prismjs "1.23.0"
 
-markdown-it-table-of-contents@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/markdown-it-table-of-contents/-/markdown-it-table-of-contents-0.5.2.tgz#2f941d386c277887910f2c7a8a16f5a17acb829c"
-  integrity sha512-6o+rxSwzXmXCUn1n8QGTSpgbcnHBG6lUU8x7A5Cssuq5vbfzTfitfGPvQ5PZkp+gP1NGS/DR2rkYqJPn0rbZ1A==
-
 markdown-it@12.0.2:
   version "12.0.2"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.0.2.tgz#4401beae8df8aa2221fc6565a7188e60a06ef0ed"
@@ -11001,17 +10996,10 @@ rollup-plugin-terser@^7.0.0:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup@^2.25.0:
+rollup@^2.25.0, rollup@^2.38.5:
   version "2.40.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.40.0.tgz#efc218eaede7ab590954df50f96195188999c304"
   integrity sha512-WiOGAPbXoHu+TOz6hyYUxIksOwsY/21TRWoO593jgYt8mvYafYqQl+axaA8y1z2HFazNUUrsMSjahV2A6/2R9A==
-  optionalDependencies:
-    fsevents "~2.3.1"
-
-rollup@^2.38.5:
-  version "2.39.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.39.1.tgz#7afd4cefd8a332c5102a8063d301fde1f31a9173"
-  integrity sha512-9rfr0Z6j+vE+eayfNVFr1KZ+k+jiUl2+0e4quZafy1x6SFCjzFspfRSO2ZZQeWeX9noeDTUDgg6eCENiEPFvQg==
   optionalDependencies:
     fsevents "~2.3.1"
 
@@ -12796,11 +12784,11 @@ vite-svg-loader@^1.4.2:
     "@vue/compiler-sfc" "^3.0.5"
 
 vite@^2.0.0-beta.60:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.0.3.tgz#ea0329295d4da9341e670036e5e7f0bfa30ae2cf"
-  integrity sha512-4CUm3FVUHyTSSSK6vHWkj3SVkP+GGNNzwYcFsHOjjc8xQ3BPjJa1JDDmFlYxpxR29ANa+7RWptYPoyHyJ29Nhw==
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.0.4.tgz#063532a4139b59a067297d8ebb5960d450907a09"
+  integrity sha512-+PP89D7AKXFE4gps8c5+4eP5yXTh5qCogjdYX7iSsIxbLZAa26JoGSq6OLk0qdb/fqDh7gtJqGiLbG2V6NvkKQ==
   dependencies:
-    esbuild "^0.8.47"
+    esbuild "^0.8.52"
     postcss "^8.2.1"
     resolve "^1.19.0"
     rollup "^2.38.5"

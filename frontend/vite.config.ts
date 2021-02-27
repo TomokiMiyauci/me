@@ -5,7 +5,6 @@ import matter from 'gray-matter'
 import anchor from 'markdown-it-anchor'
 import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
-import tableOfContents from 'markdown-it-table-of-contents'
 import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
 import { defineConfig } from 'vite'
@@ -103,10 +102,7 @@ const config = defineConfig({
         md.use(Prism)
         md.use(namedCodeBlocks, { isEnableInlineCss: true })
         md.use(emoji)
-        md.use(tableOfContents, {
-          includeLevel: [2, 3],
-          containerHeaderHtml: '<div class="p-2">目次</div>'
-        })
+
         md.use(anchor, {
           permalink: true,
           permalinkBefore: true,
