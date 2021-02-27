@@ -15,7 +15,7 @@ import { useRouter } from 'vue-router'
 
 import NavBar from '@/components/app/NavBar.vue'
 import TheFooter from '@/components/app/TheFooter.vue'
-import { DOMAIN } from '@/constants'
+import { AUTHOR, COPYRIGHT, DOMAIN } from '@/constants'
 import { jsonld } from '@/packages/jsonld'
 import i18n from '@/plugins/i18n'
 const { currentRoute } = useRouter()
@@ -29,11 +29,11 @@ if (currentRoute.value.path.startsWith('/ja')) {
 
 useHead({
   meta: [
-    { name: 'author', content: 'Tomoki Miyauchi' },
-    { name: 'copyright', content: '2021 ©Tomoki Miyauchi' },
-    { property: 'og:title', content: 'Tomoki Miyauchi' },
+    { name: 'author', content: AUTHOR },
+    { name: 'copyright', content: COPYRIGHT },
+    { property: 'og:title', content: AUTHOR },
     { property: 'og:description', content: "Tomoki Miyauchi's Portfolio" },
-    { property: 'og:image', content: 'https://miyauchi.dev/logo.png' },
+    { property: 'og:image', content: urlJoin(DOMAIN, 'logo.png') },
     { property: 'og:site_name', content: "Tomoki Miyauchi's Portfolio" },
     { name: 'twitter:card', content: 'summary' },
     { name: 'twitter:site', content: '@miyauchi_tomoki' }
