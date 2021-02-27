@@ -83,6 +83,7 @@ import type { Locale } from '@/constants'
 import { DOMAIN } from '@/constants'
 import { resolve } from '@/functions/resolver'
 import { useFragmentObserver } from '@/functions/side-effects/fragment-observer'
+import { jsonld } from '@/packages/jsonld'
 const { t, locale } = useI18n()
 const { meta, path, fullPath } = useRoute()
 const domain = import.meta.env.PROD ? DOMAIN : 'http://localhost:3000'
@@ -115,30 +116,23 @@ const breadcrumbList = [
   { to: blog, text: t('blog') },
   { to: fullPath, text: title }
 ]
-const richText = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
+
+const richResult = jsonld({
+  breadcrumb: [
     {
-      '@type': 'ListItem',
-      position: 1,
       name: t('home'),
-      item: rootURL
+      url: rootURL
     },
     {
-      '@type': 'ListItem',
-      position: 2,
       name: t('blog'),
-      item: blogURL
+      url: blogURL
     },
     {
-      '@type': 'ListItem',
-      position: 3,
       name: title,
-      item: urlJoin(domain, fullPath)
+      url: urlJoin(domain, fullPath)
     }
   ]
-}
+})
 useHead({
   meta: [
     { property: 'og:image', content: icatch },
@@ -174,7 +168,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify(richText)
+      children: JSON.stringify(richResult)
     }
   ]
 })
