@@ -34,6 +34,15 @@
           <ri-moon-line v-show="isDark" />
           <ri-sun-line v-show="!isDark" />
         </button>
+
+        <a
+          :href="'feed.xml'"
+          target="_blank"
+          title="RSS"
+          class="hidden md:block hover:text-orange-400 transition-colors duration-200"
+        >
+          <la-rss-square class="w-6 h-6" />
+        </a>
       </span>
     </div>
   </header>
