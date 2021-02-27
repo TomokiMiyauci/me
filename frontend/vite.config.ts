@@ -75,13 +75,15 @@ const config = defineConfig({
         const toc = getToc(md)
 
         const { data, content } = matter(md)
+        const { birthtime, ctime } = statSync(path)
         const frontmatter = {
           ...data,
           toc,
           next,
           prev,
           readingTime: readtime(content, 200),
-          updatedAt: statSync(path).ctime
+          publishedAt: birthtime,
+          updatedAt: ctime
         }
         route.meta = Object.assign(meta || {}, { frontmatter })
         if (route.name === '404') {

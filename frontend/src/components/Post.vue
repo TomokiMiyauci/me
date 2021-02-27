@@ -80,7 +80,7 @@ import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import Toc from '@/components/Toc.vue'
 import type { Locale } from '@/constants'
-import { DOMAIN } from '@/constants'
+import { AUTHOR, DOMAIN } from '@/constants'
 import { resolve } from '@/functions/resolver'
 import { useFragmentObserver } from '@/functions/side-effects/fragment-observer'
 import { jsonld } from '@/packages/jsonld'
@@ -107,6 +107,7 @@ const {
   icatch,
   readingTime,
   toc,
+  publishedAt,
   updatedAt,
   next,
   prev
@@ -131,7 +132,20 @@ const richResult = jsonld({
       name: title,
       url: urlJoin(domain, fullPath)
     }
-  ]
+  ],
+  blogPosting: {
+    headline: title,
+    description,
+    author: AUTHOR,
+    canonicalUrl: url,
+    image: [icatch],
+    datePublished: new Date(Date.parse(publishedAt)),
+    dateModified: new Date(Date.parse(updatedAt)),
+    publisher: {
+      name: 'TM Blog',
+      logoUrl: urlJoin(DOMAIN, 'logo.png')
+    }
+  }
 })
 useHead({
   meta: [
