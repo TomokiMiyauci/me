@@ -8,6 +8,7 @@ import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
+import analyze from 'rollup-plugin-analyzer'
 import { defineConfig } from 'vite'
 import Components from 'vite-plugin-components'
 import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
@@ -22,7 +23,8 @@ import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
 
 const cl = new Cloudinary({
-  cloud_name: 'dz3vsv9pg'
+  cloud_name: 'dz3vsv9pg',
+  secure: true
 })
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
