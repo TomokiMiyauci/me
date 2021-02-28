@@ -28,7 +28,9 @@
         </span>
       </p>
       <img
-        class="rounded mx-auto shadow hover:shadow-xl transition-shadow duration-200"
+        width="100%"
+        loading="lazy"
+        class="rounded mx-auto w-full shadow hover:shadow-xl transition-shadow duration-200"
         alt="icatch"
         :src="icatch"
       />
