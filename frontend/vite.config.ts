@@ -1,5 +1,6 @@
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import vue from '@vitejs/plugin-vue'
+import { Cloudinary } from 'cloudinary-core'
 import { readFileSync, statSync } from 'fs'
 import matter from 'gray-matter'
 import anchor from 'markdown-it-anchor'
@@ -20,6 +21,9 @@ import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
 
+const cl = new Cloudinary({
+  cloud_name: 'dz3vsv9pg'
+})
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -75,9 +79,14 @@ const config = defineConfig({
         const toc = getToc(md)
 
         const { data, content } = matter(md)
+        const icatch = cl.url(data.icatch, {
+          width: 1280,
+          crop: 'fill'
+        })
         const { birthtime, ctime } = statSync(path)
         const frontmatter = {
           ...data,
+          icatch,
           toc,
           next,
           prev,
@@ -115,12 +124,7 @@ const config = defineConfig({
     }),
     ViteIcons(),
     VitePWA()
-  ],
-  build: {
-    rollupOptions: {
-      external: ['cloudinary-core']
-    }
-  }
+  ]
 })
 
 export default config

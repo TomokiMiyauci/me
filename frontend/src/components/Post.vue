@@ -33,7 +33,7 @@
         loading="lazy"
         class="rounded mx-auto w-full shadow hover:shadow-xl transition-shadow duration-200"
         alt="icatch"
-        :src="src"
+        :src="icatch"
       />
     </div>
   </div>
@@ -94,9 +94,6 @@ import { useHead } from '@vueuse/head'
 const url = baseUrlJoin(path)
 const en = resolve({ path, routes }, 'en')
 const ja = resolve({ path, routes }, 'ja')
-const cl = new Cloudinary({
-  cloud_name: 'dz3vsv9pg'
-})
 
 const root = resolve({ path: '/', routes }, locale.value as Locale)
 const rootURL = baseUrlJoin(root)
@@ -121,11 +118,6 @@ const breadcrumbList = [
   { to: blog, text: t('blog') },
   { to: fullPath, text: title }
 ]
-
-const src = cl.url(icatch, {
-  width: 1280,
-  crop: 'fill'
-})
 
 const richResult = jsonld({
   breadcrumb: [
