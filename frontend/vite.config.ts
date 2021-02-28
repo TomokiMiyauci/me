@@ -6,8 +6,7 @@ import matter from 'gray-matter'
 import anchor from 'markdown-it-anchor'
 import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
-import { join, resolve } from 'path'
-import { parse } from 'path'
+import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
 import { defineConfig } from 'vite'
 import Components from 'vite-plugin-components'
@@ -18,6 +17,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import WindiCSS from 'vite-plugin-windicss'
 import svgLoader from 'vite-svg-loader'
 
+import { url2PublicId } from './src/functions/cloudinary'
 import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
@@ -132,6 +132,11 @@ const config = defineConfig({
           }
         md.renderer.rules.image = (tokens, idx, options, env, self) => {
           tokens[idx].attrPush(['loading', 'lazy'])
+          const publicId = url2PublicId(tokens[idx].attrGet('src'))
+          const srcset = getSrcset(publicId, [256, 512, 768, 1024, 1280])
+          tokens[idx].attrPush(['srcset', srcset])
+          tokens[idx].attrPush(['sizes', '(max-width: 30em) 30em, 100vw'])
+
           return defaultRender(tokens, idx, options, env, self)
         }
 
