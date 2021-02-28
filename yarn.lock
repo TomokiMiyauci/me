@@ -1287,9 +1287,9 @@
   integrity sha512-LFelJDOLZ6JHlmlAkgrvmcu4hpNPB91KYcr4f60D/exzU1eNOb4/KCVHIydGHIQFaOacIOD+Xy+B7P1z812cZg==
 
 "@iconify/json@^1.1.294":
-  version "1.1.309"
-  resolved "https://registry.yarnpkg.com/@iconify/json/-/json-1.1.309.tgz#262c87466050f61435ebc565fe4149b3c943d657"
-  integrity sha512-L9556ireR0vOEcrIc54AJpwhts+T4YKArkB5NkxQCMk5b4Rc9+DviglggXByaR2ryqyRZT1/cv1AD/xJtQBQ6g==
+  version "1.1.310"
+  resolved "https://registry.yarnpkg.com/@iconify/json/-/json-1.1.310.tgz#4180cfdafbf4e218b8f78abae3434089bcb6ccf6"
+  integrity sha512-gLCuqulJPC2ly3upqPILOA1nV2fYfb99Dx64hLvneUb0r22opL+TfMfl352AjSZTFMGKV6ve8pNSAOS5gvY3vg==
 
 "@intlify/cli@^0.2.0":
   version "0.2.0"
@@ -3270,11 +3270,11 @@
     vscode-uri "^2.1.2"
 
 "@vueuse/core@^4.2.1":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-4.3.0.tgz#409d1c8fc0b7fffcf5b5388dfc487762bb936b0c"
-  integrity sha512-PQ3r6wZDCN3pY+UBB5NLQdRfwiasd8MmWppuzpvNE2Sr8T48gmWXDWw3GG4EHMXnuz5EBfQG+U+1TjSaGaK6/w==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-4.3.1.tgz#f6fdb2afef6acbe59abb9832d0a7cfa01e65ce36"
+  integrity sha512-/UkL83zSkE1qb1aqidSjUxADB9ggRnchXe5CliqAb5Ak7Rt9IfdUC4zfvvAtwlIgNvT1Fo9YCtgRma4H2TVLEQ==
   dependencies:
-    "@vueuse/shared" "4.3.0"
+    "@vueuse/shared" "4.3.1"
     vue-demi latest
 
 "@vueuse/head@^0.3.1":
@@ -3282,10 +3282,10 @@
   resolved "https://registry.yarnpkg.com/@vueuse/head/-/head-0.3.1.tgz#bf09415c2a4ae5ab6a9686acdf14398ef5302414"
   integrity sha512-SaKib18YjFLrErxHYDxLXsBBY4/Q93b6rYer8WRMaRSBqotmZYGEBaoRURhtVYfneBf5dX9O9P3EdjkSn+gL0g==
 
-"@vueuse/shared@4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-4.3.0.tgz#82e05dc2941642814ac6fcbb5f9076c38c052968"
-  integrity sha512-udc1ADIYwizTK/iSfjZQj6+QDFM099oHuX0Sj/yv0NgE9eSODcesV4zO7PtvmJanzw43hCdvtdGBz8miyRkHCQ==
+"@vueuse/shared@4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-4.3.1.tgz#6f0f6c82f096ca329d9541d6f37f29a2d19dd107"
+  integrity sha512-K2F+z16BqcOtEp/pJEK7cPvOMsgBChGGfx0UAatXt8Awk+b4Vi6L6//KclAV1N7w+e9u2kJlC1Ld8GqdY5ZxRg==
   dependencies:
     vue-demi latest
 
