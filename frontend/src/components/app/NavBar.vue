@@ -36,7 +36,7 @@
         </button>
 
         <a
-          :href="'feed.xml'"
+          :href="'/feed.xml'"
           target="_blank"
           title="RSS"
           class="hidden md:block hover:text-orange-400 transition-colors duration-200"
