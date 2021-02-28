@@ -1,8 +1,7 @@
 import urlJoin from 'url-join'
 
-export const DOMAIN = import.meta.env.PROD
-  ? 'https://miyauchi.dev'
-  : 'http://localhost:3000'
+const _prod = (import.meta as any).env ? (import.meta as any).env.PROD : true
+export const DOMAIN = _prod ? 'https://miyauchi.dev' : 'http://localhost'
 export const baseUrlJoin = (...parts: string[]): string =>
   urlJoin(DOMAIN, ...parts)
 export const AUTHOR = 'Tomoki Miyauchi'
