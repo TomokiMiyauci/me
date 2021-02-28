@@ -33,6 +33,7 @@
         loading="lazy"
         class="rounded mx-auto w-full shadow hover:shadow-xl transition-shadow duration-200"
         alt="icatch"
+        :srcset="srcset"
         :src="icatch"
       />
     </div>
@@ -74,7 +75,6 @@
 </template>
 
 <script setup lang="ts">
-import { Cloudinary } from 'cloudinary-core'
 import routes from 'pages-generated'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -111,7 +111,8 @@ const {
   publishedAt,
   updatedAt,
   next,
-  prev
+  prev,
+  srcset
 } = meta.frontmatter
 const breadcrumbList = [
   { to: root, home: true },

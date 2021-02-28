@@ -8,7 +8,6 @@ import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
-import analyze from 'rollup-plugin-analyzer'
 import { defineConfig } from 'vite'
 import Components from 'vite-plugin-components'
 import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
@@ -21,6 +20,7 @@ import svgLoader from 'vite-svg-loader'
 import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
+import { getSrcset } from './src/packages/img-optimizer'
 
 const cl = new Cloudinary({
   cloud_name: 'dz3vsv9pg',
@@ -82,12 +82,19 @@ const config = defineConfig({
 
         const { data, content } = matter(md)
         const icatch = cl.url(data.icatch, {
-          width: 1280,
-          crop: 'fill'
+          width: 'auto',
+          quality: 'auto',
+          fetchFormat: 'auto'
         })
+
+        const srcset = data.icatch
+          ? getSrcset(data.icatch, [256, 512, 768, 1024, 1280])
+          : undefined
+
         const { birthtime, ctime } = statSync(path)
         const frontmatter = {
           ...data,
+          srcset,
           icatch,
           toc,
           next,
