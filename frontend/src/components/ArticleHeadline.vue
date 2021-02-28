@@ -4,8 +4,8 @@
     :to="to"
   >
     <img
-      width="100%"
-      height="100%"
+      :width="500"
+      :height="500"
       loading="lazy"
       class="w-16 h-16 m-2 sm:m-3 rounded sm:w-32 sm:h-32"
       :alt="alt"
