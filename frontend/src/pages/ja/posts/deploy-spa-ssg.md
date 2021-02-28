@@ -1,7 +1,7 @@
 ---
 title: SPAやSSGの仕組みをデプロイの観点から理解する
 description: SPAやSSGの仕組みをデプロイという観点から説明します。例としてViteで作られたVue3プロジェクトを用いて、実際にFirebase Hostingへデプロイしてみます。404ページや動的ルーティングについてもふれ、正しくデプロイする方法を学びます。
-icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/c_scale,f_auto,q_auto,w_1280/v1612603006/deploy-spa-ssg/icatch.png
+icatch: deploy-spa-ssg/icatch.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/c_scale,f_auto,q_auto,w_256/v1612608124/deploy-spa-ssg/thumbnail.png
 ---
 

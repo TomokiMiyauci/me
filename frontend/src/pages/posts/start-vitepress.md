@@ -1,7 +1,7 @@
 ---
 title: Create a document with VitePress
 description: Introduce the basic usage of VitePress,multilingual support, homepage layout, meta tag injection, custom CSS, custom component and so on.
-icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613316561/start-vitepress/icatch.png
+icatch: start-vitepress/icatch.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613247150/start-vitepress/cover.png
 ---
 

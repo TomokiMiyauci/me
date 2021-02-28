@@ -2,7 +2,7 @@
 title: どこからでもファイルダイアログを呼び出したい
 description: プログラムからファイルダイアログを呼び出し、FileListを受け取る方法を解説する
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613813117/file-dialog/thumbnail.png
-icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1603808272/file-dialog/file-dialog.png
+icatch: file-dialog/file-dialog.png
 ---
 
 ## ファイルダイアログとは
