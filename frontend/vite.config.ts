@@ -6,7 +6,8 @@ import matter from 'gray-matter'
 import anchor from 'markdown-it-anchor'
 import namedCodeBlocks from 'markdown-it-named-code-blocks'
 import Prism from 'markdown-it-prism'
-import { resolve } from 'path'
+import { join, resolve } from 'path'
+import { parse } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
 import { defineConfig } from 'vite'
 import Components from 'vite-plugin-components'
@@ -26,6 +27,7 @@ const cl = new Cloudinary({
   cloud_name: 'dz3vsv9pg',
   secure: true
 })
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
 const config = defineConfig({
@@ -123,6 +125,16 @@ const config = defineConfig({
         md.use(namedCodeBlocks, { isEnableInlineCss: true })
         md.use(emoji)
 
+        const defaultRender =
+          md.renderer.rules.image ||
+          function (tokens, idx, options, _, self) {
+            return self.renderToken(tokens, idx, options)
+          }
+        md.renderer.rules.image = (tokens, idx, options, env, self) => {
+          tokens[idx].attrPush(['loading', 'lazy'])
+          return defaultRender(tokens, idx, options, env, self)
+        }
+
         md.use(anchor, {
           permalink: true,
           permalinkBefore: true,
@@ -133,7 +145,11 @@ const config = defineConfig({
     }),
     ViteIcons(),
     VitePWA()
-  ]
+  ],
+
+  build: {
+    cssCodeSplit: false
+  }
 })
 
 export default config
