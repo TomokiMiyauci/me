@@ -5,9 +5,8 @@ import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import { parse } from 'path'
-import urlJoin from 'url-join'
 
-import { AUTHOR, COPYRIGHT, DOMAIN } from '../src/constants'
+import { AUTHOR, baseUrlJoin, COPYRIGHT, DOMAIN } from '../src/constants'
 
 const run = async () => {
   const markdown = MarkdownIt({
@@ -31,7 +30,7 @@ const run = async () => {
           ...data,
           image: data.icatch,
           date: new Date(ctimeMs),
-          link: urlJoin(DOMAIN, 'posts', parse(i).name),
+          link: baseUrlJoin('posts', parse(i).name),
           content: html,
           author: [
             {
@@ -48,13 +47,13 @@ const run = async () => {
     description: `This is Tomoki Miyauchi's personal site. You can check the activity record of Tomoki Miyauchi such as technical blog and list of projects. The site is made up of Vite and SSG and is focused on internationalization.`,
     id: DOMAIN,
     link: DOMAIN,
-    image: urlJoin(DOMAIN, 'logo.png'),
-    favicon: urlJoin(DOMAIN, 'favicon.ico'),
+    image: baseUrlJoin('logo.png'),
+    favicon: baseUrlJoin('favicon.ico'),
     copyright: COPYRIGHT,
     feedLinks: {
-      json: urlJoin(DOMAIN, 'feed.json'),
-      atom: urlJoin(DOMAIN, 'feed.atom'),
-      rss: urlJoin(DOMAIN, 'feed.xml')
+      json: baseUrlJoin('feed.json'),
+      atom: baseUrlJoin('feed.atom'),
+      rss: baseUrlJoin('feed.xml')
     },
     author: {
       name: AUTHOR,

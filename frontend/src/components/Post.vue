@@ -72,7 +72,6 @@
 
 <script setup lang="ts">
 import routes from 'pages-generated'
-import urlJoin from 'url-join'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -80,24 +79,23 @@ import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import Toc from '@/components/Toc.vue'
 import type { Locale } from '@/constants'
-import { AUTHOR, DOMAIN } from '@/constants'
+import { AUTHOR, baseUrlJoin } from '@/constants'
 import { resolve } from '@/functions/resolver'
 import { useFragmentObserver } from '@/functions/side-effects/fragment-observer'
 import { jsonld } from '@/packages/jsonld'
 const { t, locale } = useI18n()
 const { meta, path, fullPath } = useRoute()
-const domain = import.meta.env.PROD ? DOMAIN : 'http://localhost:3000'
 
 import { useHead } from '@vueuse/head'
 
-const url = urlJoin(domain, path)
+const url = baseUrlJoin(path)
 const en = resolve({ path, routes }, 'en')
 const ja = resolve({ path, routes }, 'ja')
 
 const root = resolve({ path: '/', routes }, locale.value as Locale)
-const rootURL = urlJoin(domain, root)
+const rootURL = baseUrlJoin(root)
 const blog = resolve({ path: '/posts', routes }, locale.value as Locale)
-const blogURL = urlJoin(domain, blog)
+const blogURL = baseUrlJoin(blog)
 
 useFragmentObserver('h2 > a, h3 > a, h4 > a')
 
@@ -130,7 +128,7 @@ const richResult = jsonld({
     },
     {
       name: title,
-      url: urlJoin(domain, fullPath)
+      url: baseUrlJoin(fullPath)
     }
   ],
   blogPosting: {
@@ -143,7 +141,7 @@ const richResult = jsonld({
     dateModified: new Date(Date.parse(updatedAt)),
     publisher: {
       name: 'TM Blog',
-      logoUrl: urlJoin(DOMAIN, 'logo.png')
+      logoUrl: baseUrlJoin('logo.png')
     }
   }
 })
@@ -166,17 +164,17 @@ useHead({
     {
       rel: 'alternate',
       hreflang: 'en',
-      href: urlJoin(domain, en)
+      href: baseUrlJoin(en)
     },
     {
       rel: 'alternate',
       hreflang: 'ja',
-      href: urlJoin(domain, ja)
+      href: baseUrlJoin(ja)
     },
     {
       rel: 'alternate',
       hreflang: 'x-default',
-      href: urlJoin(domain, en)
+      href: baseUrlJoin(en)
     }
   ],
   script: [

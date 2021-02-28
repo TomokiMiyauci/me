@@ -50,13 +50,13 @@ import { useRoute } from 'vue-router'
 
 import Vite from '@/assets/svgs/vite.svg'
 import { useLocalePath } from '@/composites'
+import { baseUrlJoin, DOMAIN } from '@/constants'
 const { localePath } = useLocalePath()
 const { locale, t } = useI18n()
 
-const jaPath = 'https://miyauchi.dev/ja'
-const enPath = 'https://miyauchi.dev'
+const jaPath = baseUrlJoin('ja')
 
-const href = locale.value === 'ja' ? jaPath : enPath
+const href = locale.value === 'ja' ? jaPath : DOMAIN
 
 const { meta } = useRoute()
 useHead({
@@ -70,7 +70,7 @@ useHead({
     {
       ref: 'alternate',
       hreflang: 'en',
-      href: enPath
+      href: DOMAIN
     },
     {
       ref: 'alternate',
@@ -80,7 +80,7 @@ useHead({
     {
       ref: 'alternate',
       hreflang: 'x-default',
-      href: enPath
+      href: DOMAIN
     }
   ]
 })

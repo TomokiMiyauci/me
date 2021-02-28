@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import { useHead } from '@vueuse/head'
 import routes from 'pages-generated'
-import urlJoin from 'url-join'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { RouteRecordNormalized } from 'vue-router'
@@ -31,7 +30,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import ArticleHeadline from '@/components/ArticleHeadline.vue'
 import type { Locale } from '@/constants'
-import { DOMAIN } from '@/constants'
+import { baseUrlJoin } from '@/constants'
 import { resolve } from '@/functions/resolver'
 import { isStartWithSlashJaSlash } from '@/functions/utils'
 import { jsonld } from '@/packages/jsonld'
@@ -40,7 +39,6 @@ const { locale, t } = useI18n()
 const { path } = useRoute()
 const { getRoutes } = useRouter()
 const formatDate = (val: string): Date => new Date(Date.parse(val))
-const domain = import.meta.env.PROD ? DOMAIN : 'http://localhost:3000'
 
 const lang = isStartWithSlashJaSlash(path) ? 'ja' : 'en'
 const prefix = lang === 'ja' ? '/ja/posts/' : '/posts/'
@@ -48,9 +46,9 @@ const filterPosts = ({ meta, path }: RouteRecordNormalized) =>
   path.startsWith(prefix) && meta.frontmatter
 const posts = computed(() => getRoutes().filter(filterPosts))
 const root = resolve({ path: '/', routes }, locale.value as Locale)
-const rootURL = urlJoin(domain, root)
+const rootURL = baseUrlJoin(root)
 const blog = resolve({ path: '/posts', routes }, locale.value as Locale)
-const blogURL = urlJoin(domain, blog)
+const blogURL = baseUrlJoin(blog)
 
 const richResult = jsonld({
   breadcrumb: [
@@ -65,8 +63,8 @@ const richResult = jsonld({
   ]
 })
 
-const jaPath = 'https://miyauchi.dev/ja/posts'
-const enPath = 'https://miyauchi.dev/posts'
+const jaPath = baseUrlJoin('ja', 'posts')
+const enPath = baseUrlJoin('posts')
 const title = `${t('blog')} | Tomoki Miyauchi`
 const href = locale.value === 'ja' ? jaPath : enPath
 useHead({
@@ -75,7 +73,7 @@ useHead({
     { name: 'description', content: t('description') },
     { property: 'og:title', content: title },
     { property: 'og:description', content: "Tomoki Miyauchi's Blog" },
-    { property: 'og:image', content: 'https://miyauchi.dev/logo.png' },
+    { property: 'og:image', content: baseUrlJoin('logo.png') },
     { property: 'og:site_name', content: 'TM Blog' }
   ],
   link: [
