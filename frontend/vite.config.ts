@@ -115,7 +115,12 @@ const config = defineConfig({
     }),
     ViteIcons(),
     VitePWA()
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      external: ['cloudinary-core']
+    }
+  }
 })
 
 export default config

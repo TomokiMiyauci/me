@@ -1,3 +1,4 @@
+import { Cloudinary } from 'cloudinary-core'
 import fg from 'fast-glob'
 import { Feed } from 'feed'
 import { statSync } from 'fs'
@@ -7,7 +8,9 @@ import MarkdownIt from 'markdown-it'
 import { parse } from 'path'
 
 import { AUTHOR, baseUrlJoin, COPYRIGHT, DOMAIN } from '../src/constants'
-
+const cl = new Cloudinary({
+  cloud_name: 'dz3vsv9pg'
+})
 const run = async () => {
   const markdown = MarkdownIt({
     html: true,
@@ -23,12 +26,16 @@ const run = async () => {
         const raw = await fs.readFile(i, 'utf-8')
         const { ctimeMs } = statSync(i)
         const { data, content } = matter(raw)
+        const src = cl.url(data.icatch, {
+          width: 1280,
+          crop: 'fill'
+        })
 
         const html = markdown.render(content)
 
         return {
           ...data,
-          image: data.icatch,
+          image: src,
           date: new Date(ctimeMs),
           link: baseUrlJoin('posts', parse(i).name),
           content: html,

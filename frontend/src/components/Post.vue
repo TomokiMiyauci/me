@@ -76,7 +76,6 @@
 <script setup lang="ts">
 import { Cloudinary } from 'cloudinary-core'
 import routes from 'pages-generated'
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -123,12 +122,10 @@ const breadcrumbList = [
   { to: fullPath, text: title }
 ]
 
-const src = computed(() =>
-  cl.url(icatch, {
-    width: 1280,
-    crop: 'fill'
-  })
-)
+const src = cl.url(icatch, {
+  width: 1280,
+  crop: 'fill'
+})
 
 const richResult = jsonld({
   breadcrumb: [
