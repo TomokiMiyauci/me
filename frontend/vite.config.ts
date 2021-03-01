@@ -133,9 +133,16 @@ const config = defineConfig({
         md.renderer.rules.image = (tokens, idx, options, env, self) => {
           tokens[idx].attrPush(['loading', 'lazy'])
           const publicId = url2PublicId(tokens[idx].attrGet('src'))
-          const srcset = getSrcset(publicId, [256, 512, 768, 1024, 1280])
-          tokens[idx].attrPush(['srcset', srcset])
-          tokens[idx].attrPush(['sizes', '(max-width: 30em) 30em, 100vw'])
+          // const srcset = getSrcset(publicId, [256], {
+          //   fetchFormat: undefined,
+          //   quality: undefined,
+          //   crop: undefined
+          // })
+          // tokens[idx].attrPush([
+          //   'srcset',
+          //   'https://res.cloudinary.com/dz3vsv9pg/image/upload/f_aj,fw_256/v1/start-vitepress/plain-home.png'
+          // ])
+          // tokens[idx].attrPush(['sizes', '(max-width: 30em) 30em, 100vw'])
 
           return defaultRender(tokens, idx, options, env, self)
         }
@@ -150,11 +157,7 @@ const config = defineConfig({
     }),
     ViteIcons(),
     VitePWA()
-  ],
-
-  build: {
-    cssCodeSplit: false
-  }
+  ]
 })
 
 export default config
