@@ -174,4 +174,32 @@
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts/vite-preact-typescript</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/vite-preact-typescript" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/vite-preact-typescript" />
+  <lastmod>2021-03-03</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/posts/vite-preact-typescript</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/vite-preact-typescript" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/vite-preact-typescript" />
+  <lastmod>2021-03-03</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
 </urlset>
