@@ -64,21 +64,21 @@ useHead({
   meta: [{ name: 'description', content: t('description') }],
   link: [
     {
-      ref: 'canonical',
+      rel: 'canonical',
       href
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'en',
       href: DOMAIN
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'ja',
       href: jaPath
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'x-default',
       href: DOMAIN
     }

@@ -78,21 +78,21 @@ useHead({
   ],
   link: [
     {
-      ref: 'canonical',
+      rel: 'canonical',
       href
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'en',
       href: enPath
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'ja',
       href: jaPath
     },
     {
-      ref: 'alternate',
+      rel: 'alternate',
       hreflang: 'x-default',
       href: enPath
     }
