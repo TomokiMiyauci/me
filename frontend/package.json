@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "lint:types": "vuedx-typecheck .",
     "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore .",
-    "lint:style": "stylelint src/**/*.{vue,scss}",
+    "lint:style": "stylelint src/**/*.scss",
     "lint:markdown": "markdownlint **/*.md --ignore node_modules",
     "commit": "cz"
   },
