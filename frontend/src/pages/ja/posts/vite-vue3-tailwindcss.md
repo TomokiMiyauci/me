@@ -1,0 +1,150 @@
+---
+title: ViteとVue3にTailwind CSSを導入する
+description: ViteプロジェクトでCSSフレームワークのTailwind CSSを導入する方法を紹介します。ついでに、Tailwind CSS用のStylelintのルールやVSCodeの設定をします。
+tags:
+  - Vue3
+  - tailwindcss
+  - Vite
+thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1614954463/vite-vue3-tailwindcss/thumbnail.png
+icatch: vite-vue3-tailwindcss/icatch.png
+---
+
+## はじめに
+
+Vite は No bundle 掲げており、開発時に高速な HMR を提供してくれます。
+しかし、CLI を用いたデフォルトテンプレート自体はかなりシンプルになっているため、Vite プロジェクトを始める際、他のモジュールを使うには自分で環境を構築しなければなりません。
+
+今回は Vite を使って、CSS フレームワークである Tailwind CSS の環境構築をします。
+
+なお、[こちら](https://github.com/TomokiMiyauci/vite-vue3-template)の環境をベースに説明するので、適宜参考にしてください。
+以下では Vite プロジェクトがある前提で説明します。
+
+## 環境構築
+
+まずは、Tailwind CSS モジュールをインストールし、設定ファイルを生成します。
+ついでに、`scss`や`sass`も使いたいので、それ用のモジュールもインストールします。
+
+<code-group>
+  <code-block label="Yarn" active>
+
+```bash
+yarn add -D tailwindcss sass
+yarn tailwindcss init
+```
+
+  </code-block>
+
+  <code-block label="NPM">
+
+```bash
+npm i -d tailwindcss sass
+npx tailwind init
+```
+
+  </code-block>
+</code-group>
+
+続いて、tailwind のディレクティブを注入するために、スタイルファイルを用意します。
+
+```css:src/assets/styles/tailwind.scss
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+PostCSS の設定ファイルも必要なので、プロジェクトルートに用意します。
+
+```js:postcss.config.js
+module.exports = {
+  plugins: [require('tailwindcss'), require('autoprefixer')],
+}
+```
+
+最後にスタイルファイルをエントリーポイントでインポートします。
+
+<alert>例ではパスエイリアスでパスを指定しています。各自適切なパスを設定してください。</alert>
+
+```ts:src/main.ts
+import { createApp } from 'vue'
+import App from '/@/App.vue'
+import '/@/assets/styles/main.scss'
+import '/@/assets/styles/tailwind.scss'
+
+createApp(App).mount('#app')
+```
+
+これで開発時に Utility Class を使えるようになりました。
+
+## DX を向上させる
+
+VSCode では tailwind のインテリセンスを効かせることができます。
+[こちらから](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)インストールしてください。
+
+また、VSCode ではデフォルトで`css`のバリデーションを行っているので、`unknownAtRules`が出ています。
+それを、解消するには以下のように`settings.json`に設定します。
+
+```json:.vscode/settings.json
+{
+  "scss.validate": false,
+  "css.validate": false
+}
+```
+
+Stylelint を使っている場合は、`@tailwind`や、`@apply`など tailwind 特有の構文が Stylelint のルールに引っかかることがあります。
+
+これを解消しましょう。
+
+```json:.stylelintrc
+{
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "variants",
+          "responsive",
+          "screen",
+        ],
+      },
+    ],
+  }
+}
+```
+
+## PurgeCSS でビルドを最適化する
+
+tailwind はそのままビルドしてしまうと、使っていない膨大な Utility Class も一緒にバンドルされてしまいます。
+
+Tailwind CSS は PurgeCSS を標準でサポートしているため、設定してビルドを最適化しましょう。
+
+```js:tailwind.config.js
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { join } = require('path')
+const BASE_DIR = join(__dirname, 'src')
+const VUE_FILE = join('**', '*.vue')
+
+const config = {
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
+  purge: {
+    // Learn more on https://tailwindcss.com/docs/controlling-file-size/#removing-unused-css
+    enabled: process.env.NODE_ENV === 'production',
+    content: [join(BASE_DIR, VUE_FILE), join(__dirname, '*.html')],
+  },
+  theme: {
+    extend: {},
+  },
+  variants: {},
+  plugins:[],
+}
+
+module.exports = config
+```
+
+ちなみに ES Module 形式ではなく、CommonJS 形式で記述している理由は、Tailwind CSS のプラグインが ES Module 形式を認識できないからです。`.js`形式なのも同様の理由です。
+
+さてこれにて Tailwind CSS の環境が構築できました。
