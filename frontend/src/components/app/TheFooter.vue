@@ -22,7 +22,7 @@
         <div class="my-4 space-x-4">
           <a
             href="https://www.npmjs.com/~miyauci"
-            target="_brank"
+            target="_blank"
             class="transition duration-200 hover:text-red-500"
           >
             <mdi-npm-variant class="w-8 h-8" />
@@ -30,7 +30,7 @@
 
           <a
             href="https://twitter.com/miyauchi_tomoki"
-            target="_brank"
+            target="_blank"
             class="transition duration-200 hover:text-blue-400"
           >
             <mdi-twitter class="w-8 h-8" />
@@ -38,7 +38,7 @@
 
           <a
             href="https://github.com/TomokiMiyauci"
-            target="_brank"
+            target="_blank"
             class="transition duration-200 hover:text-purple-600"
           >
             <mdi-github class="w-8 h-8" />

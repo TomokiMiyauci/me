@@ -3,8 +3,8 @@
     <div
       class="container h-full sm:px-6 mx-auto flex justify-between items-center"
     >
-      <router-link class="text-2xl sm:text-4xl" :to="localePath('/')" tag="h1">
-        miyauci.me
+      <router-link class="text-2xl sm:text-4xl" :to="localePath('/')">
+        <h1>miyauci.me</h1>
       </router-link>
 
       <span class="space-x-4 flex items-center">
@@ -13,18 +13,26 @@
           class="text-xl sm:text-2xl capitalize"
           >{{ t('blog') }}</router-link
         >
-        <select
-          v-model="locale"
-          class="mr-3 dark:text-gray-700 p-2 rounded uppercase cursor-pointer focus:outline-none focus:ring-2"
-        >
-          <option
-            v-for="locale in availableLocales"
-            :key="`locale-${locale}`"
-            :value="locale"
+
+        <span class="group relative uppercase"
+          >{{ currentRoute.path.startsWith('/ja') ? 'ja' : 'en' }}
+          <span
+            class="opacity-0 shadow bg-white mx-auto rounded p-2 right-0 block invisible delay-200 group-hover:visible group-hover:opacity-100 absolute transition duration-200"
           >
-            {{ locale }}
-          </option>
-        </select>
+            <ol>
+              <li>
+                <router-link :to="localePathEn(currentRoute.path)"
+                  >EN</router-link
+                >
+              </li>
+              <li>
+                <router-link :to="localePathJa(currentRoute.path)"
+                  >JA</router-link
+                >
+              </li>
+            </ol>
+          </span>
+        </span>
 
         <button
           class="outline-none focus:outline-none rounded p-1 transition duration-200 focus:ring-2"
@@ -66,6 +74,10 @@ const { locale, availableLocales, t } = useI18n()
 const localePath = (path: string) => {
   return resolve({ path, routes }, locale.value as 'ja' | 'en')
 }
+
+const localePathJa = (path: string) => resolve({ path, routes }, 'ja')
+const localePathEn = (path: string) => resolve({ path, routes }, 'en')
+
 const { replace, currentRoute, getRoutes } = useRouter()
 watch(locale, (now) => {
   i18n.global.locale.value = now
