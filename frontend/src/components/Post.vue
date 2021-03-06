@@ -27,15 +27,18 @@
           >
         </span>
       </p>
-      <img
-        :width="1280"
-        :height="670"
-        loading="lazy"
-        class="rounded mx-auto w-full shadow hover:shadow-xl transition-shadow duration-200"
-        alt="icatch"
-        :srcset="srcset"
-        :src="icatch"
-      />
+
+      <div class="w-full">
+        <amp-img
+          layout="responsive"
+          height="9"
+          width="16"
+          class="rounded mx-auto shadow hover:shadow-xl transition-shadow duration-200"
+          alt="icatch"
+          :srcset="srcset"
+          :src="icatch"
+        />
+      </div>
     </div>
   </div>
   <div
