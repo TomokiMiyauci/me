@@ -22,11 +22,18 @@ import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
 import { getSrcset } from './src/packages/img-optimizer'
+import Amp from './src/packages/vite-plugin-amp'
 
 const cl = new Cloudinary({
   cloud_name: 'dz3vsv9pg',
   secure: true
 })
+
+const template = {
+  compilerOptions: {
+    isCustomElement: (tag) => tag.startsWith('amp-')
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const emoji = require('markdown-it-emoji')
@@ -38,7 +45,8 @@ const config = defineConfig({
   },
   plugins: [
     vue({
-      include: [/\.vue$/, /\.md$/]
+      include: [/\.vue$/, /\.md$/],
+      template
     }),
     svgLoader(),
     ...WindiCSS({
@@ -156,7 +164,8 @@ const config = defineConfig({
       }
     }),
     ViteIcons(),
-    VitePWA()
+    VitePWA(),
+    Amp()
   ]
 })
 
