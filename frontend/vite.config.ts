@@ -139,7 +139,6 @@ const config = defineConfig({
             return self.renderToken(tokens, idx, options)
           }
         md.renderer.rules.image = (tokens, idx, options, env, self) => {
-          tokens[idx].attrPush(['loading', 'lazy'])
           const publicId = url2PublicId(tokens[idx].attrGet('src'))
           // const srcset = getSrcset(publicId, [256], {
           //   fetchFormat: undefined,

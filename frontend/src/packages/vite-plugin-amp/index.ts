@@ -2,7 +2,8 @@ import { Plugin } from 'vite'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const AmpOptimizer = require('@ampproject/toolbox-optimizer')
 const ampOptimizer = AmpOptimizer.create({
-  minify: false
+  minify: false,
+  markdown: true
 })
 import { OutputAsset, OutputChunk } from 'rollup'
 
@@ -65,10 +66,10 @@ const plugin: Plugin = {
 
   transformIndexHtml: {
     enforce: 'post',
-    transform: async (html, { bundle }) => {
-      if (!bundle) return html
+    transform: async (html, a) => {
+      if (!a.bundle) return html
 
-      const t = Object.entries(bundle).map(transformer)
+      const t = Object.entries(a.bundle).map(transformer)
 
       t.forEach(([regex, val]) => {
         html = html.replace(regex, val)
