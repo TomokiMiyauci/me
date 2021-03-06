@@ -24,6 +24,7 @@
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
+    "@ampproject/toolbox-optimizer": "^2.7.6",
     "@iconify/json": "^1.1.294",
     "@intlify/vite-plugin-vue-i18n": "^2.0.0-rc.1",
     "@types/fs-extra": "^9.0.7",
