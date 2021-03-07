@@ -75,7 +75,7 @@
     "typescript": "^4.1.3",
     "url-join": "^4.0.1",
     "vite": "^2.0.0-beta.60",
-    "vite-plugin-amp": "^1.1.0",
+    "vite-plugin-amp": "^1.2.3",
     "vite-plugin-components": "^0.6.12",
     "vite-plugin-icons": "^0.2.2",
     "vite-plugin-md": "^0.5.1",

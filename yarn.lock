@@ -12893,10 +12893,10 @@ vfile@^4.0.0:
     unist-util-stringify-position "^2.0.0"
     vfile-message "^2.0.0"
 
-vite-plugin-amp@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/vite-plugin-amp/-/vite-plugin-amp-1.1.0.tgz#c254d14f463fcb1895b58e90aed09c39f5cf76da"
-  integrity sha512-xc18fTuC9Shxmr5gIldN5y6m1Nvza900iW8PKJRCJhLZB2YpqPzHcCqWIA3IzGkMeWncfoudl9yOzkDUTGHsbA==
+vite-plugin-amp@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/vite-plugin-amp/-/vite-plugin-amp-1.2.3.tgz#4a4a8ac5c3aef5eca9576f99cb80504ef913cbcd"
+  integrity sha512-0bFi/Nj5Sqvh6t6TI9N58Qz1oSku3kA+9PVDM74qmfn8LCayYstE2a5eQjBN5ECqTSAnLMb5SyIo5MKudNOznQ==
 
 vite-plugin-components@^0.6.12:
   version "0.6.14"
