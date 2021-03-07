@@ -57,7 +57,7 @@ const plugin: Plugin = {
 
   transform: (code, id, ssr) => {
     if (!ssr) {
-      if (id.endsWith('.scss') && code) {
+      if (id.endsWith('.scss') && code && typeof code === 'string') {
         code = code.replaceAll(' !important', '')
       }
     }
