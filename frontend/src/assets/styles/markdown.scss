@@ -72,7 +72,7 @@ a {
 }
 
 amp-img {
-  @apply shadow rounded-md hover:shadow-md transition-shadow duration-200;
+  @apply shadow rounded-md hover:shadow-md transition-shadow duration-200 cursor-pointer;
 }
 
 // p > .table-of-contents {

@@ -53,6 +53,8 @@
     "gray-matter": "^4.0.2",
     "husky": "^5.0.8",
     "jest": "^26.6.3",
+    "jimp": "^0.16.1",
+    "lru-cache": "^6.0.0",
     "markdown-it-anchor": "^7.0.1",
     "markdown-it-emoji": "^2.0.0",
     "markdown-it-highlight-lines": "^1.0.2",
