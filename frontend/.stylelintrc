@@ -15,6 +15,10 @@
     ],
     "declaration-block-trailing-semicolon": null,
     "no-descending-specificity": null,
-    "declaration-colon-newline-after": null
+    "declaration-colon-newline-after": null,
+    "selector-type-no-unknown": [ true, {
+            "ignoreTypes": ["/^amp-/"],
+            }
+    ]
   }
 }
