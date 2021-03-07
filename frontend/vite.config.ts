@@ -9,6 +9,7 @@ import Prism from 'markdown-it-prism'
 import { resolve } from 'path'
 import { readingTime as readtime } from 'reading-time-estimator'
 import { defineConfig } from 'vite'
+import ViteAmp from 'vite-plugin-amp'
 import Components from 'vite-plugin-components'
 import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
 import Markdown from 'vite-plugin-md'
@@ -22,8 +23,6 @@ import { getStats } from './src/functions/markdown/next-prev'
 import { getToc } from './src/functions/markdown/toc'
 import { verdictLocale } from './src/functions/resolver'
 import { getSrcset } from './src/packages/img-optimizer'
-import Amp from './src/packages/vite-plugin-amp'
-
 const cl = new Cloudinary({
   cloud_name: 'dz3vsv9pg',
   secure: true
@@ -164,7 +163,7 @@ const config = defineConfig({
     }),
     ViteIcons(),
     VitePWA(),
-    Amp()
+    ViteAmp()
   ]
 })
 
