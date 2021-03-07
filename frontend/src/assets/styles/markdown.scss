@@ -56,10 +56,6 @@ html {
   }
 }
 
-p > img {
-  @apply shadow rounded-md hover:shadow-md transition duration-200;
-}
-
 a {
   &.header-anchor {
     @apply float-left mt-1 -ml-5 text-base no-underline  opacity-0 transition duration-200;
