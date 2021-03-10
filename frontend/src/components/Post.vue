@@ -137,20 +137,7 @@ const richResult = jsonld({
       name: title,
       url: baseUrlJoin(fullPath)
     }
-  ],
-  blogPosting: {
-    headline: title,
-    description,
-    author: AUTHOR,
-    canonicalUrl: url,
-    image: [icatch],
-    datePublished: new Date(Date.parse(publishedAt)),
-    dateModified: new Date(Date.parse(updatedAt)),
-    publisher: {
-      name: 'TM Blog',
-      logoUrl: baseUrlJoin('logo.png')
-    }
-  }
+  ]
 })
 useHead({
   meta: [
@@ -188,6 +175,26 @@ useHead({
     {
       type: 'application/ld+json',
       children: JSON.stringify(richResult)
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify(
+        jsonld({
+          blogPosting: {
+            headline: title,
+            description,
+            author: AUTHOR,
+            canonicalUrl: url,
+            image: [icatch],
+            datePublished: new Date(Date.parse(publishedAt)),
+            dateModified: new Date(Date.parse(updatedAt)),
+            publisher: {
+              name: 'TM Blog',
+              logoUrl: baseUrlJoin('logo.png')
+            }
+          }
+        })
+      )
     }
   ]
 })
