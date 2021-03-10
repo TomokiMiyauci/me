@@ -230,4 +230,32 @@
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts/vite-vue3-typescript</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/vite-vue3-typescript" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/vite-vue3-typescript" />
+  <lastmod>2021-03-11</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/posts/vite-vue3-typescript</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/vite-vue3-typescript" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/vite-vue3-typescript" />
+  <lastmod>2021-03-11</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
 </urlset>
