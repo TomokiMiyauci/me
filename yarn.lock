@@ -1321,9 +1321,9 @@
   integrity sha512-LFelJDOLZ6JHlmlAkgrvmcu4hpNPB91KYcr4f60D/exzU1eNOb4/KCVHIydGHIQFaOacIOD+Xy+B7P1z812cZg==
 
 "@iconify/json@^1.1.294":
-  version "1.1.314"
-  resolved "https://registry.yarnpkg.com/@iconify/json/-/json-1.1.314.tgz#43b417e5131b55e879f94b6fc40b09928eea42ad"
-  integrity sha512-KDc2dtNnbUryuUWs4ov1e8xCcEjrU/9r3PLOsElzsRpMjaGe/RfpAvU1NkDlv7Mmriaah+Dj6SVoLeRSUB5q3g==
+  version "1.1.315"
+  resolved "https://registry.yarnpkg.com/@iconify/json/-/json-1.1.315.tgz#7c9cee2b22d2e3c9a55e20574ce5f7f40d7d2426"
+  integrity sha512-U3+0YA8IKDqwnZsAWnsuDQf27WaWp07N5w0YmA2GfnSuoOgqo/CIgOr3WHNiSi8XyJAEiyC8skTlrNlYymq4hw==
 
 "@intlify/cli@^0.2.0":
   version "0.2.0"
@@ -1432,9 +1432,9 @@
   integrity sha512-A7GSOovcZn/NMoAmDc8FG9uRcFv6iygriK8+C6HFeOnMQ9X+T9f5A9bPtXhCOCiRpQm9SUtGqXedxO5Y8rz9/A==
 
 "@intlify/vite-plugin-vue-i18n@^2.0.0-rc.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@intlify/vite-plugin-vue-i18n/-/vite-plugin-vue-i18n-2.0.1.tgz#2c6aee7ecfc04e0698123623a7d7d6f7daa6c32d"
-  integrity sha512-7fJXlhUU+5C0f8lQ/nsWujzNc093BCnsIrH1D9nBWK57qJf7f9CPzi5mNAVwMY73j5Uy2VrCi6xyZ+s42DpVUw==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@intlify/vite-plugin-vue-i18n/-/vite-plugin-vue-i18n-2.0.2.tgz#29feba253bd1c1ea9b6d4c0434a010152ada4dc1"
+  integrity sha512-LFGNHQoR9Xmc0TEHo56MLPH7+LYt3fF640lkAgZGfaJtVRv6resNW3CnO4WnW5jvSkSNH6eP2JPLechjs2co2w==
   dependencies:
     "@intlify/cli" "^0.2.0"
     "@intlify/shared" "^9.0.0"
@@ -3204,9 +3204,9 @@
   integrity sha512-g+f/qj/cNcqKkc3tFqlXOYjrmZA+jNBiDzbP3kH+B+otKFqAdPgVTGP1IeKRdMml/aE69as5S4FqtxAbl+LaMw==
 
 "@types/node@^14.14.28":
-  version "14.14.33"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.33.tgz#9e4f8c64345522e4e8ce77b334a8aaa64e2b6c78"
-  integrity sha512-oJqcTrgPUF29oUP8AsUqbXGJNuPutsetaa9kTQAQce5Lx5dTYWV02ScBiT/k1BX/Z7pKeqedmvp39Wu4zR7N7g==
+  version "14.14.34"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.34.tgz#07935194fc049069a1c56c0c274265abeddf88da"
+  integrity sha512-dBPaxocOK6UVyvhbnpFIj2W+S+1cBTkHQbFQfeeJhoKFbzYcVUGHvddeWPSucKATb3F0+pgDq0i6ghEaZjsugA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3568,11 +3568,11 @@
     vscode-uri "^2.1.2"
 
 "@vueuse/core@^4.2.1":
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-4.3.4.tgz#32dcd4b48536c6b8051495389a259ed1b96e9413"
-  integrity sha512-OKMJNdQltsMu8l9MMQ0qvjKK4kO5x0tHveqn6ypWcSQ/NSSMRcUynbE4G404DM52Adg3aFtgrirXcM4uoM6cjg==
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-4.3.6.tgz#49a90f67d538f0770ab4ce6e2c62302bc7f091a7"
+  integrity sha512-XqfU/OIxHWq5Ii8pYLGyXADvY0Jbs4t9q3Nx5ItYNjtN9kCdZ1q+arwjqCgIyjCA25hfqdinZNtWjVXsheZUzQ==
   dependencies:
-    "@vueuse/shared" "4.3.4"
+    "@vueuse/shared" "4.3.6"
     vue-demi latest
 
 "@vueuse/head@^0.3.1":
@@ -3580,10 +3580,10 @@
   resolved "https://registry.yarnpkg.com/@vueuse/head/-/head-0.3.2.tgz#ee700091ab03069ec84f29cc696a5e4b2d890518"
   integrity sha512-H2sWLeyaZLWeRcZjmpUtgWuUMJINQcW2J8wI3nyRhJbLI+W0t//g41YLppYGxjsb7tfqVREZgyXUWZRGMpwPQg==
 
-"@vueuse/shared@4.3.4":
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-4.3.4.tgz#fe8e66842da4b7b5005a4a427d673e89f472f958"
-  integrity sha512-O1PxiG8cSD4YQKHJXWAeBVVTJNpBwCse7TkTsMqqLzqOjP2apbncfPzOcYJHVR5NkUXmtvPBIWAQuRavXKmHSw==
+"@vueuse/shared@4.3.6":
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-4.3.6.tgz#5d38c7eb4dccc2cef012a8b6d2df932c34d4708a"
+  integrity sha512-sGowcpeVxilaV03wD7N7XL+LZBy0e2FGreYyCWWofVN96PSYPw/hyVrxmZiBrfKn6fFllKf+87wi1TTs4C6ZXg==
   dependencies:
     vue-demi latest
 
@@ -13510,9 +13510,9 @@ vscode-web-custom-data@^0.3.2:
   integrity sha512-orMjjj1r4efP5ocODYZm3orpANakRBsxPZPDoD5UIrFOPKDFtMJQLp6PIH1rb3AYVRD1iYXMhDQoC6tZ+DrigA==
 
 vue-demi@latest:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.7.1.tgz#e7cf3e70e4c69bc192f4530c2665ce8b289f5dc4"
-  integrity sha512-cJ3QnpcbIqdpeV3NnNgSDwneCJifvHct+6JNvfYn/49geK/uv5VJicZDvyg20guNhz+DZmUHBHyRQTJ32lSC2g==
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.7.2.tgz#bb450837d8f36b293d3f9fbaec60570bae3c6b0a"
+  integrity sha512-cRaQymWYC3gcj3Y8CGDjPI7r2BIvHNMuoLSlfyo7CeqtFzV6eIlYK7xPnExPl4m3j6y5D1FOqdclEIWeim5EJg==
 
 vue-eslint-parser@^7.0.0:
   version "7.4.1"
@@ -13547,7 +13547,12 @@ vue-i18n@^9.0.0-rc.5:
     "@intlify/shared" "9.0.0"
     "@vue/devtools-api" "^6.0.0-beta.5"
 
-vue-router@^4.0.3, vue-router@^4.0.4:
+vue-router@^4.0.3:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.5.tgz#dd0a4134bc950c37aef64b973e9ee1008428d8fa"
+  integrity sha512-AQq+pllb6FCc7rS6vh4PPcce3XA1jgK3hKNkQ4hXHwoVN7jOeAOMKCnX7XAX3etV9rmN7iNW8iIwgPk95ckBjw==
+
+vue-router@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.4.tgz#ad9b4b7bbdad622407b4ff189b1646f48c1e9053"
   integrity sha512-uN6PDEaYdU9aRO7mU+Dkr1uaY49hV3fucEDG/Vre/Qj8ct3RoJS16vcPrvKVzn69zDDjBV5b9Xw7fZA9r6b/Iw==
@@ -14111,7 +14116,7 @@ yaml@^2.0.0-3:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.0.0-3.tgz#dc126f2fac9b845ee696ccbd13c8d303e247c471"
   integrity sha512-gvtVaY+/mQ0OsXgaWy2Tf830JuXN7qEUYdXWsuiJVSkMRsBBQ90YVpQQofaURbhoA1xSbLBf7965oH6ddzNbBQ==
 
-yargs-parser@20.x, yargs-parser@^20.2.2, yargs-parser@^20.2.3:
+yargs-parser@20.x, yargs-parser@^20.2.3:
   version "20.2.6"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.6.tgz#69f920addf61aafc0b8b89002f5d66e28f2d8b20"
   integrity sha512-AP1+fQIWSM/sMiET8fyayjx/J+JmTPt2Mr0FkrgqB4todtfa53sOsrSAcIrJRD5XS20bKUwaDIuMkWKCEiQLKA==
@@ -14131,6 +14136,11 @@ yargs-parser@^18.1.2:
   dependencies:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
+
+yargs-parser@^20.2.2:
+  version "20.2.7"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.7.tgz#61df85c113edfb5a7a4e36eb8aa60ef423cbc90a"
+  integrity sha512-FiNkvbeHzB/syOjIUxFDCnhSfzAL8R5vs40MgLFBorXACCOAEaWu0gRZl14vG8MR9AOJIZbmkjhusqBYZ3HTHw==
 
 yargs@^14.2.2:
   version "14.2.3"
