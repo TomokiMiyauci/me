@@ -17,7 +17,7 @@
         <span class="group relative uppercase"
           >{{ currentRoute.path.startsWith('/ja') ? 'ja' : 'en' }}
           <span
-            class="opacity-0 shadow bg-white mx-auto rounded p-2 right-0 block invisible delay-200 group-hover:visible group-hover:opacity-100 absolute transition duration-200"
+            class="opacity-0 shadow bg-white mx-auto rounded p-2 right-0 block invisible delay-200 group-hover:visible group-hover:opacity-100 absolute transition duration-200 dark:text-gray-700"
           >
             <ol>
               <li>
