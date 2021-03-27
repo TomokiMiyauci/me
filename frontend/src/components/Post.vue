@@ -27,18 +27,15 @@
           >
         </span>
       </p>
-
-      <div class="w-full">
-        <amp-img
-          layout="responsive"
-          height="9"
-          width="16"
-          class="rounded mx-auto shadow hover:shadow-xl transition-shadow duration-200"
-          alt="icatch"
-          :srcset="srcset"
-          :src="icatch"
-        />
-      </div>
+      <img
+        :width="1280"
+        :height="670"
+        loading="lazy"
+        class="rounded mx-auto w-full shadow hover:shadow-xl transition-shadow duration-200"
+        alt="icatch"
+        :srcset="srcset"
+        :src="icatch"
+      />
     </div>
   </div>
   <div
@@ -137,7 +134,20 @@ const richResult = jsonld({
       name: title,
       url: baseUrlJoin(fullPath)
     }
-  ]
+  ],
+  blogPosting: {
+    headline: title,
+    description,
+    author: AUTHOR,
+    canonicalUrl: url,
+    image: [icatch],
+    datePublished: new Date(Date.parse(publishedAt)),
+    dateModified: new Date(Date.parse(updatedAt)),
+    publisher: {
+      name: 'TM Blog',
+      logoUrl: baseUrlJoin('logo.png')
+    }
+  }
 })
 useHead({
   meta: [
@@ -175,26 +185,6 @@ useHead({
     {
       type: 'application/ld+json',
       children: JSON.stringify(richResult)
-    },
-    {
-      type: 'application/ld+json',
-      children: JSON.stringify(
-        jsonld({
-          blogPosting: {
-            headline: title,
-            description,
-            author: AUTHOR,
-            canonicalUrl: url,
-            image: [icatch],
-            datePublished: new Date(Date.parse(publishedAt)),
-            dateModified: new Date(Date.parse(updatedAt)),
-            publisher: {
-              name: 'TM Blog',
-              logoUrl: baseUrlJoin('logo.png')
-            }
-          }
-        })
-      )
     }
   ]
 })

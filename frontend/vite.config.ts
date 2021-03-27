@@ -146,9 +146,9 @@ const config = defineConfig({
           // })
           // tokens[idx].attrPush([
           //   'srcset',
-          //   'https://res.cloudinary.com/dz3vsv9pg/image/upload/f_aj,fw_256/v1/start-vitepress/plain-home.png'
+          //   `https://res.cloudinary.com/dz3vsv9pg/image/upload/f_aj,fw_256/v1/start-vitepress/plain-home.png`
           // ])
-          // tokens[idx].attrPush(['sizes', '(max-width: 30em) 30em, 100vw'])
+          tokens[idx].attrPush(['sizes', '(max-width: 30em) 30em, 100vw'])
 
           return defaultRender(tokens, idx, options, env, self)
         }
@@ -162,8 +162,8 @@ const config = defineConfig({
       }
     }),
     ViteIcons(),
-    VitePWA(),
-    ViteAmp()
+    VitePWA()
+    // ViteAmp()
   ]
 })
 
