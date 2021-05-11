@@ -29,7 +29,7 @@
           </a>
 
           <a
-            href="https://twitter.com/miyauchi_tomoki"
+            href="https://twitter.com/tomoki_miyauci"
             target="_blank"
             class="transition duration-200 hover:text-blue-400"
           >

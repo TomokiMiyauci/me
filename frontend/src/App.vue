@@ -36,7 +36,7 @@ useHead({
     { property: 'og:image', content: urlJoin(DOMAIN, 'logo.png') },
     { property: 'og:site_name', content: "Tomoki Miyauchi's Portfolio" },
     { name: 'twitter:card', content: 'summary' },
-    { name: 'twitter:site', content: '@miyauchi_tomoki' }
+    { name: 'twitter:site', content: '@tomoki_miyauci' }
   ],
   script: [
     {
