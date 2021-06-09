@@ -1,0 +1,213 @@
+---
+title: Aborting fetch request with AbortController
+description: Introduces how to abort an HTTP request using fetch. It also covers practical cases such as what to do after aborting, how to abort multiple HTTP requests at once, and explains the correct error handling.
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1623216242/fetch-abort/hero.png
+thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/q_auto/v1623216242/fetch-abort/thumbnail.png
+---
+
+## Introduction
+
+`AbortController` is an interface for aborting asynchronous processes, and has been available in `Node.js` since `15.0.0`.
+In this article, we'll explain how to cancel an HTTP request, a typical asynchronous process.
+
+In the past, we used `XMLHttpRequest` to send HTTP requests, but nowadays we almost use the Promise-based `Fetch API`.
+
+HTTP client libraries such as [`axios`](https://github.com/axios/axios) and [`ky`](https://github.com/sindresorhus/ky) are highly used, the basic `Fetch API` cancellation is explained here.
+
+## About Fetch API
+
+The `Fetch API` is available as standard in modern browsers and Deno. Even `Node.js` has [`node-fetch`](https://github.com/node-fetch/node-fetch), so it's no exaggeration to say that the `Fetch API` is universally available as an HTTP client. So, first of all, let's make sure you know how to use it with the `Fetch API`.
+
+The `Fetch API` takes an object called `RequestInit` as its second argument. The interface is as follows:
+
+```ts
+declare function fetch(
+  input: Request | URL | string,
+  init?: RequestInit
+): Promise<Response>
+
+interface RequestInit {
+  body?: BodyInit | null
+  cache?: RequestCache
+  credentials?: RequestCredentials
+  headers?: HeadersInit
+  integrity?: string
+  keepalive?: boolean
+  method?: string
+  mode?: RequestMode
+  redirect?: RequestRedirect
+  referrer?: string
+  referrerPolicy?: ReferrerPolicy
+  signal?: AbortSignal | null
+  window?: any
+}
+```
+
+The key `signal` takes an `AbortSignal`.`AbortSignal` is a member of class `AbortController`.
+
+### About AbortController
+
+`AbortController` is a controller that contains a signal object that can abort an asynchronous process. You can create an object from the constructor.
+
+```ts
+const controller = new AbortController()
+
+declare class AbortController {
+  readonly signal: AbortSignal
+  abort(): void
+}
+```
+
+The `AbortController` has a reference to the signal object and an `abort` method. You can abort an HTTP request by passing this `signal` to `fetch` and calling the `abort` method.
+
+The follow example assumes a non-Deno execution environment. Deno does not yet implement cancellation of the `Fetch API` as of `1.10.3`. It has been [merged into the main branch](https://github.com/denoland/deno/pull/10863) and will probably be available soon.
+
+> Top-Level Await notation is used.
+
+```ts
+const url = 'https://google.com'
+const controller = new AbortController()
+
+await fetch(url, {
+  signal: controller.signal
+})
+
+setTimeout(() => {
+  controller.abort()
+}, 1000)
+```
+
+In the above example, the request will be aborted after 1000 milliseconds. In the UI, user-initiated cancelling can be achieved by binding a call to the `abort` function to a button click event, for example.
+
+Now that we have aborted, let's think about what to do after the abort.
+
+There are several ways to handle abort. Let's look at each of them.
+
+### Rejecting the Fetch API
+
+In the `Fetch API`, reject is defined to occur in the following two cases. See [specification](https://fetch.spec.whatwg.org/) for details.
+
+- `TypeError`
+- `AbortError`
+
+`TypeError` is thrown when a network error occurs. For example, a request for a non-existent URL will raise a `TypeError`.
+
+```ts
+await fetch('https://this-is-not-exist.com')
+Uncaught TypeError: error sending request for url (https://this-is-not-exist.com/): error trying to connect: dns error: failed to lookup address information: nodename nor servname provided, or not known
+```
+
+And another error is `AbortError`. This is raised when the request is aborted.
+
+By picking up `AbortError`, we can handle the error exactly as it should be handled.
+Also, by picking up `TypeError` and `AbortError`, you can make notifications more user-friendly.
+
+```ts
+try {
+  await fetch('https://this-is-not-exist.com')
+} catch (e) {
+  if (e instanceof AbortError) {
+    // Abort error handling
+  } else {
+    // Network error handling
+  }
+}
+```
+
+In the above example, I used the `tryCatch` statement to catch errors, but of course you can also pick up errors from the `reject` function of `Promise`.
+
+### Event Handlers and Event Listeners
+
+The interface of `AbortSignal` is as follows:
+
+```ts
+interface AbortSignal extends EventTarget {
+  readonly aborted: boolean
+  onabort: ((this: AbortSignal, ev: Event) => any) | null
+  addEventListener<K extends keyof AbortSignalEventMap>(
+    type: K,
+    listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
+    options?: boolean | AddEventListenerOptions
+  ): void
+  removeEventListener<K extends keyof AbortSignalEventMap>(
+    type: K,
+    listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
+    options?: boolean | EventListenerOptions
+  ): void
+}
+```
+
+`AbortSignal` has an event handler called `onabort`.
+By setting any function to it, the function will be called on abort.
+
+```ts
+const controller = new AbortController()
+controller.signal.onabort = () => {}
+```
+
+You can also monitor for abort event in the same way by setting the `type` of the event listener to `abort`.
+
+```ts
+controller.signal.addEventListener('abort', () => {})
+```
+
+Also, the read-only property `aborted` indicates whether the `AbortSignal` has been aborted or not.
+
+## Abort multiple HTTP requests
+
+The `AboutController` can be passed to multiple calls to the `fetch` function to abort a batch HTTP requests.
+
+```ts
+const controller = new AbortController()
+const { signal } = controller
+
+try {
+  await Promise.all(
+    [endpoint1, endpoint2, endpoint3].map((url) => {
+      fetch(url, { signal })
+    })
+  )
+} catch (e) {}
+```
+
+You can also catch errors in bulk.
+
+## Abort multiple times
+
+Once an `AbortController` calls `abort`, it can't run the `fetch` function again that references that `AbortSignal`.
+
+For example, in Vue, you might end up writing something like this.
+
+```html
+<script setup lang="ts">
+  const controller = new AbortController()
+
+  const onCancel = () => {
+    controller.abort()
+  }
+
+  const onClick = async () => {
+    await fetch(url, { signal: controller.signal })
+  }
+</script>
+```
+
+In this example, the `AbortController` instance is not regenerated on every `onClick`, so you cannot make a second HTTP request.
+Since you need to make the instance for each `fetch`, you do so as follows:
+
+```html
+<script setup lang="ts">
+  let controller
+
+  const onCancel = () => {
+    controller?.abort()
+  }
+
+  const onClick = async () => {
+    controller = new AbortController()
+    await fetch(url, { signal: controller.signal })
+  }
+</script>
+```
+
+Unfortunately, due to the scope of the variable, you have to declare it as `let`, but now you can set a new instance every time you fetch.

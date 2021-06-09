@@ -314,4 +314,32 @@
   <changefreq>hourly</changefreq>
   <priority>1.0</priority>
 </url>
+<url>
+  <loc>https://miyauchi.dev/posts/fetch-abort</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/fetch-abort" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/fetch-abort" />
+  <lastmod>2021-06-09</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://miyauchi.dev/ja/posts/fetch-abort</loc>
+  <xhtml:link
+    rel="alternate"
+    hreflang="en"
+    href="https://miyauchi.dev/posts/fetch-abort" />
+  <xhtml:link
+    rel="alternate"
+    hreflang="ja"
+    href="https://miyauchi.dev/ja/posts/fetch-abort" />
+  <lastmod>2021-06-09</lastmod>
+  <changefreq>hourly</changefreq>
+  <priority>1.0</priority>
+</url>
 </urlset>
