@@ -1,7 +1,7 @@
 ---
 title: Table Driven Tests with Jest
 description: Learn how to test by Table Driven Tests with Jest. I explain two notations of array format and tagged template literal format. It also introduces type inference and assertion methods when written in TypeScript.
-icatch: jest-table-driven-tests/hero.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/jest-table-driven-tests/hero.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1616908348/jest-table-driven-tests/thubnail.png
 ---
 

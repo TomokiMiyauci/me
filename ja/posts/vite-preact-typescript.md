@@ -1,11 +1,12 @@
 ---
-title: ViteでVue3のTypescript環境を構築する
-description: No bundleツールのViteを使って、TypescriptでのVue3環境を構築します。ESLintやPrettierの設定もあわせて行い、DXの高い環境を構築します。
+title: ViteでPreactのTypescript環境を構築する
+description: No bundleツールのViteを使って、TypescriptベースのPreactの環境を構築します。ESLintやPrettierの設定もあわせて行います。
 tags:
-  - Vue3
+  - Preact
   - Tutorial
-thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1615388322/vite-vue3-typescript/thumbnail.png
-icatch: vite-vue3-typescript/icatch.png
+
+thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1614705061/vite-preact-typescript/thumbnail.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/vite-preact-typescript/icatch.png
 ---
 
 ## はじめに
@@ -13,14 +14,13 @@ icatch: vite-vue3-typescript/icatch.png
 Vite は Vue.js の作者の Evan You 氏が開発しているビルドツールです。
 ネイティブの ES Module のインポートを利用し、バンドル不要で高速に動作する開発環境を提供します。
 Vue3 はもちろん、React や Preact も対応しています。
+今回はそんな Vite を使って、Preact プロジェクトの環境構築をします。
 
-今回はそんな Vite を使って、Vue3 プロジェクトの環境構築をします。
-
-できあがったテンプレートは[こちら](https://github.com/TomokiMiyauci/vite-vue3-template)にあります。
+できあがったテンプレートは[こちら](https://github.com/TomokiMiyauci/vite-preact)にあります。
 
 ## やること
 
-vue/cli の default テンプレートに近づけることを目標に、最低限開発に必要なツールを導入していきます。
+preact/cli の default テンプレートに近づけることを目標に、最低限開発に必要なツールを導入していきます。
 ツールを個別に導入できるよう、それぞれ順を追って説明しています。
 
 - Typescript
@@ -29,7 +29,6 @@ vue/cli の default テンプレートに近づけることを目標に、最低
 - Stylelint
 - husky と lint-staged
 - Path Alias
-- VTI
 
 ## 環境構築
 
@@ -39,7 +38,7 @@ vue/cli の default テンプレートに近づけることを目標に、最低
   <code-block label="Yarn" active>
 
 ```bash
-yarn create vite-app <project-name>
+yarn create vite-app <project-name> --template preact
 cd <project-name>
 yarn
 ```
@@ -49,7 +48,7 @@ yarn
   <code-block label="NPM">
 
 ```bash
-npm init vite-app <project-name>
+npm init vite-app <project-name> --template preact
 cd <project-name>
 npm i
 ```
@@ -61,65 +60,99 @@ npm i
 
 ### Typescript にする
 
-続いてプロジェクトを Typescript 化しましょう。といっても Vue3 からはデフォルトで Typescript が使えるので次の３つを行うだけです。
+続いてプロジェクトを Typescript 化しましょう。最小限の構成では次の２つを行うだけです。
 
-1.すべての`.vue`ファイルの`script`タグに`lang="ts"`を追記します。  
-2.`main.js`を`main.ts`に変更します。  
-3.`index.html`の script タグの src を`/src/main.ts`に変更します。
+1.すべての`.jsx`ファイルを`.tsx`にします。  
+2.`index.html`の script タグの src を`/src/main.tsx`に変更します。
 
 これで開発サーバーを立ち上げると、問題なく実行できるのが確認できます。
 
 実際はこれだけでも動きますが、エディター上でのユーザーエクスペリエンスを向上させるために、さらに設定を加えます。
-
-VSCode を使っている場合は、`main.ts`で`ts(2307)` エラーが出ているはずです。
-
-これを解消するには、vue 用の型宣言ファイルを用意します。
-
-```ts:src/shims-vue.d.ts
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  const component: DefineComponent<Record<string,unknown>, Record<string,unknown>, unknown>
-  export default component
-}
-```
 
 `tsconfig.json`をプロジェクトルートに設置します。これでエディターに Typescript プロジェクトであることを認識させます。
 
 ```json:tsconfig.json
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
+    "target": "esnext",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": [ // /から始まるようにします
-        "src/*"
-      ]
-    },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"]
 }
+```
+
+VSCode ではこの時点で、`.tsx`ファイルにエラーが表示されているので、これを修正します。全ての`.tsx`ファイルに次の一文を加えます。
+
+```ts
+import { h } from 'preact'
+```
+
+また`Fragment`を使っている場合は、更にそれもインポートします。
+
+```ts
+import { h, Fragment } from 'preact'
+```
+
+次に、エントリーポイントである`main.tsx`を修正します。
+Typescript になったことで、型エラーが検出されています。
+`document.getElementById`は戻り値が`HTMLElement`または`null`なため、null チェックを入れてあげます。
+<alert>
+`index.html`の id に app が必ず存在するなら、`Non-null assertion operator`も使えます。
+</alert>
+
+```tsx:main.tsx
+const el = document.getElementById('app')
+if (el) {
+  render(<App />, el)
+}
+```
+
+続いて`vite.config.js`に変更を加えます。
+
+```ts:vite.config.js
+const config = {
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment'
+  },
+  plugins: [preactRefresh()]
+}
+```
+
+最小構成で Typescript 化できました。以下は、やらなくても問題ありません。
+
+`.js`ファイルの撲滅のため、`vite.config.js`を`.ts`に変更しましょう。また、ES Module 形式に変更し、プロジェクト全体の統一感を高めましょう。
+
+`vite.config.ts`は以下のようになります。
+
+```ts:vite.config.ts
+import preactRefresh from '@prefresh/vite'
+import type { UserConfig } from 'vite'
+
+const config: UserConfig = {
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment',
+  },
+
+  plugins: [preactRefresh()],
+}
+
+export default config
 ```
 
 これで Typescript 化は終了です。
@@ -132,8 +165,7 @@ declare module '*.vue' {
   <code-block label="Yarn" active>
 
 ```bash
-yarn add -D eslint eslint-plugin-vue @vue/
-eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+yarn add -D eslint eslint-config-preact @typescript-eslint/parser typescript
 ```
 
   </code-block>
@@ -141,8 +173,7 @@ eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plu
   <code-block label="NPM">
 
 ```bash
-npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser
-@typescript-eslint/eslint-plugin typescript
+npm i -D eslint eslint-config-preact @typescript-eslint/parser typescript
 ```
 
   </code-block>
@@ -151,24 +182,23 @@ npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-esli
 
 ```json:.eslintrc
 {
-  "root": true,
   "env": {
-      "browser": true,
-      "es2021": true,
-      "node": true
+    "browser": true,
+    "es2021": true
   },
   "extends": [
-    "plugin:vue/vue3-recommended",
     "eslint:recommended",
-    "@vue/typescript/recommended"
+    "preact"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "ecmaVersion": 2021
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
-  "plugins": [
-  ],
-  "rules": {
-  }
+  "rules": {}
 }
 ```
 
@@ -176,7 +206,7 @@ npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-esli
 
 ```json:package.json
 "scripts": {
-  "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore ."
+  "lint:script": "eslint --ext .ts,tsx --ignore-path .gitignore ."
 }
 ```
 
@@ -247,7 +277,7 @@ npm i -D husky lint-staged
     }
   },
   "lint-staged": {
-    "*.{ts,vue}": "eslint --fix"
+    "*.{ts,tsx}": "eslint --fix"
   }
 }
 ```
@@ -265,7 +295,7 @@ Prettier にプロジェクト全体のフォーマットを任せましょう�
   <code-block label="Yarn" active>
 
 ```bash
-yarn add -D prettier eslint-plugin-prettier @vue/eslint-config-prettier
+yarn add -D prettier eslint-config-prettier
 ```
 
   </code-block>
@@ -273,7 +303,7 @@ yarn add -D prettier eslint-plugin-prettier @vue/eslint-config-prettier
   <code-block label="NPM">
 
 ```bash
-npm i -D prettier eslint-plugin-prettier @vue/eslint-config-prettier
+npm i -D prettier eslint-config-prettier
 ```
 
   </code-block>
@@ -281,9 +311,9 @@ npm i -D prettier eslint-plugin-prettier @vue/eslint-config-prettier
 
 ```json:.prettierrc
 {
-  "singleQuote": true,
+  "trailingComma": "es5",
   "semi": false,
-  "vueIndentScriptAndStyle": true
+  "singleQuote": true
 }
 ```
 
@@ -292,12 +322,11 @@ ESLint と Prettier を併用する場合、ルールのバッティングがあ
 ```json:.eslintrc
 {
   "extends": [
-    "plugin:vue/vue3-recommended",
-    "eslint:recommended",
-    "@vue/typescript/recommended",
+    "eslint:all",
+    "preact",
     // 他のルールの下に追加
-    "@vue/prettier",
-    "@vue/prettier/@typescript-eslint"
+    "prettier",
+    "prettier/@typescript-eslint"
   ]
 }
 ```
@@ -327,7 +356,7 @@ npm run prettier -w -u .
 ```json:package.json
 {
  "lint-staged": {
-    "*.{ts,vue}": "eslint --fix",
+    "*.{ts,tsx}": "eslint --fix",
     "*": "prettier -w -u" // prettierは一番最後にします
   }
 }
@@ -345,7 +374,7 @@ VSCode ユーザーは次の設定によって、自動的にフォーマット�
 
 ### Stylelint を設定する
 
-スタイルもリント対象にしましょう。
+スタイルファイルもリント対象にしましょう。
 
 <code-group>
   <code-block label="Yarn" active>
@@ -371,16 +400,16 @@ npm i -D stylelint stylelint-config-recommended stylelint-config-standard
 }
 ```
 
-`package.json`を編集して、コマンドと lint-staged を設定します。
+`package.jsoon`を編集して、コマンドと lint-staged を設定します。
 
 ```json:package.json
 {
   "scripts": {
-    "lint:style": "stylelint src/**/*.{css,scss,vue}"
+    "lint:style": "stylelint src/**/*.{css,scss}"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix",
-    "*.{css,scss,vue}": "stylelint --fix",
+    "*.{css,scss}": "stylelint --fix",
     "*": "prettier -w -u"
   }
 }
@@ -394,7 +423,8 @@ VSCode ユーザーは次の設定によって、自動的にフォーマット�
 ### Path Alias を設定する
 
 モジュールの import はデフォルトでは相対パスを指定しますが、alias を設定して常に同じルートを参照したいです。
-vite は内部では Rollup を使用しているようですが、`vite.config.ts`を作成し alias を設定しましょう。
+
+`vite.config.ts`と`tsconfig.json`変更して alias を設定しましょう。
 
 <alert type="warning">Key は`/`から始まらなければなりません。</alert>
 
@@ -411,56 +441,25 @@ const config: UserConfig = {
 export default config
 ```
 
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "/@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
 これで alias の設定ができました。こんな感じで使います。
 
-```html:App.vue
-<script lang="ts">
-  import HelloWorld from '/@/components/HelloWorld.vue'
-</script>
+```tsx:main.tsx
+import { App } from '/@/app'
 ```
 
 `/`から始まらなければならないのが、少し違和感ありますが、パッケージ名の alias との兼ね合いみたいです。
 詳しくは[こちら](https://github.com/vitejs/vite/blob/master/src/node/config.ts#L53)を参照ください。
-
-### VTI で template の静的チェックをする
-
-<alert type="warning" >VTI は WIP なため、使用は各自判断してください</alert>
-
-Vue ファイルの template タグへも静的チェックを行いたいです。今回は Vetur のプロジェクトにある vti を使います。
-
-<code-group>
-  <code-block label="Yarn" active>
-
-```bash
-yarn add -D vti
-```
-
-  </code-block>
-
-  <code-block label="NPM">
-
-```bash
-npm i -D vti
-```
-
-  </code-block>
-</code-group>
-
-```json:package.json
-"scripts": {
-  "lint:markup": "vti diagnostics",
-}
-```
-
-既存の Vue ファイルでは`defineComponent`でラップしないとエラーになってしまうので、修正します。
-
-```html:*.vue
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  export default defineComponent({})
-</script>
-```
-
-また、静的チェックは Vue ファイルが増加するとかなり時間がかかるようになるため、コミット前ではなく CI で実行することをおすすめします。
 
 以上で最低限の環境が構築できました。

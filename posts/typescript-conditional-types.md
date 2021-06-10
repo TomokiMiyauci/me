@@ -6,7 +6,7 @@ tags:
   - Generics
 
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1613880465/typescript-conditional-types/thumbnail.png
-icatch: typescript-conditional-types/icatch.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/typescript-conditional-types/icatch.png
 ---
 
 ## Introduction

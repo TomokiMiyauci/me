@@ -6,7 +6,7 @@ tags:
   - tailwindcss
   - Vite
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1614954463/vite-vue3-tailwindcss/thumbnail.png
-icatch: vite-vue3-tailwindcss/icatch.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/vite-vue3-tailwindcss/icatch.png
 ---
 
 ## はじめに

@@ -2,7 +2,7 @@
 title: I want to call the file dialog from anywhere
 description: Explains how to call a file dialog from a program and receive a FileList
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/f_auto,q_auto/v1613813117/file-dialog/thumbnail.png
-icatch: file-dialog/file-dialog.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/file-dialog/file-dialog.png
 ---
 
 ## What is the File Dialog

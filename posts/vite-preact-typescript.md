@@ -6,7 +6,7 @@ tags:
   - Tutorial
 
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1614705061/vite-preact-typescript/thumbnail.png
-icatch: vite-preact-typescript/icatch.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/vite-preact-typescript/icatch.png
 ---
 
 ## Introduction

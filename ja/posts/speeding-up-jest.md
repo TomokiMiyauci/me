@@ -1,8 +1,7 @@
 ---
 title: JestでTypescriptを高速化する
 description: Jestでテストの高速化させる方法を紹介します。トランスフォーマーとしてesbuildやswcを紹介し、TypeScriptで遅くなりがちなトランスパイルを高速化させることで、テストを自体を高速化します。
-
-icatch: speeding-up-jest/hero.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/speeding-up-jest/hero.png
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1616850161/speeding-up-jest/thumbnail.png
 ---
 

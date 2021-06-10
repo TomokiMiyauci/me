@@ -6,7 +6,7 @@ tags:
   - Package
   - Yarn
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1614173989/typescript-library-release/thumbnail.png
-icatch: typescript-library-release/icatch.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/typescript-library-release/icatch.png
 ---
 
 ## Introduction

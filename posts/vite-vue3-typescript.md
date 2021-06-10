@@ -5,7 +5,7 @@ tags:
   - Vue3
   - Tutorial
 thumbnail: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1615388322/vite-vue3-typescript/thumbnail.png
-icatch: vite-vue3-typescript/icatch.png
+icatch: https://res.cloudinary.com/dz3vsv9pg/image/upload/v1612608124/vite-vue3-typescript/icatch.png
 ---
 
 ## Introduction
