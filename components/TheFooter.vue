@@ -1,7 +1,5 @@
 <template>
-  <footer
-    class="px-2 py-12 bg-gradient-to-b from-white via-gray-200 to-gray-400"
-  >
+  <footer class="px-2 py-12">
     <div
       class="m-auto container sm:px-6 flex-col-reverse items-center md:flex-row flex md:justify-between"
     >
@@ -12,13 +10,13 @@
       <div
         class="flex flex-col text-gray-600 md:flex-row items-center md:space-x-7"
       >
-        <router-link :to="localePath(currentRoute.path, switchedLocale)">
+        <a :href="switchedLocalePath(path)">
           <emojione-flag-for-united-kingdom
-            v-if="switchedLocale === 'en'"
+            v-if="lang === 'ja'"
             class="w-8 h-8"
           />
           <emojione-flag-for-japan v-else class="w-8 h-8" />
-        </router-link>
+        </a>
         <div class="my-4 space-x-4">
           <a
             href="https://www.npmjs.com/~miyauci"
@@ -50,9 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { usePath } from '../_utils/path'
+import { useLang } from '../_utils/language'
 
-import { useLocalePath } from '@/composites'
-const { currentRoute } = useRouter()
-const { localePath, switchedLocale } = useLocalePath()
+const { path, switchedLocalePath } = usePath()
+
+const { lang } = useLang()
 </script>
