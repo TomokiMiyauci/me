@@ -1,0 +1,257 @@
+---
+title: Speed ​​up Typescript with Jest
+description: Learn how to speed up your tests with Jest. Introducing esbuild or swc as transformers, it speeds up testing by speeding up transpiling, which tends to be slow with TypeScript.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-03-27
+slug: /posts/speeding-up-jest/
+---
+
+## Introduction
+
+With the advent of `esbuild`, the front-end world has become more demanding of speed in the development environment.
+The rise of `vite` can be said to be the best of all.
+
+`esbuild` and `swc` are written by the fast `Go` and `Rust`, and more often omit Typescript type checking.
+Type checking for `tsc` is usually done in IDEs and workflows, so by stripping them off,
+you're specializing in converting to `JavaScript` as a pure compiler.
+
+Now, when testing Typescript code,
+it's often [ts-jest](https://github.com/kulshekhar/ts-jest) or [babel-jest](https://www.npmjs.com/package) as a transformer.
+However, these can slow down the test.
+
+This time, I will show you how to speed up the execution of `Jest` and realize a fast test.
+
+## Conclusion
+
+I will show you about the method first.
+
+```bash
+yarn add -D jest @swc/jest
+```
+
+```json:jest.config.json
+{
+  "transform": {
+    "^.+\\.(t|j)sx?$": "@swc/jest"
+  }
+}
+```
+
+Use `@swc/jest` as the transformer.
+
+## Performance comparison
+
+Let's see how much the performance has improved due to the speedup.
+
+<Alert type="warning">
+  Since the performance differs depending on the execution environment, I will
+  compare the results relative to each other.
+</Alert>
+
+### CommonJS + Javascript
+
+Try the pattern that seems to be the fastest in theory.
+CommonJS-style JavaScript may be the fastest, as it shouldn't need to be transpiled. (I'm sorry if I made a mistake :pray:)
+
+I'm not interested in the contents of the function, so prepare a suitable function and test it.
+
+```js:index.js
+exports.add = (a, b) => a + b
+```
+
+```js:test/index.spec.js
+const { add } = require('../src')
+
+describe('add', () => {
+    it('should return 2 when it gives 1,1', () => {
+        const result = add(1,1)
+        expect(result).toBe(2)
+    })
+})
+```
+
+```js:jest.config.js
+module.exports = {
+  testEnvironment: "node",
+  roots: ["<rootDir>/test/"]
+};
+```
+
+Disable the cache and average about 10 times.
+It is not a strict measurement, but this time it is a speed comparison of each,
+so I think that a relative comparison can be made by matching the conditions.
+
+```bash
+for i in {0..9}; do yarn jest --no-cache ; done
+```
+
+Result:
+
+| Transformer                   | Mean(s) |
+| ----------------------------- | ------- |
+| None（CommonJS + JavaScript） | 0.512   |
+
+I will consider this as a standard.
+
+### ESM + TypeScript
+
+A pattern that describes TypeScript in ES module format. This is the pattern most of the time you use TypeScript.
+
+```ts:index.ts
+export const add = (a: number, b: number): number => a + b
+```
+
+```ts:test/index.spec.ts
+import { add } from '../src/'
+
+describe('add', () => {
+    it('should return 2 when it gives 1,1', () => {
+        const result = add(1,1)
+        expect(result).toBe(2)
+    })
+})
+```
+
+#### Use ts-jest for transformers
+
+```js:jest.config.js
+module.exports = {
+  ...,
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  }
+};
+
+```
+
+Result:
+
+| Transformer                   | Mean(s) |
+| ----------------------------- | ------- |
+| `ts-jest`                     | 1.660   |
+| None（CommonJS + JavaScript） | 0.512   |
+
+It takes about 3 times longer than CommonJS + JavaScript. I want to do something about this.
+
+#### Use esbuild for transformers
+
+[esbuild](https://github.com/swc-project/swc) is a fast bundler written in Go. By default,
+Bundler has built-in support for parsing TypeScript syntax and discarding type annotations.
+
+```bash
+yarn add -D esbuild-jest esbuild
+```
+
+```js:jest.config.js
+module.exports = {
+  ...,
+  transform: {
+    '^.+\\.tsx?$': 'esbuild-jest'
+  }
+};
+```
+
+Result:
+
+| Transformer                   | Mean(s) |
+| ----------------------------- | ------- |
+| `esbuild-jest`                | 0.373   |
+| `ts-jest`                     | 1.660   |
+| None（CommonJS + JavaScript） | 0.512   |
+
+It's amazing speed. Surprisingly faster than CommonJS + JavaScript.
+
+#### Use swc for transformers
+
+[swc](https://github.com/swc-project/swc) is an ultra-fast compiler written in rust.
+It seems that [Deno](https://github.com/denoland/deno) is also used for `deno lint` and `deno doc`.
+
+```bash
+yarn add -D @swc/jest
+```
+
+```js:jest.config.js
+module.exports = {
+  ...,
+  transform: {
+    '^.+\\.tsx?$': ['@swc/jest'],
+  }
+};
+```
+
+Result:
+
+| Transformer                 | Mean(s) |
+| --------------------------- | ------- |
+| `@swc/jest`                 | 0.351   |
+| `esbuild-jest`              | 0.373   |
+| `ts-jest`                   | 1.660   |
+| None（CommonJS + JavaScript | 0.512   |
+
+You can see that both `esbuild` and `swc` can be transpiled at incredible speeds.
+It is not possible to compare the speed of both with this result alone,
+but it seems that `swc` is slightly more advantageous when examined.
+However, `esbuild-jest` has the advantage that you can optionally change the following items:
+
+```ts
+interface Options {
+  jsxFactory?: string
+  jsxFragment?: string
+  sourcemap?: boolean | 'inline' | 'external'
+  loaders?: {
+    [ext: string]: Loader
+  }
+  target?: string
+  format?: string
+}
+```
+
+Also, for VSCode, an extension for [jest](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest) is provided.
+This will automatically run the test in the background if there is a change in the test target,
+of course this test will also be faster.
+
+If the test is successful, it will nark: white_check_mark: to the target code.
+Since the test ends immediately, it is a good development experience to mark it immediately.
+
+## Stop to use jest.config.ts
+
+The above result used `jest.config.js` as the `jest` config file.
+However, the `.ts` format configuration file does not improve performance much even if the transformer is changed.
+
+```bash
+// @swc/jest + jest.config.js
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.385 s
+Ran all test suites.
+✨  Done in 1.24s.
+
+// @swc/jest + jest.config.ts
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.389 s
+Ran all test suites.
+✨  Done in 2.93s.
+```
+
+Just changing the file format to `.ts` has taken more than twice as long.
+
+This is because jest is requesting `ts-node` from the transpiling of `jest.config.ts`.
+Therefore, if possible, you should write the configuration file in json format as `jest.config.json`,
+or write the configuration file in `jest.config.js` format.
+
+## Cons
+
+As mentioned at the beginning, `esbuild` and `swc` omit type checking and enjoy speed.
+Therefore, the following code cannot detect compilation errors during testing.
+
+```ts
+export const add = (a: number, b: string): number => a + b
+```
+
+In this case, the annotations are inappropriate, but when compiled into JavaScript, it works and passes the test.
+
+That said, most IDEs should display the error visually, and you can prevent it by adding `tsc` to your workflow.

@@ -1,0 +1,468 @@
+---
+title: ViteでPreactのTypescript環境を構築する
+description: No bundleツールのViteを使って、TypescriptベースのPreactの環境を構築します。ESLintやPrettierの設定もあわせて行います。
+tags:
+  - Preact
+  - Tutorial
+
+thumbnail: thumbnail.png
+hero: hero.png
+date: 2021-03-03
+slug: /posts/vite-preact-typescript/
+---
+
+## はじめに
+
+Vite は Vue.js の作者の Evan You 氏が開発しているビルドツールです。
+ネイティブの ES Module のインポートを利用し、バンドル不要で高速に動作する開発環境を提供します。
+Vue3 はもちろん、React や Preact も対応しています。
+今回はそんな Vite を使って、Preact プロジェクトの環境構築をします。
+
+できあがったテンプレートは[こちら](https://github.com/TomokiMiyauci/vite-preact)にあります。
+
+## やること
+
+preact/cli の default テンプレートに近づけることを目標に、最低限開発に必要なツールを導入していきます。
+ツールを個別に導入できるよう、それぞれ順を追って説明しています。
+
+- Typescript
+- ESLint
+- Prettier
+- Stylelint
+- husky と lint-staged
+- Path Alias
+
+## 環境構築
+
+まずは、vite のテンプレートを展開しましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn create vite-app <project-name> --template preact
+cd <project-name>
+yarn
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm init vite-app <project-name> --template preact
+cd <project-name>
+npm i
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+開発サーバーを立ち上げるとその速さに感動します。
+
+### Typescript にする
+
+続いてプロジェクトを Typescript 化しましょう。最小限の構成では次の２つを行うだけです。
+
+1.すべての`.jsx`ファイルを`.tsx`にします。 2.`index.html`の script タグの src を`/src/main.tsx`に変更します。
+
+これで開発サーバーを立ち上げると、問題なく実行できるのが確認できます。
+
+実際はこれだけでも動きますが、エディター上でのユーザーエクスペリエンスを向上させるために、さらに設定を加えます。
+
+`tsconfig.json`をプロジェクトルートに設置します。これでエディターに Typescript プロジェクトであることを認識させます。
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
+  },
+  "include": ["src"]
+}
+```
+
+VSCode ではこの時点で、`.tsx`ファイルにエラーが表示されているので、これを修正します。全ての`.tsx`ファイルに次の一文を加えます。
+
+```ts
+import { h } from 'preact'
+```
+
+また`Fragment`を使っている場合は、更にそれもインポートします。
+
+```ts
+import { h, Fragment } from 'preact'
+```
+
+次に、エントリーポイントである`main.tsx`を修正します。
+Typescript になったことで、型エラーが検出されています。
+`document.getElementById`は戻り値が`HTMLElement`または`null`なため、null チェックを入れてあげます。
+
+<Alert>
+  `index.html`の id に app が必ず存在するなら、`Non-null assertion
+  operator`も使えます。
+</Alert>
+
+```tsx:main.tsx
+const el = document.getElementById('app')
+if (el) {
+  render(<App />, el)
+}
+```
+
+続いて`vite.config.js`に変更を加えます。
+
+```ts:vite.config.js
+const config = {
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment'
+  },
+  plugins: [preactRefresh()]
+}
+```
+
+最小構成で Typescript 化できました。以下は、やらなくても問題ありません。
+
+`.js`ファイルの撲滅のため、`vite.config.js`を`.ts`に変更しましょう。また、ES Module 形式に変更し、プロジェクト全体の統一感を高めましょう。
+
+`vite.config.ts`は以下のようになります。
+
+```ts:vite.config.ts
+import preactRefresh from '@prefresh/vite'
+import type { UserConfig } from 'vite'
+
+const config: UserConfig = {
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment',
+  },
+
+  plugins: [preactRefresh()],
+}
+
+export default config
+```
+
+これで Typescript 化は終了です。
+
+### ESLint を導入する
+
+リンターのない開発は厳しいので、必ず導入しましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D eslint eslint-config-preact @typescript-eslint/parser typescript
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D eslint eslint-config-preact @typescript-eslint/parser typescript
+```
+
+  </CodeGroup>
+
+</CodeGroups>
+
+```json:.eslintrc
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "preact"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {}
+}
+```
+
+`package.json`の`script`にリント用のコマンドを用意するとのちのち楽です。
+
+```json:package.json
+"scripts": {
+  "lint:script": "eslint --ext .ts,tsx --ignore-path .gitignore ."
+}
+```
+
+個人的には、fix したくない場面もあるので、`--fix`は外から付けるようにしています。
+
+さてこれを実行させましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn lint:script --fix
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run lint:script --fix
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+VSCode ユーザーは以下の設定もすることで、自動フォーマットを効かせることができます。
+ESLint の拡張が必要なので、なければ[ここを参考に](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)インストールしてください。
+
+```json:.vscode/settings.json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
+}
+```
+
+これによって保存時にフォーマットできました。
+
+### husky と lint-staged を設定する
+
+コミット前に、静的チェックを走らせ、エラーコードをコミットできない仕組みにしましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D husky lint-staged
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D husky lint-staged
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`package.json`に次を追加します。
+
+```json:package.json
+{
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --fix"
+  }
+}
+```
+
+これによって、コミット前にコミットファイルのうち該当する拡張子のファイルに対し、ESLint が走ります。
+
+もちろんリントエラーの場合はコミットがキャンセルされます。
+
+### Prettier を設定する
+
+Prettier にプロジェクト全体のフォーマットを任せましょう。
+また、Typescript のコードでは、セミコロンは視認性が悪くなるため、Prettier で自動的に削除しましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D prettier eslint-config-prettier
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D prettier eslint-config-prettier
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+```json:.prettierrc
+{
+  "trailingComma": "es5",
+  "semi": false,
+  "singleQuote": true
+}
+```
+
+ESLint と Prettier を併用する場合、ルールのバッティングがあるため、`.eslintrc`を修正します。
+
+```json:.eslintrc
+{
+  "extends": [
+    "eslint:all",
+    "preact",
+    // 他のルールの下に追加
+    "prettier",
+    "prettier/@typescript-eslint"
+  ]
+}
+```
+
+コマンドによってフォーマッターを実行できます。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn prettier -w -u .
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run prettier -w -u .
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+コミット前に自動フォーマットを適用させたいので、`lint-staged`にその設定を加えます。
+
+```json:package.json
+{
+ "lint-staged": {
+    "*.{ts,tsx}": "eslint --fix",
+    "*": "prettier -w -u" // prettierは一番最後にします
+  }
+}
+```
+
+VSCode ユーザーは次の設定によって、自動的にフォーマットできます。
+また、例によって拡張が必要なので、なければ[こちらを参考に](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)インストールしてください。
+
+```json:.vscode/settings.json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+```
+
+### Stylelint を設定する
+
+スタイルファイルもリント対象にしましょう。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D stylelint stylelint-config-recommended stylelint-config-standard
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D stylelint stylelint-config-recommended stylelint-config-standard
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+```json:.stylelintrc
+{
+  "extends": ["stylelint-config-recommended", "stylelint-config-standard"]
+}
+```
+
+`package.jsoon`を編集して、コマンドと lint-staged を設定します。
+
+```json:package.json
+{
+  "scripts": {
+    "lint:style": "stylelint src/**/*.{css,scss}"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --fix",
+    "*.{css,scss}": "stylelint --fix",
+    "*": "prettier -w -u"
+  }
+}
+```
+
+VSCode ユーザーは次の設定によって、自動的にフォーマットできます。
+拡張が必要なので、なければ[こちらを参考に](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)インストールしてください。
+
+長くなりましたがこれでリンターとフォーマッターの基本的な設定は終了です。
+
+### Path Alias を設定する
+
+モジュールの import はデフォルトでは相対パスを指定しますが、alias を設定して常に同じルートを参照したいです。
+
+`vite.config.ts`と`tsconfig.json`変更して alias を設定しましょう。
+
+<Alert type="warning">Key は`/`から始まらなければなりません。</Alert>
+
+```ts:vite.config.ts
+import { join } from 'path'
+import type { UserConfig } from 'vite'
+
+const config: UserConfig = {
+  alias: {
+    '/@/': join(__dirname, 'src'),
+  }
+}
+
+export default config
+```
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "/@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+これで alias の設定ができました。こんな感じで使います。
+
+```tsx:main.tsx
+import { App } from '/@/app'
+```
+
+`/`から始まらなければならないのが、少し違和感ありますが、パッケージ名の alias との兼ね合いみたいです。
+詳しくは[こちら](https://github.com/vitejs/vite/blob/master/src/node/config.ts#L53)を参照ください。
+
+以上で最低限の環境が構築できました。

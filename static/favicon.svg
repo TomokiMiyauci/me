@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><path d="M136 20v41a475 475 0 01-34 22v173l-15-10-15-11V106l-35 30 1-47z" /><g><path d="M244 76l20 13-1 83 1 38-31 22 1-39v-46l-20 27-19-52v136l-30 22V20l29 20 28 71z" /></g>
+  <style>
+    path {
+        fill: #06b6d4;
+    }
+    @media (prefers-color-scheme: dark) {
+        path {
+            fill: #e11d48;
+        }
+    }
+  </style>
+</svg>

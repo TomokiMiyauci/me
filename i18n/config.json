@@ -1,0 +1,18 @@
+[
+  {
+    "code": "en",
+    "hrefLang": "en-US",
+    "name": "English",
+    "localName": "English",
+    "langDir": "ltr",
+    "dateFormat": "MM/DD/YYYY"
+  },
+  {
+    "code": "ja",
+    "hrefLang": "ja-JP",
+    "name": "Japanese",
+    "localName": "Japanese",
+    "langDir": "ltr",
+    "dateFormat": "YYYY/MM/DD"
+  }
+]

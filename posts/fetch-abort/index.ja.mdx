@@ -1,0 +1,217 @@
+---
+title: fetchによるHTTPリクエストをAbortControllerで中断する
+description: fetchを使ったHTTPリクエストを中断する方法を紹介します。中断後の処理や、複数のHTTPリクエストの一括中断の方法など、実践的なケースにも触れ、正しいエラーハンドリングについて説明します。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-06-10
+slug: /posts/fetch-abort/
+---
+
+## はじめに
+
+`AbortController` は非同期処理を中断するためのインターフェイスで、`Node.js` では `15.0.0` から使えるようになりました。
+今回は代表的な非同期処理である HTTP リクエストのキャンセルについて説明します。
+
+HTTP でリクエストを送信するには、古くは `XMLHttpRequest` を使っていましたが、昨今では Promise ベースの `Fetch API` を使うことが多いと思います。
+
+[`axios`](https://github.com/axios/axios) や　[`ky`](https://github.com/sindresorhus/ky) といった HTTP クライアントライブラリの使用率は非常に高いですが、Universal API として 基本的な `Fetch API` でのキャンセレーションについて説明します。
+
+## Fetch API について
+
+モダンブラウザと Deno では `Fetch API` を標準で利用可能です。`Node.js` でも、[`node-fetch`](https://github.com/node-fetch/node-fetch) があるので、`Fetch API` は HTTP クライアントとしてユニバーサルに利用できるといって過言ありません。ですので、まずは `Fetch API` での利用法をしっかり抑えましょう。
+
+`Fetch API` は第２引数に `RequestInit` というオブジェクトを受け取ります。インターフェイスは次のとおりです。
+
+```ts
+declare function fetch(
+  input: Request | URL | string,
+  init?: RequestInit
+): Promise<Response>
+
+interface RequestInit {
+  body?: BodyInit | null
+  cache?: RequestCache
+  credentials?: RequestCredentials
+  headers?: HeadersInit
+  integrity?: string
+  keepalive?: boolean
+  method?: string
+  mode?: RequestMode
+  redirect?: RequestRedirect
+  referrer?: string
+  referrerPolicy?: ReferrerPolicy
+  signal?: AbortSignal | null
+  window?: any
+}
+```
+
+`signal` というキーは、 `AbortSignal` を受け取ります。`AbortSignal`　は `AbortController` クラスのメンバーです。
+
+### AbortController について
+
+`AbortController` は、非同期処理を中断できるシグナルオブジェクトを含むコントローラーです。コンストラクターからオブジェクトを生成できます。
+
+```ts
+const controller = new AbortController()
+
+declare class AbortController {
+  readonly signal: AbortSignal
+  abort(): void
+}
+```
+
+`AbortController` はシグナルオブジェクトの参照と `abort` メソッドを持ちます。この `signal` を `fetch` に渡し、`abort` メソッドを呼ぶことで、HTTP リクエストを中断できます。
+
+例は Deno 以外の実行環境を想定しています。Deno は `1.10.3` の時点でまだ `Fetch API` のキャンセレーションが実装されていません。[main ブランチにマージ](https://github.com/denoland/deno/pull/10863)されたのでおそらく近日中に利用できると思います。
+
+> Top-Level Await 記法を使用しています
+
+```ts
+const url = 'https://google.com'
+const controller = new AbortController()
+
+await fetch(url, {
+  signal: controller.signal
+})
+
+setTimeout(() => {
+  controller.abort()
+}, 1000)
+```
+
+上の例では、1000 ミリ秒後に、リクエストを中断します。 UI 上ではボタンのクリックイベントなどに `abort` 関数の呼び出しをバインドすることで、ユーザー主導のキャンセリングを実現できます。
+
+これで中断はできましたが、次に中断後の処理について考えます。
+
+中断をハンドルするにはいくつかの方法が存在します。それぞれ見ていきましょう。
+
+### Fetch API の reject
+
+`Fetch API` では、次の 2 つのケースで reject が発生すると定義されています。詳しくは[仕様書](https://fetch.spec.whatwg.org/)を参照してください。
+
+- `TypeError`
+- `AbortError`
+
+`TypeError` はネットワークエラーの発生とともにスローされます。例えば、存在しない URL へのリクエストは `TypeError` が発生します。
+
+```ts
+await fetch('https://this-is-not-exist.com')
+Uncaught TypeError: error sending request for url (https://this-is-not-exist.com/): error trying to connect: dns error: failed to lookup address information: nodename nor servname provided, or not known
+```
+
+そして、もう一つのエラーが `AbortError` です。これはリクエストの中断とともに発生します。
+
+`AbortError` を拾うことで、エラー処理をきっちり行うことができます。
+また、`TypeError` と `AbortError` を拾い分けることで、ユーザーフレンドリーな通知などが行えます。
+
+```ts
+try {
+  await fetch('https://this-is-not-exist.com')
+} catch (e) {
+  if (e instanceof AbortError) {
+    // Abort error handling
+  } else {
+    // Network error handling
+  }
+}
+```
+
+上の例では `tryCatch` 文でエラーキャッチをしましたが、もちろん `Promise` の `reject` 関数からもエラーを拾うことができます。
+
+### イベントハンドラーとイベントリスナー
+
+`AbortSignal` のインターフェイスは次のとおりです。
+
+```ts
+interface AbortSignal extends EventTarget {
+  readonly aborted: boolean
+  onabort: ((this: AbortSignal, ev: Event) => any) | null
+  addEventListener<K extends keyof AbortSignalEventMap>(
+    type: K,
+    listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
+    options?: boolean | AddEventListenerOptions
+  ): void
+  removeEventListener<K extends keyof AbortSignalEventMap>(
+    type: K,
+    listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
+    options?: boolean | EventListenerOptions
+  ): void
+}
+```
+
+`AbortSignal` には `onabort` というイベントハンドラがあります。
+これに任意の関数をセットすることで、中断時にその関数が呼び出されます。
+
+```ts
+const controller = new AbortController()
+controller.signal.onabort = () => {}
+```
+
+また、イベントリスナーの `type` を `abort` とすることで、同じように中断を監視できます。
+
+```ts
+controller.signal.addEventListener('abort', () => {})
+```
+
+また、読み取り専用プロパティの `aborted` は `AbortSignal` が中断されたかどうかを表します。
+
+## 複数の HTTP リクエストを中断する
+
+`AboutController` は、複数の `fetch` 関数の呼び出しに渡すことができ、一括で HTTP リクエストを中断できます。
+
+```ts
+const controller = new AbortController()
+const { signal } = controller
+
+try {
+  await Promise.all(
+    [endpoint1, endpoint2, endpoint3].map((url) => {
+      fetch(url, { signal })
+    })
+  )
+} catch (e) {}
+```
+
+また、エラーのキャッチも一括で行えます。
+
+## 複数回中断させる
+
+`AbortController` は一度 `abort` を呼び出すと、
+その `AbortSignal` を参照にしている `fetch` 関数を再度実行できません。
+
+例えば Vue では次のように書いてしまいがちになります。
+
+```html
+<script setup lang="ts">
+  const controller = new AbortController()
+
+  const onCancel = () => {
+    controller.abort()
+  }
+
+  const onClick = async () => {
+    await fetch(url, { signal: controller.signal })
+  }
+</script>
+```
+
+この例では、`AbortController` インスタンスは `onClick` の度に再生成されるわけではないで、中断後 2 回目の HTTP リクエストを行えません。
+
+インスタンスを `fetch` の度に再設定する必要があるので、次のようにします。
+
+```html
+<script setup lang="ts">
+  let controller
+
+  const onCancel = () => {
+    controller?.abort()
+  }
+
+  const onClick = async () => {
+    controller = new AbortController()
+    await fetch(url, { signal: controller.signal })
+  }
+</script>
+```
+
+変数のスコープ上、`let` で宣言しなければならないのが残念ですが、これで fetch の度に新しいインスタンス設定できます。

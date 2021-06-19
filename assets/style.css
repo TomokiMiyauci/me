@@ -1,0 +1,59 @@
+body {
+  @apply antialiased;
+}
+
+body.light {
+  @apply bg-gray-50 text-gray-700;
+}
+
+body.dark {
+  @apply bg-gray-900 text-gray-200;
+}
+
+button {
+  @apply outline-none focus:outline-none;
+}
+
+body.light .prose code {
+  @apply bg-gray-100;
+}
+
+body.dark .prose code {
+  @apply bg-gray-800;
+}
+
+img {
+  @apply rounded-md;
+}
+
+svg {
+  @apply inline;
+}
+
+.gatsby-resp-image-wrapper {
+  @apply my-4 border-1 border-solid;
+}
+
+body.light .prose thead {
+  @apply bg-gray-200 border-b-gray-300;
+}
+
+body.light .prose tbody {
+  @apply bg-gray-100;
+}
+
+body.dark .prose tbody {
+  @apply bg-gray-800;
+}
+
+body.dark .prose thead {
+  @apply bg-gray-700 border-b-gray-500;
+}
+
+body.light .prose tbody tr {
+  @apply border-b-gray-200;
+}
+
+body.dark .prose tbody tr {
+  @apply border-b-gray-500;
+}

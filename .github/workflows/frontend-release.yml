@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/frontend-release.yml'
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -45,41 +42,41 @@ jobs:
   #     - name: Lint by tsc
   #       run: yarn lerna run --scope frontend lint:types
 
-  lint-script:
-    needs: setup
-    runs-on: ubuntu-latest
+  # lint-script:
+  #   needs: setup
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Restore node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+  #     - name: Restore node_modules
+  #       id: node_modules_cache_id
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: '**/node_modules'
+  #         key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
-      - name: Lint by ESLint
-        run: yarn lerna run --scope frontend lint:script
+  #     - name: Lint by ESLint
+  #       run: yarn lerna run --scope frontend lint:script
 
-  lint-style:
-    needs: setup
-    runs-on: ubuntu-latest
+  # lint-style:
+  #   needs: setup
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Restore node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+  #     - name: Restore node_modules
+  #       id: node_modules_cache_id
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: '**/node_modules'
+  #         key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
-      - name: Lint by Stylelint
-        run: yarn lerna run --scope frontend lint:style
+  #     - name: Lint by Stylelint
+  #       run: yarn lerna run --scope frontend lint:style
 
   # lint-markdown:
   #   needs: setup
@@ -115,15 +112,15 @@ jobs:
           key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
       - name: Build
-        run: yarn lerna run --scope frontend build
+        run: yarn build
 
       - uses: actions/upload-artifact@v2
         with:
           name: dist
-          path: frontend/dist
+          path: public
 
   deploy:
-    needs: [lint-script, lint-style, build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -131,7 +128,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: dist
-          path: frontend/dist
+          path: public
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -139,5 +136,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLOROGUE }}'
           channelId: live
           projectId: blorogue
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
