@@ -34,7 +34,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
 }) => {
   const block = parseBlock(className)
   const { ext, filePath } =
-    /^(?<ext>[a-z]+):?(?<filePath>.*)/.exec(block).groups ?? {}
+    /^(?<ext>[a-z]+):?(?<filePath>.*)/.exec(block)?.groups ?? {}
 
   const copy2Clipboard = (): void => {
     navigator.clipboard.writeText(children)
