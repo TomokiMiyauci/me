@@ -32,7 +32,7 @@ const IndexPage: FC<PageProps> = ({
 
         <div className="mt-10 md:mt-30 md:grid md:grid-cols-2">
           <LocalizedLink
-            to="/posts"
+            to="/posts/"
             language={locale}
             className="rounded-md block bg-gradient-to-r p-6 md:p-10 from-purple-800 to-pink-700 text-2xl shadow"
           >

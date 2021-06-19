@@ -76,7 +76,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
           </LocalizedLink>
 
           <LocalizedLink
-            to="/posts"
+            to="/posts/"
             language={locale}
             className={`p-2 md:p-2 space-x-2 md:px-3 flex rounded-full md:px-3 border ${
               isActive('/posts/')
@@ -119,14 +119,13 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
         "
               >
                 <li>
-                  <LocalizedLink to={originalPath} language="ja">
-                    日本語
+                  <LocalizedLink to={originalPath} language="en">
+                    English
                   </LocalizedLink>
                 </li>
-
                 <li>
-                  <LocalizedLink to={originalPath} language="en">
-                    Englush
+                  <LocalizedLink to={originalPath} language="ja">
+                    日本語
                   </LocalizedLink>
                 </li>
               </ul>

@@ -1,1 +1,1 @@
-export const SITE_URL = "https://miyauchi.dev";
+export const SITE_URL = 'https://miyauchi.dev/'

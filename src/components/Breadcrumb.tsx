@@ -13,7 +13,7 @@ const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
       <li className="inline">
         <Link
           className="align-middle  hover:text-teal-500 transition duration-200"
-          to="/posts"
+          to="/posts/"
           language={locale}
         >
           Article List
