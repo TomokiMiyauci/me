@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Highlight, { defaultProps, Language } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
-import cust from '@iconify-icons/mdi-light/content-cut'
+import { replace } from 'core-fn'
+import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
+import confetti from 'canvas-confetti'
+
+const parseBlock = replace(/language-/, '')
+
 const languageMap = (ext: string): Language => {
   switch (ext) {
     case 'ts': {
@@ -23,10 +28,18 @@ const languageMap = (ext: string): Language => {
   }
 }
 
-export default ({ children, className }) => {
-  const block = className.replace(/language-/, '')
+const CodeBlock: FC<{ children: string; className: string }> = ({
+  children,
+  className
+}) => {
+  const block = parseBlock(className)
+  const { ext, filePath } =
+    /^(?<ext>[a-z]+):?(?<filePath>.*)/.exec(block)?.groups ?? {}
 
-  const [_, ext, filePath] = /^([a-z]+):?(.*)/.exec(block) || []
+  const copy2Clipboard = (): void => {
+    navigator.clipboard.writeText(children)
+    confetti()
+  }
 
   return (
     <Highlight
@@ -35,52 +48,73 @@ export default ({ children, className }) => {
       theme={oceanicNext}
       language={languageMap(ext)}
     >
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <div className="relative my-6 text-sm">
-          <div
-            className=" flex -mx-4 md:rounded-md   overflow-x-auto"
-            style={{ backgroundColor: 'rgb(40, 44, 52)' }}
-          >
+      {({ className, style, tokens, getLineProps, getTokenProps }) => {
+        return (
+          <div className="relative group my-6 text-sm">
             <div
-              className="text-right sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600 "
+              className=" flex -mx-4 md:rounded-md   overflow-x-auto"
               style={{ backgroundColor: 'rgb(40, 44, 52)' }}
             >
-              {head(tokens).map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
-            </div>
-
-            <div className="p-4">
-              <pre className={`${className} `} style={style}>
-                {head(tokens).map((line, i) => (
-                  <div key={i} {...getLineProps({ line, key: i })}>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
-                    ))}
-                  </div>
+              <div
+                className="text-right select-none sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600"
+                style={{ backgroundColor: 'rgb(40, 44, 52)' }}
+              >
+                {head(tokens).map((_, i) => (
+                  <div key={i}>{i + 1}</div>
                 ))}
-              </pre>
+              </div>
+
+              <div className="px-3 md:px-4 overflow-x-scroll">
+                <div className="py-4 overflow-x-scroll">
+                  <pre className={`${className} `} style={style}>
+                    {head(tokens).map((line, i) => (
+                      <div key={i} {...getLineProps({ line, key: i })}>
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token, key })} />
+                        ))}
+                      </div>
+                    ))}
+                  </pre>
+                </div>
+              </div>
             </div>
+
+            {filePath && (
+              <span className="absolute bg-gray-700 text-gray-200 -top-4 py-1 px-2 rounded-sm md:rounded-md">
+                {filePath}
+              </span>
+            )}
+
+            <span className="absolute -right-2 top-0 text-gray-400">{ext}</span>
+
+            <button
+              title="Copy to clipboard"
+              onClick={copy2Clipboard}
+              className="rounded
+              absolute
+              opacity-50
+              transition-opacity
+              duration-300
+              group-hover:opacity-100
+              -right-2
+              md:right-2
+              bottom-2
+              bg-gray-700
+              flex
+              items-center
+              text-cyan-500
+              p-2"
+            >
+              <Icon
+                className="rounded-md w-6 h-6 flex shadow bg-gray-600"
+                icon={contentCopy}
+              />
+            </button>
           </div>
-
-          {filePath && (
-            <span className="absolute bg-gray-700 text-gray-200 -top-4 py-1 px-2 rounded-sm md:rounded-md">
-              {filePath}
-            </span>
-          )}
-
-          <span className="absolute -right-2 top-1 text-gray-400">{ext}</span>
-
-          {/* <button className="absolute bottom-0 right-0">
-            <Icon
-              width="1.2rem"
-              height="1.2rem"
-              className="rounded-md w-6 flex shadow bg-gray-600"
-              icon={cust}
-            />
-          </button> */}
-        </div>
-      )}
+        )
+      }}
     </Highlight>
   )
 }
+
+export default CodeBlock
