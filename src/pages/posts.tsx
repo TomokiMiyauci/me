@@ -1,45 +1,45 @@
-import React, { FC } from "react";
-import { PageProps, graphql } from "gatsby";
-import { BlogPostsQuery } from "../../graphql-types";
-import ArticleHeadline from "../components/ArticleHeadline";
-import Layout from "../components/Layout";
-import Seo from "../components/seo";
-import { Helmet } from "react-helmet";
+import React, { FC } from 'react'
+import { PageProps, graphql } from 'gatsby'
+import { BlogPostsQuery } from '../../graphql-types'
+import ArticleHeadline from '../components/ArticleHeadline'
+import Layout from '../components/Layout'
+import Seo from '../components/seo'
+import { Helmet } from 'react-helmet'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
     data,
     pageContext: { originalPath, locale },
-    location,
-  } = a;
+    location
+  } = a
   const {
     allMdx,
-    site: { siteMetadata },
-  } = data;
-  const { siteUrl } = siteMetadata;
+    site: { siteMetadata }
+  } = data
+  const { siteUrl } = siteMetadata
 
-  const p = locale === "en" ? "/" : "/ja";
+  const p = locale === 'en' ? '/' : '/ja'
 
-  const fullpath = new URL(location.pathname, siteUrl).toString();
+  const fullpath = new URL(location.pathname, siteUrl).toString()
 
   const breadcrumbList = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
     itemListElement: [
       {
-        "@type": "ListItem",
+        '@type': 'ListItem',
         position: 1,
-        name: "Home",
-        item: new URL(p, siteUrl),
+        name: 'Home',
+        item: new URL(p, siteUrl)
       },
       {
-        "@type": "ListItem",
+        '@type': 'ListItem',
         position: 2,
-        name: "Blog",
-        item: fullpath,
-      },
-    ],
-  };
+        name: 'Blog',
+        item: fullpath
+      }
+    ]
+  }
 
   return (
     <Layout originalPath={originalPath}>
@@ -64,7 +64,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           {allMdx.nodes.map(
             ({
               frontmatter: { title, thumbnail, description, date, slug },
-              timeToRead,
+              timeToRead
             }) => (
               <li className="-mx-2 md:mx-auto" key={slug}>
                 <ArticleHeadline
@@ -82,10 +82,10 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         </ul>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default Posts;
+export default Posts
 
 export const query = graphql`
   query BlogPosts($locale: String!) {
@@ -114,4 +114,4 @@ export const query = graphql`
       }
     }
   }
-`;
+`

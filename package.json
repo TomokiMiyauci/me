@@ -1,8 +1,7 @@
 {
-  "name": "next-blog",
-  "version": "1.0.0",
+  "name": "me",
   "private": true,
-  "description": "next-blog",
+  "description": "My portfolio",
   "author": "TomokiMiyauci",
   "keywords": [
     "gatsby"
@@ -76,6 +75,7 @@
     "gatsby-remark-images": "^5.4.1",
     "gatsby-transformer-remark": "^4.4.1",
     "husky": "^6.0.0",
+    "prettier": "^2.3.1",
     "prism-themes": "^1.7.0"
   }
 }

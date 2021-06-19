@@ -21,8 +21,8 @@ This is the case for the following.
 ```ts
 // "0" | 0
 const getZero = (isString: boolean) => {
-  return isString ? "0" : 0;
-};
+  return isString ? '0' : 0
+}
 ```
 
 Aside from its usage, this function takes a `boolean` argument and returns either `'0'` or `0`.
@@ -38,13 +38,13 @@ Let's take a look at it.
 The previous example can be rewritten with Conditional Types as follows
 
 ```ts
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <T extends true ? "0" : 0>"0" : <T extends true ? "0" : 0>0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <T extends true ? '0' : 0>'0' : <T extends true ? '0' : 0>0
+}
 // or
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <any>"0" : 0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <any>'0' : 0
+}
 ```
 
 The first `<T extends boolean>` defines the generic `T`.
@@ -67,10 +67,10 @@ If you are using a function declaration rather than an arrow function, you can g
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-redeclare */
 
-function getZero(isString: true): "0";
-function getZero(isString: false): 0;
-function getZero(isString: boolean): "0" | 0 {
-  return isString ? "0" : 0;
+function getZero(isString: true): '0'
+function getZero(isString: false): 0
+function getZero(isString: boolean): '0' | 0 {
+  return isString ? '0' : 0
 }
 ```
 
@@ -81,19 +81,19 @@ Unfortunately, there doesn't seem to be any other way, so let's try to make the 
 The following is the current best way to write it.
 
 ```ts
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <T extends true ? "0" : 0>"0" : <T extends true ? "0" : 0>0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <T extends true ? '0' : 0>'0' : <T extends true ? '0' : 0>0
+}
 ```
 
 Since it is redundant, seek ways to write this short.
 Write it as follows.
 
 ```ts
-type ZeroOption<T extends boolean = false> = T extends true ? "0" : 0;
+type ZeroOption<T extends boolean = false> = T extends true ? '0' : 0
 const getZero = <T extends boolean>(isString: T): ZeroOption<T> => {
-  return isString ? <ZeroOption<T>>"0" : <ZeroOption<T>>0;
-};
+  return isString ? <ZeroOption<T>>'0' : <ZeroOption<T>>0
+}
 ```
 
 You can define a type alias like a variable in the `type`. You can also use generics for this.
@@ -107,11 +107,11 @@ As mentioned earlier, can also take `any` and `never` compatible with `boolean` 
 so let's see how the type is determined.
 
 ```ts
-getZero(true); // "0"
-getZero(false); // 0
-getZero(true as boolean); // 0 | "0"
-getZero(true as any); // 0 | "0"
-getZero(true as never); // never
+getZero(true) // "0"
+getZero(false) // 0
+getZero(true as boolean) // 0 | "0"
+getZero(true as any) // 0 | "0"
+getZero(true as never) // never
 ```
 
 If the argument is `true` or `false`, it is as expected, but if it is `boolean`, `any` or `never`, why is this type judged?

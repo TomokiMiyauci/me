@@ -24,27 +24,27 @@ slug: /posts/file-dialog
 
 ```ts
 export const fileDialog = (
-  accept: string = "*",
+  accept: string = '*',
   multiple: boolean = false
 ): Promise<FileList> =>
   new Promise((resolve, reject) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = multiple;
-    input.accept = accept;
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.multiple = multiple
+    input.accept = accept
 
     input.onchange = () => {
-      const { files } = input;
+      const { files } = input
       if (files) {
-        resolve(files);
+        resolve(files)
       } else {
-        reject(Error("Not receive the FileList"));
+        reject(Error('Not receive the FileList'))
       }
-      input.remove();
-    };
+      input.remove()
+    }
 
-    input.click();
-  });
+    input.click()
+  })
 ```
 
 ポイントとしては、ファイルダイアログを呼び出すだけなら、input 要素のレンダリングは必要ありません。

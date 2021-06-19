@@ -1,22 +1,22 @@
-import React, { FC } from "react";
-import Me from "../components/Me";
-import Layout from "../components/Layout";
-import Seo from "../components/seo";
-import { PageProps, graphql } from "gatsby";
-import { Helmet } from "react-helmet";
+import React, { FC } from 'react'
+import Me from '../components/Me'
+import Layout from '../components/Layout'
+import Seo from '../components/seo'
+import { PageProps, graphql } from 'gatsby'
+import { Helmet } from 'react-helmet'
 
-import { LocalizedLink, useLocalization } from "gatsby-theme-i18n";
+import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 const IndexPage: FC<PageProps> = ({
   pageContext: { originalPath },
   data,
-  location,
+  location
 }) => {
   const {
-    site: { siteMetadata },
-  } = data;
-  const { siteUrl } = siteMetadata;
-  const { locale } = useLocalization();
-  const fullpath = new URL(location.pathname, siteUrl).toString();
+    site: { siteMetadata }
+  } = data
+  const { siteUrl } = siteMetadata
+  const { locale } = useLocalization()
+  const fullpath = new URL(location.pathname, siteUrl).toString()
 
   return (
     <Layout originalPath={originalPath}>
@@ -45,10 +45,10 @@ const IndexPage: FC<PageProps> = ({
         </div>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default IndexPage;
+export default IndexPage
 
 export const query = graphql`
   query Home {
@@ -58,4 +58,4 @@ export const query = graphql`
       }
     }
   }
-`;
+`

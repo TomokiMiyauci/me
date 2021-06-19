@@ -26,22 +26,22 @@ The `Fetch API` takes an object called `RequestInit` as its second argument. The
 declare function fetch(
   input: Request | URL | string,
   init?: RequestInit
-): Promise<Response>;
+): Promise<Response>
 
 interface RequestInit {
-  body?: BodyInit | null;
-  cache?: RequestCache;
-  credentials?: RequestCredentials;
-  headers?: HeadersInit;
-  integrity?: string;
-  keepalive?: boolean;
-  method?: string;
-  mode?: RequestMode;
-  redirect?: RequestRedirect;
-  referrer?: string;
-  referrerPolicy?: ReferrerPolicy;
-  signal?: AbortSignal | null;
-  window?: any;
+  body?: BodyInit | null
+  cache?: RequestCache
+  credentials?: RequestCredentials
+  headers?: HeadersInit
+  integrity?: string
+  keepalive?: boolean
+  method?: string
+  mode?: RequestMode
+  redirect?: RequestRedirect
+  referrer?: string
+  referrerPolicy?: ReferrerPolicy
+  signal?: AbortSignal | null
+  window?: any
 }
 ```
 
@@ -52,11 +52,11 @@ The key `signal` takes an `AbortSignal`.`AbortSignal` is a member of class `Abor
 `AbortController` is a controller that contains a signal object that can abort an asynchronous process. You can create an object from the constructor.
 
 ```ts
-const controller = new AbortController();
+const controller = new AbortController()
 
 declare class AbortController {
-  readonly signal: AbortSignal;
-  abort(): void;
+  readonly signal: AbortSignal
+  abort(): void
 }
 ```
 
@@ -67,16 +67,16 @@ The follow example assumes a non-Deno execution environment. Deno does not yet i
 > Top-Level Await notation is used.
 
 ```ts
-const url = "https://google.com";
-const controller = new AbortController();
+const url = 'https://google.com'
+const controller = new AbortController()
 
 await fetch(url, {
-  signal: controller.signal,
-});
+  signal: controller.signal
+})
 
 setTimeout(() => {
-  controller.abort();
-}, 1000);
+  controller.abort()
+}, 1000)
 ```
 
 In the above example, the request will be aborted after 1000 milliseconds. In the UI, user-initiated cancelling can be achieved by binding a call to the `abort` function to a button click event, for example.
@@ -106,7 +106,7 @@ Also, by picking up `TypeError` and `AbortError`, you can make notifications mor
 
 ```ts
 try {
-  await fetch("https://this-is-not-exist.com");
+  await fetch('https://this-is-not-exist.com')
 } catch (e) {
   if (e instanceof AbortError) {
     // Abort error handling
@@ -124,18 +124,18 @@ The interface of `AbortSignal` is as follows:
 
 ```ts
 interface AbortSignal extends EventTarget {
-  readonly aborted: boolean;
-  onabort: ((this: AbortSignal, ev: Event) => any) | null;
+  readonly aborted: boolean
+  onabort: ((this: AbortSignal, ev: Event) => any) | null
   addEventListener<K extends keyof AbortSignalEventMap>(
     type: K,
     listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
     options?: boolean | AddEventListenerOptions
-  ): void;
+  ): void
   removeEventListener<K extends keyof AbortSignalEventMap>(
     type: K,
     listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
     options?: boolean | EventListenerOptions
-  ): void;
+  ): void
 }
 ```
 
@@ -143,14 +143,14 @@ interface AbortSignal extends EventTarget {
 By setting any function to it, the function will be called on abort.
 
 ```ts
-const controller = new AbortController();
-controller.signal.onabort = () => {};
+const controller = new AbortController()
+controller.signal.onabort = () => {}
 ```
 
 You can also monitor for abort event in the same way by setting the `type` of the event listener to `abort`.
 
 ```ts
-controller.signal.addEventListener("abort", () => {});
+controller.signal.addEventListener('abort', () => {})
 ```
 
 Also, the read-only property `aborted` indicates whether the `AbortSignal` has been aborted or not.
@@ -160,15 +160,15 @@ Also, the read-only property `aborted` indicates whether the `AbortSignal` has b
 The `AboutController` can be passed to multiple calls to the `fetch` function to abort a batch HTTP requests.
 
 ```ts
-const controller = new AbortController();
-const { signal } = controller;
+const controller = new AbortController()
+const { signal } = controller
 
 try {
   await Promise.all(
     [endpoint1, endpoint2, endpoint3].map((url) => {
-      fetch(url, { signal });
+      fetch(url, { signal })
     })
-  );
+  )
 } catch (e) {}
 ```
 
@@ -182,15 +182,15 @@ For example, in Vue, you might end up writing something like this.
 
 ```html
 <script setup lang="ts">
-  const controller = new AbortController();
+  const controller = new AbortController()
 
   const onCancel = () => {
-    controller.abort();
-  };
+    controller.abort()
+  }
 
   const onClick = async () => {
-    await fetch(url, { signal: controller.signal });
-  };
+    await fetch(url, { signal: controller.signal })
+  }
 </script>
 ```
 
@@ -199,16 +199,16 @@ Since you need to make the instance for each `fetch`, you do so as follows:
 
 ```html
 <script setup lang="ts">
-  let controller;
+  let controller
 
   const onCancel = () => {
-    controller?.abort();
-  };
+    controller?.abort()
+  }
 
   const onClick = async () => {
-    controller = new AbortController();
-    await fetch(url, { signal: controller.signal });
-  };
+    controller = new AbortController()
+    await fetch(url, { signal: controller.signal })
+  }
 </script>
 ```
 

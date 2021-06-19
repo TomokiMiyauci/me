@@ -1,7 +1,7 @@
-const { register } = require("esbuild-register/dist/node");
+const { register } = require('esbuild-register/dist/node')
 
 register({
-  target: "node15",
-});
+  target: 'node15'
+})
 
-module.exports = require("./config/gatsby-config.ts");
+module.exports = require('./config/gatsby-config.ts')

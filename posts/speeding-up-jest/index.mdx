@@ -196,14 +196,14 @@ However, `esbuild-jest` has the advantage that you can optionally change the fol
 
 ```ts
 interface Options {
-  jsxFactory?: string;
-  jsxFragment?: string;
-  sourcemap?: boolean | "inline" | "external";
+  jsxFactory?: string
+  jsxFragment?: string
+  sourcemap?: boolean | 'inline' | 'external'
   loaders?: {
-    [ext: string]: Loader;
-  };
-  target?: string;
-  format?: string;
+    [ext: string]: Loader
+  }
+  target?: string
+  format?: string
 }
 ```
 
@@ -249,7 +249,7 @@ As mentioned at the beginning, `esbuild` and `swc` omit type checking and enjoy 
 Therefore, the following code cannot detect compilation errors during testing.
 
 ```ts
-export const add = (a: number, b: string): number => a + b;
+export const add = (a: number, b: string): number => a + b
 ```
 
 In this case, the annotations are inappropriate, but when compiled into JavaScript, it works and passes the test.

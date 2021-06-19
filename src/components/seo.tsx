@@ -1,13 +1,13 @@
-import React, { FC, ReactChild } from "react";
-import { Helmet } from "react-helmet";
-import { useStaticQuery, graphql } from "gatsby";
+import React, { FC, ReactChild } from 'react'
+import { Helmet } from 'react-helmet'
+import { useStaticQuery, graphql } from 'gatsby'
 
 interface SeoProps {
-  title: string;
-  description: string;
-  children: ReactChild;
-  fullpath: string;
-  imgUrl: string;
+  title: string
+  description: string
+  children: ReactChild
+  fullpath: string
+  imgUrl: string
 }
 
 const Seo: FC<Partial<SeoProps>> = ({
@@ -15,10 +15,10 @@ const Seo: FC<Partial<SeoProps>> = ({
   title,
   children,
   fullpath,
-  imgUrl,
+  imgUrl
 }) => {
   const {
-    site: { siteMetadata },
+    site: { siteMetadata }
   } = useStaticQuery(
     graphql`
       query {
@@ -38,7 +38,7 @@ const Seo: FC<Partial<SeoProps>> = ({
         }
       }
     `
-  );
+  )
 
   const {
     title: _title,
@@ -47,20 +47,20 @@ const Seo: FC<Partial<SeoProps>> = ({
     author,
     copyright,
     image,
-    social,
-  } = siteMetadata;
+    social
+  } = siteMetadata
 
-  const imageUrl = new URL("logo.png", siteUrl).toString();
+  const imageUrl = new URL('logo.png', siteUrl).toString()
 
   const ldJson = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
     url: siteUrl,
-    logo: imageUrl,
-  };
+    logo: imageUrl
+  }
 
-  const metaDescription = description || siteMetadata.description;
-  const { twitter, github } = social;
+  const metaDescription = description || siteMetadata.description
+  const { twitter, github } = social
 
   return (
     <Helmet title={title} titleTemplate={`%s | ${_title}`}>
@@ -85,7 +85,7 @@ const Seo: FC<Partial<SeoProps>> = ({
 
       {children}
     </Helmet>
-  );
-};
+  )
+}
 
-export default Seo;
+export default Seo

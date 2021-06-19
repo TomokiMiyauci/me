@@ -26,27 +26,27 @@ In this article, I'll show you how to easily call a file dialog and receive a fi
 
 ```ts
 export const fileDialog = (
-  accept: string = "*",
+  accept: string = '*',
   multiple: boolean = false
 ): Promise<FileList> =>
   new Promise((resolve, reject) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = multiple;
-    input.accept = accept;
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.multiple = multiple
+    input.accept = accept
 
     input.onchange = () => {
-      const { files } = input;
+      const { files } = input
       if (files) {
-        resolve(files);
+        resolve(files)
       } else {
-        reject(Error("Not receive the FileList"));
+        reject(Error('Not receive the FileList'))
       }
-      input.remove();
-    };
+      input.remove()
+    }
 
-    input.click();
-  });
+    input.click()
+  })
 ```
 
 The point is, if you just want to call the file dialog, you don't need to render the input element.

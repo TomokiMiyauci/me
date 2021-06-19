@@ -1,17 +1,17 @@
-import React, { FC } from "react";
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image";
-import { LocalizedLink, useLocalization } from "gatsby-theme-i18n";
+import React, { FC } from 'react'
+import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
+import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 
 const ArticleHeadline: FC<{
-  title: string;
-  description: string;
-  img: IGatsbyImageData;
-  to: string;
-  alt: string;
-  lastUpdated?: number;
-  readingTime?: number;
+  title: string
+  description: string
+  img: IGatsbyImageData
+  to: string
+  alt: string
+  lastUpdated?: number
+  readingTime?: number
 }> = ({ title, description, img, to, alt, lastUpdated, readingTime }) => {
-  const { locale } = useLocalization();
+  const { locale } = useLocalization()
   return (
     <LocalizedLink
       to={to}
@@ -66,7 +66,7 @@ const ArticleHeadline: FC<{
         )}
       </div>
     </LocalizedLink>
-  );
-};
+  )
+}
 
-export default ArticleHeadline;
+export default ArticleHeadline

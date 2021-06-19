@@ -26,22 +26,22 @@ HTTP でリクエストを送信するには、古くは `XMLHttpRequest` を使
 declare function fetch(
   input: Request | URL | string,
   init?: RequestInit
-): Promise<Response>;
+): Promise<Response>
 
 interface RequestInit {
-  body?: BodyInit | null;
-  cache?: RequestCache;
-  credentials?: RequestCredentials;
-  headers?: HeadersInit;
-  integrity?: string;
-  keepalive?: boolean;
-  method?: string;
-  mode?: RequestMode;
-  redirect?: RequestRedirect;
-  referrer?: string;
-  referrerPolicy?: ReferrerPolicy;
-  signal?: AbortSignal | null;
-  window?: any;
+  body?: BodyInit | null
+  cache?: RequestCache
+  credentials?: RequestCredentials
+  headers?: HeadersInit
+  integrity?: string
+  keepalive?: boolean
+  method?: string
+  mode?: RequestMode
+  redirect?: RequestRedirect
+  referrer?: string
+  referrerPolicy?: ReferrerPolicy
+  signal?: AbortSignal | null
+  window?: any
 }
 ```
 
@@ -52,11 +52,11 @@ interface RequestInit {
 `AbortController` は、非同期処理を中断できるシグナルオブジェクトを含むコントローラーです。コンストラクターからオブジェクトを生成できます。
 
 ```ts
-const controller = new AbortController();
+const controller = new AbortController()
 
 declare class AbortController {
-  readonly signal: AbortSignal;
-  abort(): void;
+  readonly signal: AbortSignal
+  abort(): void
 }
 ```
 
@@ -67,16 +67,16 @@ declare class AbortController {
 > Top-Level Await 記法を使用しています
 
 ```ts
-const url = "https://google.com";
-const controller = new AbortController();
+const url = 'https://google.com'
+const controller = new AbortController()
 
 await fetch(url, {
-  signal: controller.signal,
-});
+  signal: controller.signal
+})
 
 setTimeout(() => {
-  controller.abort();
-}, 1000);
+  controller.abort()
+}, 1000)
 ```
 
 上の例では、1000 ミリ秒後に、リクエストを中断します。 UI 上ではボタンのクリックイベントなどに `abort` 関数の呼び出しをバインドすることで、ユーザー主導のキャンセリングを実現できます。
@@ -106,7 +106,7 @@ Uncaught TypeError: error sending request for url (https://this-is-not-exist.com
 
 ```ts
 try {
-  await fetch("https://this-is-not-exist.com");
+  await fetch('https://this-is-not-exist.com')
 } catch (e) {
   if (e instanceof AbortError) {
     // Abort error handling
@@ -124,18 +124,18 @@ try {
 
 ```ts
 interface AbortSignal extends EventTarget {
-  readonly aborted: boolean;
-  onabort: ((this: AbortSignal, ev: Event) => any) | null;
+  readonly aborted: boolean
+  onabort: ((this: AbortSignal, ev: Event) => any) | null
   addEventListener<K extends keyof AbortSignalEventMap>(
     type: K,
     listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
     options?: boolean | AddEventListenerOptions
-  ): void;
+  ): void
   removeEventListener<K extends keyof AbortSignalEventMap>(
     type: K,
     listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any,
     options?: boolean | EventListenerOptions
-  ): void;
+  ): void
 }
 ```
 
@@ -143,14 +143,14 @@ interface AbortSignal extends EventTarget {
 これに任意の関数をセットすることで、中断時にその関数が呼び出されます。
 
 ```ts
-const controller = new AbortController();
-controller.signal.onabort = () => {};
+const controller = new AbortController()
+controller.signal.onabort = () => {}
 ```
 
 また、イベントリスナーの `type` を `abort` とすることで、同じように中断を監視できます。
 
 ```ts
-controller.signal.addEventListener("abort", () => {});
+controller.signal.addEventListener('abort', () => {})
 ```
 
 また、読み取り専用プロパティの `aborted` は `AbortSignal` が中断されたかどうかを表します。
@@ -160,15 +160,15 @@ controller.signal.addEventListener("abort", () => {});
 `AboutController` は、複数の `fetch` 関数の呼び出しに渡すことができ、一括で HTTP リクエストを中断できます。
 
 ```ts
-const controller = new AbortController();
-const { signal } = controller;
+const controller = new AbortController()
+const { signal } = controller
 
 try {
   await Promise.all(
     [endpoint1, endpoint2, endpoint3].map((url) => {
-      fetch(url, { signal });
+      fetch(url, { signal })
     })
-  );
+  )
 } catch (e) {}
 ```
 
@@ -183,15 +183,15 @@ try {
 
 ```html
 <script setup lang="ts">
-  const controller = new AbortController();
+  const controller = new AbortController()
 
   const onCancel = () => {
-    controller.abort();
-  };
+    controller.abort()
+  }
 
   const onClick = async () => {
-    await fetch(url, { signal: controller.signal });
-  };
+    await fetch(url, { signal: controller.signal })
+  }
 </script>
 ```
 
@@ -201,16 +201,16 @@ try {
 
 ```html
 <script setup lang="ts">
-  let controller;
+  let controller
 
   const onCancel = () => {
-    controller?.abort();
-  };
+    controller?.abort()
+  }
 
   const onClick = async () => {
-    controller = new AbortController();
-    await fetch(url, { signal: controller.signal });
-  };
+    controller = new AbortController()
+    await fetch(url, { signal: controller.signal })
+  }
 </script>
 ```
 

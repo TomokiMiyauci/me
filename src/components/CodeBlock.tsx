@@ -1,32 +1,32 @@
-import React from "react";
-import Highlight, { defaultProps, Language } from "prism-react-renderer";
-import oceanicNext from "prism-react-renderer/themes/oceanicNext";
-import { head } from "fonction";
-import cust from "@iconify-icons/mdi-light/content-cut";
-import { Icon } from "@iconify/react";
+import React from 'react'
+import Highlight, { defaultProps, Language } from 'prism-react-renderer'
+import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
+import { head } from 'fonction'
+import cust from '@iconify-icons/mdi-light/content-cut'
+import { Icon } from '@iconify/react'
 const languageMap = (ext: string): Language => {
   switch (ext) {
-    case "ts": {
-      return "typescript";
+    case 'ts': {
+      return 'typescript'
     }
-    case "js": {
-      return "javascript";
+    case 'js': {
+      return 'javascript'
     }
 
-    case "md": {
-      return "markdown";
+    case 'md': {
+      return 'markdown'
     }
 
     default: {
-      return ext as Language;
+      return ext as Language
     }
   }
-};
+}
 
 export default ({ children, className }) => {
-  const block = className.replace(/language-/, "");
+  const block = className.replace(/language-/, '')
 
-  const [_, ext, filePath] = /^([a-z]+):?(.*)/.exec(block) || [];
+  const [_, ext, filePath] = /^([a-z]+):?(.*)/.exec(block) || []
 
   return (
     <Highlight
@@ -39,11 +39,11 @@ export default ({ children, className }) => {
         <div className="relative my-6 text-sm">
           <div
             className=" flex -mx-4 md:rounded-md   overflow-x-auto"
-            style={{ backgroundColor: "rgb(40, 44, 52)" }}
+            style={{ backgroundColor: 'rgb(40, 44, 52)' }}
           >
             <div
               className="text-right sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600 "
-              style={{ backgroundColor: "rgb(40, 44, 52)" }}
+              style={{ backgroundColor: 'rgb(40, 44, 52)' }}
             >
               {head(tokens).map((_, i) => (
                 <div key={i}>{i + 1}</div>
@@ -82,5 +82,5 @@ export default ({ children, className }) => {
         </div>
       )}
     </Highlight>
-  );
-};
+  )
+}

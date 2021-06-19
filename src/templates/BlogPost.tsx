@@ -1,33 +1,33 @@
-import React, { FC } from "react";
-import { graphql, PageProps } from "gatsby";
-import Article from "../components/Article";
-import { BlogPostBySlugQuery } from "../../graphql-types";
-import ArticleHeadline from "../components/ArticleHeadline";
-import Layout from "../components/Layout";
-import { MDXRenderer } from "gatsby-plugin-mdx";
-import Seo from "../components/seo";
-import { Helmet } from "react-helmet";
-import { useLocalization } from "gatsby-theme-i18n";
+import React, { FC } from 'react'
+import { graphql, PageProps } from 'gatsby'
+import Article from '../components/Article'
+import { BlogPostBySlugQuery } from '../../graphql-types'
+import ArticleHeadline from '../components/ArticleHeadline'
+import Layout from '../components/Layout'
+import { MDXRenderer } from 'gatsby-plugin-mdx'
+import Seo from '../components/seo'
+import { Helmet } from 'react-helmet'
+import { useLocalization } from 'gatsby-theme-i18n'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location,
-  pageContext,
+  pageContext
 }) => {
   const {
     previous,
     next,
     mdx,
-    site: { siteMetadata },
-  } = data;
+    site: { siteMetadata }
+  } = data
 
   const { frontmatter, body, timeToRead } = mdx || {
-    frontmatter: { hero: {} },
-  };
-  const { title, description, hero, date } = frontmatter;
-  const { publicURL, childImageSharp } = hero;
-  const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString();
-  const { locale } = useLocalization();
+    frontmatter: { hero: {} }
+  }
+  const { title, description, hero, date } = frontmatter
+  const { publicURL, childImageSharp } = hero
+  const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
+  const { locale } = useLocalization()
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -105,10 +105,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
     </Layout>
-  );
-};
+  )
+}
 
-export default BlogPostTemplate;
+export default BlogPostTemplate
 
 export const pageQuery = graphql`
   query BlogPostBySlug(
@@ -177,4 +177,4 @@ export const pageQuery = graphql`
       }
     }
   }
-`;
+`

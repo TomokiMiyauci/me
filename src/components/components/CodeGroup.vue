@@ -1,12 +1,30 @@
 <template>
   <div class="code-group">
     <div
-      class="rounded-t-md border-b-2 px-2 bg-gray-800 text-sm text-white relative"
+      class="
+        rounded-t-md
+        border-b-2
+        px-2
+        bg-gray-800
+        text-sm text-white
+        relative
+      "
     >
       <button
         v-for="({ label }, index) in tabs"
         :key="label"
-        class="px-4 py-3 text-gray-400 font-bold font-mono hover:bg-green-800 transition border-transparent duration-300 border-b-2 focus:border-green-600 focus:bg-gray-700"
+        class="
+          px-4
+          py-3
+          text-gray-400
+          font-bold font-mono
+          hover:bg-green-800
+          transition
+          border-transparent
+          duration-300
+          border-b-2
+          focus:border-green-600 focus:bg-gray-700
+        "
         :class="[{ 'bg-gray-700': activeTab === index }]"
         @click="switchTab(index)"
         @keypress="switchTab(index)"

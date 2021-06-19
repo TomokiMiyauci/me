@@ -1,16 +1,16 @@
-import React from "react";
-import { GatsbySSR } from "gatsby";
+import React from 'react'
+import { GatsbySSR } from 'gatsby'
 
-const onRenderBody: GatsbySSR["onRenderBody"] = ({
+const onRenderBody: GatsbySSR['onRenderBody'] = ({
   pathname,
   setHeadComponents,
-  pluginOptions,
+  pluginOptions
 }) => {
-  console.log(pathname, pluginOptions);
-};
+  console.log(pathname, pluginOptions)
+}
 
 const config: GatsbySSR = {
-  onRenderBody,
-};
+  onRenderBody
+}
 
-export default config;
+export default config

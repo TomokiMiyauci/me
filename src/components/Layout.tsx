@@ -9,7 +9,7 @@ import CodeBlock from './CodeBlock'
 import CodeGroups from './CodeGroups'
 
 const components: MDXProviderComponentsProp = {
-  pre: props => <div {...props} />,
+  pre: (props) => <div {...props} />,
   a: MdxLink,
   code: CodeBlock,
   Alert,

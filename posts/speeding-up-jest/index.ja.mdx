@@ -185,14 +185,14 @@ module.exports = {
 
 ```ts
 interface Options {
-  jsxFactory?: string;
-  jsxFragment?: string;
-  sourcemap?: boolean | "inline" | "external";
+  jsxFactory?: string
+  jsxFragment?: string
+  sourcemap?: boolean | 'inline' | 'external'
   loaders?: {
-    [ext: string]: Loader;
-  };
-  target?: string;
-  format?: string;
+    [ext: string]: Loader
+  }
+  target?: string
+  format?: string
 }
 ```
 
@@ -234,7 +234,7 @@ Ran all test suites.
 冒頭述べている通り、`esbuild` や `swc` は型チェックを省略し、速度を享受しています。よって、次のコードはテスト時にコンパイルエラーを検出できません。
 
 ```ts
-export const add = (a: number, b: string): number => a + b;
+export const add = (a: number, b: string): number => a + b
 ```
 
 この場合は、アノテーションが不適切ですが、JavaScript にコンパイルされたときには、正常のコードとして動くのでテストも通ります。

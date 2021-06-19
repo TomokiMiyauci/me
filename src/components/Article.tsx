@@ -1,18 +1,18 @@
-import React, { FC, ReactChild } from "react";
-import Breadcrumb from "./Breadcrumb";
-import { GatsbyImage, IGatsbyImageData } from "gatsby-plugin-image";
-import { Icon } from "@iconify/react";
-import cached from "@iconify-icons/mdi/cached";
-import timerSand from "@iconify-icons/mdi/timer-sand";
+import React, { FC, ReactChild } from 'react'
+import Breadcrumb from './Breadcrumb'
+import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
+import { Icon } from '@iconify/react'
+import cached from '@iconify-icons/mdi/cached'
+import timerSand from '@iconify-icons/mdi/timer-sand'
 
 interface ArticleProps {
-  children: ReactChild;
-  title: string;
-  description: string;
-  hero: IGatsbyImageData;
-  relativePath: string;
-  timeToRead: number;
-  date: string;
+  children: ReactChild
+  title: string
+  description: string
+  hero: IGatsbyImageData
+  relativePath: string
+  timeToRead: number
+  date: string
 }
 
 const Article: FC<ArticleProps> = ({
@@ -22,7 +22,7 @@ const Article: FC<ArticleProps> = ({
   hero,
   relativePath,
   timeToRead,
-  date,
+  date
 }) => {
   return (
     <article itemScope itemType="http://schema.org/Article" className="mx-auto">
@@ -78,7 +78,7 @@ space-x-6 my-6"
 
       {children}
     </article>
-  );
-};
+  )
+}
 
-export default Article;
+export default Article

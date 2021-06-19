@@ -1,13 +1,13 @@
-import React, { FC } from "react";
-import { LocalizedLink as Link } from "gatsby-theme-i18n";
-import { useLocalization } from "gatsby-theme-i18n";
-import { Icon } from "@iconify/react";
-import ChevronDouble from "@iconify-icons/mdi/chevron-right";
+import React, { FC } from 'react'
+import { LocalizedLink as Link } from 'gatsby-theme-i18n'
+import { useLocalization } from 'gatsby-theme-i18n'
+import { Icon } from '@iconify/react'
+import ChevronDouble from '@iconify-icons/mdi/chevron-right'
 const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
   title,
-  to,
+  to
 }) => {
-  const { locale } = useLocalization();
+  const { locale } = useLocalization()
   return (
     <ul className="mb-5 space-x-2 dark:text-gray-200 border-b md:border-none p-2 md:p-0 md:mx-0 -m-4">
       <li className="inline">
@@ -30,7 +30,7 @@ const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
         </li>
       )}
     </ul>
-  );
-};
+  )
+}
 
-export default Breadcrumb;
+export default Breadcrumb

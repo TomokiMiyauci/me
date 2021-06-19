@@ -99,13 +99,13 @@ npm i
 VSCode ではこの時点で、`.tsx`ファイルにエラーが表示されているので、これを修正します。全ての`.tsx`ファイルに次の一文を加えます。
 
 ```ts
-import { h } from "preact";
+import { h } from 'preact'
 ```
 
 また`Fragment`を使っている場合は、更にそれもインポートします。
 
 ```ts
-import { h, Fragment } from "preact";
+import { h, Fragment } from 'preact'
 ```
 
 次に、エントリーポイントである`main.tsx`を修正します。

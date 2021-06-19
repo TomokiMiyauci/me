@@ -1,39 +1,39 @@
-import React, { FC, useRef, useState, useEffect } from "react";
-import { LocalizedLink, useLocalization } from "gatsby-theme-i18n";
-import blogicon from "@iconify-icons/carbon/blog";
-import { Icon } from "@iconify/react";
-import Logo from "./Logo";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
-import useDarkMode from "use-dark-mode";
-import translateIcon from "@iconify-icons/mdi/translate";
-import accountIcon from "@iconify-icons/mdi/account-outline";
-import { useClickOutside } from "@miyauci/react-click-outside";
-import { ifElseFn } from "fonction";
+import React, { FC, useRef, useState, useEffect } from 'react'
+import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
+import blogicon from '@iconify-icons/carbon/blog'
+import { Icon } from '@iconify/react'
+import Logo from './Logo'
+import { DarkModeSwitch } from 'react-toggle-dark-mode'
+import useDarkMode from 'use-dark-mode'
+import translateIcon from '@iconify-icons/mdi/translate'
+import accountIcon from '@iconify-icons/mdi/account-outline'
+import { useClickOutside } from '@miyauci/react-click-outside'
+import { ifElseFn } from 'fonction'
 
 const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
-  const { locale } = useLocalization();
+  const { locale } = useLocalization()
 
   const { value, toggle } = useDarkMode(undefined, {
-    classNameDark: "dark",
-    classNameLight: "light",
-  });
+    classNameDark: 'dark',
+    classNameLight: 'light'
+  })
 
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
-  const ref = useRef<HTMLUListElement>(null);
-  const [isShow, changeShow] = useState(false);
+  const ref = useRef<HTMLUListElement>(null)
+  const [isShow, changeShow] = useState(false)
   const toggleShow = ifElseFn(
     () => isShow,
     () => changeShow(false),
     () => changeShow(true)
-  );
+  )
 
-  useClickOutside(ref, () => changeShow(false), "mousedown" as any);
-  const isActive = (path: string): boolean => originalPath === path;
+  useClickOutside(ref, () => changeShow(false), 'mousedown' as any)
+  const isActive = (path: string): boolean => originalPath === path
 
   return (
     <header
@@ -64,13 +64,13 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
             to="/"
             language={locale}
             className={`p-2 md:p-2 space-x-2 md:px-3 flex rounded-full md:px-3 border ${
-              isActive("/")
-                ? "bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white"
-                : ""
+              isActive('/')
+                ? 'bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white'
+                : ''
             }`}
           >
             <Icon className="w-7 h-7" icon={accountIcon} />
-            <span className={originalPath === "/" ? "" : "hidden md:inline"}>
+            <span className={originalPath === '/' ? '' : 'hidden md:inline'}>
               About
             </span>
           </LocalizedLink>
@@ -79,14 +79,14 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
             to="/posts"
             language={locale}
             className={`p-2 md:p-2 space-x-2 md:px-3 flex rounded-full md:px-3 border ${
-              isActive("/posts/")
-                ? "bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white"
-                : ""
+              isActive('/posts/')
+                ? 'bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white'
+                : ''
             }`}
           >
             <Icon className="w-7 h-7" icon={blogicon} />
             <span
-              className={originalPath === "/posts/" ? "" : "hidden md:inline"}
+              className={originalPath === '/posts/' ? '' : 'hidden md:inline'}
             >
               Blog
             </span>
@@ -141,7 +141,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default TheHeader;
+export default TheHeader

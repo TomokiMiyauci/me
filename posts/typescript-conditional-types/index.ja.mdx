@@ -20,8 +20,8 @@ slug: /posts/typescript-conditional-types
 ```ts
 // "0" | 0
 const getZero = (isString: boolean) => {
-  return isString ? "0" : 0;
-};
+  return isString ? '0' : 0
+}
 ```
 
 この関数の使いみちはさておき、引数に`boolean`を受け取り、`'0'` もしくは `0`を返す関数です。
@@ -37,13 +37,13 @@ const getZero = (isString: boolean) => {
 先程の例は、Conditional Types で次のように書き換えられます。
 
 ```ts
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <T extends true ? "0" : 0>"0" : <T extends true ? "0" : 0>0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <T extends true ? '0' : 0>'0' : <T extends true ? '0' : 0>0
+}
 // または
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <any>"0" : 0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <any>'0' : 0
+}
 ```
 
 最初の`<T extends boolean>`でジェネリクス`T`を定義しています。`T`は`extends boolean`を満たす型すなわち、
@@ -63,10 +63,10 @@ const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-redeclare */
 
-function getZero(isString: true): "0";
-function getZero(isString: false): 0;
-function getZero(isString: boolean): "0" | 0 {
-  return isString ? "0" : 0;
+function getZero(isString: true): '0'
+function getZero(isString: false): 0
+function getZero(isString: boolean): '0' | 0 {
+  return isString ? '0' : 0
 }
 ```
 
@@ -77,19 +77,19 @@ function getZero(isString: boolean): "0" | 0 {
 現状最も気分がいいのは以下の書き方です。
 
 ```ts
-const getZero = <T extends boolean>(isString: T): T extends true ? "0" : 0 => {
-  return isString ? <T extends true ? "0" : 0>"0" : <T extends true ? "0" : 0>0;
-};
+const getZero = <T extends boolean>(isString: T): T extends true ? '0' : 0 => {
+  return isString ? <T extends true ? '0' : 0>'0' : <T extends true ? '0' : 0>0
+}
 ```
 
 冗長なので、これを短く書く方法を模索します。
 以下のように書くことができます。
 
 ```ts
-type ZeroOption<T extends boolean = false> = T extends true ? "0" : 0;
+type ZeroOption<T extends boolean = false> = T extends true ? '0' : 0
 const getZero = <T extends boolean>(isString: T): ZeroOption<T> => {
-  return isString ? <ZeroOption<T>>"0" : <ZeroOption<T>>0;
-};
+  return isString ? <ZeroOption<T>>'0' : <ZeroOption<T>>0
+}
 ```
 
 `type`で変数のように型エイリアスを定義できます。これにはジェネリクスも使うことができます。
@@ -102,11 +102,11 @@ const getZero = <T extends boolean>(isString: T): ZeroOption<T> => {
 先程触れたように、`boolean`と互換性のある`any`や`never`も引数に受け取れるので、その時の型がどのように判定されるのか確認しましょう。
 
 ```ts
-getZero(true); // "0"
-getZero(false); // 0
-getZero(true as boolean); // 0 | "0"
-getZero(true as any); // 0 | "0"
-getZero(true as never); // never
+getZero(true) // "0"
+getZero(false) // 0
+getZero(true as boolean) // 0 | "0"
+getZero(true as any) // 0 | "0"
+getZero(true as never) // never
 ```
 
 引数に`true`や`false`を指定したときは期待通りですが、`boolean`や`any`、`never`のときはなぜこのような型が判定されるのでしょうか。

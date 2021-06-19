@@ -49,9 +49,9 @@ The first way to write it is to define the table as an array and pass it.
 Write as follows.
 
 ```ts
-describe.each(table)(name, fn, timeout);
-it.each(table)(name, fn, timeout);
-test.each(table)(name, fn, timeout);
+describe.each(table)(name, fn, timeout)
+it.each(table)(name, fn, timeout)
+test.each(table)(name, fn, timeout)
 ```
 
 Some objects have a same `each` method.
@@ -128,13 +128,13 @@ The interface looks like this:
 ```ts
 describe.each`
   table
-`(name, fn, timeout);
+`(name, fn, timeout)
 it.each`
   table
-`(name, fn, timeout);
+`(name, fn, timeout)
 test.each`
   table
-`(name, fn, timeout);
+`(name, fn, timeout)
 ```
 
 Write the same test as the above example, it will look like this:

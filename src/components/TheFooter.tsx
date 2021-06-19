@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import npm from "@iconify-icons/mdi/npm-variant";
-import github from "@iconify-icons/mdi/github";
-import twitter from "@iconify-icons/mdi/twitter";
-import { Icon } from "@iconify/react";
+import React, { FC } from 'react'
+import npm from '@iconify-icons/mdi/npm-variant'
+import github from '@iconify-icons/mdi/github'
+import twitter from '@iconify-icons/mdi/twitter'
+import { Icon } from '@iconify/react'
 const TheFooter: FC = () => {
   return (
     <footer className="px-2 py-12 mb-18 md:mb-auto">
@@ -40,7 +40,7 @@ const TheFooter: FC = () => {
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default TheFooter;
+export default TheFooter
