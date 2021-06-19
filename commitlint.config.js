@@ -1,9 +1,9 @@
 module.exports = {
-  extends: ['@commitlint/config-lerna-scopes'],
+  extends: ['gitmoji'],
   parserPreset: {
     parserOpts: {
-      headerPattern: /^(:\w*:)(?: \((.*?)\))?\s((?:.*(?=\())|.*)(?:\(#(\d*)\))?/,
-      headerCorrespondence: ['type', 'scope', 'subject', 'ticket', 'header']
+      headerPattern: /^(:\w*:)(?:\s)(?:\((.*?)\))?\s((?:.*(?=\())|.*)(?:\(#(\d*)\))?/,
+      headerCorrespondence: ['type', 'scope', 'subject', 'ticket']
     }
   },
   rules: {
@@ -13,7 +13,6 @@ module.exports = {
       [
         ':art:',
         ':newspaper:',
-        ':pencil:',
         ':memo:',
         ':zap:',
         ':fire:',
@@ -21,7 +20,6 @@ module.exports = {
         ':bug:',
         ':ambulance:',
         ':penguin:',
-        ':apple:',
         ':checkered_flag:',
         ':robot:',
         ':green_ale:',
@@ -83,7 +81,9 @@ module.exports = {
         ':alembic:',
         ':mag:',
         ':wheel-of-dharma:',
-        ':label:'
+        ':label:',
+        ':triangular_flag_on_post:',
+        ':page_facing_up:'
       ]
     ],
     'header-max-length': [2, 'always', 75]

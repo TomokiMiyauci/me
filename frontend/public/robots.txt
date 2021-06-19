@@ -1,2 +1,0 @@
-User-Agent:*
-Sitemap:https://miyauchi.dev/sitemap.xml
