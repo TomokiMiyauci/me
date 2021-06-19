@@ -5158,6 +5158,13 @@ copyfiles@^2.3.0:
     untildify "^4.0.0"
     yargs "^16.1.0"
 
+core-fn@^1.0.0-beta.1:
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/core-fn/-/core-fn-1.0.0-beta.1.tgz#bcd5354d2368fae586323b9f4efc3741aed6ed4f"
+  integrity sha512-3tlSWwdK8+1m9TXD7A/p686qih7aygNlZ5vR2YEolWBXzXGBywMB6ef/jPQSiJ6m5K5UTVkVp3KrhnTmHFbKWg==
+  dependencies:
+    curry-rice "^1.0.0"
+
 core-js-compat@3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.9.0.tgz#29da39385f16b71e1915565aa0385c4e0963ad56"
@@ -5539,6 +5546,11 @@ currently-unhandled@^0.4.1:
   integrity sha1-mI3zP+qxke95mmE2nddsF635V+o=
   dependencies:
     array-find-index "^1.0.1"
+
+curry-rice@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/curry-rice/-/curry-rice-1.0.0.tgz#ff5daf251141a54931988458ced7c39931fa5b96"
+  integrity sha512-rpXOEtPurOBZGieMQf/wG7YW+zi2N7EWrkaVBFLZYCUyG2LiLLuNup9yIdasuiCmo+O/LTwPDiijotmSlRLYXA==
 
 cz-conventional-changelog@3.2.0:
   version "3.2.0"

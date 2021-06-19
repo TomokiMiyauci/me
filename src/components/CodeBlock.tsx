@@ -2,8 +2,10 @@ import React from 'react'
 import Highlight, { defaultProps, Language } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
-import cust from '@iconify-icons/mdi-light/content-cut'
-import { Icon } from '@iconify/react'
+import { replace } from 'core-fn'
+
+const language = replace(/language-/, '')
+
 const languageMap = (ext: string): Language => {
   switch (ext) {
     case 'ts': {
@@ -24,7 +26,7 @@ const languageMap = (ext: string): Language => {
 }
 
 export default ({ children, className }) => {
-  const block = className.replace(/language-/, '')
+  const block = language(className)
 
   const [_, ext, filePath] = /^([a-z]+):?(.*)/.exec(block) || []
 
@@ -50,16 +52,18 @@ export default ({ children, className }) => {
               ))}
             </div>
 
-            <div className="p-4">
-              <pre className={`${className} `} style={style}>
-                {head(tokens).map((line, i) => (
-                  <div key={i} {...getLineProps({ line, key: i })}>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
-                    ))}
-                  </div>
-                ))}
-              </pre>
+            <div className="px-4 overflow-x-scroll">
+              <div className="py-4 overflow-x-scroll">
+                <pre className={`${className} `} style={style}>
+                  {head(tokens).map((line, i) => (
+                    <div key={i} {...getLineProps({ line, key: i })}>
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token, key })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              </div>
             </div>
           </div>
 

@@ -22,6 +22,7 @@
     "@mdx-js/react": "^1.6.22",
     "@miyauci/is-valid": "^1.0.0-beta.15",
     "@miyauci/react-click-outside": "^1.0.4",
+    "core-fn": "^1.0.0-beta.1",
     "esbuild-register": "^2.6.0",
     "firebase": "^8.6.8",
     "fonction": "^1.8.1",
