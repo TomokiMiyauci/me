@@ -5194,9 +5194,9 @@ copyfiles@^2.3.0:
     yargs "^16.1.0"
 
 core-fn@^1.0.0-beta.7:
-  version "1.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/core-fn/-/core-fn-1.0.0-beta.7.tgz#b41e265e091ed4bb77b71f03388b6faf7c58124b"
-  integrity sha512-Elzvn6DG3gyiV5FRe9CKnC7jRtOUjM8zTeVg0WQCRbIfaIqJIniZJ21NWKghGEigOdlW4e5UQ3XnUrjEvYRNFg==
+  version "1.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/core-fn/-/core-fn-1.0.0-beta.8.tgz#bf52e118b415e1d5a2373d7c77dc411fa2e93c49"
+  integrity sha512-hW9uppIM7PjV9lXZw6su7808NYTF5GdFbjgOuuWAf0QR4NWbXobcqaIUPLs+U/ajxzDvIyr+74yeZJyjMubEfQ==
   dependencies:
     curry-rice "^1.0.0"
     fonction "^1.8.1"
