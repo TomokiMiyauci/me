@@ -43,13 +43,14 @@ const ArticleHeadline: FC<{
             transition
             duration-200
             text-xl
+            text-accent
             sm:text-2xl
           "
           >
             {title}
           </h2>
 
-          <p className="light:text-gray-500 dark:text-gray-400 line-clamp-2 md:line-clamp-3">
+          <p className="light:text-gray-600 dark:text-gray-200 line-clamp-2 md:line-clamp-3">
             {description}
           </p>
         </div>

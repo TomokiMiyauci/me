@@ -3,6 +3,8 @@ import typography from 'windicss/plugin/typography'
 import lineClamp from 'windicss/plugin/line-clamp'
 import plugin from 'windicss/plugin'
 
+const varAccentColor = 'var(--accent-color)'
+
 export default defineConfig({
   safelist: ['prose', '-left-6'],
   extract: {
@@ -15,13 +17,18 @@ export default defineConfig({
           css: {
             color: false,
             blockquote: {
-              color: false
+              color: false,
+              marginInlineStart: '0.5rem',
+              marginInlineEnd: '0.5rem',
+              paddingLeft: '0.75rem',
+              borderLeftColor: varAccentColor
             },
             a: {
-              color: 'rgba(124, 58, 237)'
+              color: varAccentColor,
+              textDecoration: 'none'
             },
             'a code': {
-              color: 'rgba(124, 58, 237)'
+              color: varAccentColor
             },
             'a:hover': {
               '-webkit-text-decoration-line': 'underline',
@@ -29,12 +36,14 @@ export default defineConfig({
             },
             pre: false,
             code: {
+              color: false,
+              fontWeight: '500',
               backgroundColor: false,
+              whiteSpace: 'nowrap',
               borderRadius: '0.375rem',
               marginLeft: '0.25rem',
               marginRight: '0.25rem',
-              padding: '0.25rem',
-              color: 'var(--accent-color)'
+              padding: '0.25rem'
             },
             img: {
               boxShadow:
@@ -94,13 +103,16 @@ export default defineConfig({
     plugin(({ addUtilities }) => {
       const newUtilities = {
         '.bg-accent': {
-          color: 'ver(--accent-color)'
+          color: varAccentColor
         },
         '.text-accent': {
-          color: 'var(--accent-color)'
+          color: varAccentColor
         },
         '.fill-accent': {
-          fill: 'var(--accent-color)'
+          fill: varAccentColor
+        },
+        '.border-accent': {
+          borderColor: varAccentColor
         }
       }
       addUtilities(newUtilities)

@@ -6,7 +6,7 @@ import { replace, exec } from 'core-fn'
 import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
 import confetti from 'canvas-confetti'
-import { pipe } from 'fonction'
+import { pipe, length } from 'fonction'
 
 const parseBlock = replace(/language-/, '')
 const parseBlockName = exec(/^(?<ext>[a-z]+):?(?<filePath>.*)/)
@@ -50,17 +50,19 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
       language={languageMap(ext)}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => {
+        const _tokens = head(tokens)
+        const isOneLine = length(_tokens) === 1
         return (
           <div className="relative group my-6 text-sm">
             <div
-              className="flex -mx-4 md:rounded-md overflow-x-auto"
+              className="flex -mx-4 md:mx-0 md:rounded-md overflow-x-auto"
               style={{ backgroundColor: 'rgb(40, 44, 52)' }}
             >
               <div
                 className="text-right select-none sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600"
                 style={{ backgroundColor: 'rgb(40, 44, 52)' }}
               >
-                {head(tokens).map((_, i) => (
+                {_tokens.map((_, i) => (
                   <div key={i}>{i + 1}</div>
                 ))}
               </div>
@@ -81,12 +83,12 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
             </div>
 
             {filePath && (
-              <span className="absolute bg-gray-700 text-gray-200 -top-4 py-1 px-2 rounded-sm md:rounded-md">
+              <span className="absolute bg-gray-700 text-gray-200 -top-4 py-1 px-2 md:left-4 rounded-sm md:rounded-md">
                 {filePath}
               </span>
             )}
 
-            <span className="absolute select-none -right-2 top-0 text-gray-400">
+            <span className="absolute select-none -right-2 md:right-2 top-0 text-gray-400">
               {ext}
             </span>
 
@@ -109,7 +111,9 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               p-2"
             >
               <Icon
-                className="rounded-md w-6 h-6 flex shadow bg-gray-600"
+                className={`rounded-md flex shadow bg-gray-600 ${
+                  isOneLine ? 'w-3 h-3' : 'w-6 h-6'
+                } `}
                 icon={contentCopy}
               />
             </button>
