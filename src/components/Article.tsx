@@ -60,11 +60,11 @@ const Article: FC<ArticleProps> = ({
 space-x-6 my-6"
         >
           <span className="space-x-2 flex items-center">
-            <Icon icon={cached} />
+            <Icon className="text-accent" icon={cached} />
             <span>{date}</span>
           </span>
           <span v-if="readingTime" className="space-x-2 flex items-center">
-            <Icon icon={timerSand} />
+            <Icon className="text-accent" icon={timerSand} />
             <span>{timeToRead} min</span>
           </span>
         </div>

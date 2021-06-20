@@ -43,3 +43,15 @@ body {
     }
   }
 }
+
+.prose {
+  ul > li > {
+    *:first-child {
+      @apply mt-0;
+    }
+
+    *:last-child {
+      @apply mb-0;
+    }
+  }
+}

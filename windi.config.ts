@@ -67,7 +67,8 @@ export default defineConfig({
             h6: {
               color: false
             },
-
+            'ul > li': false,
+            'ul > li::before': false,
             'code::before': false,
             'code::after': false,
             'pre code': false,

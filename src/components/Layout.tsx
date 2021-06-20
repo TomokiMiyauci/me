@@ -7,10 +7,12 @@ import TheHeader from './TheHeader'
 import TheFooter from './TheFooter'
 import CodeBlock from './CodeBlock'
 import CodeGroups from './CodeGroups'
+import MdxLi from './MdxLi'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,
   a: MdxLink,
+  li: MdxLi,
   code: CodeBlock,
   Alert,
   CodeGroups,
