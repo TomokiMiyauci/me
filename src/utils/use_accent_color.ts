@@ -1,5 +1,6 @@
 import colors from 'windicss/colors'
-
+import { useEffect } from 'react'
+import { first, pipe, tap } from 'fonction'
 type Color = { label: string; color: string }
 
 const defaultColor: Color = {
@@ -32,9 +33,37 @@ const colorPalette: Color[] = [
   { label: 'gray', color: colors.gray[500] }
 ]
 
+const setProperty = (val: string): void => {
+  if (document) {
+    document.documentElement.style.setProperty('--accent-color', val)
+  }
+}
+
+const accentColor = Symbol('accentColor')
+
+const colorPipe = pipe(
+  (colorPalette: Color[], label: string) =>
+    colorPalette.filter((color) => color.label === label),
+  first,
+
+  tap((color) => {
+    if (color) {
+      setProperty(color.color)
+    }
+  })
+)
+
 const useAccentColor = () => {
+  useEffect(() => {
+    const label = localStorage.getItem(accentColor.toString())
+    if (label) {
+      colorPipe(colorPalette, label)
+    }
+  }, [])
+
   const switchColor = (color: Color) => {
-    document.documentElement.style.setProperty('--accent-color', color.color)
+    localStorage.setItem(accentColor.toString(), color.label)
+    setProperty(color.color)
   }
 
   return { switchColor, colorPalette }

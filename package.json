@@ -26,7 +26,7 @@
     "core-fn": "^1.0.0-beta.7",
     "esbuild-register": "^2.6.0",
     "firebase": "^8.6.8",
-    "fonction": "^1.8.1",
+    "fonction": "^1.9.0-beta.6",
     "gatsby": "^3.7.1",
     "gatsby-plugin-amp": "^0.2.2",
     "gatsby-plugin-canonical-urls": "^3.7.1",

@@ -7403,6 +7403,11 @@ fonction@^1.8.0-beta.6, fonction@^1.8.1:
   resolved "https://registry.yarnpkg.com/fonction/-/fonction-1.8.1.tgz#914b3daa29dcc8d41acfd278d20cddbb33fe8134"
   integrity sha512-CfiQWjwsvbnKetiOg0XPrxTK4rI+xq/+RuNv32cwnt37v66O4WL+vAUe7hrSRXMqavA2KLKSQBE+I7CBXd3yrQ==
 
+fonction@^1.9.0-beta.6:
+  version "1.9.0-beta.6"
+  resolved "https://registry.yarnpkg.com/fonction/-/fonction-1.9.0-beta.6.tgz#f847dd5fc2eaf6809a8b2a5382fba384f6d5cea9"
+  integrity sha512-4K6jySWXvG5n2K53lPnS3n8gg/B/5etFr9iaH7t1eewHmqFMr28jNlUgy7ItTZm6xQManVfHrIrhsISA+n5NPQ==
+
 for-each@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
