@@ -1,6 +1,7 @@
 import { defineConfig } from 'windicss/helpers'
 import typography from 'windicss/plugin/typography'
 import lineClamp from 'windicss/plugin/line-clamp'
+import plugin from 'windicss/plugin'
 
 export default defineConfig({
   safelist: ['prose', '-left-6'],
@@ -33,7 +34,7 @@ export default defineConfig({
               marginLeft: '0.25rem',
               marginRight: '0.25rem',
               padding: '0.25rem',
-              color: 'rgb(6, 182, 212)'
+              color: 'var(--accent-color)'
             },
             img: {
               boxShadow:
@@ -87,5 +88,22 @@ export default defineConfig({
       }
     }
   },
-  plugins: [typography(), lineClamp]
+  plugins: [
+    typography(),
+    lineClamp,
+    plugin(({ addUtilities }) => {
+      const newUtilities = {
+        '.bg-accent': {
+          color: 'ver(--accent-color)'
+        },
+        '.text-accent': {
+          color: 'var(--accent-color)'
+        },
+        '.fill-accent': {
+          fill: 'var(--accent-color)'
+        }
+      }
+      addUtilities(newUtilities)
+    })
+  ]
 })

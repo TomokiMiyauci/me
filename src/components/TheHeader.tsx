@@ -9,6 +9,7 @@ import translateIcon from '@iconify-icons/mdi/translate'
 import accountIcon from '@iconify-icons/mdi/account-outline'
 import { useClickOutside } from '@miyauci/react-click-outside'
 import { ifElseFn } from 'fonction'
+import AccentColor from './AccentColor'
 
 const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
   const { locale } = useLocalization()
@@ -95,7 +96,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
 
         <div className="flex space-x-4 md:space-x-8">
           <div className="relative flex items-center">
-            <button className="flex" onClick={toggleShow}>
+            <button className="flex text-accent" onClick={toggleShow}>
               <Icon className="w-8 h-8" icon={translateIcon} />
             </button>
 
@@ -132,8 +133,16 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
             )}
           </div>
 
+          <AccentColor />
+
           {isClient ? (
-            <DarkModeSwitch checked={value} onChange={toggle} size={30} />
+            <DarkModeSwitch
+              checked={value}
+              sunColor="var(--accent-color)"
+              moonColor="var(--accent-color)"
+              onChange={toggle}
+              size={30}
+            />
           ) : (
             <span className="w-30px h-30px" />
           )}

@@ -2,12 +2,15 @@ import React, { FC } from 'react'
 import Highlight, { defaultProps, Language } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
-import { replace } from 'core-fn'
+import { replace, exec } from 'core-fn'
 import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
 import confetti from 'canvas-confetti'
+import { pipe } from 'fonction'
 
 const parseBlock = replace(/language-/, '')
+const parseBlockName = exec(/^(?<ext>[a-z]+):?(?<filePath>.*)/)
+const parseFileExt = pipe(parseBlock, parseBlockName)
 
 const languageMap = (ext: string): Language => {
   switch (ext) {
@@ -32,9 +35,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
   children,
   className
 }) => {
-  const block = parseBlock(className)
-  const { ext, filePath } =
-    /^(?<ext>[a-z]+):?(?<filePath>.*)/.exec(block)?.groups ?? {}
+  const { ext, filePath } = parseFileExt(className)?.groups ?? {}
 
   const copy2Clipboard = (): void => {
     navigator.clipboard.writeText(children)
@@ -52,7 +53,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
         return (
           <div className="relative group my-6 text-sm">
             <div
-              className=" flex -mx-4 md:rounded-md   overflow-x-auto"
+              className="flex -mx-4 md:rounded-md overflow-x-auto"
               style={{ backgroundColor: 'rgb(40, 44, 52)' }}
             >
               <div
@@ -85,7 +86,9 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               </span>
             )}
 
-            <span className="absolute -right-2 top-0 text-gray-400">{ext}</span>
+            <span className="absolute select-none -right-2 top-0 text-gray-400">
+              {ext}
+            </span>
 
             <button
               title="Copy to clipboard"
@@ -102,7 +105,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               bg-gray-700
               flex
               items-center
-              text-cyan-500
+              text-accent
               p-2"
             >
               <Icon
