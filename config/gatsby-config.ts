@@ -161,7 +161,8 @@ const plugins: GatsbyConfig['plugins'] = [
         }
       }
     }
-  }
+  },
+  'gatsby-plugin-sass'
   // {
   //   resolve: "gatsby-plugin-offline",
   //   options: {
