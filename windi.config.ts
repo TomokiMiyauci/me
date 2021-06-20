@@ -3,6 +3,8 @@ import typography from 'windicss/plugin/typography'
 import lineClamp from 'windicss/plugin/line-clamp'
 import plugin from 'windicss/plugin'
 
+const varAccentColor = 'var(--accent-color)'
+
 export default defineConfig({
   safelist: ['prose', '-left-6'],
   extract: {
@@ -18,10 +20,10 @@ export default defineConfig({
               color: false
             },
             a: {
-              color: 'rgba(124, 58, 237)'
+              color: varAccentColor
             },
             'a code': {
-              color: 'rgba(124, 58, 237)'
+              color: varAccentColor
             },
             'a:hover': {
               '-webkit-text-decoration-line': 'underline',
@@ -29,12 +31,13 @@ export default defineConfig({
             },
             pre: false,
             code: {
+              color: false,
+              fontWeight: '500',
               backgroundColor: false,
               borderRadius: '0.375rem',
               marginLeft: '0.25rem',
               marginRight: '0.25rem',
-              padding: '0.25rem',
-              color: 'var(--accent-color)'
+              padding: '0.25rem'
             },
             img: {
               boxShadow:
@@ -94,13 +97,16 @@ export default defineConfig({
     plugin(({ addUtilities }) => {
       const newUtilities = {
         '.bg-accent': {
-          color: 'ver(--accent-color)'
+          color: varAccentColor
         },
         '.text-accent': {
-          color: 'var(--accent-color)'
+          color: varAccentColor
         },
         '.fill-accent': {
-          fill: 'var(--accent-color)'
+          fill: varAccentColor
+        },
+        '.border-accent': {
+          borderColor: varAccentColor
         }
       }
       addUtilities(newUtilities)

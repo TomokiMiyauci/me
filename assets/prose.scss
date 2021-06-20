@@ -1,30 +1,39 @@
-body.light .prose code {
-  @apply bg-gray-100;
-}
+body {
+  &.light {
+    .prose {
+      code {
+        @apply bg-gray-200 border-accent opacity-80  border;
+      }
+      thead {
+        @apply bg-gray-200 border-b-gray-300;
+      }
 
-body.dark .prose code {
-  @apply bg-gray-800;
-}
-body.light .prose thead {
-  @apply bg-gray-200 border-b-gray-300;
-}
+      tbody {
+        @apply bg-gray-100;
 
-body.light .prose tbody {
-  @apply bg-gray-100;
-}
+        tr {
+          @apply border-b-gray-200;
+        }
+      }
+    }
+  }
 
-body.dark .prose tbody {
-  @apply bg-gray-800;
-}
+  &.dark {
+    .prose {
+      code {
+        @apply bg-gray-800 border-accent opacity-80 border;
+      }
+      tbody {
+        @apply bg-gray-800;
 
-body.dark .prose thead {
-  @apply bg-gray-700 border-b-gray-500;
-}
+        tr {
+          @apply border-b-gray-500;
+        }
+      }
 
-body.light .prose tbody tr {
-  @apply border-b-gray-200;
-}
-
-body.dark .prose tbody tr {
-  @apply border-b-gray-500;
+      thead {
+        @apply bg-gray-700 border-b-gray-500;
+      }
+    }
+  }
 }
