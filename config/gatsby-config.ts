@@ -88,8 +88,7 @@ const plugins: GatsbyConfig['plugins'] = [
       background_color: '#06b6d4',
       theme_color: `#e11d48`,
       display: `standalone`,
-      icon: resolve(__dirname, '..', 'static', 'favicon.svg'),
-      cache_busting_mode: 'none'
+      icon: resolve(__dirname, '..', 'static', 'favicon.svg')
     }
   },
   {
@@ -162,7 +161,8 @@ const plugins: GatsbyConfig['plugins'] = [
       }
     }
   },
-  'gatsby-plugin-sass'
+  'gatsby-plugin-sass',
+  'gatsby-plugin-offline'
   // {
   //   resolve: "gatsby-plugin-offline",
   //   options: {
