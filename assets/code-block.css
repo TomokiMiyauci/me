@@ -42,7 +42,3 @@
   padding-left: 2.8em;
   overflow: initial;
 }
-
-body {
-  @apply bg-red-500;
-}

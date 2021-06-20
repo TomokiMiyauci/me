@@ -23,7 +23,7 @@
     "@miyauci/is-valid": "^1.0.0-beta.15",
     "@miyauci/react-click-outside": "^1.0.4",
     "canvas-confetti": "^1.4.0",
-    "core-fn": "^1.0.0-beta.1",
+    "core-fn": "^1.0.0-beta.7",
     "esbuild-register": "^2.6.0",
     "firebase": "^8.6.8",
     "fonction": "^1.8.1",

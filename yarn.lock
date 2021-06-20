@@ -5168,12 +5168,13 @@ copyfiles@^2.3.0:
     untildify "^4.0.0"
     yargs "^16.1.0"
 
-core-fn@^1.0.0-beta.1:
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/core-fn/-/core-fn-1.0.0-beta.1.tgz#bcd5354d2368fae586323b9f4efc3741aed6ed4f"
-  integrity sha512-3tlSWwdK8+1m9TXD7A/p686qih7aygNlZ5vR2YEolWBXzXGBywMB6ef/jPQSiJ6m5K5UTVkVp3KrhnTmHFbKWg==
+core-fn@^1.0.0-beta.7:
+  version "1.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/core-fn/-/core-fn-1.0.0-beta.7.tgz#b41e265e091ed4bb77b71f03388b6faf7c58124b"
+  integrity sha512-Elzvn6DG3gyiV5FRe9CKnC7jRtOUjM8zTeVg0WQCRbIfaIqJIniZJ21NWKghGEigOdlW4e5UQ3XnUrjEvYRNFg==
   dependencies:
     curry-rice "^1.0.0"
+    fonction "^1.8.1"
 
 core-js-compat@3.9.0:
   version "3.9.0"

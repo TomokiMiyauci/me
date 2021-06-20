@@ -25,7 +25,7 @@ const CodeGroup: FC<{
               title={label}
               className={
                 state === i
-                  ? ' text-cyan-500 py-1 px-2 capitalize'
+                  ? ' text-accent py-1 px-2 capitalize'
                   : 'py-1 px-2 capitalize'
               }
               onClick={() => changeState(i)}

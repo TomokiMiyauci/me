@@ -57,3 +57,7 @@ body.light .prose tbody tr {
 body.dark .prose tbody tr {
   @apply border-b-gray-500;
 }
+
+:root {
+  --accent-color: #06b6d4;
+}
