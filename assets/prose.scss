@@ -1,8 +1,11 @@
 body {
   &.light {
     .prose {
+      a {
+        @apply underline md:no-underline md:hover:underline;
+      }
       code {
-        @apply bg-gray-200 border-accent opacity-80  border;
+        @apply bg-gray-200 border-accent opacity-80 border;
       }
       thead {
         @apply bg-gray-200 border-b-gray-300;
@@ -20,6 +23,9 @@ body {
 
   &.dark {
     .prose {
+      a {
+        @apply underline md:no-underline md:hover:underline;
+      }
       code {
         @apply bg-gray-800 border-accent opacity-80 border;
       }

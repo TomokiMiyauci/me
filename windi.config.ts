@@ -17,10 +17,15 @@ export default defineConfig({
           css: {
             color: false,
             blockquote: {
-              color: false
+              color: false,
+              marginInlineStart: '0.5rem',
+              marginInlineEnd: '0.5rem',
+              paddingLeft: '0.75rem',
+              borderLeftColor: varAccentColor
             },
             a: {
-              color: varAccentColor
+              color: varAccentColor,
+              textDecoration: 'none'
             },
             'a code': {
               color: varAccentColor
@@ -34,6 +39,7 @@ export default defineConfig({
               color: false,
               fontWeight: '500',
               backgroundColor: false,
+              whiteSpace: 'nowrap',
               borderRadius: '0.375rem',
               marginLeft: '0.25rem',
               marginRight: '0.25rem',
