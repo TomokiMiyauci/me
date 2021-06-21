@@ -12,6 +12,9 @@ export default defineConfig({
   },
   theme: {
     extend: {
+      colors: {
+        grey: '#282c34'
+      },
       typography: {
         DEFAULT: {
           css: {
@@ -104,7 +107,7 @@ export default defineConfig({
     plugin(({ addUtilities }) => {
       const newUtilities = {
         '.bg-accent': {
-          color: varAccentColor
+          backgroundColor: varAccentColor
         },
         '.text-accent': {
           color: varAccentColor
