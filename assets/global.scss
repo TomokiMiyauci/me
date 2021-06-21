@@ -1,5 +1,5 @@
 body {
-  @apply antialiased;
+  @apply antialiased scrollbar-thin scrollbar-thumb-accent scrollbar-thumb-rounded-md;
 
   &.light {
     @apply bg-gray-50 text-gray-700;
@@ -28,4 +28,8 @@ svg {
 
 .gatsby-resp-image-wrapper {
   @apply my-4 border-1 border-solid;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  @apply w-3px h-3px md:h-4px md:w-3px;
 }

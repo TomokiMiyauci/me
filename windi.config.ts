@@ -7,13 +7,17 @@ const varAccentColor = 'var(--accent-color)'
 
 export default defineConfig({
   safelist: ['prose', '-left-6'],
+  variants: {
+    scrollbar: ['rounded']
+  },
   extract: {
     include: ['gatsby-*.js', 'src/**/*.{js,tsx}', 'config/**/*.ts']
   },
   theme: {
     extend: {
       colors: {
-        grey: '#282c34'
+        grey: '#282c34',
+        accent: varAccentColor
       },
       typography: {
         DEFAULT: {
@@ -101,25 +105,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [
-    typography(),
-    lineClamp,
-    plugin(({ addUtilities }) => {
-      const newUtilities = {
-        '.bg-accent': {
-          backgroundColor: varAccentColor
-        },
-        '.text-accent': {
-          color: varAccentColor
-        },
-        '.fill-accent': {
-          fill: varAccentColor
-        },
-        '.border-accent': {
-          borderColor: varAccentColor
-        }
-      }
-      addUtilities(newUtilities)
-    })
-  ]
+  plugins: [typography(), lineClamp, require('@windicss/plugin-scrollbar')]
 })

@@ -35,7 +35,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
                 ))}
               </div>
 
-              <div className="py-4 flex-1 overflow-x-scroll">
+              <div className="py-4 flex-1 overflow-x-scroll scrollbar-thin scrollbar-track-grey scrollbar-thumb-accent md:scrollbar-thumb-rounded">
                 <pre
                   className={`${className} float-left min-w-full`}
                   style={style}
