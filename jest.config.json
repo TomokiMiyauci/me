@@ -9,5 +9,6 @@
   "testEnvironment": "node",
   "transform": {
     "^.+\\.(t|j)sx?$": "@swc/jest"
-  }
+  },
+  "testMatch": ["**/*_test.ts?(x)"]
 }

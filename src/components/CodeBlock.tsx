@@ -1,42 +1,17 @@
 import React, { FC } from 'react'
-import Highlight, { defaultProps, Language } from 'prism-react-renderer'
+import Highlight, { defaultProps } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
-import { replace, exec } from 'core-fn'
 import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
 import confetti from 'canvas-confetti'
-import { pipe, length } from 'fonction'
-
-const parseBlock = replace(/language-/, '')
-const parseBlockName = exec(/^(?<ext>[a-z]+):?(?<filePath>.*)/)
-const parseFileExt = pipe(parseBlock, parseBlockName)
-
-const languageMap = (ext: string): Language => {
-  switch (ext) {
-    case 'ts': {
-      return 'typescript'
-    }
-    case 'js': {
-      return 'javascript'
-    }
-
-    case 'md': {
-      return 'markdown'
-    }
-
-    default: {
-      return ext as Language
-    }
-  }
-}
+import { languageMap, parseCodeBlockHeader } from '../utils/code_block'
 
 const CodeBlock: FC<{ children: string; className: string }> = ({
   children,
   className
 }) => {
-  const { ext, filePath } = parseFileExt(className)?.groups ?? {}
-
+  const { ext, filePath, highlights } = parseCodeBlockHeader(className)
   const copy2Clipboard = (): void => {
     navigator.clipboard.writeText(children)
     confetti()
@@ -51,34 +26,42 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => {
         const _tokens = head(tokens)
-        const isOneLine = length(_tokens) === 1
         return (
           <div className="relative group my-6 text-sm">
-            <div
-              className="flex -mx-4 md:mx-0 md:rounded-md overflow-x-auto"
-              style={{ backgroundColor: 'rgb(40, 44, 52)' }}
-            >
-              <div
-                className="text-right select-none sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600"
-                style={{ backgroundColor: 'rgb(40, 44, 52)' }}
-              >
+            <div className="flex -mx-4 md:mx-0 md:rounded-md overflow-x-auto bg-grey">
+              <div className="text-right select-none sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600 bg-grey">
                 {_tokens.map((_, i) => (
                   <div key={i}>{i + 1}</div>
                 ))}
               </div>
 
-              <div className="px-3 md:px-4 overflow-x-scroll">
-                <div className="py-4 overflow-x-scroll">
-                  <pre className={`${className} `} style={style}>
-                    {head(tokens).map((line, i) => (
-                      <div key={i} {...getLineProps({ line, key: i })}>
+              <div className="py-4 flex-1 overflow-x-scroll">
+                <pre
+                  className={`${className} float-left min-w-full`}
+                  style={style}
+                >
+                  {head(tokens).map((line, i) => {
+                    const { className, ...rest } = getLineProps({
+                      line,
+                      key: i
+                    })
+                    return (
+                      <div
+                        className={`px-3 md:px-4 ${className} ${
+                          highlights.includes(i + 1)
+                            ? 'bg-true-gray-400 bg-opacity-30'
+                            : ''
+                        }`}
+                        key={i}
+                        {...rest}
+                      >
                         {line.map((token, key) => (
                           <span key={key} {...getTokenProps({ token, key })} />
                         ))}
                       </div>
-                    ))}
-                  </pre>
-                </div>
+                    )
+                  })}
+                </pre>
               </div>
             </div>
 
@@ -97,7 +80,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               onClick={copy2Clipboard}
               className="rounded
               absolute
-              opacity-50
+              opacity-40
               transition-opacity
               duration-300
               group-hover:opacity-100
@@ -108,14 +91,10 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               flex
               items-center
               text-accent
-              p-2"
+              p-1
+              md:p-2"
             >
-              <Icon
-                className={`rounded-md flex shadow bg-gray-600 ${
-                  isOneLine ? 'w-3 h-3' : 'w-6 h-6'
-                } `}
-                icon={contentCopy}
-              />
+              <Icon className={`rounded-md flex w-6 h-6`} icon={contentCopy} />
             </button>
           </div>
         )
