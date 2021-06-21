@@ -22,7 +22,7 @@ HTTP でリクエストを送信するには、古くは `XMLHttpRequest` を使
 
 `Fetch API` は第２引数に `RequestInit` というオブジェクトを受け取ります。インターフェイスは次のとおりです。
 
-```ts
+```ts{18}
 declare function fetch(
   input: Request | URL | string,
   init?: RequestInit
