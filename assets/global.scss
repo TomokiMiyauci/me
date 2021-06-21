@@ -1,5 +1,5 @@
 body {
-  @apply antialiased scrollbar-thin scrollbar-thumb-accent scrollbar-thumb-rounded-md;
+  @apply antialiased md:scrollbar-thin scrollbar-thumb-accent scrollbar-thumb-rounded-md;
 
   &.light {
     @apply bg-gray-50 text-gray-700;

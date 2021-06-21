@@ -7,3 +7,4 @@ public
 .firebase
 .DS_Store
 tmp
+graphql-types.ts
