@@ -8,13 +8,17 @@ const AccentColor: FC = () => {
   const [isShow, changeShow] = useState(false)
 
   return (
-    <div className="relative">
-      <button title="Accent color" onClick={() => changeShow(!isShow)}>
+    <div className="relative flex">
+      <button
+        title="Accent color"
+        className="flex"
+        onClick={() => changeShow(!isShow)}
+      >
         <Icon className="w-8 h-8 text-accent" icon={invertColors} />
       </button>
 
       {isShow && (
-        <div className="fixed md:absolute md:space-y-2 bottom-70px md:bottom-auto md:flex-col md:w-auto items-center md:rounded-md justify-around light:bg-gray-50 dark:bg-gray-900 md:dark:bg-gray-800 md:light:bg-gray-100 p-2 flex md:right-0 left-0 w-full">
+        <div className="fixed md:absolute md:space-y-2 bottom-70px md:top-10 md:bottom-auto md:flex-col md:w-auto items-center md:rounded-md justify-around light:bg-gray-50 dark:bg-gray-900 md:dark:bg-gray-800 md:light:bg-gray-100 p-2 flex md:right-0 left-0 w-full">
           {colorPalette.map(({ label, color }) => (
             <button
               title={label}

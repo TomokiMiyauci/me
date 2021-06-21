@@ -30,7 +30,7 @@ const IndexPage: FC<PageProps> = ({
       <div className="container max-w-4xl mx-auto md:p-14">
         <Me />
 
-        <div className="mt-10 md:mt-30 md:grid md:grid-cols-2">
+        <div className="mt-10 md:mt-30 grid grid-cols-1 gap-6 md:grid-cols-2">
           <LocalizedLink
             to="/posts/"
             language={locale}
@@ -41,6 +41,15 @@ const IndexPage: FC<PageProps> = ({
               my mind, regardless of the field.
             </p>
             <h2 className="mt-10 text-5xl font-semibold text-white">Blog</h2>
+          </LocalizedLink>
+
+          <LocalizedLink
+            to="/photos/"
+            language={locale}
+            className="rounded-md flex flex-col justify-between block bg-gradient-to-r p-6 md:p-10 from-cyan-500 to-emerald-700 text-2xl shadow"
+          >
+            <p className="text-gray-200">My photo gallery</p>
+            <h2 className="mt-10 text-5xl font-semibold text-white">Photo</h2>
           </LocalizedLink>
         </div>
       </div>

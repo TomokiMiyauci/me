@@ -6,14 +6,34 @@ import Logo from './Logo'
 import { DarkModeSwitch } from 'react-toggle-dark-mode'
 import useDarkMode from 'use-dark-mode'
 import translateIcon from '@iconify-icons/mdi/translate'
+import camera from '@iconify-icons/mdi/camera'
 import accountIcon from '@iconify-icons/mdi/account-outline'
 import { useClickOutside } from '@miyauci/react-click-outside'
 import { ifElseFn } from 'fonction'
 import AccentColor from './AccentColor'
 
-const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
+const LinkButton: FC<{ to: string; originalPath: string }> = ({
+  to,
+  children,
+  originalPath
+}) => {
   const { locale } = useLocalization()
+  const isActive = (path: string): boolean => originalPath === path
 
+  return (
+    <LocalizedLink
+      to={to}
+      language={locale}
+      className={`px-2 py-1 w-11 md:w-16 h-11 md:h-16 shadow text-mini md:text-base md:px-3 flex rounded-full md:px-3 flex items-center justify-center flex-col ${
+        isActive(to) ? 'text-accent ring-1 ring-accent' : ''
+      }`}
+    >
+      {children}
+    </LocalizedLink>
+  )
+}
+
+const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
   const { value, toggle } = useDarkMode(undefined, {
     classNameDark: 'dark',
     classNameLight: 'light'
@@ -34,7 +54,6 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
   )
 
   useClickOutside(ref, () => changeShow(false), 'mousedown' as any)
-  const isActive = (path: string): boolean => originalPath === path
 
   return (
     <header
@@ -52,49 +71,33 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
       light:bg-gray-50
       dark:bg-gray-900
       border-t
+      dark:border-gray-800
     "
     >
       <div
         className="container max-w-8xl p-3 md:py-6 mx-auto items-center
     justify-between flex"
       >
-        <span className="flex items-center space-x-4 md:space-x-10">
+        <span className="flex items-center space-x-3 md:space-x-10">
           <Logo />
 
-          <LocalizedLink
-            to="/"
-            language={locale}
-            className={`p-2 md:p-2 space-x-2 md:px-3 flex rounded-full md:px-3 border ${
-              isActive('/')
-                ? 'bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white'
-                : ''
-            }`}
-          >
+          <LinkButton originalPath={originalPath} to="/">
             <Icon className="w-7 h-7" icon={accountIcon} />
-            <span className={originalPath === '/' ? '' : 'hidden md:inline'}>
-              About
-            </span>
-          </LocalizedLink>
+            <span>About</span>
+          </LinkButton>
 
-          <LocalizedLink
-            to="/posts/"
-            language={locale}
-            className={`p-2 md:p-2 space-x-2 md:px-3 flex rounded-full md:px-3 border ${
-              isActive('/posts/')
-                ? 'bg-gradient-to-br from-purple-800 via-pink-500 to-amber-500 text-white'
-                : ''
-            }`}
-          >
+          <LinkButton originalPath={originalPath} to="/posts/">
             <Icon className="w-7 h-7" icon={blogicon} />
-            <span
-              className={originalPath === '/posts/' ? '' : 'hidden md:inline'}
-            >
-              Blog
-            </span>
-          </LocalizedLink>
+            <span>Blog</span>
+          </LinkButton>
+
+          <LinkButton originalPath={originalPath} to="/photos/">
+            <Icon className="w-7 h-7" icon={camera} />
+            <span>Photo</span>
+          </LinkButton>
         </span>
 
-        <div className="flex space-x-4 md:space-x-8">
+        <div className="flex space-x-3 md:space-x-8 items-center">
           <div className="relative flex items-center">
             <button className="flex text-accent" onClick={toggleShow}>
               <Icon className="w-8 h-8" icon={translateIcon} />

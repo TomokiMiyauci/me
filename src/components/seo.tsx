@@ -32,7 +32,6 @@ const Seo: FC<Partial<SeoProps>> = ({
             image
             social {
               twitter
-              github
             }
           }
         }
@@ -60,7 +59,7 @@ const Seo: FC<Partial<SeoProps>> = ({
   }
 
   const metaDescription = description || siteMetadata.description
-  const { twitter, github } = social
+  const { twitter } = social
 
   return (
     <Helmet title={title} titleTemplate={`%s | ${_title}`}>

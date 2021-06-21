@@ -1,7 +1,6 @@
 import { defineConfig } from 'windicss/helpers'
 import typography from 'windicss/plugin/typography'
 import lineClamp from 'windicss/plugin/line-clamp'
-import plugin from 'windicss/plugin'
 
 const varAccentColor = 'var(--accent-color)'
 
@@ -15,6 +14,9 @@ export default defineConfig({
   },
   theme: {
     extend: {
+      fontSize: {
+        mini: '0.65rem'
+      },
       colors: {
         grey: '#282c34',
         accent: varAccentColor
