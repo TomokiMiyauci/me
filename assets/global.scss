@@ -37,3 +37,7 @@ svg {
 .scrollbar-thin::-webkit-scrollbar {
   @apply w-[3px] h-[3px] md:h-[4px] md:w-[3px];
 }
+
+.react-images__view-image {
+  @apply mx-auto;
+}
