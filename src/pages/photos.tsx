@@ -48,7 +48,7 @@ const Photos: FC<PageProps> = ({
         {isShow ? (
           <Modal onClose={() => changeShow(false)}>
             <Carousel
-              currentindexex={imageIndex}
+              currentIndex={imageIndex}
               views={data.allFile.nodes.map(({ childImageSharp }) => ({
                 source: childImageSharp.gatsbyImageData.images.fallback.src
               }))}
