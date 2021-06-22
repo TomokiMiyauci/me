@@ -148,7 +148,7 @@ const TheHeader: FC<{ originalPath: string; className?: string }> = ({
               size={30}
             />
           ) : (
-            <span className="w-30px h-30px" />
+            <span className="w-[30px] h-[30px]" />
           )}
         </div>
       </div>

@@ -50,9 +50,8 @@ const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
   children,
   originalPath
 }) => {
-  const [isShowHeader, changeShow] = useState(false)
+  const [isShowHeader, changeShow] = useState(true)
   const fn = scrollInfoEvent((_, { type, diff }) => {
-    console.log(type)
     if (diff > 10 && type === 'up') {
       changeShow(true)
     } else if (diff > 10 && type === 'down') {
@@ -69,7 +68,7 @@ const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
     <>
       <TheHeader
         originalPath={originalPath}
-        className={`transform md:transform-none transition-transform duration-300 delay-100 md:delay-0 md:duration-[0] ${
+        className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
           isShowHeader ? '' : 'translate-y-full'
         }`}
       />
