@@ -74,7 +74,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
     "
     >
       <div
-        className="container max-w-8xl p-3 md:py-6 mx-auto items-center
+        className="container max-w-8xl py-2 px-3 md:py-6 mx-auto items-center
     justify-between flex"
       >
         <span className="flex items-center space-x-3 md:space-x-10">

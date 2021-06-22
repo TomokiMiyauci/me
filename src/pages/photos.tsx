@@ -18,7 +18,7 @@ const Photos: FC<PageProps> = ({
   return (
     <Layout originalPath={originalPath}>
       <Seo title="Photo" fullpath={fullpath} />
-      <div className="grid gap-1 sm:grid-cols-2 grid-cols-1 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div className="grid gap-1 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 -mx-3 md:mx-0">
         {data.allFile.nodes.map(({ childImageSharp }) => {
           return (
             <div className="overflow-hidden">
