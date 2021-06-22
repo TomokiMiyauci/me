@@ -33,7 +33,10 @@ const LinkButton: FC<{ to: string; originalPath: string }> = ({
   )
 }
 
-const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
+const TheHeader: FC<{ originalPath: string; className?: string }> = ({
+  originalPath,
+  className
+}) => {
   const { value, toggle } = useDarkMode(undefined, {
     classNameDark: 'dark',
     classNameLight: 'light'
@@ -57,7 +60,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
 
   return (
     <header
-      className="
+      className={`
       fixed
       md:sticky
       md:top-0
@@ -70,8 +73,7 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
       bg-gray-50
       dark:bg-blue-gray-900
       border-t
-      dark:border-gray-800
-    "
+      dark:border-gray-800 ${className}`}
     >
       <div
         className="container max-w-8xl py-2 px-3 md:py-6 mx-auto items-center
