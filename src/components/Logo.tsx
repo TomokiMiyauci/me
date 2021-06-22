@@ -6,7 +6,7 @@ const Logo: FC = () => {
   const { locale } = useLocalization()
   return (
     <LocalizedLink language={locale} className="md:text-4xl space-x-4" to="/">
-      <LL className="w-10 fill-accent align-middle h-10" />
+      <LL className="w-10 fill-current text-accent align-middle h-10" />
 
       <span className="hidden md:inline">miyauci.me</span>
     </LocalizedLink>

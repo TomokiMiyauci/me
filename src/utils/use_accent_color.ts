@@ -1,36 +1,35 @@
-import colors from 'windicss/colors'
 import { useEffect } from 'react'
 import { first, pipe, tap } from 'fonction'
 type Color = { label: string; color: string }
 
 const defaultColor: Color = {
   label: 'cyan',
-  color: colors.cyan[500]
+  color: '#06B6D4'
 }
 
 const colorPalette: Color[] = [
   {
     label: 'pink',
-    color: colors.pink[500]
+    color: '#EC4899'
   },
   {
     label: 'red',
-    color: colors.red[500]
+    color: '#EF4444'
   },
   {
     label: 'amber',
-    color: colors.amber[500]
+    color: '#F59E0B'
   },
   {
     label: 'emerald',
-    color: colors.emerald[500]
+    color: '#10B981'
   },
   defaultColor,
   {
     label: 'indigo',
-    color: colors.indigo[500]
+    color: '#6366F1'
   },
-  { label: 'gray', color: colors.gray[500] }
+  { label: 'gray', color: '#71717A' }
 ]
 
 const setProperty = (val: string): void => {

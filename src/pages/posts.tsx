@@ -60,7 +60,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 
       <div className="container mx-auto">
         <h1 className="text-center text-5xl my-4 md:my-10">Blog</h1>
-        <ul className="mx-auto md:(grid grid-cols-2 gap-14) max-w-5xl">
+        <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
           {allMdx.nodes.map(
             ({
               frontmatter: { title, thumbnail, description, date, slug },

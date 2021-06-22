@@ -5,7 +5,7 @@ import twitter from '@iconify-icons/mdi/twitter'
 import { Icon } from '@iconify/react'
 const TheFooter: FC = () => {
   return (
-    <footer className="px-2 py-12 mb-18 md:mb-auto">
+    <footer className="px-2 py-12 mb-16 md:mb-auto">
       <div className="m-auto container sm:px-6 flex-col-reverse items-center md:flex-row flex md:justify-between">
         <span className="text-sm text-gray-600">
           {new Date().getFullYear()} ©Tomoki Miyauci
