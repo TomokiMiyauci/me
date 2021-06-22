@@ -1,23 +1,35 @@
-import { defineConfig } from 'windicss/helpers'
-import typography from 'windicss/plugin/typography'
-import lineClamp from 'windicss/plugin/line-clamp'
-
 const varAccentColor = 'var(--accent-color)'
+const colors = require('tailwindcss/colors')
 
-export default defineConfig({
-  safelist: ['prose', '-left-6'],
-  variants: {
-    scrollbar: ['rounded']
-  },
-  extract: {
-    include: ['gatsby-*.js', 'src/**/*.{js,tsx}', 'config/**/*.ts']
-  },
+module.exports = {
+  mode: 'jit',
+  purge: ['src/**/*.{js,ts,tsx}', 'config/**.ts'],
+  darkMode: 'class',
   theme: {
     extend: {
-      fontSize: {
-        mini: '0.65rem'
-      },
       colors: {
+        rose: colors.rose,
+        pink: colors.pink,
+        fuchsia: colors.fuchsia,
+        purple: colors.purple,
+        violet: colors.violet,
+        indigo: colors.indigo,
+        blue: colors.blue,
+        sky: colors.sky,
+        cyan: colors.cyan,
+        teal: colors.teal,
+        emerald: colors.emerald,
+        green: colors.green,
+        lime: colors.lime,
+        yellow: colors.yellow,
+        amber: colors.amber,
+        orange: colors.orange,
+        red: colors.red,
+        'warm-gray': colors.warmGray,
+        'true-gray': colors.trueGray,
+        gray: colors.gray,
+        'cool-gray': colors.coolGray,
+        'blue-gray': colors.blueGray,
         grey: '#282c34',
         accent: varAccentColor
       },
@@ -107,5 +119,12 @@ export default defineConfig({
       }
     }
   },
-  plugins: [typography(), lineClamp, require('@windicss/plugin-scrollbar')]
-})
+  variants: {
+    extend: {}
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/line-clamp'),
+    require('tailwind-scrollbar')
+  ]
+}

@@ -24,7 +24,7 @@ const LinkButton: FC<{ to: string; originalPath: string }> = ({
     <LocalizedLink
       to={to}
       language={locale}
-      className={`px-2 py-1 w-11 md:w-16 h-11 md:h-16 shadow text-mini md:text-base md:px-3 flex rounded-full md:px-3 flex items-center justify-center flex-col ${
+      className={`px-2 py-1 w-11 md:w-16 h-11 md:h-16 shadow text-[0.65rem] text-mini md:text-base md:px-3 flex rounded-full md:px-3 flex items-center justify-center flex-col ${
         isActive(to) ? 'text-accent ring-1 ring-accent' : ''
       }`}
     >
@@ -62,14 +62,13 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
       md:sticky
       md:top-0
       md:bottom-auto
-      md:drop-shadow
       md:mx-auto
       md:border-none
       w-full
       z-50
       bottom-0
-      light:bg-gray-50
-      dark:bg-gray-900
+      bg-gray-50
+      dark:bg-blue-gray-900
       border-t
       dark:border-gray-800
     "
@@ -109,14 +108,14 @@ const TheHeader: FC<{ originalPath: string }> = ({ originalPath }) => {
                 className="
           absolute
           rounded-md
-          light:bg-white
-          dark:bg-gray-800
+          bg-white
+          dark:bg-blue-gray-800
           mt-2
           right-0
           bottom-10
           shadow
           text-lg
-          md:(bottom-auto)
+          md:bottom-auto
           md:top-8
           hover:shadow-md
           p-3

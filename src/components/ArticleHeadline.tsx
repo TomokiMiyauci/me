@@ -18,10 +18,11 @@ const ArticleHeadline: FC<{
       language={locale}
       className="
       rounded-md
-      hover:(shadow-lg scale-103)
+      hover:shadow-lg
+      hover:scale-103
       md:hover:scale-105
-      light:hover:bg-gray-50
-      dark:hover:bg-gray-800
+      hover:bg-gray-50
+      dark:hover:bg-blue-gray-800
       transition
       duration-500
       flex
@@ -50,7 +51,7 @@ const ArticleHeadline: FC<{
             {title}
           </h2>
 
-          <p className="light:text-gray-600 dark:text-gray-200 line-clamp-2 md:line-clamp-3">
+          <p className="text-gray-600 dark:text-gray-200 line-clamp-2 md:line-clamp-3">
             {description}
           </p>
         </div>

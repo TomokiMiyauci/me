@@ -27,10 +27,10 @@ body {
         @apply underline md:no-underline md:hover:underline;
       }
       code {
-        @apply bg-gray-800 border-accent opacity-80 border;
+        @apply bg-blue-gray-800 border-accent opacity-80 border;
       }
       tbody {
-        @apply bg-gray-800;
+        @apply bg-blue-gray-800;
 
         tr {
           @apply border-b-gray-500;
@@ -38,7 +38,7 @@ body {
       }
 
       thead {
-        @apply bg-gray-700 border-b-gray-500;
+        @apply bg-blue-gray-700 border-b-gray-500;
       }
     }
   }

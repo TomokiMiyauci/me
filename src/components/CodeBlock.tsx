@@ -66,7 +66,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
             </div>
 
             {filePath && (
-              <span className="absolute bg-gray-700 text-gray-200 -top-4 py-1 px-2 md:left-4 rounded-sm md:rounded-md">
+              <span className="absolute bg-blue-gray-700 text-gray-200 -top-4 py-1 px-2 md:left-4 rounded-sm md:rounded-md">
                 {filePath}
               </span>
             )}
@@ -87,7 +87,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               -right-2
               md:right-2
               bottom-2
-              bg-gray-700
+              bg-blue-gray-700
               flex
               items-center
               text-accent

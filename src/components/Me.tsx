@@ -7,9 +7,9 @@ import twitter from '@iconify-icons/uil/twitter-alt'
 const Me: FC = () => {
   return (
     <>
-      <div className="md:(flex space-x-6)">
+      <div className="md:flex md:space-x-6">
         <div
-          className="border-8 bg-gradient-to-br from-purple-500 via-pink-300 to-amber-300 overflow-hidden inline-block h-190px w-190px"
+          className="border-8 bg-gradient-to-br from-purple-500 via-pink-300 to-amber-300 overflow-hidden inline-block h-[190px] w-[190px]"
           style={{ borderRadius: '40% 60% / 35% 30% 70% 65%' }}
         >
           <StaticImage

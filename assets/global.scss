@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   @apply antialiased;
 
@@ -6,7 +10,7 @@ body {
   }
 
   &.dark {
-    @apply bg-gray-900 text-gray-200;
+    @apply bg-blue-gray-900 text-gray-200;
   }
 }
 
@@ -27,9 +31,9 @@ svg {
 }
 
 .gatsby-resp-image-wrapper {
-  @apply my-4 border-1 border-solid;
+  @apply my-4 border border-solid;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  @apply w-3px h-3px md:h-4px md:w-3px;
+  @apply w-[3px] h-[3px] md:h-[4px] md:w-[3px];
 }

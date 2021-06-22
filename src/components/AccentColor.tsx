@@ -18,7 +18,7 @@ const AccentColor: FC = () => {
       </button>
 
       {isShow && (
-        <div className="fixed md:absolute md:space-y-2 bottom-70px md:top-10 md:bottom-auto md:flex-col md:w-auto items-center md:rounded-md justify-around light:bg-gray-50 dark:bg-gray-900 md:dark:bg-gray-800 md:light:bg-gray-100 p-2 flex md:right-0 left-0 w-full">
+        <div className="fixed md:absolute md:space-y-2 bottom-[69px] md:top-10 md:bottom-auto md:flex-col md:w-auto items-center md:rounded-md justify-around bg-gray-50 dark:bg-blue-gray-900 md:dark:bg-blue-gray-800 md:bg-gray-100 p-2 flex md:right-0 left-0 w-full">
           {colorPalette.map(({ label, color }) => (
             <button
               title={label}
@@ -27,7 +27,7 @@ const AccentColor: FC = () => {
                 changeShow(false)
               }}
               key={label}
-              className="w-6 h-6 hover:scale-120 transform duration-200  transition-transform rounded-full"
+              className="w-6 h-6 hover:scale-[1.2] transform duration-200  transition-transform rounded-full"
               style={{ backgroundColor: color }}
             />
           ))}

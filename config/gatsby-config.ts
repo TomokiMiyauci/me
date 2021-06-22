@@ -5,6 +5,7 @@ import { SITE_URL as siteUrl } from './constants'
 const name = 'miyauci.me'
 
 const plugins: GatsbyConfig['plugins'] = [
+  'gatsby-plugin-postcss',
   {
     resolve: 'gatsby-plugin-react-svg',
     options: {
@@ -64,7 +65,7 @@ const plugins: GatsbyConfig['plugins'] = [
   `gatsby-plugin-image`,
   `gatsby-plugin-sharp`,
   `gatsby-transformer-sharp`,
-  'gatsby-plugin-graphql-codegen',
+  // 'gatsby-plugin-graphql-codegen',
   {
     resolve: 'gatsby-source-filesystem',
     options: {
@@ -72,19 +73,13 @@ const plugins: GatsbyConfig['plugins'] = [
       path: resolve(__dirname, '..', 'posts')
     }
   },
-  {
-    resolve: 'gatsby-source-filesystem',
-    options: {
-      name: 'photos',
-      path: resolve(__dirname, '..', 'photos')
-    }
-  },
-  {
-    resolve: `gatsby-plugin-windicss`,
-    options: {
-      preflight: true
-    }
-  },
+  // {
+  //   resolve: 'gatsby-source-filesystem',
+  //   options: {
+  //     name: 'photos',
+  //     path: resolve(__dirname, '..', 'photos')
+  //   }
+  // },
   {
     resolve: `gatsby-plugin-manifest`,
     options: {
