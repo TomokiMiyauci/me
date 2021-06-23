@@ -11,6 +11,7 @@ import accountIcon from '@iconify-icons/mdi/account-outline'
 import { useClickOutside } from '@miyauci/react-click-outside'
 import { ifElseFn } from 'fonction'
 import AccentColor from './AccentColor'
+import { Transition } from '@headlessui/react'
 
 const LinkButton: FC<{ to: string; originalPath: string }> = ({
   to,
@@ -99,7 +100,15 @@ const TheHeader: FC<{ originalPath: string; className?: string }> = ({
               <Icon className="w-8 h-8" icon={translateIcon} />
             </button>
 
-            {isShow && (
+            <Transition
+              show={isShow}
+              enter="transition-opacity duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-300"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
               <ul
                 ref={ref}
                 className="
@@ -130,7 +139,7 @@ const TheHeader: FC<{ originalPath: string; className?: string }> = ({
                   </LocalizedLink>
                 </li>
               </ul>
-            )}
+            </Transition>
           </div>
 
           <AccentColor />
