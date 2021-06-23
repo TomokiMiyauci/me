@@ -99,20 +99,6 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   {
-    resolve: 'gatsby-plugin-firebase',
-    options: {
-      credentials: {
-        apiKey: 'AIzaSyAN_gLPDQgXzROBhfpoEq7g-Wek6FY1kJE',
-        authDomain: 'blorogue.firebaseapp.com',
-        projectId: 'blorogue',
-        storageBucket: 'blorogue.appspot.com',
-        messagingSenderId: '205944386882',
-        appId: '1:205944386882:web:f48733fc94e54f0de244db',
-        measurementId: 'G-DWBGDDWNR9'
-      }
-    }
-  },
-  {
     resolve: `gatsby-plugin-sitemap`,
     options: {
       query: `
@@ -164,14 +150,7 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   'gatsby-plugin-sass',
   'gatsby-plugin-offline'
-  // {
-  //   resolve: "gatsby-plugin-offline",
-  //   options: {
-  //     workboxConfig: {
-  //       globPatterns: ["**/icon-path*"],
-  //     },
-  //   },
-  // },
+  // 'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
 const siteMetadata: GatsbyConfig['siteMetadata'] = {
@@ -187,17 +166,6 @@ const siteMetadata: GatsbyConfig['siteMetadata'] = {
     github: 'TomokiMiyauci'
   }
 }
-
-// [
-//   ["meta", { name: "author", content: "Tomoki Miyauchi" }],
-//   ["meta", { name: "copyright", content: "©Tomoki Miyauchi" }],
-//   ["meta", { property: "og:title", content: "miyauci.me" }],
-//   ["meta", { property: "og:description", content: description }],
-//   ["meta", { property: "og:image", content: "https://miyauchi.dev/logo.png" }],
-//   ["meta", { property: "og:site_name", content: "miyauci.me" }],
-//   ["meta", { name: "twitter:card", content: "summary" }],
-//   ["meta", { name: "twitter:site", content: "@tomoki_miyauci" }],
-// ];
 
 const config: GatsbyConfig = {
   siteMetadata,
