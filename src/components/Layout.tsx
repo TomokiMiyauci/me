@@ -8,6 +8,7 @@ import TheFooter from './TheFooter'
 import CodeBlock from './CodeBlock'
 import CodeGroups from './CodeGroups'
 import MdxLi from './MdxLi'
+import BottomNavigation from './BottomNavigation'
 
 interface ScrollInfo {
   type: 'up' | 'down'
@@ -48,13 +49,14 @@ const components: MDXProviderComponentsProp = {
 
 const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
   children,
+
   originalPath
 }) => {
   const [isShowHeader, changeShow] = useState(true)
   const fn = scrollInfoEvent((_, { type, diff }) => {
-    if (diff > 10 && type === 'up') {
+    if (diff > 14 && type === 'up') {
       changeShow(true)
-    } else if (diff > 10 && type === 'down') {
+    } else if (diff > 14 && type === 'down') {
       changeShow(false)
     }
   })
@@ -66,17 +68,25 @@ const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
   })
   return (
     <>
-      <TheHeader
-        originalPath={originalPath}
-        className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
-          isShowHeader ? '' : 'translate-y-full'
-        }`}
-      />
-      <main className="p-4">
+      <main className="p-4 mt-14 md:mt-28">
         <MDXProvider components={components}>{children}</MDXProvider>
       </main>
 
+      <TheHeader
+        originalPath={originalPath}
+        className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500 ${
+          isShowHeader ? '' : '-translate-y-full'
+        }`}
+      />
+
       <TheFooter />
+
+      <BottomNavigation
+        originalPath={originalPath}
+        className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
+          isShowHeader ? '' : 'translate-y-full'
+        }`}
+      />
     </>
   )
 }
