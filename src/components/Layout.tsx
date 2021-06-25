@@ -9,6 +9,7 @@ import CodeBlock from './CodeBlock'
 import CodeGroups from './CodeGroups'
 import MdxLi from './MdxLi'
 import BottomNavigation from './BottomNavigation'
+import MdxH2 from './MdxH2'
 
 interface ScrollInfo {
   type: 'up' | 'down'
@@ -42,6 +43,11 @@ const components: MDXProviderComponentsProp = {
   a: MdxLink,
   li: MdxLi,
   code: CodeBlock,
+  h2: (props) => {
+    const { id, children } = props
+    const title = children[1]
+    return <MdxH2 id={id} title={title} />
+  },
   Alert,
   CodeGroups,
   CodeGroup
