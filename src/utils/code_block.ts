@@ -5,7 +5,7 @@ import { isEmpty } from '@miyauci/is-valid'
 
 const parseLanguage = replace(/^language-/, '')
 const parseBlockName = pipe(
-  exec(/^(?<ext>[a-z]+)(:(?<filePath>[\w\.]*))?({(?<highlights>[\d,-]+)\})?/),
+  exec(/^(?<ext>[a-z]+)(:(?<filePath>[\w\.\/]*))?({(?<highlights>[\d,-]+)\})?/),
   (RegExpExecArray) => RegExpExecArray?.groups || {}
 )
 const defaultSetter = ({
