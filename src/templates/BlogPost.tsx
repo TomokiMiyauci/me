@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
@@ -8,6 +8,10 @@ import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
 import { useLocalization } from 'gatsby-theme-i18n'
+import Toc from '../components/Toc'
+import { Popover, Transition } from '@headlessui/react'
+import { Icon } from '@iconify/react'
+import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -21,8 +25,9 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     site: { siteMetadata }
   } = data
 
-  const { frontmatter, body, timeToRead } = mdx || {
-    frontmatter: { hero: {} }
+  const { frontmatter, body, timeToRead, tableOfContents } = mdx || {
+    frontmatter: { hero: {} },
+    items: []
   }
   const { title, description, hero, date } = frontmatter
   const { publicURL, childImageSharp } = hero
@@ -100,6 +105,39 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               </ul>
             </nav>
           </div>
+
+          <Popover className="relative">
+            {({ open }) => (
+              <>
+                <Popover.Button
+                  title="Table of Contents"
+                  className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-2"
+                >
+                  <Icon className="w-8 h-8" icon={book} />
+                </Popover.Button>
+
+                <Popover.Overlay className={`backdrop-blur-sm fixed inset-0`} />
+
+                <Transition
+                  show={open}
+                  as={Fragment}
+                  enter="transition duration-500 ease-out"
+                  enterFrom="transform translate-y-full opacity-0"
+                  enterTo="transform translate-y-0 opacity-100"
+                  leave="transition duration-300 ease-out"
+                  leaveFrom="transform translate-y-0 opacity-100"
+                  leaveTo="transform translate-y-full opacity-0"
+                >
+                  <Popover.Panel
+                    as="aside"
+                    className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
+                  >
+                    <Toc toc={tableOfContents.items} />
+                  </Popover.Panel>
+                </Transition>
+              </>
+            )}
+          </Popover>
         </>
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
@@ -121,6 +159,7 @@ export const pageQuery = graphql`
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $slug } }
     ) {
+      tableOfContents
       frontmatter {
         title
         description
