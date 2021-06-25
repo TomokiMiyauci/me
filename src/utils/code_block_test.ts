@@ -29,6 +29,7 @@ describe('parseBlockName', () => {
     ['', {}],
     ['ts', { ext: 'ts' }],
     ['ts:filepath.ts', { ext: 'ts', filePath: 'filepath.ts' }],
+    ['ts:src/filepath.ts', { ext: 'ts', filePath: 'src/filepath.ts' }],
 
     [
       'ts:filepath.ts{1}',
@@ -143,6 +144,14 @@ describe('parseCodeBlockHeader', () => {
       {
         ext: 'json',
         filePath: 'filepath.json',
+        highlights: [1, 2, 3, 5, 6, 7, 8]
+      }
+    ],
+    [
+      'json:src/filepath.json{1,2,3,5-8}',
+      {
+        ext: 'json',
+        filePath: 'src/filepath.json',
         highlights: [1, 2, 3, 5, 6, 7, 8]
       }
     ]
