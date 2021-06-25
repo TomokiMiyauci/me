@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react'
+import React, { FC, Fragment, useRef } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
@@ -33,6 +33,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const handleCloseToc = () => buttonRef.current?.click()
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -123,6 +125,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             {({ open }) => (
               <>
                 <Popover.Button
+                  ref={buttonRef}
                   title="Table of Contents"
                   className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-2"
                 >
@@ -137,15 +140,18 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   enter="transition duration-500 ease-out"
                   enterFrom="transform translate-y-full opacity-0"
                   enterTo="transform translate-y-0 opacity-100"
-                  leave="transition duration-300 ease-out"
-                  leaveFrom="transform translate-y-0 opacity-100"
-                  leaveTo="transform translate-y-full opacity-0"
+                  leave="transition duration-500 ease-out"
+                  leaveFrom="transform translate-y-0"
+                  leaveTo="transform translate-y-full"
                 >
                   <Popover.Panel
                     as="aside"
-                    className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
+                    className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-3xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
                   >
-                    <Toc toc={tableOfContents.items} />
+                    <Toc
+                      onClickLink={handleCloseToc}
+                      toc={tableOfContents.items}
+                    />
                   </Popover.Panel>
                 </Transition>
               </>
