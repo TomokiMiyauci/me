@@ -33,14 +33,7 @@ const plugins: GatsbyConfig['plugins'] = [
     resolve: 'gatsby-plugin-mdx',
     options: {
       gatsbyRemarkPlugins: [
-        {
-          resolve: `gatsby-remark-autolink-headers`,
-          options: {
-            offsetY: 200,
-            className:
-              'absolute transform -translate-x-full opacity-0 duration-300 transition-opacity group-hover:md:opacity-100'
-          }
-        },
+        'gatsby-remark-autolink-headers',
         {
           resolve: 'gatsby-remark-images'
         }
@@ -65,7 +58,7 @@ const plugins: GatsbyConfig['plugins'] = [
   `gatsby-plugin-image`,
   `gatsby-plugin-sharp`,
   `gatsby-transformer-sharp`,
-  // 'gatsby-plugin-graphql-codegen',
+  'gatsby-plugin-graphql-codegen',
   {
     resolve: 'gatsby-source-filesystem',
     options: {
@@ -98,6 +91,13 @@ const plugins: GatsbyConfig['plugins'] = [
       clarity_project_id: '5ipdtj3l7s'
     }
   },
+  // {
+  //   resolve: `gatsby-plugin-nprogress`,
+  //   options: {
+  //     color: `text-accent bg-accent`,
+  //     showSpinner: false
+  //   }
+  // },
   {
     resolve: `gatsby-plugin-sitemap`,
     options: {
