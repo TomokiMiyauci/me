@@ -58,9 +58,22 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             relativePath={location.pathname}
             date={new Date(date).toLocaleDateString(locale)}
           >
-            <section className="prose mx-auto" itemProp="articleBody">
-              <MDXRenderer>{body}</MDXRenderer>
-            </section>
+            <div className="container mx-auto flex flex-wrap ">
+              <aside className="lg:w-1/5" />
+              <section
+                className="mx-auto w-full prose lg:w-3/5"
+                itemProp="articleBody"
+              >
+                <MDXRenderer>{body}</MDXRenderer>
+              </section>
+
+              <nav className="lg:w-1/5 pl-4">
+                <Toc
+                  className="sticky hidden lg:block rounded-md top-28 bg-gray-100  dark:bg-blue-gray-800"
+                  toc={tableOfContents.items}
+                />
+              </nav>
+            </div>
           </Article>
 
           <hr className="prose mx-auto mt-4" />

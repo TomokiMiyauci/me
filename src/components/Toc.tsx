@@ -6,7 +6,7 @@ type Toc = { url: string; title: string; items?: Toc[] }
 const Toc: FC<{ className?: string; toc: Toc[] }> = ({ className, toc }) => {
   const { locale } = useLocalization()
   return (
-    <ul className="p-4">
+    <ul className={`p-4 ${className}`}>
       {toc.map(({ url, title, items }) => {
         return (
           <li key={url}>
