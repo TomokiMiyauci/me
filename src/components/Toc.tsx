@@ -20,12 +20,12 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
     const el = document.getElementById(linkFormat(url))
     const offset = innerWidth > 768 ? 112 : 56
 
-    if (el) {
-      scroll({
-        top: el.offsetTop - offset,
-        behavior: 'smooth'
-      })
-    }
+    // if (el) {
+    //   scroll({
+    //     top: el.offsetTop - offset,
+    //     behavior: 'smooth'
+    //   })
+    // }
     onClickLink?.()
   }
 
