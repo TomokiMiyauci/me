@@ -16,6 +16,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
 
   const handleClick = (url: string) => (e: MouseEvent) => {
     e.preventDefault()
+    e.stopPropagation()
 
     const el = document.getElementById(linkFormat(url))
     const offset = innerWidth > 768 ? 112 : 56
