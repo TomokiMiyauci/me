@@ -34,7 +34,9 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const handleCloseToc = () => buttonRef.current?.click()
+  const handleCloseToc = () => {
+    buttonRef.current?.click()
+  }
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -127,7 +129,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 <Popover.Button
                   ref={buttonRef}
                   title="Table of Contents"
-                  className="fixed md:hidden z-10 bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-6"
+                  className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-6"
                 >
                   <Icon className="w-8 h-8" icon={book} />
                 </Popover.Button>

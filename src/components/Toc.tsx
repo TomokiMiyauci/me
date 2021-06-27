@@ -16,17 +16,16 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
 
   const handleClick = (url: string) => (e: MouseEvent) => {
     e.preventDefault()
-    e.stopPropagation()
 
     const el = document.getElementById(linkFormat(url))
     const offset = innerWidth > 768 ? 112 : 56
 
-    // if (el) {
-    //   scroll({
-    //     top: el.offsetTop - offset,
-    //     behavior: 'smooth'
-    //   })
-    // }
+    if (el) {
+      scroll({
+        top: el.offsetTop - offset,
+        behavior: 'smooth'
+      })
+    }
     onClickLink?.()
   }
 
@@ -36,7 +35,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
         return (
           <li key={url}>
             <LocalizedLink
-              onClick={handleClick(url)}
+              onMouseDown={handleClick(url)}
               className="block"
               to={url}
               language={locale}
@@ -49,7 +48,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
                 {items.map(({ url, title }) => (
                   <li key={url}>
                     <LocalizedLink
-                      onClick={handleClick(url)}
+                      onMouseDown={handleClick(url)}
                       className="block"
                       to={url}
                       language={locale}
