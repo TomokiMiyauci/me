@@ -97,7 +97,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.timeToRead}
                       lastUpdated={previous.frontmatter.date}
-                      tags={previous.frontmatter.tags}
+                      tags={previous.frontmatter.tags ?? []}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -112,7 +112,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
-                      tags={next.frontmatter.tags}
+                      tags={next.frontmatter.tags ?? []}
                       readingTime={next.timeToRead}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
