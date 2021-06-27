@@ -1,6 +1,8 @@
 import React, { FC } from 'react'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
+import { isLength0 } from '@miyauci/is-valid'
+import Tag from './Tag'
 
 const ArticleHeadline: FC<{
   title: string
@@ -8,9 +10,10 @@ const ArticleHeadline: FC<{
   img: IGatsbyImageData
   to: string
   alt: string
+  tags: string[]
   lastUpdated?: number
   readingTime?: number
-}> = ({ title, description, img, to, alt, lastUpdated, readingTime }) => {
+}> = ({ title, description, img, to, alt, lastUpdated, readingTime, tags }) => {
   const { locale } = useLocalization()
   return (
     <LocalizedLink
@@ -27,6 +30,7 @@ const ArticleHeadline: FC<{
       duration-500
       flex
       mb-4
+      group
       transform
     "
     >
@@ -55,6 +59,14 @@ const ArticleHeadline: FC<{
             {description}
           </p>
         </div>
+
+        {!isLength0(tags) && (
+          <div className="space-x-2">
+            {tags.map((tag) => (
+              <Tag key={tag} tag={tag} />
+            ))}
+          </div>
+        )}
 
         {(lastUpdated || readingTime) && (
           <div className="time opacity-50 no-underline text-sm -mt-1">

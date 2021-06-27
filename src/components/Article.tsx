@@ -4,6 +4,8 @@ import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import { Icon } from '@iconify/react'
 import cached from '@iconify-icons/mdi/cached'
 import timerSand from '@iconify-icons/mdi/timer-sand'
+import Tag from './Tag'
+import { isLength0 } from '@miyauci/is-valid'
 
 interface ArticleProps {
   children: ReactChild
@@ -12,6 +14,7 @@ interface ArticleProps {
   hero: IGatsbyImageData
   relativePath: string
   timeToRead: number
+  tags: string[]
   date: string
 }
 
@@ -22,6 +25,7 @@ const Article: FC<ArticleProps> = ({
   hero,
   relativePath,
   timeToRead,
+  tags,
   date
 }) => {
   return (
@@ -54,6 +58,14 @@ const Article: FC<ArticleProps> = ({
         >
           {description}
         </p>
+
+        {!isLength0(tags) && (
+          <p className="my-2 space-x-4">
+            {tags.map((tag) => (
+              <Tag key={tag} tag={tag} />
+            ))}
+          </p>
+        )}
 
         <div
           className="flex justify-center text-gray-500 dark:text-gray-100

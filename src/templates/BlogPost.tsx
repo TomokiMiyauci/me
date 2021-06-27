@@ -29,7 +29,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     frontmatter: { hero: {} },
     items: []
   }
-  const { title, description, hero, date } = frontmatter
+  const { title, description, hero, date, tags } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
@@ -60,6 +60,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             hero={childImageSharp.gatsbyImageData}
             timeToRead={timeToRead}
             relativePath={location.pathname}
+            tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
           >
             <div className="container mx-auto flex flex-wrap ">
@@ -99,6 +100,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.timeToRead}
                       lastUpdated={previous.frontmatter.date}
+                      tags={[]}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -113,6 +115,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
+                      tags={[]}
                       readingTime={next.timeToRead}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
@@ -191,6 +194,7 @@ export const pageQuery = graphql`
             gatsbyImageData(layout: CONSTRAINED)
           }
         }
+        tags
         date
         slug
       }
