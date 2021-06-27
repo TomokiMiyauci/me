@@ -34,9 +34,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const handleCloseToc = () => {
-    buttonRef.current?.click()
-  }
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -153,10 +150,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                     as="aside"
                     className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-3xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
                   >
-                    <Toc
-                      onClickLink={handleCloseToc}
-                      toc={tableOfContents.items}
-                    />
+                    <Toc toc={tableOfContents.items} />
                   </Popover.Panel>
                 </Transition>
               </>
