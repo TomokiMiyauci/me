@@ -63,7 +63,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
           {allMdx.nodes.map(
             ({
-              frontmatter: { title, thumbnail, description, date, slug },
+              frontmatter: { title, thumbnail, description, date, slug, tags },
               timeToRead
             }) => (
               <li className="-mx-2 md:mx-auto" key={slug}>
@@ -74,6 +74,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
                   img={thumbnail.childImageSharp.gatsbyImageData}
                   readingTime={timeToRead}
                   lastUpdated={date}
+                  tags={tags ?? []}
                   alt="thumbnail"
                 />
               </li>
@@ -104,6 +105,7 @@ export const query = graphql`
             }
           }
           slug
+          tags
         }
         timeToRead
       }

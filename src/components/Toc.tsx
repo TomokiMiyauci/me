@@ -35,7 +35,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
         return (
           <li key={url}>
             <LocalizedLink
-              onClick={handleClick(url)}
+              onMouseDown={handleClick(url)}
               className="block"
               to={url}
               language={locale}
@@ -48,7 +48,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
                 {items.map(({ url, title }) => (
                   <li key={url}>
                     <LocalizedLink
-                      onClick={handleClick(url)}
+                      onMouseDown={handleClick(url)}
                       className="block"
                       to={url}
                       language={locale}

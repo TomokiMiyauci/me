@@ -49,7 +49,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
                       <div
                         className={`px-3 md:px-4 ${className} ${
                           highlights.includes(i + 1)
-                            ? 'bg-true-gray-400 bg-opacity-30'
+                            ? 'border-l-[3px] bg-true-gray-400 bg-opacity-30'
                             : ''
                         }`}
                         key={i}

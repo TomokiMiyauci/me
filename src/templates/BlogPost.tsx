@@ -29,12 +29,14 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     frontmatter: { hero: {} },
     items: []
   }
-  const { title, description, hero, date } = frontmatter
+  const { title, description, hero, date, tags } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const handleCloseToc = () => buttonRef.current?.click()
+  const handleCloseToc = () => {
+    buttonRef.current?.click()
+  }
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -58,6 +60,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             hero={childImageSharp.gatsbyImageData}
             timeToRead={timeToRead}
             relativePath={location.pathname}
+            tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
           >
             <div className="container mx-auto flex flex-wrap ">
@@ -97,6 +100,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.timeToRead}
                       lastUpdated={previous.frontmatter.date}
+                      tags={[]}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -111,6 +115,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
+                      tags={[]}
                       readingTime={next.timeToRead}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
@@ -127,7 +132,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 <Popover.Button
                   ref={buttonRef}
                   title="Table of Contents"
-                  className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-2"
+                  className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-6"
                 >
                   <Icon className="w-8 h-8" icon={book} />
                 </Popover.Button>
@@ -189,6 +194,7 @@ export const pageQuery = graphql`
             gatsbyImageData(layout: CONSTRAINED)
           }
         }
+        tags
         date
         slug
       }
