@@ -97,7 +97,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.timeToRead}
                       lastUpdated={previous.frontmatter.date}
-                      tags={[]}
+                      tags={previous.frontmatter.tags}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -112,7 +112,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
-                      tags={[]}
+                      tags={next.frontmatter.tags}
                       readingTime={next.timeToRead}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
@@ -209,6 +209,7 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
+        tags
         slug
       }
     }
@@ -226,6 +227,7 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
+        tags
         slug
       }
     }
