@@ -10,6 +10,7 @@ import jest from '@iconify-icons/logos/jest'
 import tagOutline from '@iconify-icons/mdi/tag-outline'
 import packageVariantClosed from '@iconify-icons/mdi/package-variant-closed'
 import seedOutline from '@iconify-icons/mdi/seed-outline'
+import accessPoint from '@iconify-icons/mdi/access-point'
 import { pipe } from 'fonction'
 
 import { lowerCase } from 'fonction'
@@ -25,6 +26,10 @@ const tagIcon = (tag: string) => {
 
     case 'preact': {
       return preact
+    }
+
+    case 'fetch': {
+      return accessPoint
     }
 
     case 'tailwindcss': {
@@ -62,10 +67,12 @@ const Tag: FC<{ tag: string }> = ({ tag }) => {
   const icon = getIcon(tag)
 
   return (
-    <span className="rounded-full pr-2 p-1 inline-flex transition duration-300 items-center dark:bg-blue-gray-800 dark:group-hover:bg-blue-gray-700 border dark:border-blue-gray-700 bg-gray-100  space-x-2">
-      <Icon className="w-7 h-7 text-accent rounded-full" icon={icon} />
+    <span className="rounded-md md:pr-2 p-1  inline-flex transition duration-300 items-center dark:bg-blue-gray-800 dark:group-hover:bg-blue-gray-700 border dark:border-blue-gray-700 bg-gray-100  space-x-2">
+      <Icon className="w-7 h-7 text-accent rounded" icon={icon} />
 
-      <span className="lowercase dark:text-gray-200">{tag}</span>
+      <span className="lowercase hidden md:inline dark:text-gray-200">
+        {tag}
+      </span>
     </span>
   )
 }

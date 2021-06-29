@@ -34,9 +34,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const handleCloseToc = () => {
-    buttonRef.current?.click()
-  }
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -100,7 +97,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.timeToRead}
                       lastUpdated={previous.frontmatter.date}
-                      tags={[]}
+                      tags={previous.frontmatter.tags ?? []}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -115,7 +112,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
-                      tags={[]}
+                      tags={next.frontmatter.tags ?? []}
                       readingTime={next.timeToRead}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
@@ -153,10 +150,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                     as="aside"
                     className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-3xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
                   >
-                    <Toc
-                      onClickLink={handleCloseToc}
-                      toc={tableOfContents.items}
-                    />
+                    <Toc toc={tableOfContents.items} />
                   </Popover.Panel>
                 </Transition>
               </>
@@ -215,6 +209,7 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
+        tags
         slug
       }
     }
@@ -232,6 +227,7 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
+        tags
         slug
       }
     }
