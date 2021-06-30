@@ -41,3 +41,17 @@ svg {
 .react-images__view-image {
   @apply mx-auto;
 }
+
+progress[value] {
+  &::-webkit-progress-bar {
+    background-color: transparent;
+  }
+
+  &::-webkit-progress-value {
+    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500;
+  }
+
+  &::-moz-progress-bar {
+    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500;
+  }
+}

@@ -1,8 +1,15 @@
-import React, { FC, MouseEventHandler } from 'react'
+import React, {
+  FC,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { AnyFn } from 'fonction'
 import { replace } from 'core-fn'
 import bookmarkMinusOutline from '@iconify-icons/mdi/bookmark-minus-outline'
 import { Icon } from '@iconify/react'
+
 const linkFormat = replace('#', '')
 
 type Toc = { url: string; title: string; items?: Toc[] }
@@ -12,6 +19,9 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
   toc,
   onClickLink
 }) => {
+  const [activeIndex, changeActiveIndex] = useState('')
+  const ul = useRef<HTMLUListElement>(null)
+
   const handleClick =
     (url: string): MouseEventHandler =>
     (e) => {
@@ -27,7 +37,38 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
         })
       }
       onClickLink?.()
+      setTimeout(() => {
+        changeActiveIndex(url)
+      }, 600)
     }
+
+  useEffect(() => {
+    const headings = document.querySelectorAll('section > h2, h3')
+
+    const observer = new IntersectionObserver(
+      (entry) => {
+        entry.forEach((intersectionObserverEntry) => {
+          if (!intersectionObserverEntry.isIntersecting) return
+          changeActiveIndex(`#${intersectionObserverEntry.target.id}`)
+        })
+      },
+      {
+        rootMargin: '-50% 0px'
+      }
+    )
+
+    headings.forEach((heading) => {
+      if (heading.id) {
+        observer.observe(heading)
+      }
+    })
+
+    return () => {
+      headings.forEach((heading) => {
+        observer.unobserve(heading)
+      })
+    }
+  }, [])
 
   return (
     <div className={`p-3 ${className}`}>
@@ -35,11 +76,17 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
         <Icon icon={bookmarkMinusOutline} className="w-7 h-7" />
         <span>Table of Contents</span>
       </h3>
-      <ul className="space-y-2 md:inset-x-2.5">
+      <ul ref={ul} className="space-y-2 md:inset-x-2.5">
         {toc.map(({ url, title, items }) => {
           return (
             <li key={url}>
-              <a onClick={handleClick(url)} className="block" href={url}>
+              <a
+                onClick={handleClick(url)}
+                className={`hover:translate-x-2 transform delay-100 duration-500 transition-transform block ${
+                  activeIndex === url ? 'text-accent' : ''
+                } `}
+                href={url}
+              >
                 {title}
               </a>
 
@@ -49,7 +96,9 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
                     <li key={url}>
                       <a
                         onClick={handleClick(url)}
-                        className="block"
+                        className={`hover:translate-x-2 delay-100 transform duration-500 transition-transform block ${
+                          activeIndex === url ? 'text-accent' : ''
+                        } `}
                         href={url}
                       >
                         {title}
