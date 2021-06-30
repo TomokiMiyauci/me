@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useRef } from 'react'
+import React, { FC, Fragment, useRef, useEffect, useState } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
@@ -12,6 +12,28 @@ import Toc from '../components/Toc'
 import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
+import { optimizer } from '../utils/optimizer'
+
+const useReading = () => {
+  const [reading, changeReading] = useState({
+    max: 0,
+    val: 0
+  })
+  useEffect(() => {
+    const fn = optimizer((ev) => {
+      changeReading({
+        max: document.body.clientHeight - innerHeight,
+        val: scrollY
+      })
+    })
+
+    addEventListener('scroll', fn)
+
+    return () => removeEventListener('scroll', fn)
+  }, [reading])
+
+  return reading
+}
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -34,6 +56,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const { max, val } = useReading()
 
   return (
     <Layout originalPath={pageContext.originalPath}>
@@ -61,7 +85,14 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             date={new Date(date).toLocaleDateString(locale)}
           >
             <div className="container mx-auto flex flex-wrap ">
-              <aside className="lg:w-1/5" />
+              <aside className="lg:w-1/5 md:px-10 md:pt-20 md:relative">
+                <progress
+                  max={max}
+                  value={val}
+                  className="appearance-none fixed top-0 z-[1] md:z-auto w-full md:w-56 inset-x-0 md:inset-x-auto md:sticky h-1 md:bg-gray-200 md:dark:bg-blue-gray-800 md:top-1/2 md:transform md:rotate-90"
+                />
+              </aside>
+
               <section
                 className="mx-auto w-full prose lg:w-3/5"
                 itemProp="articleBody"
