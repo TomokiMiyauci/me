@@ -10,33 +10,7 @@ import CodeGroups from './CodeGroups'
 import MdxLi from './MdxLi'
 import BottomNavigation from './BottomNavigation'
 import MdxH2 from './MdxH2'
-
-interface ScrollInfo {
-  type: 'up' | 'down'
-  diff: number
-}
-
-let lastPosition = 0
-let ticking = false
-
-const scrollInfoEvent =
-  (fn: (ev: Event, scrollInfo: ScrollInfo) => unknown) => (ev: Event) => {
-    const _lastPosition = lastPosition
-    const currentScrollY = scrollY
-    lastPosition = scrollY
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const calc = currentScrollY - _lastPosition
-        fn(ev, {
-          type: calc > 0 ? 'down' : 'up',
-          diff: Math.abs(calc)
-        })
-        ticking = false
-      })
-
-      ticking = true
-    }
-  }
+import { scrollInfoEvent } from '../utils/scroll'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,
@@ -59,10 +33,10 @@ const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
   originalPath
 }) => {
   const [isShowHeader, changeShow] = useState(true)
-  const fn = scrollInfoEvent((_, { type, diff }) => {
-    if (diff > 14 && type === 'up') {
+  const fn = scrollInfoEvent(({ direction, diff }) => {
+    if (diff > 14 && direction === 'up') {
       changeShow(true)
-    } else if (diff > 14 && type === 'down') {
+    } else if (diff > 14 && direction === 'down') {
       changeShow(false)
     }
   })

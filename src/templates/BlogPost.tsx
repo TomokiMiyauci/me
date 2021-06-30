@@ -85,11 +85,11 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             date={new Date(date).toLocaleDateString(locale)}
           >
             <div className="container mx-auto flex flex-wrap ">
-              <aside className="lg:w-1/5 md:px-10 md:pt-20 md:relative">
+              <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
                 <progress
                   max={max}
                   value={val}
-                  className="appearance-none fixed top-0 z-[1] md:z-auto w-full md:w-56 inset-x-0 md:inset-x-auto md:sticky h-1 md:bg-gray-200 md:dark:bg-blue-gray-800 md:top-1/2 md:transform md:rotate-90"
+                  className="appearance-none fixed top-0 z-[1] lg:z-auto w-full lg:w-56 inset-x-0 lg:inset-x-auto lg:sticky h-1 lg:bg-gray-200 lg:dark:bg-blue-gray-800 lg:top-1/2 lg:transform lg:rotate-90"
                 />
               </aside>
 

@@ -13,26 +13,23 @@ import { ifElseFn } from 'fonction'
 import AccentColor from './AccentColor'
 import { Transition } from '@headlessui/react'
 
-const LinkButton: FC<{ to: string; originalPath: string }> = ({
-  to,
-  children,
-  originalPath
-}) => {
-  const { locale } = useLocalization()
-  const isActive = (path: string): boolean => originalPath === path
+const LinkButton: FC<{ to: string; originalPath: string; className?: string }> =
+  ({ to, children, originalPath, className }) => {
+    const { locale } = useLocalization()
+    const isActive = (path: string): boolean => originalPath === path
 
-  return (
-    <LocalizedLink
-      to={to}
-      language={locale}
-      className={`px-2 hidden md:inline-flex py-1 w-16 h-16 shadow md:px-3 rounded-full items-center justify-center flex-col ${
-        isActive(to) ? 'text-accent ring-1 ring-accent' : ''
-      }`}
-    >
-      {children}
-    </LocalizedLink>
-  )
-}
+    return (
+      <LocalizedLink
+        to={to}
+        language={locale}
+        className={`px-2 hidden md:inline-flex md:px-4 py-1 w-20 h-20 xl:w-24 xl:h-24 items-center justify-center flex-col hover:bg-gray-100 hover:opacity-70 transition duration-300 dark:hover:bg-blue-gray-800 ${className} ${
+          isActive(to) ? 'text-accent bg-gray-100 dark:bg-blue-gray-800' : ''
+        }`}
+      >
+        {children}
+      </LocalizedLink>
+    )
+  }
 
 const TheHeader: FC<{ originalPath: string; className?: string }> = ({
   originalPath,
@@ -72,13 +69,17 @@ const TheHeader: FC<{ originalPath: string; className?: string }> = ({
       dark:border-gray-800 ${className}`}
     >
       <div
-        className="container max-w-8xl py-2 px-3 md:py-6 mx-auto items-center
+        className="container max-w-8xl py-2 md:py-0 px-3 mx-auto items-center
     justify-between flex"
       >
-        <span className="flex items-center space-x-3 md:space-x-10">
+        <span className="flex items-center">
           <Logo />
 
-          <LinkButton originalPath={originalPath} to="/">
+          <LinkButton
+            className="ml-6 xl:ml-12"
+            originalPath={originalPath}
+            to="/"
+          >
             <Icon className="w-7 h-7" icon={accountIcon} />
             <span>About</span>
           </LinkButton>
