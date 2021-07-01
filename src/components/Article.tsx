@@ -30,7 +30,7 @@ const Article: FC<ArticleProps> = ({
 }) => {
   return (
     <article itemScope itemType="http://schema.org/Article" className="mx-auto">
-      <div className="container xl:px-24 mx-auto mb-10 text-gray-800">
+      <div className="container morph xl:px-24 mx-auto mb-10 relative text-gray-800">
         <Breadcrumb to={relativePath} title={title} />
         <h1
           className="
@@ -87,6 +87,11 @@ space-x-6 my-6"
           image={hero}
         />
       </div>
+
+      {/* <div
+        style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70% ' }}
+        className="absolute z-[-1] dark:bg-blue-gray-800  blur filter inset-0 w-full h-full"
+      /> */}
 
       {children}
     </article>
