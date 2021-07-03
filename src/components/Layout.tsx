@@ -24,7 +24,18 @@ const components: MDXProviderComponentsProp = {
   },
   Alert,
   CodeGroups,
-  CodeGroup
+  CodeGroup,
+
+  wrapper: ({ children }) => {
+    const updatedChildren = children.map((child) => {
+      if (child.props.className === 'footnotes') {
+        const { mdxType, originalType, ...rest } = child.props
+        return <div key={1} {...rest} />
+      }
+      return child
+    })
+    return <>{updatedChildren}</>
+  }
 }
 
 const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
