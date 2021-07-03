@@ -1,0 +1,417 @@
+---
+title: Getting Array Elements Type-Safely in TypeScript
+description: Introduce how to type-safely get the first element of a list structure in TypeScript. It also explains items such as Conditional Types, infer signatures, pattern matching of data structures, and overloading.
+tags:
+  - TypeScript
+  - Generics
+
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-07-03
+slug: /posts/typesafe-array-element/
+---
+
+## Getting Started
+
+Sometimes you want to get a specific element of an array or string. For example, if you want to get the first element of an array, how do you do that?
+
+```ts
+const sales = [100, 200, 300, ...]
+
+const head = sales[0]
+const [head2, ..._] = sales
+const head3 = sales.slice(0, 1)[0]
+```
+
+There are many ways to do this, such as specifying subscripts or using [destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+
+Let's see the result of TypeScript type inference.
+
+```ts
+sales // number[]
+
+head // number
+head2 // number
+head3 // number
+```
+
+This is correct in this case, because it is type of `number`. What about the following?
+
+```ts
+const sales: number[] = []
+```
+
+Of course, in this case, it will still be inferred as `number`.
+This is in spite of the fact that the value retrieved is `undefined` since accessing an empty array.
+
+This does not change the result if you type-annotate the empty array as follows:
+
+```ts
+const sales: number[] | [] = []
+```
+
+No, no, no. You may think it is strange to use `number[]` for an empty array in the first place. However, there is no compilation error, and this is a common case.
+For example, if you are expecting `number[]` as an argument to a function, an empty array will be accepted without any problem. When retrieving elements using subscripts, etc., you have to be very conscious of type safety, even in TypeScript.
+
+In this article, I will introduce such type-safe retrieval of array and string elements.
+
+## Conclusion
+
+To conclude first, I have published a function project of [fonction](https://github.com/TomokiMiyauci/fonction), which is a functional utility package, so please use it.
+It is TypeScript-first, and supports multiple runtimes such as `Deno`, `Node.js`, and browsers, so it can be used in basically any environment.
+
+In addition to the `head` function for retrieving the first element of a `string` or `Array`, it implements various other pure functions such as `last` for the end element, `init` for other than the end element, `tail` for other than the first element, etc. Please check it out.
+
+## head function definition
+
+Let's define a function as `head` to get the first element in a type-safe manner.
+The name `head` is based on the `head` function in `Haskell`. Although I say `type-safe`, the correct value is obtained in the implementation, so `undefined` should be inferred depending on the value.
+
+There are other ways to do this, such as returning a class of type Maybe instead of `undefined`, but here I will use a function that returns the elements of the array as they are.
+If I add `undefined` as Union types to the return value, it seems to be good.
+
+```ts
+const head = <T extends unknown[]>(val: T): T[number] | undefined => head[0]
+```
+
+Now, if you give `string[]` as an argument, you'll get `string | undefined` and the inferred types.
+
+```ts
+const val = ['hello', 'world'] // string[]
+head(val) // string | undefined
+head([]) // undefined
+head([] as []) // undefined
+```
+
+Note that at this point, if you pass an empty array of type `[]` or `never[]`, only `undefined` will be inferred, which is correct.
+
+Arrays don't seem to be a problem by themselves, TypeScript has `Tuple types`.
+Let's deal with that as well.
+
+Tuples are not necessarily `readonly`, but since tuples are often defined using the `const` assertion, I'll support `readonly` first.
+Since I can't accept `readonly` types at this point, extend the generics.
+
+```ts{1}
+const head = <T extends readonly unknown[]>(val: T): T[number] | undefined =>
+  head[0]
+```
+
+Just add the `readonly` signature to the generics. Now you can get `readonly` values in arrays.
+
+```ts
+const readonlyArray = ['hello', 'world'] as readonly string[]
+head(readonlyArray) // string | undefined
+```
+
+Now that we're ready, let's see what happens when we receive a tuple in our current function.
+
+```ts{1,3}
+const head = <T extends readonly unknown[]>(val: T): T[number] | undefined => head[0]
+
+const tuple = ['hello', 'world'] as const // readonly ['hello', 'world']
+head(tuple) // "hello" | "world" | undefined
+```
+
+All elements of the tuple and `undefined` are now enumerated in Union type. That's because `T[number]` enumerates its elements with Union type for things like arrays.
+For example, `(string | number)[][number]` is type-inferred as `string | number`, so I didn't care about it in the case of arrays.
+However, in the case of a tuple, since it is ordered, it is not appropriate for elements other than the first to be type-inferred.
+Therefore, we will use [`Conditional Types`](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html) to make sure that we get the correct type inference.
+
+```ts{3}
+const head <T extends readonly unknown[]> = (val: T): T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined => val[0] as any
+```
+
+TypeScript's type system allows for a kind of pattern matching, depending on the data structure.
+If you have a tuple with the structure `[infer U, . ..infer _]`, and `Conditional Types` is used to make a conditional branch for type inference in the case of arrays and tuples.
+Incidentally, `[infer U, . . infer _]` can recognize a tuple with a single element such as `[string]` as a pattern.
+
+Also, the `infer` signature allows you to use the type inferred by the conditional branch as the result of type inference.
+In other words, with `infer U`, if the type is a tuple, the type of the first element is used as `U` for the type inference result.
+
+If it does not match the pattern, it will be used as an array, and the element type and `undefined` will be inferred as Union type.
+The reason why the return type of the implementation is set to `any` is that the type inference of the return value of the implementation and the return type of the function no longer match due to `Conditional Types`.[^1]
+
+[^1]: The return value of the function is now more detailed.
+
+There are several ways to work around this, but for now we'll assume `any`.
+
+The return type is getting messy, so I split the implementation and the type definition as follows:
+
+```ts{6}
+type Head<T extends readonly unknown[]> = T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+
+const head = <T extends readonly unknown[]>(val: T): Head<T> =>
+  val[0] as Head<T>
+```
+
+The type of the implementation we just `any`, can be defined without `any` by making it the same as the return value of the function, as shown above.
+
+The result of using this function is as follows:
+
+| type of argument             | argument                | type of return value                        | return value |
+| ---------------------------- | ----------------------- | ------------------------------------------- | ------------ |
+| `string[]`                   | ['hello', 'world']      | `string` &#124; `undefined`                 | 'hello'      |
+| (`string` &#124; `number`)[] | ['hello', 'world', 100] | `string` &#124; `number` &#124; `undefined` | 'hello'      |
+| `['hello', 100]`             | ['hello', 100]          | `hello`                                     | 'hello'      |
+| `never[]` &#124; `[]`        | []                      | `undefined`                                 | undefined    |
+
+I hope this has made the function quite easy to use.
+
+## Support for strings
+
+The `head` function only targets tuples and arrays, but we want to target strings as well.
+Packages that implement the `head` function, such as [rambda#head](https://ramdajs.com/docs/#head), also target strings[^2].
+
+[^2]: Though with weaker type inference
+
+The `Haskell` `head` function also takes `[Char]` as an argument.[^3]
+
+[^3]: The `head` function of `Haskell` has some differences, such as throwing an exception if an empty array is passed, so we are not aiming to follow it strictly.
+
+Now, before processing the string, we check the expected value. The processing of strings in the `head` function should have the following specifications.
+
+| type of argument | argument | type of return value | return value |
+| ---------------- | -------- | -------------------- | ------------ |
+| `string`         | 'hello'  | `string`             | 'h'          |
+| `string`         | ''       | `string`             | ''           |
+| `'hello'`        | 'hello'  | `h`                  | 'h'          |
+| `''`             | ''       | `''`                 | ''           |
+
+Only two patterns are considered. If a `string` argument is applied, the type `string` will be inferred, and if a string constant is applied, the first character of the string will be type-inferred.
+This can be achieved with [`Template Literal Types`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html), available since 4.1 of TypeScript.
+`Template Literal Types` are simply template literals that can be used with types.
+
+Also, strings, as a data structure, can have a complete type representation by distinguishing between empty characters and others.
+
+First, let's look at the following types
+
+```ts
+type Head<T extends string> = T extends `${infer L}${string}` ? L : never
+```
+
+The `Template Literal Types` allow you to match non-empty characters as the data structure of a string.
+This means the following results.
+
+| argument types | return types |
+| -------------- | ------------ |
+| `string`       | `never`      |
+| `''`           | `never`      |
+| `'h'`          | `'h'`        |
+| `'hello'`      | `'h'`        |
+
+The type `never` was inferred if it was an empty string or a `string`, otherwise the beginning of the string was inferred.
+
+Now, `${infer L}${string}`, which is a `Template Literal Types`, turns out to represent a match against a string of one or more characters.[^4]
+
+[^4]: JavaScript and TypeScript do not explicitly distinguish between characters and strings.
+
+By the way, if you refer to the backward part of the string data structure, the following result is obtained.
+
+```ts
+type Head<T extends string> = T extends `${string}${infer R}` ? R : never
+```
+
+| argument types | return types |
+| -------------- | ------------ |
+| `string`       | `never`      |
+| `''`           | `never`      |
+| `'h'`          | `''`         |
+| `'hello'`      | `'ello'`     |
+
+The result is a little confusing in the case of a single character, but the point is that you can get any string except the first one.
+
+With this knowledge so far, you can write the correct type inference. It will look something like this
+
+```ts
+type Head<T extends string> = T extends `${infer L}${string}`
+  ? L
+  : T extends ''
+  ? ''
+  : string
+```
+
+You can see it now. `${infer L}${string}` didn't match only the empty character and the `string` type, so I just put it after `Conditional Types`.
+
+If it is a string of one or more characters, it is the first character; if it is an empty string, it is an empty string; otherwise, it is a `string` type
+
+If you combine this type expression with the array type, you get the following:
+
+```ts
+type Head<T extends readonly unknown[] | string> = T extends string
+  ? T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  : T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+```
+
+Of course, this type can also be split into `string` and `array`.
+
+```ts{11,13}
+type HeadString<T extends string> = T extends `${infer L}${string}`
+  ? L
+  : T extends ''
+  ? ''
+  : string
+
+type HeadArray<T extends readonly unknown[]> = T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+
+type Head<T extends readonly unknown[] | string> = T extends string
+  ? HeadString<T>
+  : T extends readonly unknown[]
+  ? HeadArray<T>
+  : never
+```
+
+Splitting types is good from the point of view of readability.
+But as shown above, `HeadString` can only accept `string` types, so we need to distinguish cases such as when `T` is a `string`.
+The same is true for `HeadArray`.
+
+Considering these features, splitting the type may not be of much benefit for non-recursive types.
+
+However, the `Head` type itself is useful. If you `export` this type from a module, you can use it as a type to infer the first element from `string` or `unknown[]`.
+By separating the implementation from the type definition, you can create a generic types definition.
+
+The implementation also looks like this
+
+```ts
+const head = <T extends readonly unknown[] | string>(val: T): Head<T> => {
+  const _head = val[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+} as Head<T>
+```
+
+In the case of a string, we want to return an empty string, not `undefined`, so we split the case.
+Now we have a `head` function with strict type inference.
+
+## Overload
+
+Now, up until now, I have explained this by splitting the types and implementations as the types have become bloated.
+You can do the same thing using a mechanism called [overload](https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions).
+
+By using overloading, you can define multiple types for a function.
+
+There are several notations for defining functions in JavaScript and TypeScript.
+Let's take a look at `function declaration` and `arrow function` overloads in each notation.
+
+### Function declaration
+
+Function declaration are the oldest and most common way to define a function. It is done using the `function` keyword.
+
+```ts
+function head(val: string) {
+  return val[0]
+}
+```
+
+A detailed description of function declaration is beyond the scope of this article, but they have the following features:
+
+Functions defined in function declaration are rolled up to the global scope. This behavior is sometimes referred to as hoisting.
+Also, the `this` of a function defined in a function declaration is determined at runtime. In other words, the value of `this` differs depending on the caller of the function.
+Furthermore, generators can be written in function declaration.
+
+Overload in a function declaration can be written as follows. If you replace the previous `head` function, it would look like this.
+
+```ts
+function head<T extends string>(
+  val: T
+): T extends `${infer F}${string}` ? F : T extends '' ? '' : string
+function head<T extends readonly unknown[]>(
+  val: T
+): T extends readonly [infer U, ...infer _] ? U : T[0] | undefined
+
+function head(val: string | unknown[]) {
+  const _head = val[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+You can write the type definition and implementation of a function separately. This is easy to understand, isn't it?
+
+### Arrow functions
+
+Arrow functions are available since ES6 and are an alternative syntax for function expressions. (Not function declaration)
+According to [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions), it has the following features.
+
+> - Does not have its own bindings to `this` or `super`, and should not be used as methods.
+> - Does not have `arguments`, or `new.target` keywords.
+> - Not suitable for `call`, `apply` and `bind` methods, which generally rely on establishing a scope.
+> - Can not be used as constructors.
+> - Can not use `yield`, within its body.
+
+Function declaration is the most common notation.[^5]
+
+[^5]: even Deno's Standard Library is mostly in this notation
+
+On the other hand, arrow functions have the above restrictions, but in other situations, functions can be defined concisely.
+
+Also, I think I read somewhere that overloading is not possible with Arrow functions, but it is.
+It looks like this:
+
+```ts{10}
+const head: {
+  <T extends string>(val: T): T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  <T extends unknown[]>(val: T): T extends readonly [infer U, ...infer _]
+    ? U
+    : T[0] | undefined
+} = (val: string | unknown[]): any => {
+  const _head = (val as string | unknown[])[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+As with function declaration, you can write them separately in `string` and `unknow[]`. The only difference is that, as highlighted, the return type of the implementation must be `any`.
+This is because, as mentioned above, the return type of the overload and the return type of the implementation will diverge.
+
+Also, although it doesn't make much sense, you can cut out the overload part into a `type`.
+
+```ts
+type Head = {
+  <T extends string>(val: T): T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  <T extends unknown[]>(val: T): T extends readonly never[] | []
+    ? undefined
+    : T extends readonly [infer U, ...infer _]
+    ? U
+    : T[0] | undefined
+}
+const head: Head = (val: string | unknown[]): any => {
+  const _head = (val as string | unknown[])[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+This `Head` alias is significantly less versatile. It can only be used as a type annotation for functions.
+There is a big difference in type generality between a type definition and an implementation defined separately without overload.
+
+overload is tightly coupled with the implementation of a function, so I think it is better to use it for limited purposes.
+
+## Summary
+
+I have introduced a method to retrieve the first element from a list structure in a type-safe manner.
+In the process, you may have learned about `Conditional Types`, `infer` signatures, pattern matching in data structures, and `overload`.
+
+This article was originally inspired by [type challenge](https://github.com/type-challenges/type-challenges), where I learned that the TypeScript type system is Turing-complete.
+The type system has infinite expressive power.
+
+Although it didn't come up in this article, you can also write recursive type definitions.
+Recursive types have an upper limit on the number of recursions, but there are ways to break this limit through lazy evaluation.
+I would like to write about recursive types in another article, so please look forward to it.
+
+In this article, I introduced only the `head` function, but I think it will be useful to define `last` to take the last element of the list, `init` for non-tail, `tail` for non-head, etc. as an exercise.

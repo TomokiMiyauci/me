@@ -1,0 +1,406 @@
+---
+title: TypeScriptで型安全に配列の要素を取得する
+description: TypeScriptで型安全にリスト構造の先頭要素を取得する方法を紹介します。また、Conditional Typesやinferシグネチャ、データ構造のパターンマッチング、オーバーロードといったTypeScriptの型システムの力を引き出すこれらの要素についても解説しています。
+tags:
+  - TypeScript
+  - Generics
+
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-07-03
+slug: /posts/typesafe-array-element/
+---
+
+## はじめに
+
+配列や文字列の特定の要素を取得したいこと、たまにありますね。例えば、配列の先頭の要素を取得する場合どのように行いますか？
+
+```ts
+const sales = [100, 200, 300, ...]
+
+const head = sales[0]
+const [head2, ..._] = sales
+const head3 = sales.slice(0, 1)[0]
+```
+
+添字を指定したり、[分割代入](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)を使ったり色々方法はありますが、果たして型安全に処理できているでしょうか。TypeScript で型推論された結果を見てみましょう。
+
+```ts
+sales // number[]
+
+head // number
+head2 // number
+head3 // number
+```
+
+`number` 型となっているため、この場合正しいですね。では次のような場合はどうでしょう。
+
+```ts
+const sales: number[] = []
+```
+
+もちろんこの場合でも、すべての方法で `number` と推論されます。空配列へのアクセスなので、取得される値は `undefined` にもかかわらずです。
+これは以下のように空配列を型注釈しても結果は変わりません。
+
+```ts
+const sales: number[] | [] = []
+```
+
+いやいやそもそも空の配列を `number[]` とすること自体がおかしいと思われるかもしれません。しかし、コンパイルエラーは発生しませんし、しかも日常的によく起こるケースです。
+例えば関数の引数に `number[]`を期待していた場合、空の配列は問題なく受け入れます。添字などを使って要素を取得する場合、TypeScript であろうが、型の安全性を強く意識しなければなりません。
+
+今回は、そんな配列や文字列の要素の型安全な取得について紹介します。
+
+## 結論
+
+先に結論を書くと、私の[fonction](https://github.com/TomokiMiyauci/fonction)という、関数型ユーティリティパッケージに関数を公開しているので、それを使ってください。
+TypeScript-first で、`Deno`や`Node.js`、ブラウザなどマルチランタイムをサポートしているので、基本的にはどんな環境でも使えると思います。
+
+`string`や  `Array`の先頭要素を取得する `head` 関数の他、 末尾の `last`, 末尾以外の`init`, 先頭以外の `tail` など 他にも様々な純粋関数を実装しているので、是非チェックしてみてください。
+
+## head 関数の定義
+
+型安全に先頭要素を取得する関数を `head`として定義してみましょう。 ちなみに `head`という名前は、`Haskell`の `head` 関数を意識しています。
+型安全にといっていますが、そもそも実装上、正しい値は取れているので、値によっては`undefined` も推論されればいいわけです。`undefined`ではなく、
+Maybe 型のクラスを返すなどの方法もありますが、ここでは配列の要素をそのままの型で返す関数とします。
+
+戻り値に Union types として `undefined` を追加すれば、良さそうに思えます。
+
+```ts
+const head = <T extends unknown[]>(val: T): T[number] | undefined => head[0]
+```
+
+これで `string[]`を引数に与えると、`string | undefined` と推論された値が得られます。
+
+```ts
+const val = ['hello', 'world'] // string[]
+head(val) // string | undefined
+head([]) // undefined
+head([] as []) // undefined
+```
+
+ちなみにこの時点で、空の配列 `[]` や `never[]` の型を渡すと、`undefined` のみが推論されるようになり正しいです。
+
+これだけでは配列は問題なさそうですが、TypeScript には `Tuple types`があるので、それにも対応しましょう。
+
+タプルが必ずしも`readonly`ではないですが、タプルは`const`アサーションを使って定義されることが多いので、まずは`readonly`に対応します。
+この時点では`readonly` な型は受け取れませんので、ジェネリクスを拡張します。
+
+```ts{1}
+const head = <T extends readonly unknown[]>(val: T): T[number] | undefined =>
+  head[0]
+```
+
+`readonly` シグネチャをジェネリクスへつけるだけですね。これで、配列でも `readonly` な値を受け取れます。
+
+```ts
+const readonlyArray = ['hello', 'world'] as readonly string[]
+head(readonlyArray) // string | undefined
+```
+
+さて準備はできたので、現状の関数でタプルを受け取るとどうなるか見てみましょう。
+
+```ts{1,3}
+const head = <T extends readonly unknown[]>(val: T): T[number] | undefined => head[0]
+
+const tuple = ['hello', 'world'] as const // readonly ['hello', 'world']
+head(tuple) // "hello" | "world" | undefined
+```
+
+Union type でタプルのすべての要素と `undefined`が列挙されました。それもそのはず、`T[number]` は配列のようなものに対しては、構成要素を Union type で列挙するからです。
+例えば `(string | number)[][number]`の場合は  `string | number` と型推論されるので、配列の場合は気になりませんでした。
+しかし、タプルの場合、順序のあるので先頭以外の要素が型推論されることはふさわしくありません。
+よって、[`Conditional Types`](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html)を使って、正しい型推論が得られるようにします。
+
+```ts{3}
+const head <T extends readonly unknown[]> = (val: T): T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined => val[0] as any
+```
+
+TypeScript の型システムはデータ構造によって、パターンマッチのようなものができます。
+タプルを `[infer U, ...infer _]` という構造であるとみなし、 `Conditional Types`により、配列とタプルの場合の型推論の条件分岐をしています。
+ちなみに、`[infer U, ...infer _]` では `[string]`　のような要素が一つのタプルもパターンとして認識できます。
+
+また、`infer` シグネチャによって、その条件分岐で推論された型を型推論の結果に用いることができます。
+つまり、 `infer U` によって、タプル型だった場合、先頭要素の型を `U` として型推論の結果にしています。
+
+パターンにマッチしない場合は配列として、要素の型と `undefined` を Union type で推論されるようにします。
+実装の戻り値の型を`any`にしているのは、`Conditional Types`により、実装の戻り値の型推論と、関数の戻り値の型が合わなくなってしまったからです。[^1]
+
+[^1]: 関数の戻り値の方のほうが詳細度が上がってしまった。
+
+これを回避する方法はいくつかありますが、今は `any` としておきます。
+
+戻り値の型がごちゃごちゃしてきたので、実装と型定義を分割すると次のようになります。
+
+```ts{6}
+type Head<T extends readonly unknown[]> = T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+
+const head = <T extends readonly unknown[]>(val: T): Head<T> =>
+  val[0] as Head<T>
+```
+
+先程 `any` した実装の型ですが、上のように　関数の戻り値と同じにすることで、 `any` を出すことなく定義できます。
+
+この関数を使った結果は次のようになります。
+
+| 引数の型                     | 引数　                  | 戻り値の型                                  | 戻り値　  |
+| ---------------------------- | ----------------------- | ------------------------------------------- | --------- |
+| `string[]`                   | ['hello', 'world']      | `string` &#124; `undefined`                 | 'hello'   |
+| (`string` &#124; `number`)[] | ['hello', 'world', 100] | `string` &#124; `number` &#124; `undefined` | 'hello'   |
+| `['hello', 100]`             | ['hello', 100]          | `hello`                                     | 'hello'   |
+| `never[]` &#124; `[]`        | []                      | `undefined`                                 | undefined |
+
+これでかなり使いやすい関数になったかと思います。
+
+## 文字列に対応する
+
+`head` 関数はタプルおよび配列のみを処理対象としていますが、文字列もその対象にしたいです。
+[rambda#head](https://ramdajs.com/docs/#head)のように、`head` 関数を実装しているパッケージも文字列を対象としていますし[^2]、
+`Haskell` の `head`関数も`[Char]`を引数に持つためです。[^3]
+
+[^2]: 型推論は弱いですが
+[^3]: ただし`Haskell`の `head` 関数は空配列を渡すと例外を投げるなど違いがあるので、厳密な踏襲を目指しているわけではない
+
+さて文字列の処理に先立って、期待値を確認します。`head` 関数の文字列の処理は次の仕様とします。
+
+| 引数の型  | 引数　  | 戻り値の型 | 戻り値　 |
+| --------- | ------- | ---------- | -------- |
+| `string`  | 'hello' | `string`   | 'h'      |
+| `string`  | ''      | `string`   | ''       |
+| `'hello'` | 'hello' | `h`        | 'h'      |
+| `''`      | ''      | `''`       | ''       |
+
+２つのパターンのみを考えます。引数に`string`が適応された場合、`string`型が、文字列の定数が適応された場合、その文字列の先頭の文字が型推論されるようにします。
+これは TypeScript の 4.1 から使えるようになった、[`Template Literal Types`](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html) により実現できます。
+`Template Literal Types` は簡単に言うと、型で使用できるテンプレートリテラルです。
+
+また、文字列はデータ構造として、空文字とそれ以外を区別することで、完結な型表現が可能です。
+
+まず次の型を見てみます。
+
+```ts
+type Head<T extends string> = T extends `${infer L}${string}` ? L : never
+```
+
+`Template Literal Types`によって、文字列のデータ構造として空文字以外をマッチできます。
+つまり次の結果となります。
+
+| 引数の型  | 戻り値の型 |
+| --------- | ---------- |
+| `string`  | `never`    |
+| `''`      | `never`    |
+| `'h'`     | `'h'`      |
+| `'hello'` | `'h'`      |
+
+空文字と、`string`の場合に`never`型となり、それ以外の場合は、文字列の先頭が推論されました。
+
+さて`${infer L}${string}`という `Template Literal Types`ですが、これは１文字以上の文字列とのマッチを表していることがわかりました。[^4]
+
+[^4]: JavaScript や TypeScript は文字と文字列を明確に区別しません。
+
+ちなみに文字列データ構造の後方を参照すると次の結果になります。
+
+```ts
+type Head<T extends string> = T extends `${string}${infer R}` ? R : never
+```
+
+| 引数の型  | 戻り値の型 |
+| --------- | ---------- |
+| `string`  | `never`    |
+| `''`      | `never`    |
+| `'h'`     | `''`       |
+| `'hello'` | `'ello'`   |
+
+一文字の場合に少しわかりにくい結果になりましたが、要は先頭以外の文字列を取得できます。
+
+ここまでの知識で正しい型推論を書くことができます。以下のようになります。
+
+```ts
+type Head<T extends string> = T extends `${infer L}${string}`
+  ? L
+  : T extends ''
+  ? ''
+  : string
+```
+
+もうわかりますね。`${infer L}${string}`は空文字と`string`型のみマッチしなかったので、それを`Conditional Types`に続けて記述しただけです。
+日本語で言うなら、「１文字以上の文字列な場合は先頭文字、空文字であれば空文字、それ以外は`string`型となる
+」といった具合でしょうか。
+
+この型表現を配列の型と合わせると次のようになります。
+
+```ts
+type Head<T extends readonly unknown[] | string> = T extends string
+  ? T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  : T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+```
+
+もちろんこの型は`string`と`array`に分割することもできます。
+
+```ts{11,13}
+type HeadString<T extends string> = T extends `${infer L}${string}`
+  ? L
+  : T extends ''
+  ? ''
+  : string
+
+type HeadArray<T extends readonly unknown[]> = T extends readonly [infer U, ...infer _]
+  ? U
+  : T[0] | undefined
+
+type Head<T extends readonly unknown[] | string> = T extends string
+  ? HeadString<T>
+  : T extends readonly unknown[]
+  ? HeadArray<T>
+  : never
+```
+
+型を分割するのは、可読性の観点からは良いですが、上のように、`HeadString`は`string`型のみを受け取れるので、`T`が`string`の場合といった場合分けが必要になってしまいます。
+現行の型システムでは**それ以外**の場合の型をうまく捉えることができないので、
+上の例のように`HeadArray`にわたす時には`T`が`readonly unknown[]`の場合といった場合分けが必要になります。
+このあたりの特徴を考えると、再帰型以外の場合は、型を分割してもあまり恩恵は少ないかもしれません。
+
+ただ、`Head`型自体は有用です。モジュールからこの型を`export`すれば、型として、`string`か`unknown[]`から先頭の要素を推論する型を利用できます。
+実装と型定義を分けることで、汎用的なモジュールの作成ができます。
+
+また実装は次のようになります。
+
+```ts
+const head = <T extends readonly unknown[] | string>(val: T): Head<T> => {
+  const _head = val[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+} as Head<T>
+```
+
+文字列の場合は、`undefined` ではなく空文字を返したいので、場合分けをしています。
+これで厳密な型推論付きの`head`関数ができました。
+
+## オーバーロード
+
+さて今までは型が肥大化してきたので、型と実装を分割して解説してきましたが、実は[オーバーロード](https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions)という仕組みを使っても同じようなことはできます。
+オーバーロードをすることで、複数の型を関数に対して定義する事ができます。
+
+JavaScript や TypeScript で関数を定義するにはいくつか記法があります。`関数宣言`と、`アロー関数`に関して、それぞれの記法におけるオーバーロードについて見てみます。
+
+### 関数宣言
+
+関数宣言は古くからある最も一般的な関数定義の方法です。`function` キーワードを用いて行います。
+
+```ts
+function head(val: string) {
+  return val[0]
+}
+```
+
+関数宣言の詳しい説明はここではしませんが、次の特徴があります。
+
+関数宣言で定義した関数は、グローバルスコープに巻き上げられます。この挙動はホイスティングと言ったりします。
+また、関数宣言で定義した関数の`this`は、実行時に決定されます。つまり、関数の呼び出し元によって`this`の値は異なります。
+さらに、関数宣言ではジェネレータを書くことができます。
+
+関数宣言でのオーバーロードは次のように書きます。先の`head`関数を置き換えるとこんな感じでしょうか。
+
+```ts
+function head<T extends string>(
+  val: T
+): T extends `${infer F}${string}` ? F : T extends '' ? '' : string
+function head<T extends readonly unknown[]>(
+  val: T
+): T extends readonly [infer U, ...infer _] ? U : T[0] | undefined
+
+function head(val: string | unknown[]) {
+  const _head = val[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+関数の型定義と実装を分けて書くことができることがわかります。これはこれでわかりやすいのではないでしょうか。
+
+### アロー関数
+
+アロー関数は ES6 から使用でき、関数式の代替構文です。（関数宣言ではなく）
+[MDN](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Functions/Arrow_functions) によると次の特徴があるようです。
+
+> - `this` や `super` への結びつけを持たないので、メソッドとして使用することはできません。
+> - `arguments` や `new.target` キーワードがありません。
+> - `call`, `apply`, `bind` のような、一般にスコープの設定のためのメソッドには適していません。
+> - コンストラクターとして使用することはできません。
+> - 本体内で `yield` を使用することはできません。
+
+関数宣言は最も一般的な記法です。[^5]
+
+[^5]: 例えば Deno の Standard Library もほとんどこの記法です。
+
+一方、アロー関数では上の制約はありますが、それ以外の場面では簡潔に関数を定義できます。
+
+また、アロー関数ではオーバーロードができないという旨の記事をどこかで見た気がしますが、できます。
+次のようになります。
+
+```ts{10}
+const head: {
+  <T extends string>(val: T): T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  <T extends unknown[]>(val: T): T extends readonly [infer U, ...infer _]
+    ? U
+    : T[0] | undefined
+} = (val: string | unknown[]): any => {
+  const _head = (val as string | unknown[])[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+関数宣言と同じように、`string`と`unknow[]`で分けて書くことができます。唯一の違いは、ハイライトしているように、実装の戻り値の型を`any`にしなければなりません。
+これは上にもあったように、オーバーロードの戻り値の型と実装の戻り値の型が乖離してしまうことへの対応です。
+
+また、あまり意味はありませんが、オーバーロードの部分のみを`type`に切り出すこともできます。
+
+```ts
+type Head = {
+  <T extends string>(val: T): T extends `${infer F}${string}`
+    ? F
+    : T extends ''
+    ? ''
+    : string
+  <T extends unknown[]>(val: T): T extends readonly never[] | []
+    ? undefined
+    : T extends readonly [infer U, ...infer _]
+    ? U
+    : T[0] | undefined
+}
+const head: Head = (val: string | unknown[]): any => {
+  const _head = (val as string | unknown[])[0]
+  return Array.isArray(val) ? _head : _head ?? ''
+}
+```
+
+この`Head`エイリアスは汎用性が著しく低いです。関数の型アノテーションとしてしか使えません。
+オーバーロードせずに型定義と実装を分けて定義したものとは、型の汎用性で大きな差が生まれます。
+
+以上のように、オーバーロードは関数の実装と密結合になるので、用途を限定して使うといいかと思います。
+
+## まとめ
+
+型安全にリスト構造から先頭要素の取得をする方法を紹介しました。
+その過程で、`Conditional Types`や`infer`シグネチャ、データ構造のパターンマッチング、`オーバーロード`について理解できたかと思います。
+
+この記事はもともと[type challenge](https://github.com/type-challenges/type-challenges)から、TypeScript の型システムがチューリング完全であることを知ったことが始まりでした。
+型システムは無限の表現力があります。
+
+今回は出てきませんでしたが、再帰的な型定義も書くことができます。
+再帰型には再帰数の上限がありますが、遅延評価によってこの上限を突破する方法もあります。
+別の記事で再帰型について書きたいと思いますのでお楽しみに。
+
+今回は、`head` 関数のみを紹介しましたが、リストの末尾を取る `last`、末尾以外の`init`, 先頭以外の `tail` など 練習課題として定義してみると力になると思います。
