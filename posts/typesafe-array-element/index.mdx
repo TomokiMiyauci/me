@@ -131,7 +131,9 @@ Also, the `infer` signature allows you to use the type inferred by the condition
 In other words, with `infer U`, if the type is a tuple, the type of the first element is used as `U` for the type inference result.
 
 If it does not match the pattern, it will be used as an array, and the element type and `undefined` will be inferred as Union type.
-The reason why the return type of the implementation is set to `any` is that the type inference of the return value of the implementation and the return type of the function no longer match due to `Conditional Types`. (The return value of the function is now more detailed.)
+The reason why the return type of the implementation is set to `any` is that the type inference of the return value of the implementation and the return type of the function no longer match due to `Conditional Types`.[^1]
+
+[^1]: The return value of the function is now more detailed.
 
 There are several ways to work around this, but for now we'll assume `any`.
 
@@ -162,9 +164,13 @@ I hope this has made the function quite easy to use.
 ## Support for strings
 
 The `head` function only targets tuples and arrays, but we want to target strings as well.
-Packages that implement the `head` function, such as [rambda#head](https://ramdajs.com/docs/#head), also target strings (though with weaker type inference).
+Packages that implement the `head` function, such as [rambda#head](https://ramdajs.com/docs/#head), also target strings[^2].
 
-The `Haskell` `head` function also takes `[Char]` as an argument.(However, the `head` function of `Haskell` has some differences, such as throwing an exception if an empty array is passed, so we are not aiming to follow it strictly.)
+[^2]: Though with weaker type inference
+
+The `Haskell` `head` function also takes `[Char]` as an argument.[^3]
+
+[^3]: The `head` function of `Haskell` has some differences, such as throwing an exception if an empty array is passed, so we are not aiming to follow it strictly.
 
 Now, before processing the string, we check the expected value. The processing of strings in the `head` function should have the following specifications.
 
@@ -199,8 +205,9 @@ This means the following results.
 
 The type `never` was inferred if it was an empty string or a `string`, otherwise the beginning of the string was inferred.
 
-Now, `${infer L}${string}`, which is a `Template Literal Types`, turns out to represent a match against a string of one or more characters. (JavaScript and TypeScript do not explicitly distinguish between character and strings.
-(JavaScript and TypeScript do not explicitly distinguish between characters and strings.)
+Now, `${infer L}${string}`, which is a `Template Literal Types`, turns out to represent a match against a string of one or more characters.[^4]
+
+[^4]: JavaScript and TypeScript do not explicitly distinguish between characters and strings.
 
 By the way, if you refer to the backward part of the string data structure, the following result is obtained.
 
@@ -341,7 +348,10 @@ According to [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 > - Can not be used as constructors.
 > - Can not use `yield`, within its body.
 
-Function declaration is the most common notation (even Deno's Standard Library is mostly in this notation).
+Function declaration is the most common notation.[^5]
+
+[^5]: even Deno's Standard Library is mostly in this notation
+
 On the other hand, arrow functions have the above restrictions, but in other situations, functions can be defined concisely.
 
 Also, I think I read somewhere that overloading is not possible with Arrow functions, but it is.
