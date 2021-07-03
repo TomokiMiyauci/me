@@ -22,6 +22,11 @@ const components: MDXProviderComponentsProp = {
     const title = children[1]
     return <MdxH2 id={id} title={title} />
   },
+  table: (props) => (
+    <div className="w-full rounded-md overflow-x-scroll">
+      <table {...props} />
+    </div>
+  ),
   Alert,
   CodeGroups,
   CodeGroup,

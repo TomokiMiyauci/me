@@ -94,11 +94,10 @@ module.exports = {
             'code::after': false,
             'pre code': false,
             table: {
-              overflow: 'hidden',
+              marginTop: 0,
+              marginBottom: 0,
               borderCollapse: 'collapse',
-              borderRadius: '0.375rem',
-              boxShadow:
-                '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);'
+              borderRadius: '0.375rem'
             },
             thead: {
               backgroundColor: false,
@@ -106,10 +105,14 @@ module.exports = {
               borderBottomColor: false
             },
             'thead th': {
-              padding: '0.25rem 0.5rem'
+              padding: '0.25rem 0.5rem',
+              whiteSpace: 'nowrap'
             },
             'tbody tr': {
               borderBottomColor: false
+            },
+            'tbody td': {
+              whiteSpace: 'nowrap'
             },
             'thead th:first-child': false,
             'tbody td:first-child': false,
