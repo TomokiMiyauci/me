@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "blorogue"
+  },
+  "targets": {
+    "blorogue": {
+      "hosting": {
+        "blog": [
+          "blorogue"
+        ],
+        "storybook": [
+          "miyauchi-storybook"
+        ]
+      }
+    }
   }
 }

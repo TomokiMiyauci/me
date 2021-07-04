@@ -12,7 +12,9 @@
     "dev": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "clean": "gatsby clean",
+    "storybook": "start-storybook",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@headlessui/react": "^1.3.0",
@@ -93,6 +95,13 @@
     "postcss": "^8.3.5",
     "prettier": "^2.3.1",
     "prism-themes": "^1.7.0",
-    "tailwindcss": "^2.2.2"
+    "tailwindcss": "^2.2.2",
+    "@mdx-js/preact": "^1.6.22",
+    "@storybook/addon-actions": "^6.4.0-alpha.11",
+    "@storybook/addon-essentials": "^6.4.0-alpha.11",
+    "@storybook/addon-links": "^6.4.0-alpha.11",
+    "@storybook/react": "^6.4.0-alpha.11",
+    "storybook-builder-vite": "^0.0.10",
+    "vite": "^2.3.8"
   }
 }
