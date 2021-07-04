@@ -1,4 +1,4 @@
-name: Deploy frontend
+name: Deploy blog
 
 on:
   push:
@@ -136,3 +136,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLOROGUE }}'
           channelId: live
           projectId: blorogue
+          target: blog
