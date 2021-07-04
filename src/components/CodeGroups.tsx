@@ -14,7 +14,7 @@ const CodeGroup: FC<{
   const labels = _children.map((child) => child.props.label)
 
   return (
-    <div className="relative -space-y-4">
+    <div className="relative -space-y-6">
       <div className="text-right">
         <span
           style={{ backgroundColor: 'rgb(40, 44, 52)' }}

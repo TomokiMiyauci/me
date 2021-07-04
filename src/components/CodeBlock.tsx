@@ -27,7 +27,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
       {({ className, style, tokens, getLineProps, getTokenProps }) => {
         const _tokens = head(tokens)
         return (
-          <div className="relative group my-6 text-sm">
+          <div className="relative group mb-6 my-8 text-sm">
             <div className="flex -mx-4 md:mx-0 md:rounded-md overflow-x-auto bg-grey">
               <div className="text-right select-none sticky left-0 border-r border-gray-600 px-2 py-4 text-gray-600 bg-grey">
                 {_tokens.map((_, i) => (
