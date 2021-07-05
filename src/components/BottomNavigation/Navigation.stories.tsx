@@ -1,11 +1,12 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import { PureNavigation as BottomNavigation, navigations } from './'
+import Navigation from './Navigation'
+import { navigations } from './constants'
 
-const meta: ComponentMeta<typeof BottomNavigation> = {
-  title: 'BottomNavigation',
-  component: BottomNavigation,
+const meta: ComponentMeta<typeof Navigation> = {
+  title: 'Navigation',
+  component: Navigation,
 
   args: {
     navigations,
@@ -13,8 +14,8 @@ const meta: ComponentMeta<typeof BottomNavigation> = {
   }
 }
 
-const Template: ComponentStory<typeof BottomNavigation> = (args) => (
-  <BottomNavigation {...args} />
+const Template: ComponentStory<typeof Navigation> = (args) => (
+  <Navigation {...args} />
 )
 
 const Default = Template.bind({})
