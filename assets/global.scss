@@ -48,7 +48,7 @@ progress[value] {
   }
 
   &::-webkit-progress-value {
-    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 transition-all duration-100 ease-out;
+    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500;
   }
 
   &::-moz-progress-bar {
