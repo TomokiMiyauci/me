@@ -1,5 +1,15 @@
 import React from 'react'
 import { BaseDecorators } from '@storybook/addons'
+import { action } from '@storybook/addon-actions'
+
+global.___loader = {
+  enqueue: () => {},
+  hovering: () => {}
+}
+global.__BASE_PATH__ = '/'
+window.___navigate = (pathname) => {
+  action('NavigateTo:')(pathname)
+}
 const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -21,6 +31,7 @@ const decorators: BaseDecorators<unknown> = [
   )
 ]
 
-export { parameters, decorators }
 import('../assets/global.scss')
 import('../assets/prose.scss')
+
+export { parameters, decorators }
