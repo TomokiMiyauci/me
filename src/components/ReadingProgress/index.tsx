@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 import { optimizer } from '../../utils/optimizer'
+import ProgressBar from './ProgressBar'
 
 const useReading = () => {
   const [reading, changeReading] = useState({
@@ -7,7 +8,7 @@ const useReading = () => {
     val: 0
   })
   useEffect(() => {
-    const fn = optimizer((ev) => {
+    const fn = optimizer(() => {
       changeReading({
         max: document.body.clientHeight - innerHeight,
         val: scrollY
@@ -25,12 +26,6 @@ const useReading = () => {
 const ReadingProgress: FC = () => {
   const { max, val } = useReading()
 
-  return (
-    <progress
-      max={max}
-      value={val}
-      className="appearance-none fixed top-0 z-[1] lg:z-auto w-full lg:w-56 inset-x-0 lg:inset-x-auto lg:sticky h-1 lg:bg-gray-200 lg:dark:bg-blue-gray-800 lg:top-1/2 lg:transform lg:rotate-90"
-    />
-  )
+  return <ProgressBar max={max} val={val} />
 }
 export default ReadingProgress
