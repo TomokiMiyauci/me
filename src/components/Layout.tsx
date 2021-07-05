@@ -13,7 +13,7 @@ const Layout: FC<{
         <MDXProvider>{children}</MDXProvider>
       </main>
 
-      <AppFrame currentPath={currentPath} originalPath={originalPath} />
+      {/* <AppFrame currentPath={currentPath} originalPath={originalPath} /> */}
     </>
   )
 }
