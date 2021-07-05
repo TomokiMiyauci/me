@@ -12,28 +12,7 @@ import Toc from '../components/Toc'
 import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
-import { optimizer } from '../utils/optimizer'
-
-const useReading = () => {
-  const [reading, changeReading] = useState({
-    max: 0,
-    val: 0
-  })
-  useEffect(() => {
-    const fn = optimizer((ev) => {
-      changeReading({
-        max: document.body.clientHeight - innerHeight,
-        val: scrollY
-      })
-    })
-
-    addEventListener('scroll', fn)
-
-    return () => removeEventListener('scroll', fn)
-  }, [reading])
-
-  return reading
-}
+import ReadingProgress from '../components/ReadingProgress'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -56,8 +35,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-
-  const { max, val } = useReading()
 
   return (
     <Layout
@@ -89,11 +66,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
           >
             <div className="container mx-auto flex flex-wrap ">
               <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
-                <progress
-                  max={max}
-                  value={val}
-                  className="appearance-none fixed top-0 z-[1] lg:z-auto w-full lg:w-56 inset-x-0 lg:inset-x-auto lg:sticky h-1 lg:bg-gray-200 lg:dark:bg-blue-gray-800 lg:top-1/2 lg:transform lg:rotate-90"
-                />
+                <ReadingProgress />
               </aside>
 
               <section
