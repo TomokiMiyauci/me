@@ -44,7 +44,7 @@ const config: StorybookConfig = {
       require.resolve('@babel/plugin-proposal-class-properties'),
       require.resolve('babel-plugin-remove-graphql-queries')
     ]
-    config.resolve.mainFields = ['module', 'main', 'browser']
+    config.resolve.mainFields = ['module', 'main']
 
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
