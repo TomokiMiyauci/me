@@ -1,6 +1,5 @@
-import React, { FC, useMemo } from 'react'
-import { useLocalization } from 'gatsby-theme-i18n'
-import { navigations } from './constants'
+import React, { FC } from 'react'
+import { useLocalizedNavigations } from './hooks'
 
 import Navigation from './Navigation'
 
@@ -8,16 +7,7 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   currentPath,
   className
 }) => {
-  const { localizedPath, ...rest } = useLocalization()
-  const localizedNavs = useMemo(
-    () =>
-      navigations.map(({ title, to, icon }) => ({
-        title,
-        icon,
-        to: localizedPath({ ...rest, path: to })
-      })),
-    []
-  )
+  const localizedNavs = useLocalizedNavigations()
 
   return (
     <Navigation
