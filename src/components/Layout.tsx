@@ -43,11 +43,11 @@ const components: MDXProviderComponentsProp = {
   }
 }
 
-const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
-  children,
-
-  originalPath
-}) => {
+const Layout: FC<{
+  children: ReactChildren
+  originalPath: string
+  currentPath: string
+}> = ({ children, currentPath, originalPath }) => {
   const [isShowHeader, changeShow] = useState(true)
   const fn = scrollInfoEvent(({ direction, diff }) => {
     if (diff > 14 && direction === 'up') {
@@ -78,7 +78,7 @@ const Layout: FC<{ children: ReactChildren; originalPath: string }> = ({
       <TheFooter />
 
       <BottomNavigation
-        originalPath={originalPath}
+        currentPath={currentPath}
         className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
           isShowHeader ? '' : 'translate-y-full'
         }`}

@@ -60,7 +60,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const { max, val } = useReading()
 
   return (
-    <Layout originalPath={pageContext.originalPath}>
+    <Layout
+      originalPath={pageContext.originalPath}
+      currentPath={location.pathname}
+    >
       <Seo
         title={title}
         description={description}
