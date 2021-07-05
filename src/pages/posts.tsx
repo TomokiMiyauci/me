@@ -42,7 +42,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   }
 
   return (
-    <Layout originalPath={originalPath}>
+    <Layout originalPath={originalPath} currentPath={location.pathname}>
       <Seo
         title="Blog"
         description="Tomoki Miyauchi's technical blog. Mainly aim to disseminate technical and useful information such as information on the latest technology related to the Web and introduction of what was created as a project. I will send live information with a lot of actual code."

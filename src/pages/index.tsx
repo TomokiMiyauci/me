@@ -19,7 +19,7 @@ const IndexPage: FC<PageProps> = ({
   const fullpath = new URL(location.pathname, siteUrl).toString()
 
   return (
-    <Layout originalPath={originalPath}>
+    <Layout originalPath={originalPath} currentPath={location.pathname}>
       <Seo title="Home" fullpath={fullpath} />
 
       <Helmet>
