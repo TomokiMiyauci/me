@@ -7,8 +7,6 @@ const meta: ComponentMeta<typeof Alert> = {
   title: 'Alert',
   component: Alert,
 
-  decorators: [(Story) => <Story />],
-
   args: {
     children: (
       <>
