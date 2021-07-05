@@ -1,16 +1,13 @@
-import React, { FC, ReactChildren, useEffect, useState } from 'react'
+import React, { FC, ReactChildren } from 'react'
 import { MDXProvider, MDXProviderComponentsProp } from '@mdx-js/react'
 import { MdxLink } from 'gatsby-theme-i18n'
 import Alert from './Alert'
 import CodeGroup from './CodeGroup'
-import TheHeader from './TheHeader'
-import TheFooter from './TheFooter'
 import CodeBlock from './CodeBlock'
 import CodeGroups from './CodeGroups'
 import MdxLi from './MdxLi'
-import BottomNavigation from './BottomNavigation'
 import MdxH2 from './MdxH2'
-import { scrollInfoEvent } from '../utils/scroll'
+import AppFrame from './AppFrame'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,
@@ -48,41 +45,13 @@ const Layout: FC<{
   originalPath: string
   currentPath: string
 }> = ({ children, currentPath, originalPath }) => {
-  const [isShowHeader, changeShow] = useState(true)
-  const fn = scrollInfoEvent(({ direction, diff }) => {
-    if (diff > 14 && direction === 'up') {
-      changeShow(true)
-    } else if (diff > 14 && direction === 'down') {
-      changeShow(false)
-    }
-  })
-
-  useEffect(() => {
-    addEventListener('scroll', fn)
-
-    return () => removeEventListener('scroll', fn)
-  })
   return (
     <>
       <main className="p-4 mt-14 md:mt-28">
         <MDXProvider components={components}>{children}</MDXProvider>
       </main>
 
-      <TheHeader
-        originalPath={originalPath}
-        className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500 ${
-          isShowHeader ? '' : '-translate-y-full'
-        }`}
-      />
-
-      <TheFooter />
-
-      <BottomNavigation
-        currentPath={currentPath}
-        className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
-          isShowHeader ? '' : 'translate-y-full'
-        }`}
-      />
+      <AppFrame currentPath={currentPath} originalPath={originalPath} />
     </>
   )
 }

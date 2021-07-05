@@ -6190,12 +6190,7 @@ babel-plugin-react-docgen@^4.2.1:
     lodash "^4.17.15"
     react-docgen "^5.0.0"
 
-babel-plugin-remove-graphql-queries@2.9.14:
-  version "2.9.14"
-  resolved "https://registry.yarnpkg.com/babel-plugin-remove-graphql-queries/-/babel-plugin-remove-graphql-queries-2.9.14.tgz#49bf6cdf0a37c2a37c11bf4648675c26732a0492"
-  integrity sha512-V4o7CvS5bud+Tk9ni4gSr2l980K2H0lQ0A7skfSMvHrPlek+Rcs+4tNVpHnKuAWoXTZ+63tW06B4ENn+wf35bg==
-
-babel-plugin-remove-graphql-queries@^3.8.0:
+babel-plugin-remove-graphql-queries@3.8.0, babel-plugin-remove-graphql-queries@^3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-remove-graphql-queries/-/babel-plugin-remove-graphql-queries-3.8.0.tgz#00bbb2a8a222d13e8f025b813bb117e8c5f1a5d5"
   integrity sha512-ArP55oowkMmMXxz1Q7OAsPUSt09gwRDzRtOi5cdrhhNsN7z4XOmy0n+ImYSyNxId0NL7wG2g2KT8wRdgmZ95Ig==
