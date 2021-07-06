@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useRef, useEffect, useState } from 'react'
+import React, { FC, Fragment, useRef } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
@@ -13,7 +13,7 @@ import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
-
+import ReactUtterences from 'react-utterances'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location,
@@ -67,7 +67,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
           >
             <div className="container mx-auto flex flex-wrap ">
               <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
-                {/* <ReadingProgress /> */}
+                <ReadingProgress />
               </aside>
 
               <section
@@ -85,6 +85,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               </nav>
             </div>
           </Article>
+
+          <ReactUtterences repo="TomokiMiyauci/me" type="pathname" />
 
           <hr className="prose mx-auto mt-4" />
 
