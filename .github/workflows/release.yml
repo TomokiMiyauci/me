@@ -113,6 +113,8 @@ jobs:
 
       - name: Build
         run: yarn build
+        env:
+          GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
 
       - uses: actions/upload-artifact@v2
         with:

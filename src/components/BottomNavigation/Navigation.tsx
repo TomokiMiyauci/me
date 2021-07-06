@@ -43,9 +43,7 @@ const Navigation: FC<{
   currentPath: string
 }> = ({ navigations, currentPath, className }) => {
   return (
-    <nav
-      className={`px-2 dark:bg-blue-gray-900 bg-gray-50 dark:border-blue-gray-800 ${className}`}
-    >
+    <nav className={`px-2  ${className}`}>
       <MemoInner currentPath={currentPath} navigations={navigations} />
     </nav>
   )

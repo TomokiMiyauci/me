@@ -131,7 +131,9 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
           </div>
 
           <section className="max-w-prose -mx-4 md:mx-auto">
-            <h3 className="p-4 text-3xl md:p-0 md:mb-2">Comments</h3>
+            <h3 id="comment" className="p-4 text-3xl md:p-0 md:mb-2">
+              Comments
+            </h3>
             <Comment
               repo="TomokiMiyauci/me"
               issueTerm="pathname"

@@ -24,6 +24,8 @@ jobs:
 
       - name: Build
         run: yarn build
+        env:
+          GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
