@@ -1,11 +1,14 @@
 import React, { FC, ReactChild } from 'react'
 import Breadcrumb from './Breadcrumb'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import { Icon } from '@iconify/react'
 import cached from '@iconify-icons/mdi/cached'
 import timerSand from '@iconify-icons/mdi/timer-sand'
 import Tag from './Tag'
 import { isLength0 } from '@miyauci/is-valid'
+import IconWith from '../components/IconWith'
+import { useCommentCount } from './Comment/CommentCount/hooks'
+import CommentCounter from './Comment/CommentCount/CommentCounter'
+import { handleClick } from './Comment/CommentCount/_util'
 
 interface ArticleProps {
   children: ReactChild
@@ -28,6 +31,7 @@ const Article: FC<ArticleProps> = ({
   tags,
   date
 }) => {
+  const [commentCount, loading] = useCommentCount()
   return (
     <article itemScope itemType="http://schema.org/Article" className="mx-auto">
       <div className="container morph xl:px-24 mx-auto mb-10 relative text-gray-800">
@@ -69,16 +73,22 @@ const Article: FC<ArticleProps> = ({
 
         <div
           className="flex justify-center text-gray-500 dark:text-gray-100
-space-x-6 my-6"
+space-x-6 md:space-x-8 my-6"
         >
           <span className="space-x-2 flex items-center">
-            <Icon className="text-accent" icon={cached} />
-            <span>{date}</span>
+            <IconWith icon={cached} className="text-accent w-7 h-7">
+              <span className="text-xl">{date}</span>
+            </IconWith>
           </span>
-          <span v-if="readingTime" className="space-x-2 flex items-center">
-            <Icon className="text-accent" icon={timerSand} />
-            <span>{timeToRead} min</span>
+          <span className="space-x-2 flex  items-center">
+            <IconWith icon={timerSand} className="text-accent w-7 h-7">
+              <span className="text-xl">{timeToRead} min</span>
+            </IconWith>
           </span>
+
+          <a href="#comment" onClick={handleClick}>
+            <CommentCounter value={commentCount} loading={loading} />
+          </a>
         </div>
 
         <GatsbyImage
