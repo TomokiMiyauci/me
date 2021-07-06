@@ -10,11 +10,18 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   const localizedNavs = useLocalizedNavigations()
 
   return (
-    <Navigation
-      className={`fixed bottom-0 inset-x-0 w-full border-t ${className}`}
-      navigations={localizedNavs}
-      currentPath={currentPath}
-    />
+    <div
+      className={`bg-gray-50
+    dark:bg-blue-gray-900
+    backdrop-blur-sm
+    md:backdrop-blur-md
+    dark:border-gray-800
+    fixed bottom-0 inset-x-0 w-full border-t ${className}
+  `}
+      style={{ '--tw-bg-opacity': '0.7' }}
+    >
+      <Navigation navigations={localizedNavs} currentPath={currentPath} />
+    </div>
   )
 }
 

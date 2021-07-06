@@ -9,7 +9,7 @@ const Layout: FC<{
 }> = ({ children, currentPath, originalPath }) => {
   return (
     <>
-      <main className="p-4 mt-14 md:mt-28">
+      <main className="p-4 mt-14 md:mt-24">
         <MDXProvider>{children}</MDXProvider>
       </main>
 
