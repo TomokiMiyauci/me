@@ -1,5 +1,6 @@
 const getCommentNumber = async (path: string) => {
   const { graphql } = await import('@octokit/graphql')
+
   const { search } = (await graphql(
     `
       query ($q: String!) {
@@ -19,7 +20,7 @@ const getCommentNumber = async (path: string) => {
     {
       q: `repo:TomokiMiyauci/me in:title ${path}`,
       headers: {
-        authorization: `token 55c363212c1e70dbaabfef6005f3203422762cb4`
+        authorization: `token ${process.env.GATSBY_GITHUB_API}`
       }
     }
   )) as ResultSearch
