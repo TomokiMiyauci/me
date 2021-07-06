@@ -88,11 +88,6 @@ space-x-6 my-6"
         />
       </div>
 
-      {/* <div
-        style={{ borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70% ' }}
-        className="absolute z-[-1] dark:bg-blue-gray-800  blur filter inset-0 w-full h-full"
-      /> */}
-
       {children}
     </article>
   )

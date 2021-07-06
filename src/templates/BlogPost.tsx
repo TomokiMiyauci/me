@@ -13,7 +13,7 @@ import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
-import ReactUtterences from 'react-utterances'
+import Comment from '../components/Comment'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location,
@@ -35,7 +35,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  console.log(1)
 
   return (
     <Layout
@@ -86,8 +85,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             </div>
           </Article>
 
-          <ReactUtterences repo="TomokiMiyauci/me" type="pathname" />
-
           <hr className="prose mx-auto mt-4" />
 
           <div className=" max-w-prose mx-auto my-10">
@@ -132,6 +129,16 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               </ul>
             </nav>
           </div>
+
+          <section className="max-w-prose -mx-4 md:mx-auto">
+            <h3 className="p-4 text-3xl md:p-0 md:mb-2">Comments</h3>
+            <Comment
+              repo="TomokiMiyauci/me"
+              issueTerm="pathname"
+              label="comment"
+              theme="preferred-color-scheme"
+            />
+          </section>
 
           <Popover className="relative">
             {({ open }) => (
