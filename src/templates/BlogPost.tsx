@@ -35,6 +35,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
+  console.log(1)
 
   return (
     <Layout
@@ -66,7 +67,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
           >
             <div className="container mx-auto flex flex-wrap ">
               <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
-                <ReadingProgress />
+                {/* <ReadingProgress /> */}
               </aside>
 
               <section
