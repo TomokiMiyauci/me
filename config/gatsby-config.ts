@@ -1,7 +1,9 @@
 import { GatsbyConfig } from 'gatsby'
 import { resolve } from 'path'
 import { SITE_URL as siteUrl } from './constants'
-
+// import { queries } from '../src/utils/algolia_queries'
+import { config as _config } from 'dotenv'
+_config()
 const name = 'miyauci.me'
 
 const plugins: GatsbyConfig['plugins'] = [
@@ -58,7 +60,7 @@ const plugins: GatsbyConfig['plugins'] = [
   `gatsby-plugin-image`,
   `gatsby-plugin-sharp`,
   `gatsby-transformer-sharp`,
-  'gatsby-plugin-graphql-codegen',
+  // 'gatsby-plugin-graphql-codegen',
   {
     resolve: 'gatsby-source-filesystem',
     options: {
@@ -91,13 +93,16 @@ const plugins: GatsbyConfig['plugins'] = [
       clarity_project_id: '5ipdtj3l7s'
     }
   },
+
   // {
-  //   resolve: `gatsby-plugin-nprogress`,
+  //   resolve: `gatsby-plugin-algolia`,
   //   options: {
-  //     color: `text-accent bg-accent`,
-  //     showSpinner: false
+  //     appId: process.env.GATSBY_ALGOLIA_APP_ID,
+  //     apiKey: process.env.ALGOLIA_ADMIN_KEY,
+  //     queries
   //   }
   // },
+
   {
     resolve: `gatsby-plugin-sitemap`,
     options: {
