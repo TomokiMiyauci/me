@@ -10,8 +10,6 @@ const getCommentNumber = async (path: string) => {
               comments {
                 totalCount
               }
-              number
-              title
             }
           }
         }
