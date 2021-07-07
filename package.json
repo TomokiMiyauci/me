@@ -3,6 +3,7 @@
   "private": true,
   "description": "My portfolio",
   "author": "TomokiMiyauci",
+  "license": "MIT",
   "keywords": [
     "gatsby"
   ],
