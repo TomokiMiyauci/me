@@ -8,3 +8,5 @@ public
 .DS_Store
 tmp
 graphql-types.ts
+.env
+storybook-static

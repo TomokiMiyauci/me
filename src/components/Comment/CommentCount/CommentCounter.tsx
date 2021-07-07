@@ -1,18 +1,17 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import IconWithLoading from './IconWithLoading'
-
+import CountUp from 'react-countup'
 const CommentCounter: FC<{ value: number; loading: boolean }> = ({
   value,
   loading
 }) => {
   return (
-    <IconWithLoading loading={loading}>
-      <span
-        className="text-xl underline md:no-underline hover:underline"
-        style={{ textDecorationColor: 'var(--accent-color)' }}
-      >
-        {value}
-      </span>
+    <IconWithLoading
+      className="text-xl underline md:no-underline hover:underline"
+      loading={loading}
+      style={{ textDecorationColor: 'var(--accent-color)' }}
+    >
+      <CountUp end={value} />
     </IconWithLoading>
   )
 }
