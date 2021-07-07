@@ -14,6 +14,10 @@ import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
 import Comment from '../components/Comment'
+import { makeRepoPostPath } from '../utils/parser'
+import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
+import robotIcon from '@iconify-icons/mdi/robot'
+import sourcePull from '@iconify-icons/mdi/source-pull'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location,
@@ -30,11 +34,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     frontmatter: { hero: {} },
     items: []
   }
-  const { title, description, hero, date, tags } = frontmatter
+  const { title, description, hero, date, tags, slug } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
+
+  const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
   return (
     <Layout
@@ -73,7 +79,33 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 className="mx-auto w-full prose lg:w-3/5"
                 itemProp="articleBody"
               >
+                {locale === 'en' && (
+                  <div className="px-2 py-1 md:py-2 border-accent border rounded md:rounded-md bg-gradient-to-r space-x-2 from-purple-400 dark:from-purple-500 via-pink-400 dark:via-pink-500  to-amber-400 dark:to-amber-500">
+                    <Icon icon={robotIcon} className="w-6 h-6 md:w-7 md:h-7" />
+                    <span className="align-middle">
+                      This article has been translated on the basis of machine
+                      translation. If there are any errors, please fix it.
+                      <a
+                        href={editOnGitHub}
+                        className="float-right border-accent border space-x-1 hover:no-underline no-underline bg-white dark:bg-blue-gray-900 rounded text-gray-700 dark:text-gray-50 px-2 shadow"
+                        target="_blank"
+                      >
+                        <Icon icon={sourcePull} className="w-5 h-5" />
+                        <span>pull request</span>
+                      </a>
+                    </span>
+                  </div>
+                )}
                 <MDXRenderer>{body}</MDXRenderer>
+
+                <a
+                  className="text-accent space-x-1 underline md:no-underline hover:underline"
+                  href={editOnGitHub}
+                  target="_blank"
+                >
+                  <span>Edit this page on GitHub</span>
+                  <Icon icon={icon} className="w-5 h-5" />
+                </a>
               </section>
 
               <nav className="lg:w-1/5 pl-4">

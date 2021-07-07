@@ -13,8 +13,7 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
     <div
       className={`bg-gray-50
     dark:bg-blue-gray-900
-    backdrop-blur-sm
-    md:backdrop-blur-md
+    backdrop-blur-md
     dark:border-gray-800
     fixed bottom-0 inset-x-0 w-full border-t ${className}
   `}
