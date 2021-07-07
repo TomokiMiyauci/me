@@ -3,6 +3,7 @@ import { StaticImage } from 'gatsby-plugin-image'
 import { Icon } from '@iconify/react'
 import github from '@iconify-icons/uil/github-alt'
 import twitter from '@iconify-icons/uil/twitter-alt'
+import atSign from '@iconify-icons/feather/at-sign'
 
 const Me: FC = () => {
   return (
@@ -26,9 +27,9 @@ const Me: FC = () => {
             <a
               href="https://twitter.com/tomoki_miyauci"
               target="_blank"
-              className="hidden md:inline text-2xl"
+              className="hidden md:inline hover:underline ml-2 text-2xl text-accent"
             >
-              (@tomoki_miyauci)
+              <span>@tomoki_miyauci</span>
             </a>
           </h1>
 
@@ -42,6 +43,7 @@ const Me: FC = () => {
           <div className="my-4 space-x-4">
             <a
               title="GitHub"
+              className="hover:text-accent transition-colors duration-300"
               href="https://github.com/TomokiMiyauci"
               target="_blank"
             >
@@ -49,10 +51,19 @@ const Me: FC = () => {
             </a>
             <a
               title="Twitter"
+              className="hover:text-accent transition-colors duration-300"
               href="https://twitter.com/tomoki_miyauci"
               target="_blank"
             >
               <Icon className="w-8 h-8" icon={twitter}></Icon>
+            </a>
+
+            <a
+              title="Mail"
+              className="hover:text-accent transition-colors duration-300"
+              href="mailto:contact&#64;miyauchi.dev"
+            >
+              <Icon className="w-8 h-8" icon={atSign} />
             </a>
           </div>
         </div>
