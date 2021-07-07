@@ -4,11 +4,12 @@ import { Icon } from '@iconify/react'
 import github from '@iconify-icons/uil/github-alt'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import atSign from '@iconify-icons/feather/at-sign'
-
+import GitHubCalendar from 'react-github-calendar'
+import ReactTooltip from 'react-tooltip'
 const Me: FC = () => {
   return (
     <>
-      <div className="md:flex md:space-x-6">
+      <div className="md:flex md:space-x-6 mb-6">
         <div
           className="border-8 bg-gradient-to-br from-purple-500 via-pink-300 to-amber-300 overflow-hidden inline-block h-[190px] w-[190px]"
           style={{ borderRadius: '40% 60% / 35% 30% 70% 65%' }}
@@ -68,6 +69,9 @@ const Me: FC = () => {
           </div>
         </div>
       </div>
+      <GitHubCalendar username="tomokimiyauci">
+        <ReactTooltip delayShow={50} html textColor="var(--accent-color)" />
+      </GitHubCalendar>
     </>
   )
 }
