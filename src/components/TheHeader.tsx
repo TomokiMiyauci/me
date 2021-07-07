@@ -60,8 +60,7 @@ const TheHeader: FC<{
       w-full
       bg-gray-50
       dark:bg-blue-gray-900
-      backdrop-blur-sm
-      md:backdrop-blur-md
+      backdrop-blur-md
       dark:border-gray-800 ${className}`}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
