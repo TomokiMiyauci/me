@@ -22624,6 +22624,13 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
+utterances-react-component@^1.0.0-beta.1:
+  version "1.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/utterances-react-component/-/utterances-react-component-1.0.0-beta.1.tgz#5a7824b39a280f42ae31ec4c678e0955bec041d5"
+  integrity sha512-5eh7yImQBej81aqbYY6FqRUL3HFEoHNY3l3U0H5UB99kuPxUVzP1ztrYd4NAFvp+ujIoC1mFlLaB+ruU5Q0osQ==
+  dependencies:
+    "@miyauci/is-valid" "^1.0.0-beta.15"
+
 uuid-browser@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid-browser/-/uuid-browser-3.1.0.tgz#0f05a40aef74f9e5951e20efbf44b11871e56410"
