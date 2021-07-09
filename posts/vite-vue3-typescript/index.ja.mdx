@@ -31,9 +31,15 @@ vue/cli の default テンプレートに近づけることを目標に、最低
 - Stylelint
 - husky と lint-staged
 - Path Alias
-- VTI
+- vue-tsc
 
 ## 環境構築
+
+次のバージョンで検証されました。
+
+```bash
+@vitejs/create-app@2.4.5
+```
 
 まずは、vite のテンプレートを展開しましょう。
 
@@ -41,7 +47,7 @@ vue/cli の default テンプレートに近づけることを目標に、最低
   <CodeGroup label="Yarn" active>
 
 ```bash
-yarn create vite-app <project-name>
+yarn create @vitejs/app <project-name> --template vue-ts
 cd <project-name>
 yarn
 ```
@@ -51,7 +57,7 @@ yarn
   <CodeGroup label="NPM">
 
 ```bash
-npm init vite-app <project-name>
+npm init @vitejs/app <project-name> -- --template vue-ts
 cd <project-name>
 npm i
 ```
@@ -61,19 +67,21 @@ npm i
 
 開発サーバーを立ち上げるとその速さに感動します。
 
-### Typescript にする
+:arrow_heading_down: この作業は不要になりました。
 
-続いてプロジェクトを Typescript 化しましょう。といっても Vue3 からはデフォルトで Typescript が使えるので次の３つを行うだけです。
+### ~~Typescript にする~~
 
-1.すべての`.vue`ファイルの`script`タグに`lang="ts"`を追記します。 2.`main.js`を`main.ts`に変更します。 3.`index.html`の script タグの src を`/src/main.ts`に変更します。
+~~続いてプロジェクトを Typescript 化しましょう。といっても Vue3 からはデフォルトで Typescript が使えるので次の３つを行うだけです。~~
 
-これで開発サーバーを立ち上げると、問題なく実行できるのが確認できます。
+~~1.すべての`.vue`ファイルの`script`タグに`lang="ts"`を追記します。 2.`main.js`を`main.ts`に変更します。 3.`index.html`の script タグの src を`/src/main.ts`に変更します。~~
 
-実際はこれだけでも動きますが、エディター上でのユーザーエクスペリエンスを向上させるために、さらに設定を加えます。
+~~これで開発サーバーを立ち上げると、問題なく実行できるのが確認できます。~~
 
-VSCode を使っている場合は、`main.ts`で`ts(2307)` エラーが出ているはずです。
+~~実際はこれだけでも動きますが、エディター上でのユーザーエクスペリエンスを向上させるために、さらに設定を加えます。~~
 
-これを解消するには、vue 用の型宣言ファイルを用意します。
+~~VSCode を使っている場合は、`main.ts`で`ts(2307)` エラーが出ているはずです。~~
+
+~~これを解消するには、vue 用の型宣言ファイルを用意します。~~
 
 ```ts:src/shims-vue.d.ts
 declare module '*.vue' {
@@ -82,8 +90,6 @@ declare module '*.vue' {
   export default component
 }
 ```
-
-`tsconfig.json`をプロジェクトルートに設置します。これでエディターに Typescript プロジェクトであることを認識させます。
 
 ```json:tsconfig.json
 {
@@ -122,7 +128,7 @@ declare module '*.vue' {
 }
 ```
 
-これで Typescript 化は終了です。
+~~これで Typescript 化は終了です。~~
 
 ### ESLint を導入する
 
@@ -132,8 +138,7 @@ declare module '*.vue' {
   <CodeGroup label="Yarn" active>
 
 ```bash
-yarn add -D eslint eslint-plugin-vue @vue/
-eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+yarn add -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
   </CodeGroup>
@@ -141,8 +146,7 @@ eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plu
   <CodeGroup label="NPM">
 
 ```bash
-npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser
-@typescript-eslint/eslint-plugin typescript
+npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
   </CodeGroup>
@@ -169,6 +173,16 @@ npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-esli
   ],
   "rules": {
   }
+}
+```
+
+これではエラーになってしまうので、型定義を修正します。
+
+```ts:src/shims-vue.d.ts
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<Record<string,unknown>, Record<string,unknown>, unknown>
+  export default component
 }
 ```
 
@@ -394,72 +408,65 @@ VSCode ユーザーは次の設定によって、自動的にフォーマット�
 ### Path Alias を設定する
 
 モジュールの import はデフォルトでは相対パスを指定しますが、alias を設定して常に同じルートを参照したいです。
-vite は内部では Rollup を使用しているようですが、`vite.config.ts`を作成し alias を設定しましょう。
-
-<Alert type="warning">Key は`/`から始まらなければなりません。</Alert>
 
 ```ts:vite.config.ts
-import { join } from 'path'
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
-const config: UserConfig = {
-  alias: {
-    '/@/': join(__dirname, 'src'),
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  plugins: [vue()]
+})
+```
+
+また、 `tsconfig.json` も設定します。
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    //...
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
-
-export default config
 ```
 
 これで alias の設定ができました。こんな感じで使います。
 
 ```html:App.vue
 <script lang="ts">
-  import HelloWorld from '/@/components/HelloWorld.vue'
+  import HelloWorld from '@/components/HelloWorld.vue'
 </script>
 ```
 
-`/`から始まらなければならないのが、少し違和感ありますが、パッケージ名の alias との兼ね合いみたいです。
-詳しくは[こちら](https://github.com/vitejs/vite/blob/master/src/node/config.ts#L53)を参照ください。
+### vue-tsc で template の静的チェックをする
 
-### VTI で template の静的チェックをする
+`vue-tsc` で template タグへも静的チェックを行えます。
+テンプレート生成時にインストールされていますが、`@vue/runtime-dom@3.1.4` の時点では、
+`tsconfig.json`の `skipLibCheck` が `true` になっていないと動作しません。
 
-<Alert type="warning">VTI は WIP なため、使用は各自判断してください</Alert>
-
-Vue ファイルの template タグへも静的チェックを行いたいです。今回は Vetur のプロジェクトにある vti を使います。
-
-<CodeGroups>
-  <CodeGroup label="Yarn" active>
-
-```bash
-yarn add -D vti
-```
-
-  </CodeGroup>
-
-  <CodeGroup label="NPM">
-
-```bash
-npm i -D vti
-```
-
-  </CodeGroup>
-</CodeGroups>
+````json:tsconfig.json
+{
+  "compilerOptions": {
+    //...
+    "skipLibCheck": true
+  },
+}
 
 ```json:package.json
 "scripts": {
-  "lint:markup": "vti diagnostics",
+  "lint:markup": "vue-tsc --noEmit",
 }
-```
+````
 
-既存の Vue ファイルでは`defineComponent`でラップしないとエラーになってしまうので、修正します。
-
-```html:*.vue
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  export default defineComponent({})
-</script>
-```
+これは `@vue/runtime-dom` の型定義にエラーがあるのでそれを回避する目的で行います。
 
 また、静的チェックは Vue ファイルが増加するとかなり時間がかかるようになるため、コミット前ではなく CI で実行することをおすすめします。
 

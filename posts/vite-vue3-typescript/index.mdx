@@ -31,9 +31,15 @@ I'm going to walk you through each of these tools so that you can introduce them
 - Stylelint
 - husky and lint-staged
 - Path Alias
-- VTI
+- vue-tsc
 
 ## Building Environments
+
+Verified in the next version:
+
+```bash
+@vitejs/create-app@2.4.5
+```
 
 First, let's expand the vite template.
 
@@ -41,7 +47,7 @@ First, let's expand the vite template.
   <CodeGroup label="Yarn" active>
 
 ```bash
-yarn create vite-app <project-name>
+yarn create @vitejs/app <project-name> --template vue-ts
 cd <project-name>
 yarn
 ```
@@ -51,7 +57,7 @@ yarn
   <CodeGroup label="NPM">
 
 ```bash
-npm init vite-app <project-name>
+npm init @vitejs/app <project-name> -- --template vue-ts
 cd <project-name>
 npm i
 ```
@@ -61,22 +67,24 @@ npm i
 
 Once the development server is up, you'll be impressed by how fast it is.
 
-### Typescript
+:arrow_heading_down: No longer needed.
 
-Next, let's make your project Typescripted.
-Since Vue3 has Typescript by default, you only need to do the following three things.
+### ~~Typescript~~
 
-1.Add `lang="ts"` to the `script` tag in all `.vue` files.
+~~Next, let's make your project Typescripted.
+Since Vue3 has Typescript by default, you only need to do the following three things.~~
+
+~~1.Add `lang="ts"` to the `script` tag in all `.vue` files.
 2.Change `main.js` to `main.ts`.
-3.Change the src of the script tag of `index.html` to `/src/main.ts`.
+3.Change the src of the script tag of `index.html` to `/src/main.ts`.~~
 
-Now you can start up the development server and see that it runs without any problem.
+~~Now you can start up the development server and see that it runs without any problem.~~
 
-It will actually work on its own, but you can add more settings to improve the user experience in the editor.
+~~It will actually work on its own, but you can add more settings to improve the user experience in the editor.~~
 
-If you're using VSCode, you should see a `main.ts` with a `ts(2307)` error.
+~~If you're using VSCode, you should see a `main.ts` with a `ts(2307)` error.~~
 
-To fix this, need to create a type declaration file for vue.
+~~To fix this, need to create a type declaration file for vue.~~
 
 ```ts:src/shims-vue.d.ts
 declare module '*.vue' {
@@ -86,7 +94,7 @@ declare module '*.vue' {
 }
 ```
 
-Place the `tsconfig.json` in your project root. This will tell the editor to recognize the project as a Typescript project.
+~~Place the `tsconfig.json` in your project root. This will tell the editor to recognize the project as a Typescript project.~~
 
 ```json:tsconfig.json
 {
@@ -125,7 +133,7 @@ Place the `tsconfig.json` in your project root. This will tell the editor to rec
 }
 ```
 
-That's the end of Typescript.
+~~That's the end of Typescript.~~
 
 ### Introducing ESLint
 
@@ -135,8 +143,7 @@ Development without a linter is tough, so be sure to install it.
   <CodeGroup label="Yarn" active>
 
 ```bash
-yarn add -D eslint eslint-plugin-vue @vue/eslint-config-typescript
-@typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+yarn add -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
   </CodeGroup>
@@ -144,8 +151,7 @@ yarn add -D eslint eslint-plugin-vue @vue/eslint-config-typescript
   <CodeGroup label="NPM">
 
 ```bash
-npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript
-@typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
   </CodeGroup>
@@ -172,6 +178,16 @@ npm i -D eslint eslint-plugin-vue @vue/eslint-config-typescript
   ],
   "rules": {
   }
+}
+```
+
+This will result in an error, so we will modify the type definition.
+
+```ts:src/shims-vue.d.ts
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<Record<string,unknown>, Record<string,unknown>, unknown>
+  export default component
 }
 ```
 
@@ -298,7 +314,7 @@ When ESLint and Prettier are used together, I need to fix the `.eslintrc` to avo
     "plugin:vue/vue3-recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",
-    // 他のルールの下に追加
+    // Add under other rules
     "@vue/prettier",
     "@vue/prettier/@typescript-eslint"
   ]
@@ -397,75 +413,66 @@ That's the end of the basic setup of the linker and formatter.
 ### Configuring Path Alias
 
 The import of the module is relative by default, but you want to set an alias to always refer to the same root.
-As vite seems to use Rollup internally, let's create a `vite.config.ts` file and set up alias.
-
-<Alert type="warning">Key must start with `/`.</Alert>
 
 ```ts:vite.config.ts
-import { join } from 'path'
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 
-const config: UserConfig = {
-  alias: {
-    '/@/': join(__dirname, 'src'),
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  plugins: [vue()]
+})
+```
+
+Also change `tsconfig.json`.
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    //...
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
-
-export default config
 ```
 
 Now you can set up alias. I'll use it like this.
 
 ```html:App.vue
 <script lang="ts">
-  import HelloWorld from '/@/components/HelloWorld.vue'
+  import HelloWorld from '@/components/HelloWorld.vue'
 </script>
 ```
 
-It's a little strange that it has to start from `/`, but it seems to combine with the alias of the package name.
-For more information, please refer to [here](https://github.com/vitejs/vite/blob/master/src/node/config.ts#L53).
+### Checking template statically with vue-tsc
 
-### Checking template statically in VTI
+You can statically check your template tags with `vue-tsc`.
 
-<Alert type="warning">VTI is a WIP, so use at your own discretion</Alert>
+It is installed when the template is generated.
+However, as of `@vue/runtime-dom@3.1.4`, it does not work unless `skipLibCheck` in `tsconfig.json` is set to `true`.
 
-I want to do a static check on the template tag in the Vue file as well.
-In this case, use the vti in the Vetur project.
-
-<CodeGroups>
-  <CodeGroup label="Yarn" active>
-
-```bash
-yarn add -D vti
-```
-
-  </CodeGroup>
-
-  <CodeGroup label="NPM">
-
-```bash
-npm i -D vti
-```
-
-  </CodeGroup>
-</CodeGroups>
+````json:tsconfig.json
+{
+  "compilerOptions": {
+    //...
+    "skipLibCheck": true
+  },
+}
 
 ```json:package.json
 "scripts": {
-  "lint:markup": "vti diagnostics",
+  "lint:markup": "vue-tsc --noEmit",
 }
-```
+````
 
-The existing Vue files need to be wrapped with a `defineComponent` or they will fail.
-
-```html:*.vue
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  export default defineComponent({})
-</script>
-```
-
-I also recommend running static checks in CI rather than before committing,
+I recommend running static checks in CI rather than before committing,
 as static checks can take quite a bit of time as the number of Vue files increases.
 
 That's the minimum environment you'll need to build.
