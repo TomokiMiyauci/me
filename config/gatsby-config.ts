@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import { SITE_URL as siteUrl } from './constants'
 // import { queries } from '../src/utils/algolia_queries'
 import emoji from 'remark-emoji'
+import remarkExternalLinks from 'remark-external-links'
 import { config as _config } from 'dotenv'
 _config()
 const name = 'miyauci.me'
@@ -35,7 +36,7 @@ const plugins: GatsbyConfig['plugins'] = [
   {
     resolve: 'gatsby-plugin-mdx',
     options: {
-      remarkPlugins: [emoji],
+      remarkPlugins: [emoji, remarkExternalLinks],
       gatsbyRemarkPlugins: [
         'gatsby-remark-autolink-headers',
         {
