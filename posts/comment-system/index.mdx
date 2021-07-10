@@ -1,0 +1,228 @@
+---
+title: The tech blog commenting system with utterances
+description: Introduce a project called utterances that I recommend for a commenting system for technical blogs.Also introduce utterances-component, a project that can handle utterances as a component.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-07-09
+slug: /posts/comment-system/
+tags:
+  - utterances
+  - utterances-component
+---
+
+## Getting Started
+
+When you create your own blog, you may wonder about the comment function. Do you want to create it yourself or use an external service?
+
+I've used `Firebase` `firestore` and `Firebase Authentication` to create a comment system for anonymous users.
+However, if you have a technical blog in mind, wouldn't you like to have the following features?
+
+- User authentication
+- Write in markdown format
+  - Embed links.
+  - Links should be `noreferrer`
+  - Images can be embedded
+  - XSS protection
+  - Can be previewed
+- Comment notification
+  - Notify the blogger
+  - Notifications to commenters
+
+Also, I think most blogs these days are made with static site generators, so I would like to use the above features in a serverless way.
+
+Personally, I've been obsessed with blog features and have experienced frustration, so I want to make the unrelated parts easy.
+
+In such cases, I recommend [`utterances`](https://github.com/utterance/utterances).
+
+## What are utterances?
+
+utterances is not a blogging system.
+
+The official description is as follows.
+
+> A lightweight comments widget built on GitHub issues. Use GitHub issues for blog comments, wiki pages and more!
+
+utterances provides a lightweight comments component and a bot for commenting on GitHub issues.
+With utterances, you can connect GitHub issues to articles and pages, and display the issues.
+
+In other words, it is almost the same as embedding a GitHub issues into a blog.
+
+The authentication uses `GitHubOAuth`, and can be written in markdown format or any other way you like.
+There are also several color themes that support dark mode, and you can even specify issue labels.
+
+It's also free and has no ads.
+
+## Features of utterances
+
+Let's see if it meets the requirements for a technical blog commenting system.
+
+## User authentication
+
+For user authentication, we will use the `GitHubOAuth` flow. If it's a technical blog, the target audience is technical people, so
+This is probably the most ideal authentication provider.
+For security concerns, anonymous users cannot comment, though.
+
+### Can you write in markdown format?
+
+You can write comments as you would write an issue on GitHub. You can write comments as if you were writing an issue on GitHub, as you can see from this blog.
+It also looks the same. The only difference is that there is no shortcut widget for markdown notation.
+You can also preview it, so no complaints there.
+
+### Comment Notifications
+
+As I mentioned earlier, commenting is the same as commenting on a GitHub issue.
+So the blogger will get a notification from GitHub.
+Commenters will also be notified of other comments as well.
+
+The above is all the functionality you need, but there are a few other things worth mentioning.
+
+### Reactions to comments
+
+As with GitHub issues, you can react to comments. You can add :rocket: or :heart: ,etc to the comment.
+It also works reactively, just like the original.
+
+There are similar projects such as [`Gitment`](https://github.com/imsun/gitment) and [`Gitalk`](https://github.com/gitalk/gitalk), but the closest in appearance and functionality to GitHub issues is `utterances`.
+
+### Options for tying to various GitHub issues
+
+There are six ways to tie an article to GitHub issues.
+You can choose from the following methods for the title of the issue:
+
+- Partial match with the `pathname` of the page
+- Partial matching with the `URL` of the page
+- Partial match with the `title` of the page
+- Partial match with the `og:title` of the page
+- Contains a specific term
+
+This means that if the tied issue is not found, the comment will not be displayed in any way.
+When a comment is posted, the comment will be added to the associated issue, if one exists.
+If not, an issue will be created automatically.
+
+It is also possible to specify an issue number to tie.
+
+This variety of association options allows for flexible support of blogs with complex path structures.
+
+For example, in the case of an internationalized blog like this one, there are articles with the same content in different languages and with different `pathname`.
+
+In this case, you can choose whether to unify the comments for the articles or separate them.
+
+- https://miyauchi.dev/posts/comment-system/
+- https://miyauchi.dev/ja/posts/comment-system/
+
+In the case of above URL, this blog wanted to have separate comments for the Japanese and English articles, so I chose to tie them by `pathname`.
+
+The title of GitHub issues generates `posts/comment-system/` and `en/posts/comment-system/`.
+
+Since it is the longest match, you can distinguish them without any problem even if the article is in English.
+
+On the other hand, if you want to unify the comments, you can specify the slug as a specific term that matches in both articles.
+
+## Install utterances
+
+Installation is very easy. There are two things to do.
+The first is to install the [utterances-bot](https://github.com/apps/utterances) in your GitHub App.
+
+This bot will write comments on real GitHub issues.
+
+The other is to load the `utterances` script.
+
+Just place the script tag generated according to the [official documentation](https://utteranc.es/) in your HTML and you are done. The script tag looks like this
+
+```html
+<script
+  src="https://utteranc.es/client.js"
+  repo="TomokiMiyauci/me"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async
+></script>
+```
+
+### Introduction to the UI component library
+
+`React`, `Vue` or `Svelte`, etc working with script tags in these requires a bit of tricky stuff.
+
+In order to handle script tags in `React`, `Vue`, `Svelte`, etc, you need to be a little hack.
+
+So I made a [`utterances-component`](https://github.com/TomokiMiyauci/utterances-component). It currently supports `React/Preact`, `Vue3`, and `Svelte`.
+What it does is not much, but it can be handled as a component, so it should be easy to implement `utterances`.
+
+<CodeGroups>
+  <CodeGroup label="React" active>
+
+```tsx
+import { Utterances } from 'utterances-react-component'
+;<Utterances
+  repo="TomokiMiyauci/utterances-component"
+  theme="github-dark"
+  issueTerm="pathname"
+/>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="Vue">
+
+```html
+<template>
+  <Utterances
+    repo="TomokiMiyauci/utterances-component"
+    theme="github-dark"
+    issueTerm="pathname"
+  />
+</template>
+
+<script setup lang="ts">
+  import { Utterances } from 'utterances-vue-component'
+</script>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="Svelte">
+
+```html
+<script lang="ts">
+  import { Utterances } from 'utterances-svelte-component'
+</script>
+
+<Utterances
+  repo="TomokiMiyauci/utterances-component"
+  theme="github-dark"
+  issueTerm="pathname"
+/>
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Since this project was built with `monorepo`.
+If there are other UI component libraries that you would like to see supported, please submit a feature request.
+
+## Limitations of utterances
+
+I have only introduced the good points, but there are some limitations.
+
+### Can't get the comment count
+
+If you have a blog, you would like to display the number of comments in a different place as well. Unfortunately, it is not possible to get the number of comments.
+
+The `utterances` script actually embeds an `iframe`.
+Therefore, due to [CORS](https://developer.mozilla.org/ja/docs/Web/HTTP/CORShttps://developer.mozilla.org/en-US/docs/Web/HTTP/CORS), you can't even access the DOM.
+So you can't even extract the number of comments from the string `xxx Comments - powered by utteranc.es`.
+
+If you self-host the script, you can use the [postMessage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) for messaging since it is an iframe.
+
+See [Comments counts #36](https://github.com/utterance/utterances/issues/36) for details.
+
+Note that this blog uses GitHub APi v4 separately to get only the comment count of an issue.
+
+### Rate Limits
+
+`utterances` makes a request to GitHub issues to get comments.
+High frequency requests will be trapped by GitHub's rate limit.
+
+For example, if a comment is fetched too many times due to frequent reloads, the comment becomes unusable.
+
+If you don't mind the above points, I recommend you to try it.
