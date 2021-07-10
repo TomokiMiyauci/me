@@ -12,7 +12,7 @@ const ArticleHeadline: FC<{
   alt: string
   tags: string[]
   lastUpdated?: number
-  readingTime?: number
+  readingTime?: string
 }> = ({ title, description, img, to, alt, lastUpdated, readingTime, tags }) => {
   const { locale } = useLocalization()
   return (
@@ -75,7 +75,7 @@ const ArticleHeadline: FC<{
                 {new Date(lastUpdated).toLocaleDateString()}
               </span>
             )}
-            {readingTime && <span>{readingTime} min read</span>}
+            {readingTime && <span>{readingTime}</span>}
           </div>
         )}
       </div>
