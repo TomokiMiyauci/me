@@ -12,7 +12,10 @@ const IconWithLoading: FC<{
 }> = ({ loading, children, className, style }) => {
   return (
     <div className={`flex space-x-2 items-center ${className}`} style={style}>
-      <Icon className="w-7 h-7 text-accent" icon={commentEditOutline} />
+      <Icon
+        className="w-6 h-6 md:w-7 md:h-7 text-accent"
+        icon={commentEditOutline}
+      />
       <Placeholder
         placeholding={!loading}
         placeholder={

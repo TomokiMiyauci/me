@@ -18,6 +18,8 @@ import { makeRepoPostPath } from '../utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import robotIcon from '@iconify-icons/mdi/robot'
 import sourcePull from '@iconify-icons/mdi/source-pull'
+import SnsShare from '../components/SnsShare'
+
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location,
@@ -69,6 +71,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             hero={childImageSharp.gatsbyImageData}
             readingTime={readingTime.text}
             relativePath={location.pathname}
+            url={fullpath}
             tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
             modifiedDate={new Date(gitAuthorTime).toLocaleDateString(locale)}
@@ -110,6 +113,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   <span>Edit this page on GitHub</span>
                   <Icon icon={icon} className="w-5 h-5" />
                 </a>
+
+                <div className="space-x-4 my-4">
+                  <SnsShare title={title} url={fullpath} />
+                </div>
               </section>
 
               <nav className="lg:w-1/5 pl-4">

@@ -3,12 +3,12 @@ import Breadcrumb from './Breadcrumb'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import timerSand from '@iconify-icons/mdi/timer-sand'
 import Tag from './Tag'
-import { isLength0 } from '@miyauci/is-valid'
 import IconWith from '../components/IconWith'
 import { useCommentCount } from './Comment/CommentCount/hooks'
 import CommentCounter from './Comment/CommentCount/CommentCounter'
 import { handleClick } from './Comment/CommentCount/_util'
 import ArticleDate from '../components/ArticleDate'
+import SnsShare from '../components/SnsShare'
 
 interface ArticleProps {
   children: ReactChild
@@ -21,6 +21,7 @@ interface ArticleProps {
   date: string
   modifiedDate: string
   isModified: boolean
+  url: string
 }
 
 const Article: FC<ArticleProps> = ({
@@ -33,7 +34,8 @@ const Article: FC<ArticleProps> = ({
   tags,
   date,
   modifiedDate,
-  isModified
+  isModified,
+  url
 }) => {
   const [commentCount, loading] = useCommentCount()
   return (
@@ -67,13 +69,16 @@ const Article: FC<ArticleProps> = ({
           {description}
         </p>
 
-        {!isLength0(tags) && (
-          <p className="my-2 space-x-4">
+        <div className="flex items-center justify-between my-2">
+          <div className="space-x-4">
             {tags.map((tag) => (
               <Tag key={tag} tag={tag} />
             ))}
-          </p>
-        )}
+          </div>
+          <div className="space-x-2 md:space-x-4">
+            <SnsShare title={title} url={url} />
+          </div>
+        </div>
 
         <div
           className="flex justify-center text-gray-500 dark:text-gray-100
@@ -87,8 +92,11 @@ space-x-6 md:space-x-8 my-6"
             />
           </span>
           <span className="space-x-2 flex  items-center">
-            <IconWith icon={timerSand} className="text-accent w-7 h-7">
-              <span className="text-xl">{readingTime}</span>
+            <IconWith
+              icon={timerSand}
+              className="text-accent w-6 h-6 md:w-7 md:h-7"
+            >
+              <span className="md:text-xl">{readingTime}</span>
             </IconWith>
           </span>
 
