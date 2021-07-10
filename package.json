@@ -115,6 +115,7 @@
     "postcss": "^8.3.5",
     "prettier": "^2.3.1",
     "prism-themes": "^1.7.0",
+    "react-share": "^4.4.0",
     "remark-emoji": "^2.2.0",
     "remark-external-links": "^8.0.0",
     "storybook-builder-vite": "^0.0.10",

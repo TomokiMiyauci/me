@@ -15,7 +15,7 @@ const ArticleDate: FC<{
         {isModified && isShow && (
           <span className="space-x-1 p-1 border border-accent text-center whitespace-nowrap overflow-x-scroll -top-11 inset-x-0 mx-auto rounded absolute bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 dark:from-purple-500 dark:via-pink-500 dark:to-amber-500 text-gray-800 dark:text-gray-50">
             <Icon icon={calendarTextOutline} className="w-6 h-6" />
-            <span className="align-middle p-1 text-lg">{publishAt}</span>
+            <span className="align-middle p-1 md:text-lg">{publishAt}</span>
           </span>
         )}
         <span
@@ -25,9 +25,9 @@ const ArticleDate: FC<{
         >
           <Icon
             icon={isModified ? cached : calendarTextOutline}
-            className="w-7 h-7 text-accent"
+            className="w-6 h-6 md:w-7 md:h-7 text-accent"
           />
-          <span className="align-middle p-1 text-xl">
+          <span className="align-middle p-1  md:text-xl">
             {isModified ? modifiedAt : publishAt}
           </span>
         </span>
