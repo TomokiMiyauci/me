@@ -16,7 +16,7 @@ interface ArticleProps {
   description: string
   hero: IGatsbyImageData
   relativePath: string
-  timeToRead: number
+  readingTime: string
   tags: string[]
   date: string
   modifiedDate: string
@@ -29,7 +29,7 @@ const Article: FC<ArticleProps> = ({
   description,
   hero,
   relativePath,
-  timeToRead,
+  readingTime,
   tags,
   date,
   modifiedDate,
@@ -88,7 +88,7 @@ space-x-6 md:space-x-8 my-6"
           </span>
           <span className="space-x-2 flex  items-center">
             <IconWith icon={timerSand} className="text-accent w-7 h-7">
-              <span className="text-xl">{timeToRead} min</span>
+              <span className="text-xl">{readingTime}</span>
             </IconWith>
           </span>
 

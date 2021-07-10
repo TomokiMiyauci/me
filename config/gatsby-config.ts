@@ -45,6 +45,7 @@ const plugins: GatsbyConfig['plugins'] = [
       ]
     }
   },
+  'gatsby-remark-reading-time',
   'gatsby-plugin-react-helmet',
   {
     resolve: 'gatsby-theme-i18n',

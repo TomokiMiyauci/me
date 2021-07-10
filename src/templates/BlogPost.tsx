@@ -30,12 +30,12 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     site: { siteMetadata }
   } = data
 
-  const { frontmatter, body, timeToRead, tableOfContents, fields } = mdx || {
+  const { frontmatter, body, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
     fields: {},
     items: []
   }
-  const { isModified, gitAuthorTime } = fields
+  const { isModified, gitAuthorTime, readingTime } = fields
   const { title, description, hero, date, tags, slug } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
@@ -67,7 +67,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             title={title}
             description={description}
             hero={childImageSharp.gatsbyImageData}
-            timeToRead={timeToRead}
+            readingTime={readingTime.text}
             relativePath={location.pathname}
             tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
@@ -138,7 +138,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={previous.frontmatter.slug}
-                      readingTime={previous.timeToRead}
+                      readingTime={previous.fields.readingTime.text}
                       lastUpdated={previous.frontmatter.date}
                       tags={previous.frontmatter.tags ?? []}
                       alt="previous article thumbnail"
@@ -156,7 +156,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       }
                       to={next.frontmatter.slug}
                       tags={next.frontmatter.tags ?? []}
-                      readingTime={next.timeToRead}
+                      readingTime={next.fields.readingTime.text}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
                     />
@@ -233,6 +233,9 @@ export const pageQuery = graphql`
       frontmatter: { slug: { eq: $slug } }
     ) {
       fields {
+        readingTime {
+          text
+        }
         gitAuthorTime
         isModified
       }
@@ -252,13 +255,16 @@ export const pageQuery = graphql`
         slug
       }
       body
-      timeToRead
     }
     previous: mdx(
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $previousPostSlug } }
     ) {
-      timeToRead
+      fields {
+        readingTime {
+          text
+        }
+      }
       frontmatter {
         title
         description
@@ -276,7 +282,11 @@ export const pageQuery = graphql`
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $nextPostSlug } }
     ) {
-      timeToRead
+      fields {
+        readingTime {
+          text
+        }
+      }
       frontmatter {
         title
         description
