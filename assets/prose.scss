@@ -45,13 +45,34 @@ body {
 }
 
 .prose {
-  ul > li > {
-    *:first-child {
-      @apply mt-0;
-    }
+  ul {
+    > li > {
+      *:first-child {
+        @apply mt-0;
+      }
 
-    *:last-child {
-      @apply mb-0;
+      *:last-child {
+        @apply mb-0;
+      }
     }
+    &:not(ul ul) {
+      @apply list-none;
+
+      & > li::before {
+        content: '';
+
+        @apply bg-accent p-3 mr-2;
+
+        mask: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24"><path fill="%23000000" d="M23 12l-2.44-2.78l.34-3.68l-3.61-.82l-1.89-3.18L12 3L8.6 1.54L6.71 4.72l-3.61.81l.34 3.68L1 12l2.44 2.78l-.34 3.69l3.61.82l1.89 3.18L12 21l3.4 1.46l1.89-3.18l3.61-.82l-.34-3.68L23 12m-13 5l-4-4l1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" /></svg>')
+          no-repeat center center;
+      }
+    }
+    ul {
+      @apply list-disc pl-14;
+    }
+  }
+
+  li::marker {
+    @apply text-accent;
   }
 }
