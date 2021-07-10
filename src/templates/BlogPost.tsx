@@ -32,6 +32,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
   const { frontmatter, body, timeToRead, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
+    fields: {},
     items: []
   }
   const { isModified, gitAuthorTime } = fields
