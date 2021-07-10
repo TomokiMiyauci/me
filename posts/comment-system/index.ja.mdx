@@ -1,0 +1,228 @@
+---
+title: 技術ブログのコメントシステムはutterancesがいい感じ
+description: 技術ブログのコメントシステムにおすすめなutterancesというプロジェクトを紹介します。またutterancesを コンポーネントとして扱える utterances-componentというプロジェクトの紹介もします。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-07-09
+slug: /posts/comment-system/
+tags:
+  - utterances
+  - utterances-component
+---
+
+## はじめに
+
+ブログを自作するときに、コメント機能について悩みますよね。自作するのか外部サービスを使うのか...
+
+わたしも以前 `Firebase` の `firestore` と `Firebase Authentication`  で匿名ユーザーが書きこめるコメントシステムのようなものを作ったことがあります。
+しかし、技術ブログを念頭に置いたとき、次の機能は欲しいではないでしょうか。
+
+- ユーザー認証
+- マークダウン形式で書ける
+  - リンクが埋め込める
+  - リンクは `noreferrer`になってほしい
+  - 画像が埋め込める
+  - XSS 対策
+  - プレビューできる
+- コメント通知
+  - ブログ運営者への通知
+  - コメンターへの通知
+
+ぱっと思いつく限りでも結構ありますね。
+また、最近のブログは静的サイトジェネレーターで作られることが多いと思うので、上の機能をサーバーレスで利用したいです。
+
+個人的に、ブログはスクラッチに拘り過ぎて、記事を書く以前に挫折した経験があるので、関係ない部分は楽したいものです。
+
+そんなときにおすすめなのが、[`utterances`](https://github.com/utterance/utterances)です。
+
+## utterances とは
+
+utterances はブログシステムではありません。
+
+公式では次のように説明されています。
+
+> A lightweight comments widget built on GitHub issues. Use GitHub issues for blog comments, wiki pages and more!
+
+utterances は　軽量なコメントコンポーネントと GitHub issues にコメントを書き込むボットを提供しています。
+utterances を使うと、GitHub の issue と記事やページを紐付け、issue を表示することができます。
+
+つまり、GitHub の issue をブログに埋め込んでいるのとほぼ同じです。
+
+認証は `GitHubOAuth`を利用し、マークダウン形式等好きなように書くことができます。
+また、ダークモードも対応したいくつかのカラーテーマがあり、issue のラベルを指定することもできます。
+
+しかも無料で広告もありません。
+
+## utterances の機能
+
+先程の、技術ブログのコメントシステムとしての要件を満たしているか確認しておきましょう。
+
+### ユーザー認証
+
+ユーザー認証には `GitHubOAuth` フローを利用します。技術ブログであれば対象は技術者なので、
+認証プロバイダーの要件としては最も理想的ではないでしょうか。
+セキュリティの懸念から匿名ユーザーではコメントはできませんが。
+
+### マークダウン形式で書けるか
+
+GitHub の issue を書くようにコメントが書けます。このブログでも採用しているので見てもらえばわかると思いますが、
+見た目もそのままです。違いを上げるとすれば、マークダウン記法のショートカットウィジェットがないくらいですね。
+プレビューもできるので文句なしです。
+
+### コメント通知
+
+先程の説明したように、コメントは GitHub issues 内のコメントになります。
+GitHub issues にコメントしたのと同様なので、ブログの運営者は GitHub からの通知を受け取れます。
+コメンターも同様に他のコメントがあった場合、通知を受け取れます。
+
+以上のように必要な機能は揃っていますが、他にも特筆すべき事柄があったので少し紹介します。
+
+### コメントへのリアクション
+
+GitHub issues と同様なので、コメントへのリアクションもできます。:rocket:とか　:heart:とかコメントに付けれます。
+また、リアクティブに動作するのも本家と同様です。
+
+同様のプロジェクトとして[`Gitment`](https://github.com/imsun/gitment)や[`Gitalk`](https://github.com/gitalk/gitalk)がありますが、GitHub issues に見た目、機能が最も近いのが `utterances`だと感じました。
+
+### 多様な GitHub issues との紐付けオプション
+
+GitHub の issue に紐付ける方法として６つの方法があります。issue のタイトルに対して以下の方法を選択できます。
+
+- ページの `pathname`との部分一致
+- ページの `URL`との部分一致
+- ページの `title` との部分一致
+- ページの `og:title` との部分一致
+- 特定の用語が含まれている
+
+これにより、紐付けられた issue が見つからない場合、コメントは何も表示されません。
+コメントが投稿されると、紐付けられた issue が存在する場合はその issue にコメントが追加されます。
+ない場合は自動的に issue が生成されます。
+
+また issue number を指定して紐付けることもできます。
+
+この多彩な紐付けの選択肢により、複雑なパス構成のブログでも柔軟に対応できます。
+
+例えばこのブログのように国際化に対応したブログの場合、同じ内容の記事が、違う言語、違う `pathname` で存在します。
+
+このとき、記事のコメントを統一するのか、別々にするのかを選択できます。
+
+- https://miyauchi.dev/posts/comment-system/
+- https://miyauchi.dev/ja/posts/comment-system/
+
+という URL の場合、このブログでは日本語と英語の記事でコメントを別々にしたかったので、 `pathname`での紐付けを選びました。
+
+GitHub issues のタイトルは `posts/comment-system/` と `ja/posts/comment-system/`が生成されます。
+
+最長一致なので、英語の記事の場合でも問題なく区別することができます。
+
+逆にコメントを統一したい場合は、両記事で一致する部分のスラグを特定の用語として指定するといいかと思います。
+
+## utterances の導入
+
+導入はとても簡単です。やることは２つです。
+ひとつは、GitHub App に [utterances-bot](https://github.com/apps/utterances)をインストールすることです。
+
+このボットが実際の GitHub issues にコメントを書き込みます。
+
+もうひとつは、`utterances` のスクリプトを読み込むことです。
+
+[公式ドキュメント](https://utteranc.es/)に従って生成されたスクリプトタグを、HTML に配置すれば完了です。スクリプトタグはこんな感じです。
+
+```html
+<script
+  src="https://utteranc.es/client.js"
+  repo="TomokiMiyauci/me"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async
+></script>
+```
+
+### UI コンポーネントライブラリへの導入
+
+UI コンポーネントライブラリは `React` や `Vue`、`Svelte` などのことを指しています。この総称がよくわかりません:sweat_drops:。
+
+これらでスクリプトタグを扱うには少しだけトリッキーな事が必要です。
+
+なので[`utterances-component`](https://github.com/TomokiMiyauci/utterances-component)作りました。現状`React/Preact`、`Vue3`、`Svelte`をサポートしています。
+やっていることは大したことはないですが、コンポーネントとして扱えるので `utterances` の導入は簡単ではないでしょうか。
+
+<CodeGroups>
+  <CodeGroup label="React" active>
+
+```tsx
+import { Utterances } from 'utterances-react-component'
+;<Utterances
+  repo="TomokiMiyauci/utterances-component"
+  theme="github-dark"
+  issueTerm="pathname"
+/>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="Vue">
+
+```html
+<template>
+  <Utterances
+    repo="TomokiMiyauci/utterances-component"
+    theme="github-dark"
+    issueTerm="pathname"
+  />
+</template>
+
+<script setup lang="ts">
+  import { Utterances } from 'utterances-vue-component'
+</script>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="Svelte">
+
+```html
+<script lang="ts">
+  import { Utterances } from 'utterances-svelte-component'
+</script>
+
+<Utterances
+  repo="TomokiMiyauci/utterances-component"
+  theme="github-dark"
+  issueTerm="pathname"
+/>
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+このプロジェクトは `monorepo` で作ったので、
+もしこの他にサポートしてほしい UI コンポーネントライブラリがあれば、機能リクエストをお願いします。
+
+## utterances の制約
+
+これまでいいところのみ紹介しましたが、制約はあります。
+
+### コメント数が取得できない
+
+ブログであればコメント数だけ別の場所にも表示するなどしたいですよね。しかし残念ながら、コメント数を取得することはできません。
+
+`utterances` のスクリプトは実際には `iframe` になり埋め込まれます。よって、[CORS](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS)により、DOM のアクセスもできません。
+なので、`xxx Comments - powered by utteranc.es` という文字列からコメント数を抜き出すなどの芸当もできません。
+
+スクリプトをセルフホスティングすれば、iframe なので [postMessage API](https://developer.mozilla.org/ja/docs/Web/API/Window/postMessage)によるメッセージングは可能です。
+
+詳しくは[Comments counts #36](https://github.com/utterance/utterances/issues/36)を参照してください。
+
+ちなみにこのブログでは、別途 GitHub APi v4 を使って、issue のコメント数のみを取得しています。
+
+### レートリミット
+
+`utterances`は GitHub issues へリクエストを行いコメントを取得しています。
+よって、高頻度のリクエストは GitHub のレートリミットに引っかかります。
+
+例えば高頻度のリロードによって、何度もコメントの取得が行われるとコメントが使えなくなります。
+
+他にも細かい点を上げればきりがないですが、
+上の点が気にならなければ使ってみることをおすすめします。

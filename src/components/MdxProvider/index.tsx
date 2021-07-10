@@ -5,13 +5,11 @@ import Alert from '../Alert'
 import CodeGroup from '../CodeGroup'
 import CodeBlock from '../CodeBlock'
 import CodeGroups from '../CodeGroups'
-import MdxLi from '../MdxLi'
 import MdxH2 from '../MdxH2'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,
   a: MdxLink,
-  li: MdxLi,
   code: CodeBlock,
   h2: (props) => {
     const { id, children } = props
