@@ -1,7 +1,6 @@
 import React, { FC, ReactChild } from 'react'
 import Breadcrumb from './Breadcrumb'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import cached from '@iconify-icons/mdi/cached'
 import timerSand from '@iconify-icons/mdi/timer-sand'
 import Tag from './Tag'
 import { isLength0 } from '@miyauci/is-valid'
@@ -9,6 +8,7 @@ import IconWith from '../components/IconWith'
 import { useCommentCount } from './Comment/CommentCount/hooks'
 import CommentCounter from './Comment/CommentCount/CommentCounter'
 import { handleClick } from './Comment/CommentCount/_util'
+import ArticleDate from '../components/ArticleDate'
 
 interface ArticleProps {
   children: ReactChild
@@ -19,6 +19,8 @@ interface ArticleProps {
   timeToRead: number
   tags: string[]
   date: string
+  modifiedDate: string
+  isModified: boolean
 }
 
 const Article: FC<ArticleProps> = ({
@@ -29,7 +31,9 @@ const Article: FC<ArticleProps> = ({
   relativePath,
   timeToRead,
   tags,
-  date
+  date,
+  modifiedDate,
+  isModified
 }) => {
   const [commentCount, loading] = useCommentCount()
   return (
@@ -76,9 +80,11 @@ const Article: FC<ArticleProps> = ({
 space-x-6 md:space-x-8 my-6"
         >
           <span className="space-x-2 flex items-center">
-            <IconWith icon={cached} className="text-accent w-7 h-7">
-              <span className="text-xl">{date}</span>
-            </IconWith>
+            <ArticleDate
+              publishAt={date}
+              modifiedAt={modifiedDate}
+              isModified={isModified}
+            />
           </span>
           <span className="space-x-2 flex  items-center">
             <IconWith icon={timerSand} className="text-accent w-7 h-7">

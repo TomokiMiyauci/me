@@ -1,7 +1,9 @@
 import { resolve } from 'path'
 import { GatsbyNode } from 'gatsby'
+import { execSync } from 'child_process'
+import moment from 'moment'
 
-export const createPages: GatsbyNode['createPages'] = async ({
+const createPages: GatsbyNode['createPages'] = async ({
   graphql,
   actions,
   reporter
@@ -50,3 +52,34 @@ export const createPages: GatsbyNode['createPages'] = async ({
     })
   })
 }
+
+const onCreateNode: GatsbyNode<{
+  fileAbsolutePath: string
+  frontmatter: { date: string | undefined }
+}>['onCreateNode'] = ({ node, actions }) => {
+  if (node.internal.type === 'Mdx') {
+    const date = node.frontmatter.date
+    if (!date) {
+      console.error('Not exists date property in frontmatter')
+    }
+
+    const gitAuthorTime = execSync(
+      `git log -1 --pretty=format:%aI ${node.fileAbsolutePath}`
+    ).toString()
+
+    const isModified = !moment(gitAuthorTime).isSame(date, 'day')
+    actions.createNodeField({
+      node,
+      name: 'gitAuthorTime',
+      value: gitAuthorTime
+    })
+
+    actions.createNodeField({
+      node,
+      name: 'isModified',
+      value: isModified
+    })
+  }
+}
+
+export { createPages, onCreateNode }

@@ -30,10 +30,12 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     site: { siteMetadata }
   } = data
 
-  const { frontmatter, body, timeToRead, tableOfContents } = mdx || {
+  const { frontmatter, body, timeToRead, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
+    fields: {},
     items: []
   }
+  const { isModified, gitAuthorTime } = fields
   const { title, description, hero, date, tags, slug } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
@@ -69,6 +71,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             relativePath={location.pathname}
             tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
+            modifiedDate={new Date(gitAuthorTime).toLocaleDateString(locale)}
+            isModified={isModified}
           >
             <div className="container mx-auto flex flex-wrap ">
               <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
@@ -228,6 +232,10 @@ export const pageQuery = graphql`
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $slug } }
     ) {
+      fields {
+        gitAuthorTime
+        isModified
+      }
       tableOfContents
       frontmatter {
         title
