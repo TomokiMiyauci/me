@@ -1,6 +1,6 @@
 import blogicon from '@iconify-icons/carbon/blog'
 import accountIcon from '@iconify-icons/mdi/account-outline'
-import camera from '@iconify-icons/mdi/camera'
+import camera from '@iconify-icons/mdi/camera-outline'
 
 type Navi = {
   title: string

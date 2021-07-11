@@ -85,6 +85,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
+    "@iconify-icons/eva": "^1.1.0",
     "@iconify/react": "^1.1.4",
     "@storybook/addon-a11y": "^6.3.2",
     "@storybook/addon-actions": "^6.3.2",

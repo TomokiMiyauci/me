@@ -1,13 +1,10 @@
 import React, { FC, memo } from 'react'
 import Logo from './Logo'
 import AccentColor from './AccentColor'
-import Search from './search/Index'
 import DarkMode from './DarkMode'
 import LangSwitcher from './LangSwitcher'
 import Navigation from './BottomNavigation/Navigation'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
-
-const indices = ['Pages']
 
 const Inner: FC<{
   originalPath: string
@@ -21,7 +18,7 @@ const Inner: FC<{
 justify-between flex"
     >
       <span className="flex space-x-6 items-center">
-        <Logo />
+        <Logo shrink />
 
         <Navigation
           className="hidden md:block"
