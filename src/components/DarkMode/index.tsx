@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect, ReactNode } from 'react'
-import useDarkMode from 'use-dark-mode'
+import React, { FC, useState, useEffect, ReactNode, useContext } from 'react'
 import { DarkModeSwitch } from 'react-toggle-dark-mode'
+import DarkModeContext from './Context'
 
 const useIsClient = () => {
   const [isClient, setIsClient] = useState(false)
@@ -21,10 +21,7 @@ const OnlyClient: FC<{ placeholder?: ReactNode }> = ({
 }
 
 const DarkMode: FC = () => {
-  const { value, toggle } = useDarkMode(undefined, {
-    classNameDark: 'dark',
-    classNameLight: 'light'
-  })
+  const [value, toggle] = useContext(DarkModeContext)
 
   return (
     <OnlyClient placeholder={<span className="w-[30px] h-[30px]" />}>

@@ -13,12 +13,12 @@ import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
-import { Utterances } from 'utterances-react-component'
 import { makeRepoPostPath } from '../utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import robotIcon from '@iconify-icons/mdi/robot'
 import sourcePull from '@iconify-icons/mdi/source-pull'
 import SnsShare from '../components/SnsShare'
+import Comment from '../components/Comment'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -177,12 +177,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             <h3 id="comment" className="p-4 text-3xl md:p-0 md:mb-2">
               Comments
             </h3>
-            <Utterances
-              repo="TomokiMiyauci/me"
-              issueTerm="pathname"
-              label="comment"
-              theme="preferred-color-scheme"
-            />
+            <Comment />
           </section>
 
           <Popover className="relative">
