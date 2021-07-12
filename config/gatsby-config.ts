@@ -40,6 +40,13 @@ const plugins: GatsbyConfig['plugins'] = [
       gatsbyRemarkPlugins: [
         'gatsby-remark-autolink-headers',
         {
+          resolve: `gatsby-remark-plantuml-lite`,
+          options: {
+            // Configuration options
+            imageType: `svg`
+          }
+        },
+        {
           resolve: 'gatsby-remark-images'
         }
       ]
