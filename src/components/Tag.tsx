@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react'
 import typescriptIcon from '@iconify-icons/logos/typescript-icon'
 import yarn from '@iconify-icons/logos/yarn'
 import preact from '@iconify-icons/logos/preact'
+import react from '@iconify-icons/logos/react'
 import vue3 from '@iconify-icons/logos/vue'
 import tailwindcssIcon from '@iconify-icons/logos/tailwindcss-icon'
 import vitejs from '@iconify-icons/logos/vitejs'
@@ -22,6 +23,10 @@ const tagIcon = (tag: string) => {
     }
     case 'yarn': {
       return yarn
+    }
+
+    case 'react': {
+      return react
     }
 
     case 'preact': {
