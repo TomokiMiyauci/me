@@ -128,6 +128,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
     require('@tailwindcss/line-clamp'),
-    require('tailwind-scrollbar')
+    require('tailwind-scrollbar'),
+    require('tailwindcss-hero-patterns')
   ]
 }

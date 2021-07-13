@@ -19,6 +19,7 @@ import robotIcon from '@iconify-icons/mdi/robot'
 import sourcePull from '@iconify-icons/mdi/source-pull'
 import SnsShare from '../components/SnsShare'
 import Comment from '../components/Comment'
+import Newsletter from '../components/Newsletter'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -128,7 +129,11 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             </div>
           </Article>
 
-          <hr className="prose mx-auto mt-4" />
+          <hr className="prose mx-auto my-10" />
+
+          <div className="max-w-5xl mx-auto">
+            <Newsletter />
+          </div>
 
           <div className=" max-w-prose mx-auto my-10">
             <h3 className="text-3xl mb-6">Other Article</h3>
