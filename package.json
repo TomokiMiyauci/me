@@ -113,6 +113,7 @@
     "gatsby-remark-plantuml-lite": "^0.0.6",
     "gatsby-transformer-remark": "^4.4.1",
     "husky": "^6.0.0",
+    "is-email": "^1.0.1",
     "jest": "^27.0.4",
     "postcss": "^8.3.5",
     "prettier": "^2.3.1",
@@ -123,6 +124,7 @@
     "storybook-builder-vite": "^0.0.10",
     "storybook-tailwind-dark-mode": "^1.0.9",
     "tailwindcss": "^2.2.2",
+    "tailwindcss-hero-patterns": "^0.0.1",
     "vite": "^2.3.8"
   },
   "resolutions": {

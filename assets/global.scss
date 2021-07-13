@@ -26,6 +26,10 @@ svg {
   @apply inline;
 }
 
+input {
+  @apply outline-none;
+}
+
 :root {
   --accent-color: #06b6d4;
 }

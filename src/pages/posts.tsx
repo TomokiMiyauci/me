@@ -5,6 +5,7 @@ import ArticleHeadline from '../components/ArticleHeadline'
 import Layout from '../components/Layout'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
+import Newsletter from '../components/Newsletter'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -82,6 +83,8 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           )}
         </ul>
       </div>
+
+      <Newsletter />
     </Layout>
   )
 }
