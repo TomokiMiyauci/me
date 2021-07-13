@@ -24,12 +24,14 @@
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     }
   ],
+  "firestore": {
+    "rules": "firebase/firestore.rules"
+  },
   "emulators": {
     "hosting": {
       "port": 5000
     },
-    "ui": {
-      "enabled": true,
+    "firestore": {
       "port": 8080
     }
   }
