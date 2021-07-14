@@ -115,6 +115,7 @@ jobs:
         run: yarn build
         env:
           GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
+          GATSBY_CONVERTKIT_API_KEY: ${{ secrets.GATSBY_CONVERTKIT_API_KEY }}
 
       - uses: actions/upload-artifact@v2
         with:

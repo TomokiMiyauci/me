@@ -3,6 +3,8 @@ import AppFrame from './AppFrame'
 import MDXProvider from '../components/MdxProvider'
 import DarkModeContext from '../components/DarkMode/Context'
 import useDarkMode from 'use-dark-mode'
+import Snackbar from '../components/Snackbar'
+import SnackbarContext, { useNotice } from '../components/Snackbar/Context'
 
 const Layout: FC<{
   children: ReactChildren
@@ -14,14 +16,19 @@ const Layout: FC<{
     classNameLight: 'light'
   })
 
-  return (
-    <DarkModeContext.Provider value={[value, toggle]}>
-      <main className="p-4 mt-14 md:mt-24">
-        <MDXProvider>{children}</MDXProvider>
-      </main>
+  const [state, notice] = useNotice()
 
-      <AppFrame currentPath={currentPath} originalPath={originalPath} />
-    </DarkModeContext.Provider>
+  return (
+    <SnackbarContext.Provider value={[state, notice]}>
+      <DarkModeContext.Provider value={[value, toggle]}>
+        <main className="p-4 mt-14 md:mt-24">
+          <MDXProvider>{children}</MDXProvider>
+        </main>
+
+        <AppFrame currentPath={currentPath} originalPath={originalPath} />
+        <Snackbar />
+      </DarkModeContext.Provider>
+    </SnackbarContext.Provider>
   )
 }
 
