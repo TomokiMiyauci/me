@@ -8,6 +8,7 @@ import vue3 from '@iconify-icons/logos/vue'
 import tailwindcssIcon from '@iconify-icons/logos/tailwindcss-icon'
 import vitejs from '@iconify-icons/logos/vitejs'
 import jest from '@iconify-icons/logos/jest'
+import storybook from '@iconify-icons/logos/storybook-icon'
 import tagOutline from '@iconify-icons/mdi/tag-outline'
 import packageVariantClosed from '@iconify-icons/mdi/package-variant-closed'
 import seedOutline from '@iconify-icons/mdi/seed-outline'
@@ -35,6 +36,10 @@ const tagIcon = (tag: string) => {
 
     case 'fetch': {
       return accessPoint
+    }
+
+    case 'storybook': {
+      return storybook
     }
 
     case 'tailwindcss': {
