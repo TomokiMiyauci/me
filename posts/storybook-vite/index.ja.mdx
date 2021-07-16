@@ -60,7 +60,7 @@ iframe 内のビルドを `Webpack` から `vite` に切り替えることで次
 ```bash
 yarn create @vitejs/app <project-name> --template preact-ts
 cd <project-name>
-yarn
+yarn add -D @mdx-js/preact
 ```
 
   </CodeGroup>
@@ -70,11 +70,13 @@ yarn
 ```bash
 npm init @vitejs/app <project-name> -- --template preact-ts
 cd <project-name>
-npm i
+npm i -D @mdx-js/preact
 ```
 
   </CodeGroup>
 </CodeGroups>
+
+のちに必要になる `storybook-builder-vite` の `peerDependency` もインストールしています。
 
 つづいて、Storybook の雛形を生成します。
 スクラッチでももちろん環境構築できますが、次のコマンドで雛形を生成できます。
@@ -126,25 +128,7 @@ npx sb init --builder storybook-builder-vite
 
 ## Preact で mdx ファイルを扱う
 
-まず、`preact` で `mdx` ファイルを Storybook で使うために、 `peerDependency` をインストールします。
-
-<CodeGroups>
-  <CodeGroup label="Yarn" active>
-
-```bash
-yarn add -D @mdx-js/preact
-```
-
-  </CodeGroup>
-
-  <CodeGroup label="NPM">
-
-```bash
-npm i -D @mdx-js/preact
-```
-
-  </CodeGroup>
-</CodeGroups>
+`preact` で `mdx` ファイルを Storybook で使うために、２つの変更が必要です。
 
 ### Storybook の設定ファイルを変更する
 
