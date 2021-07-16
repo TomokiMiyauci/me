@@ -1,8 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /newsletters/{email} {
-      allow create;
+    match /posts/{post} {
+      allow read;
+      allow create, update: if request.auth != null;
     }
   }
 }

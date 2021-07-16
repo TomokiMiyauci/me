@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { BlogPostsQuery } from '../../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'

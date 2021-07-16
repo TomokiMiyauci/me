@@ -1,10 +1,10 @@
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 
 import Snackbar from './Snackbar'
-import Context from './Context'
+import { useNotice } from '../../hooks/notice'
 
 const Index: FC = () => {
-  const [props] = useContext(Context)
+  const [props] = useNotice()
 
   return (
     <Snackbar

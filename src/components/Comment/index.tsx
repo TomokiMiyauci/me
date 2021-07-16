@@ -1,12 +1,12 @@
-import React, { FC, useContext, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { Utterances, Theme } from 'utterances-react-component'
-import DarkModeContext from '../DarkMode/Context'
+import { useDarkMode } from '../../hooks/dark_mode'
 
 const Comment: FC = () => {
-  const [isDark] = useContext(DarkModeContext)
+  const { value } = useDarkMode()
   const theme = useMemo(
-    () => (isDark ? 'icy-dark' : 'github-light') as Theme,
-    [isDark]
+    () => (value ? 'icy-dark' : 'github-light') as Theme,
+    [value]
   )
 
   return (

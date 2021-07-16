@@ -1,16 +1,8 @@
-import { createContext, useState, useRef, useEffect } from 'react'
-import { Notice } from './types'
+import { useState, useRef, useEffect, useContext } from 'react'
+import { Notice } from '../types/notice'
+import NoticeContext from '../contexts/notice'
 
-const NoticeContext = createContext<
-  [
-    Notice & {
-      isShow: boolean
-    },
-    (args: Notice) => void
-  ]
->([{ isShow: false }, () => {}])
-
-const useNotice = () => {
+const useNoticeProvider = () => {
   const [state, changeState] = useState<Notice>({})
   const [isShow, changeShow] = useState(false)
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
@@ -24,6 +16,7 @@ const useNotice = () => {
     if (!isShow) return
     timeoutId.current = setTimeout(() => {
       changeShow(false)
+      console.log(12222222)
     }, 6000)
   }, [isShow])
 
@@ -35,6 +28,6 @@ const useNotice = () => {
   ]
 }
 
-export default NoticeContext
+const useNotice = () => useContext(NoticeContext)
 
-export { useNotice }
+export { useNoticeProvider, useNotice }

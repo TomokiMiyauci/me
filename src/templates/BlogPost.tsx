@@ -73,6 +73,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             readingTime={readingTime.text}
             relativePath={location.pathname}
             url={fullpath}
+            slug={slug}
             tags={tags ?? []}
             date={new Date(date).toLocaleDateString(locale)}
             modifiedDate={new Date(gitAuthorTime).toLocaleDateString(locale)}
