@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
-import LogoImg from '@/assets/logo.svg'
+import LogoImg from '@/../assets/logo.svg'
 
 const Logo: FC<{ shrink?: boolean }> = ({ shrink }) => {
   const { locale } = useLocalization()
