@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react'
 import { Utterances, Theme } from 'utterances-react-component'
-import { useDarkMode } from '@/hooks/dark_mode'
+import { useDarkMode } from '../../hooks/dark_mode'
 
 const Comment: FC = () => {
   const { value } = useDarkMode()

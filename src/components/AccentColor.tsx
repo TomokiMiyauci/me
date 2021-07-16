@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import invertColors from '@iconify-icons/mdi/invert-colors'
 import { Icon } from '@iconify/react'
-import { useAccentColor } from '@/utils/use_accent_color'
+import { useAccentColor } from '../utils/use_accent_color'
 import { Transition } from '@headlessui/react'
 
 const AccentColor: FC = () => {

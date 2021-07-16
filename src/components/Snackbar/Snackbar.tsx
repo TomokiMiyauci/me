@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Icon } from '@iconify/react'
 import { Transition } from '@headlessui/react'
-import { Notice } from '@/types/notice'
+import { Notice } from '../../types/notice'
 
 const Snackbar: FC<
   {

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Link } from 'gatsby'
-import { Navi } from '@/components/IconTextLink/types'
-import IconWith from '@/components/IconWith'
+import { Navi } from './types'
+import IconWith from '../IconWith'
 
 const IconTextLink: FC<Navi> = ({ to, icon, title, isActive }) => (
   <Link

@@ -104,15 +104,6 @@ const plugins: GatsbyConfig['plugins'] = [
       clarity_project_id: '5ipdtj3l7s'
     }
   },
-  {
-    resolve: `gatsby-plugin-alias-imports`,
-    options: {
-      alias: {
-        '@': resolve(__dirname, '..', 'src')
-      },
-      extensions: ['js', 'tsx', 'ts']
-    }
-  },
 
   // {
   //   resolve: `gatsby-plugin-algolia`,
@@ -175,6 +166,7 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   'gatsby-plugin-sass',
   'gatsby-plugin-offline'
+  // 'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
 const siteMetadata: GatsbyConfig['siteMetadata'] = {

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import IconWithLoading from '@/components/Comment/CommentCount/IconWithLoading'
+import IconWithLoading from './IconWithLoading'
 import CountUp from 'react-countup'
 const CommentCounter: FC<{ value: number; loading: boolean }> = ({
   value,

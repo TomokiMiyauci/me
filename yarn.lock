@@ -1604,7 +1604,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.6", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.6", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.14.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
   integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
@@ -11497,13 +11497,6 @@ gatsby-plugin-algolia@^0.20.1:
     algoliasearch "^4.9.1"
     deep-equal "^2.0.5"
     lodash.chunk "^4.2.0"
-
-gatsby-plugin-alias-imports@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-alias-imports/-/gatsby-plugin-alias-imports-1.0.5.tgz#44c0856d77acb74b58b89ec725dadd8f5d5b327d"
-  integrity sha512-q58JrSjuVNh4NApamqElR0zqwm55FOb9vFAVb2i2ftPRu0uYzWJkbOz2IN3vSw7a+5PmGzX7VL8XDFXlNHrMNA==
-  dependencies:
-    "@babel/runtime" "^7.2.0"
 
 gatsby-plugin-amp@^0.2.2:
   version "0.2.2"

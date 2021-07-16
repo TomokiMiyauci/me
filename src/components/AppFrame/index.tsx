@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect, memo } from 'react'
-import { scrollInfoEvent } from '@/utils/scroll'
-import BottomNavigation from '@/components/BottomNavigation'
-import TheHeader from '@/components/TheHeader'
-import TheFooter from '@/components/TheFooter'
+import { scrollInfoEvent } from '../../utils/scroll'
+import BottomNavigation from '../BottomNavigation'
+import TheHeader from '../TheHeader'
+import TheFooter from '../TheFooter'
 
 const MemoedTheHeader = memo(TheHeader)
 const MemoedTheFooter = memo(TheFooter)

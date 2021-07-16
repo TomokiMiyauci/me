@@ -1,9 +1,7 @@
 import React, { FC } from 'react'
-import Newsletter, {
-  ClickEventHandler
-} from '@/components/Newsletter/Newsletter'
+import Newsletter, { ClickEventHandler } from './Newsletter'
 import bxMailSend from '@iconify-icons/bx/bx-mail-send'
-import { useNotice } from '@/hooks/notice'
+import { useNotice } from '../../hooks/notice'
 
 const Index: FC = () => {
   const [_, notice] = useNotice()

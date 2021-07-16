@@ -1,5 +1,5 @@
 import { useLocalization } from 'gatsby-theme-i18n'
-import { navigations } from '@/components/BottomNavigation/constants'
+import { navigations } from './constants'
 
 const useLocalizedPath = () => {
   const { localizedPath, ...rest } = useLocalization()

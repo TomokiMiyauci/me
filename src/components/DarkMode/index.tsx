@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ReactNode } from 'react'
 import { DarkModeSwitch } from 'react-toggle-dark-mode'
-import { useDarkMode } from '@/hooks/dark_mode'
+import { useDarkMode } from '../../hooks/dark_mode'
 
 const useIsClient = () => {
   const [isClient, setIsClient] = useState(false)

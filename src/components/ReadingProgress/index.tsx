@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
 // import { optimizer } from '../../utils/optimizer'
-import ProgressBar from '@/components/ReadingProgress/ProgressBar'
+import ProgressBar from './ProgressBar'
 
 const useReading = () => {
   const [reading, changeReading] = useState({
