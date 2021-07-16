@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Notice } from '../types/notice'
+import { Notice } from '@/types/notice'
 
 const NoticeContext = createContext<
   [

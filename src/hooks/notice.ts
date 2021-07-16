@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext } from 'react'
-import { Notice } from '../types/notice'
-import NoticeContext from '../contexts/notice'
+import { Notice } from '@/types/notice'
+import NoticeContext from '@/contexts/notice'
 
 const useNoticeProvider = () => {
   const [state, changeState] = useState<Notice>({})

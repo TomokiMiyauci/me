@@ -1,7 +1,7 @@
 import { useState, useMemo, useContext, useEffect } from 'react'
-import type { MaybeUser, UserContext } from '../types/user'
-import AuthContext from '../contexts/auth'
-import { useFirebase } from './firebase'
+import type { MaybeUser, UserContext } from '@/types/user'
+import AuthContext from '@/contexts/auth'
+import { useFirebase } from '@/hooks/firebase'
 import { signInAnonymously } from 'firebase/auth'
 
 const useAuthProvider = (): UserContext => {
