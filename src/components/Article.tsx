@@ -9,6 +9,7 @@ import CommentCounter from './Comment/CommentCount/CommentCounter'
 import { handleClick } from './Comment/CommentCount/_util'
 import ArticleDate from '../components/ArticleDate'
 import SnsShare from '../components/SnsShare'
+import Clap from '../components/Clap'
 
 interface ArticleProps {
   children: ReactChild
@@ -16,6 +17,7 @@ interface ArticleProps {
   description: string
   hero: IGatsbyImageData
   relativePath: string
+  slug: string
   readingTime: string
   tags: string[]
   date: string
@@ -35,6 +37,7 @@ const Article: FC<ArticleProps> = ({
   date,
   modifiedDate,
   isModified,
+  slug,
   url
 }) => {
   const [commentCount, loading] = useCommentCount()
@@ -81,17 +84,17 @@ const Article: FC<ArticleProps> = ({
         </div>
 
         <div
-          className="flex justify-center text-gray-500 dark:text-gray-100
-space-x-6 md:space-x-8 my-6"
+          className="flex justify-center flex-wrap text-gray-500 dark:text-gray-100
+space-x-2 sm:space-x-4 md:space-x-8 my-6"
         >
-          <span className="space-x-2 flex items-center">
+          <span className="flex items-center">
             <ArticleDate
               publishAt={date}
               modifiedAt={modifiedDate}
               isModified={isModified}
             />
           </span>
-          <span className="space-x-2 flex  items-center">
+          <span className="flex items-center">
             <IconWith
               icon={timerSand}
               className="text-accent w-6 h-6 md:w-7 md:h-7"
@@ -100,9 +103,11 @@ space-x-6 md:space-x-8 my-6"
             </IconWith>
           </span>
 
-          <a href="#comment" onClick={handleClick}>
+          <a href="#comment" className="flex" onClick={handleClick}>
             <CommentCounter value={commentCount} loading={loading} />
           </a>
+
+          <Clap slug={slug} />
         </div>
 
         <GatsbyImage

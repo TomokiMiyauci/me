@@ -1,7 +1,15 @@
 import { useEffect, useState, useContext } from 'react'
 import { initializeApp, getApps } from 'firebase/app'
-import { initializeFirestore } from 'firebase/firestore/lite'
-import { initializeAuth, useAuthEmulator } from 'firebase/auth'
+import {
+  initializeFirestore,
+  useFirestoreEmulator
+} from 'firebase/firestore/lite'
+import {
+  initializeAuth,
+  useAuthEmulator,
+  setPersistence,
+  browserLocalPersistence
+} from 'firebase/auth'
 import { isLength0 } from '@miyauci/is-valid'
 import { pipe } from 'fonction'
 import { firebaseOptions } from '../../config/constants'
@@ -17,9 +25,12 @@ const useFirebaseProvider = () => {
     if (notInitialized()) {
       const app = initializeApp(firebaseOptions)
       const firestore = initializeFirestore(app, {})
-      const auth = initializeAuth(app)
+      const auth = initializeAuth(app, {
+        persistence: browserLocalPersistence
+      })
 
       if (process.env.NODE_ENV === 'development') {
+        useFirestoreEmulator(firestore, 'localhost', 8081)
         useAuthEmulator(auth, 'http://localhost:9099')
       }
 
