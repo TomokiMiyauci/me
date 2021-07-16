@@ -1,19 +1,5 @@
 import { StorybookConfig } from '@storybook/core-common'
-// import { UserConfig } from 'vite'
-// import { resolve } from 'path'
-
-// type WeakenMap<T, K extends keyof T> = {
-//   [P in keyof T]: P extends K ? any : T[P]
-// }
-
-// interface ExtendedCoreConfig extends WeakenMap<CoreConfig, 'builder'> {
-//   builder: 'webpack4' | 'webpack5' | 'storybook-builder-vite'
-// }
-
-// interface ExtendedStorybookConfig extends WeakenMap<StorybookConfig, 'core'> {
-//   core: ExtendedCoreConfig
-//   viteFinal?: (config: UserConfig) => UserConfig
-// }
+import { resolve } from 'path'
 
 const config: StorybookConfig = {
   stories: ['../src/components/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -35,6 +21,9 @@ const config: StorybookConfig = {
     config.module.rules[0].exclude = [
       /node_modules\/(?!(gatsby|gatsby-theme-i18n)\/)/
     ]
+    config.resolve.alias = {
+      '@': resolve(__dirname, '..', 'src')
+    }
     config.module.rules[0].use[0].loader = require.resolve('babel-loader')
     config.module.rules[0].use[0].options.presets = [
       require.resolve('@babel/preset-react'),
