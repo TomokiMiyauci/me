@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
-import FirebaseContext from '@/contexts/firebase'
-import { useFirebaseProvider } from '@/hooks/firebase'
-import NoticeContext from '@/contexts/notice'
-import { useNoticeProvider } from '@/hooks/notice'
-import DarkModeContext from '@/contexts/dark_mode'
-import { useDarkModeProvider } from '@/hooks/dark_mode'
+import FirebaseContext from './firebase'
+import { useFirebaseProvider } from '../hooks/firebase'
+import NoticeContext from './notice'
+import { useNoticeProvider } from '../hooks/notice'
+import DarkModeContext from './dark_mode'
+import { useDarkModeProvider } from '../hooks/dark_mode'
 
 const Index: FC = ({ children }) => {
   const firebase = useFirebaseProvider()

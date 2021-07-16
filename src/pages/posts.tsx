@@ -1,11 +1,11 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { PageProps, graphql } from 'gatsby'
-import { BlogPostsQuery } from '@/../graphql-types'
-import ArticleHeadline from '@/components/ArticleHeadline'
-import Layout from '@/components/Layout'
-import Seo from '@/components/seo'
+import { BlogPostsQuery } from '../../graphql-types'
+import ArticleHeadline from '../components/ArticleHeadline'
+import Layout from '../components/Layout'
+import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
-import Newsletter from '@/components/Newsletter'
+import Newsletter from '../components/Newsletter'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {

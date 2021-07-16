@@ -7,13 +7,14 @@ import {
 import {
   initializeAuth,
   useAuthEmulator,
+  setPersistence,
   browserLocalPersistence
 } from 'firebase/auth'
 import { isLength0 } from '@miyauci/is-valid'
 import { pipe } from 'fonction'
-import { firebaseOptions } from '@/../config/constants'
-import FirebaseContext from '@/contexts/firebase'
-import { FirebaseState } from '@/types/firebase'
+import { firebaseOptions } from '../../config/constants'
+import FirebaseContext from '../contexts/firebase'
+import { FirebaseState } from '../types/firebase'
 
 const notInitialized = pipe(getApps, isLength0)
 
