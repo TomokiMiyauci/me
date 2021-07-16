@@ -1,10 +1,10 @@
 import React, { FC, memo } from 'react'
-import Logo from './Logo'
-import AccentColor from './AccentColor'
-import DarkMode from './DarkMode'
-import LangSwitcher from './LangSwitcher'
-import Navigation from './BottomNavigation/Navigation'
-import { useLocalizedNavigations } from './BottomNavigation/hooks'
+import Logo from '@/components/Logo'
+import AccentColor from '@/components/AccentColor'
+import DarkMode from '@/components/DarkMode'
+import LangSwitcher from '@/components/LangSwitcher'
+import Navigation from '@/components/BottomNavigation/Navigation'
+import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
 
 const Inner: FC<{
   originalPath: string

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 
-import Snackbar from './Snackbar'
-import { useNotice } from '../../hooks/notice'
+import Snackbar from '@/components/Snackbar/Snackbar'
+import { useNotice } from '@/hooks/notice'
 
 const Index: FC = () => {
   const [props] = useNotice()

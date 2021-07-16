@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
-import { useLocalizedNavigations } from './hooks'
-
-import Navigation from './Navigation'
+import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
+import Navigation from '@/components/BottomNavigation/Navigation'
 
 const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   currentPath,

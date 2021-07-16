@@ -1,9 +1,9 @@
 import React, { FC, ReactChildren } from 'react'
-import AppFrame from './AppFrame'
-import MDXProvider from '../components/MdxProvider'
-import Snackbar from '../components/Snackbar'
-import { useAuthProvider } from '../hooks/auth'
-import AuthContext from '../contexts/auth'
+import AppFrame from '@/components/AppFrame'
+import MDXProvider from '@/components/MdxProvider'
+import Snackbar from '@/components/Snackbar'
+import { useAuthProvider } from '@/hooks/auth'
+import AuthContext from '@/contexts/auth'
 
 const Layout: FC<{
   children: ReactChildren

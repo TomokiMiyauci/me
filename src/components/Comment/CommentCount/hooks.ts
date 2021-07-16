@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getCommentNumber } from '../../../utils/github_api'
+import { getCommentNumber } from '@/utils/github_api'
 
 const useCommentCount = () => {
   const [commentNumber, changeCommentNumber] = useState(0)

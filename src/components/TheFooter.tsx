@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { Icon } from '@iconify/react'
 import firebaseIcon from '@iconify-icons/logos/firebase'
-import Logo from './Logo'
+import Logo from '@/components/Logo'
 import heart from '@iconify-icons/mdi/heart'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'

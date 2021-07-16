@@ -10,9 +10,9 @@ import {
   arrayRemove,
   FieldValue
 } from 'firebase/firestore/lite'
-import { useFirebase } from '../../hooks/firebase'
-import { useAuth } from '../../hooks/auth'
-import Clap from './Clap'
+import { useFirebase } from '@/hooks/firebase'
+import { useAuth } from '@/hooks/auth'
+import Clap from '@/components/Clap'
 
 type PostMeta = {
   createdAt?: Timestamp
@@ -89,8 +89,6 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
     if (!firestore) return
     const document = doc(firestore, slug) as DocumentReference<PostMeta>
     getDoc(document).then((e) => {
-      console.log(e)
-
       changePostMeta({ clap: e.data()?.clap ?? 0, clapBy: e.data()?.clapBy })
     })
   }, [firestore])

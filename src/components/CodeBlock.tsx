@@ -5,7 +5,7 @@ import { head } from 'fonction'
 import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
 import confetti from 'canvas-confetti'
-import { languageMap, parseCodeBlockHeader } from '../utils/code_block'
+import { languageMap, parseCodeBlockHeader } from '@/utils/code_block'
 
 const CodeBlock: FC<{ children: string; className: string }> = ({
   children,
