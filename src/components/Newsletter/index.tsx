@@ -1,10 +1,10 @@
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import Newsletter, { ClickEventHandler } from './Newsletter'
-import Context from '../Snackbar/Context'
 import bxMailSend from '@iconify-icons/bx/bx-mail-send'
+import { useNotice } from '../../hooks/notice'
 
 const Index: FC = () => {
-  const [_, notice] = useContext(Context)
+  const [_, notice] = useNotice()
 
   const onClick: ClickEventHandler = async (email) => {
     fetch('https://api.convertkit.com/v3/forms/2439368/subscribe', {
