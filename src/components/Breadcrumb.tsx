@@ -3,6 +3,8 @@ import { LocalizedLink as Link } from 'gatsby-theme-i18n'
 import { useLocalization } from 'gatsby-theme-i18n'
 import { Icon } from '@iconify/react'
 import ChevronDouble from '@iconify-icons/mdi/chevron-right'
+import blogicon from '@iconify-icons/carbon/blog'
+
 const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
   title,
   to
@@ -16,14 +18,14 @@ const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
           to="/posts/"
           language={locale}
         >
-          Article List
+          <Icon icon={blogicon} className="w-6 h-6" />
         </Link>
       </li>
       <li className="inline align-middle">
         <Icon className="align-middle" icon={ChevronDouble} />
       </li>
       {to && (
-        <li className="inline dark:text-gray-100">
+        <li className="inline text-accent">
           <Link to={to} language={locale} className="align-middle ">
             {title}
           </Link>
