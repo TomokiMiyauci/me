@@ -132,9 +132,5 @@
   },
   "resolutions": {
     "postcss": "^8.3.5"
-  },
-  "browserslist": [
-    ">10%",
-    "not dead"
-  ]
+  }
 }
