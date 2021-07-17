@@ -78,7 +78,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <meta name="twitter:card" content="summary" />
       </Helmet>
 
-      <section className="-mx-4 p-2  md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-texture-gray-200 dark:heropattern-texture-gray-700 flex flex-col justify-center items-center">
+      <section className="-mx-4 p-2  md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-topography-gray-200 dark:heropattern-topography-gray-700 flex flex-col justify-center items-center">
         <h1 className="text-center text-5xl p-6 md:p-12 ">Blog</h1>
 
         <div className="max-w-5xl flex justify-center flex-wrap space-x-2">

@@ -8,7 +8,9 @@ const Logo: FC<{ shrink?: boolean }> = ({ shrink }) => {
     <LocalizedLink language={locale} className="text-4xl space-x-4" to="/">
       <LL className="w-10 fill-current text-accent align-middle h-10" />
 
-      <span className={`${shrink ? 'hidden md:inline' : ''}`}>miyauci.me</span>
+      <span className={`text-accent ${shrink ? 'hidden md:inline' : ''}`}>
+        miyauci.me
+      </span>
     </LocalizedLink>
   )
 }
