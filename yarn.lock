@@ -11416,6 +11416,11 @@ fuse.js@^3.4.5, fuse.js@^3.6.1:
   resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.6.1.tgz#7de85fdd6e1b3377c23ce010892656385fd9b10c"
   integrity sha512-hT9yh/tiinkmirKrlv4KWOjztdoZo1mx9Qh4KvWqC7isoXwdUY3PNWUxceF4/qO9R6riA2C29jdTOeQOIROjgw==
 
+gatsby-alias-imports@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/gatsby-alias-imports/-/gatsby-alias-imports-1.0.6.tgz#1836b223b60e874dfa7a6a69813545ab0f7c3cea"
+  integrity sha512-v8RdbmSFenNxaifo118utlfdxqvJbBWv7Ygfb0kQm2ZLrW1meu8ARjx3gAZExfSwFmMhyyiUltOvQSVDy0Jrsw==
+
 gatsby-cli@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/gatsby-cli/-/gatsby-cli-3.9.0.tgz#0c8ba76fd061d09739ff69e1c2f73d08e55c2c52"

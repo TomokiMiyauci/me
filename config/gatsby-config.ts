@@ -105,6 +105,14 @@ const plugins: GatsbyConfig['plugins'] = [
       enable_on_dev_env: false
     }
   },
+  {
+    resolve: `gatsby-alias-imports`,
+    options: {
+      aliases: {
+        '@': resolve(__dirname, '..', 'src')
+      }
+    }
+  },
   // {
   //   resolve: `gatsby-plugin-algolia`,
   //   options: {
