@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
 
 import Navigation from './Navigation'
@@ -7,8 +7,6 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   currentPath,
   className
 }) => {
-  const localizedNavs = useLocalizedNavigations()
-
   return (
     <div
       className={`bg-gray-50
@@ -19,9 +17,17 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   `}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
-      <Navigation navigations={localizedNavs} currentPath={currentPath} />
+      <Memo currentPath={currentPath} />
     </div>
   )
 }
+
+const Nav: FC<{ currentPath: string }> = ({ currentPath }) => {
+  const localizedNavs = useLocalizedNavigations()
+
+  return <Navigation navigations={localizedNavs} currentPath={currentPath} />
+}
+
+const Memo = memo(Nav)
 
 export default BottomNavigation

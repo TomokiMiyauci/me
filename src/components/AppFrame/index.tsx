@@ -4,9 +4,7 @@ import BottomNavigation from '../BottomNavigation'
 import TheHeader from '../TheHeader'
 import TheFooter from '../TheFooter'
 
-const MemoedTheHeader = memo(TheHeader)
 const MemoedTheFooter = memo(TheFooter)
-const MemoedBottomNavigation = memo(BottomNavigation)
 
 const useScrollShower = (init?: boolean) => {
   const [isShow, changeShow] = useState(init ?? false)
@@ -35,7 +33,7 @@ const AppFrame: FC<{ originalPath: string; currentPath: string }> = ({
 
   return (
     <>
-      <MemoedTheHeader
+      <TheHeader
         originalPath={originalPath}
         currentPath={currentPath}
         className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500 ${
@@ -45,7 +43,7 @@ const AppFrame: FC<{ originalPath: string; currentPath: string }> = ({
 
       <MemoedTheFooter />
 
-      <MemoedBottomNavigation
+      <BottomNavigation
         currentPath={currentPath}
         className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
           isShowHeader ? '' : 'translate-y-full'

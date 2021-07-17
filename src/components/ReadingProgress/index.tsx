@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-// import { optimizer } from '../../utils/optimizer'
+import { optimizer } from '../../utils/optimizer'
 import ProgressBar from './ProgressBar'
 
 const useReading = () => {
@@ -8,19 +8,12 @@ const useReading = () => {
     val: 0
   })
   useEffect(() => {
-    // const fn = optimizer(() => {
-    //   changeReading({
-    //     max: document.body.clientHeight - innerHeight,
-    //     val: scrollY
-    //   })
-    // })
-
-    const fn = () => {
+    const fn = optimizer(() => {
       changeReading({
         max: document.body.clientHeight - innerHeight,
         val: scrollY
       })
-    }
+    })
 
     addEventListener('scroll', fn)
 
