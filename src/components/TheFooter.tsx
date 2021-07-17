@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Icon } from '@iconify/react'
 import firebaseIcon from '@iconify-icons/logos/firebase'
 import Logo from './Logo'
-import heart from '@iconify-icons/mdi/heart'
+import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'
 import npmOutline from '@iconify-icons/eva/npm-outline'
@@ -24,7 +24,7 @@ const TheFooter: FC = () => {
           <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
             <span>
               <span className="font-semibold">Made by</span>
-              <Icon icon={heart} className="w-6 h-6 text-accent mx-2" />
+              <Icon icon={gatsby} className="w-5 h-5 mx-2" />
               TomokiMiyauci
             </span>
             <span className="text-sm">

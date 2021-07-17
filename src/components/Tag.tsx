@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, MouseEventHandler } from 'react'
 import { Icon } from '@iconify/react'
 import typescriptIcon from '@iconify-icons/logos/typescript-icon'
 import yarn from '@iconify-icons/logos/yarn'
@@ -73,11 +73,18 @@ const tagIcon = (tag: string) => {
 
 const getIcon = pipe(lowerCase, tagIcon)
 
-const Tag: FC<{ tag: string }> = ({ tag }) => {
+const Tag: FC<{
+  tag: string
+  hancleClick?: MouseEventHandler
+  className?: string
+}> = ({ tag, hancleClick, className }) => {
   const icon = getIcon(tag)
 
   return (
-    <span className="rounded-md md:pr-2 p-1  inline-flex transition duration-300 items-center dark:bg-blue-gray-800 dark:group-hover:bg-blue-gray-700 border dark:border-blue-gray-700 bg-gray-100  space-x-2">
+    <span
+      onClick={hancleClick}
+      className={`rounded-md  p-1  inline-flex transition duration-300 items-center dark:bg-blue-gray-800 dark:group-hover:bg-blue-gray-700 border dark:border-blue-gray-700 bg-gray-100  space-x-2 ${className}`}
+    >
       <Icon className="w-7 h-7 text-accent rounded" icon={icon} />
 
       <span className="lowercase hidden md:inline dark:text-gray-200">

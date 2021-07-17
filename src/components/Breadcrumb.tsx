@@ -25,8 +25,8 @@ const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
         <Icon className="align-middle" icon={ChevronDouble} />
       </li>
       {to && (
-        <li className="inline text-accent">
-          <Link to={to} language={locale} className="align-middle ">
+        <li className="inline text-accent align-middle">
+          <Link to={to} language={locale} className="align-middle">
             {title}
           </Link>
         </li>
