@@ -9,10 +9,10 @@ const Breadcrumb: FC<Partial<{ title: string; to: string }>> = ({
 }) => {
   const { locale } = useLocalization()
   return (
-    <ul className="mb-3 scrollbar-thin scrollbar-thumb-accent whitespace-nowrap space-x-2 dark:text-gray-200 overflow-x-scroll border-b dark:border-blue-gray-800 md:border-none p-2 px-4 md:p-0 md:mx-0 -m-4">
+    <ul className="mb-0 md:mb-4 scrollbar-thin scrollbar-thumb-accent whitespace-nowrap space-x-2 dark:text-gray-200 overflow-x-scroll border-b dark:border-blue-gray-800 md:border-none p-2 px-4 md:p-0 md:mx-0 -m-4">
       <li className="inline">
         <Link
-          className="align-middle  hover:text-teal-500 transition duration-200"
+          className="align-middle  hover:text-accent transition duration-200"
           to="/posts/"
           language={locale}
         >

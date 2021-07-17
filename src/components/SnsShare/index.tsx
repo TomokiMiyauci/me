@@ -7,13 +7,17 @@ import {
   LinkedinShareButton,
   LinkedinIcon,
   TwitterShareButton,
-  TwitterIcon
+  TwitterIcon,
+  RedditIcon,
+  RedditShareButton,
+  HatenaShareButton,
+  HatenaIcon
 } from 'react-share'
 
 const SNSShare: FC<{ title: string; url: string }> = ({ title, url }) => {
   return (
     <>
-      <FacebookShareButton url={url}>
+      <FacebookShareButton title={title} url={url}>
         <FacebookIcon size={40} round />
       </FacebookShareButton>
 
@@ -21,13 +25,21 @@ const SNSShare: FC<{ title: string; url: string }> = ({ title, url }) => {
         <TwitterIcon size={40} round />
       </TwitterShareButton>
 
-      <LinkedinShareButton url={url}>
-        <LinkedinIcon title={title} size={40} round />
+      <LinkedinShareButton title={title} url={url}>
+        <LinkedinIcon size={40} round />
       </LinkedinShareButton>
 
-      <LineShareButton url={url}>
+      <RedditShareButton url={url} title={title}>
+        <RedditIcon size={40} round />
+      </RedditShareButton>
+
+      <LineShareButton title={title} url={url}>
         <LineIcon size={40} round />
       </LineShareButton>
+
+      <HatenaShareButton title={title} url={url}>
+        <HatenaIcon size={40} round />
+      </HatenaShareButton>
     </>
   )
 }

@@ -10,6 +10,8 @@ import { handleClick } from './Comment/CommentCount/_util'
 import ArticleDate from '../components/ArticleDate'
 import SnsShare from '../components/SnsShare'
 import Clap from '../components/Clap'
+import Pullrequest from '@/components/Pullrequest'
+import { useLocalization } from 'gatsby-theme-i18n'
 
 interface ArticleProps {
   children: ReactChild
@@ -24,6 +26,7 @@ interface ArticleProps {
   modifiedDate: string
   isModified: boolean
   url: string
+  editLink: string
 }
 
 const Article: FC<ArticleProps> = ({
@@ -38,13 +41,23 @@ const Article: FC<ArticleProps> = ({
   modifiedDate,
   isModified,
   slug,
-  url
+  url,
+  editLink
 }) => {
   const [commentCount, loading] = useCommentCount()
+  const { locale } = useLocalization()
   return (
     <article itemScope itemType="http://schema.org/Article" className="mx-auto">
       <div className="container morph xl:px-24 mx-auto mb-10 relative text-gray-800">
         <Breadcrumb to={relativePath} title={title} />
+        {locale === 'en' && (
+          <Pullrequest className="mb-5 md:mb-6 -mx-4 sm:mx-0" href={editLink} />
+        )}
+
+        <div className="space-x-2  text-right my-2 md:space-x-4">
+          <SnsShare title={title} url={url} />
+        </div>
+
         <h1
           className="
           xl:text-9xl
@@ -77,9 +90,6 @@ const Article: FC<ArticleProps> = ({
             {tags.map((tag) => (
               <Tag key={tag} tag={tag} />
             ))}
-          </div>
-          <div className="space-x-2 md:space-x-4">
-            <SnsShare title={title} url={url} />
           </div>
         </div>
 

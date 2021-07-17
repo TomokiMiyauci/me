@@ -65,7 +65,7 @@ progress[value] {
   &::after {
     content: '';
 
-    @apply rounded-full z-[1] pointer-events-none left-[-20vmin] top-[-20vmin] w-[50vmax] md:w-[40vmax] filter blur md:h-[40vmax] h-[50vmax] absolute bg-black dark:bg-white  opacity-[0.08] dark:opacity-[0.06];
+    @apply rounded-full z-[1] pointer-events-none left-[-20vmin] top-[-20vmin] w-[30vmax] md:w-[40vmax] filter blur md:h-[40vmax] h-[30vmax] absolute bg-black dark:bg-white  opacity-[0.08] dark:opacity-[0.06];
   }
 
   &::after {
