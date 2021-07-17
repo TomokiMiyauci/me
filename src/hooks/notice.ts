@@ -16,7 +16,6 @@ const useNoticeProvider = () => {
     if (!isShow) return
     timeoutId.current = setTimeout(() => {
       changeShow(false)
-      console.log(12222222)
     }, 6000)
   }, [isShow])
 

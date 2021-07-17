@@ -89,8 +89,6 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
     if (!firestore) return
     const document = doc(firestore, slug) as DocumentReference<PostMeta>
     getDoc(document).then((e) => {
-      console.log(e)
-
       changePostMeta({ clap: e.data()?.clap ?? 0, clapBy: e.data()?.clapBy })
     })
   }, [firestore])

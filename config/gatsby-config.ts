@@ -101,10 +101,18 @@ const plugins: GatsbyConfig['plugins'] = [
   {
     resolve: `gatsby-plugin-clarity`,
     options: {
-      clarity_project_id: '5ipdtj3l7s'
+      clarity_project_id: '5ipdtj3l7s',
+      enable_on_dev_env: false
     }
   },
-
+  {
+    resolve: `gatsby-alias-imports`,
+    options: {
+      aliases: {
+        '@': resolve(__dirname, '..', 'src')
+      }
+    }
+  },
   // {
   //   resolve: `gatsby-plugin-algolia`,
   //   options: {
@@ -165,8 +173,8 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   'gatsby-plugin-sass',
-  'gatsby-plugin-offline'
-  // 'gatsby-plugin-webpack-bundle-analyser-v2'
+  'gatsby-plugin-offline',
+  'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
 const siteMetadata: GatsbyConfig['siteMetadata'] = {
