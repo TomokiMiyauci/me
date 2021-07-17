@@ -2,6 +2,7 @@ import { resolve } from 'path'
 import { GatsbyNode } from 'gatsby'
 import { execSync } from 'child_process'
 import moment from 'moment'
+import { toLowerCase } from 'core-fn'
 
 const createPages: GatsbyNode['createPages'] = async ({
   graphql,
@@ -55,10 +56,10 @@ const createPages: GatsbyNode['createPages'] = async ({
 
 const onCreateNode: GatsbyNode<{
   fileAbsolutePath: string
-  frontmatter: { date: string | undefined }
+  frontmatter: { date?: string; tags?: string[] }
 }>['onCreateNode'] = ({ node, actions }) => {
   if (node.internal.type === 'Mdx') {
-    const date = node.frontmatter.date
+    const { date, tags } = node.frontmatter!
     if (!date) {
       console.error('Not exists date property in frontmatter')
     }
@@ -78,6 +79,12 @@ const onCreateNode: GatsbyNode<{
       node,
       name: 'isModified',
       value: isModified
+    })
+
+    actions.createNodeField({
+      node,
+      name: 'lowerCaseTags',
+      value: tags?.map(toLowerCase) ?? []
     })
   }
 }
