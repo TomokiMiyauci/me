@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { BlogPostsQuery } from '../../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'
@@ -8,10 +8,14 @@ import { Helmet } from 'react-helmet'
 import Newsletter from '@/components/Newsletter'
 import { useMemo } from 'react'
 import Tag from '@/components/Tag'
-import { includes } from 'core-fn'
+import { includes, toLowerCase } from 'core-fn'
 import { isEmpty } from '@miyauci/is-valid'
 import { navigate } from '@reach/router'
+import { pipe } from 'fonction'
 import { useEffect } from 'react'
+import NotFoundQueryString from '@/components/NotFoundQueryString'
+import magnify from '@iconify-icons/mdi/magnify'
+import { Icon } from '@iconify/react'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -25,9 +29,14 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   } = data
   const { siteUrl } = siteMetadata
   const [selectedTag, changeTag] = useState<string>('')
+  const [search, changeSearch] = useState<string>('')
 
   useEffect(() => {
     changeTag(new URLSearchParams(location.search).get('tag') ?? '')
+  }, [])
+
+  useEffect(() => {
+    changeSearch(new URLSearchParams(location.search).get('q') ?? '')
   }, [])
 
   const p = locale === 'en' ? '/' : '/ja'
@@ -55,13 +64,28 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 
   const { nodes, group } = allMdx
 
-  const articles = useMemo(() => {
-    if (isEmpty(selectedTag)) return nodes
+  const filterByWord = useMemo(() => {
+    if (isEmpty(search)) return nodes
 
-    return nodes.filter(({ fields }) =>
+    const searchIncludes = includes(search)
+    const check = pipe(toLowerCase, searchIncludes)
+
+    return nodes.filter(({ frontmatter }) => {
+      const title = frontmatter?.title ?? ''
+      const description = frontmatter?.description ?? ''
+
+      return check(title) || check(description)
+    })
+  }, [search])
+
+  const articles = useMemo(() => {
+    if (isEmpty(selectedTag)) return filterByWord
+
+    return filterByWord.filter(({ fields }) =>
       includes(selectedTag, fields.lowerCaseTags)
     )
-  }, [selectedTag])
+  }, [filterByWord, selectedTag])
+
   const isSelecting = useMemo(
     () => (tag: string) => {
       return tag === selectedTag
@@ -72,14 +96,36 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const handleClick = (tag: string) => {
     const tagQuery = isEmpty(selectedTag) || selectedTag !== tag ? tag : ''
 
-    const url = new URL(location.href)
-    url.search = isEmpty(tagQuery)
-      ? ''
-      : new URLSearchParams({ tag: tagQuery }).toString()
-    navigate(url.href, { replace: true })
-
     changeTag(tagQuery)
   }
+
+  useEffect(() => {
+    const url = new URL(location.href)
+    const urlSearchParams = new URLSearchParams(url.search)
+
+    if (selectedTag) {
+      urlSearchParams.set('tag', selectedTag)
+    } else {
+      urlSearchParams.delete('tag')
+    }
+    url.search = urlSearchParams.toString()
+    navigate(url.href, { replace: true })
+  }, [selectedTag])
+
+  useEffect(() => {
+    const url = new URL(location.href)
+
+    const urlSearchParams = new URLSearchParams(url.search)
+    if (search) {
+      urlSearchParams.set('q', search)
+    } else {
+      urlSearchParams.delete('q')
+    }
+    url.search = urlSearchParams.toString()
+    navigate(url.href, { replace: true })
+  }, [search])
+
+  console.log(11111)
 
   return (
     <Layout originalPath={originalPath} currentPath={location.pathname}>
@@ -98,8 +144,21 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <meta name="twitter:card" content="summary" />
       </Helmet>
 
-      <section className="-mx-4 p-2  md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-topography-gray-200 dark:heropattern-topography-gray-700 flex flex-col justify-center items-center">
-        <h1 className="text-center text-5xl p-6 md:p-12 ">Blog</h1>
+      <section className="-mx-4 p-2 space-y-6 md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-topography-gray-200 dark:heropattern-topography-gray-700 flex flex-col justify-center items-center">
+        <h1 className="text-center text-5xl p-2 ">Blog</h1>
+
+        <span className="rounded-full px-2 hover:shadow-md focus-within:ring ring-accent transition duration-300 py-0.5 space-x-2 shadow inline-flex bg-gray-100 dark:bg-blue-gray-900 border dark:border-blue-gray-700">
+          <Icon icon={magnify} className="w-9 h-9 text-gray-500" />
+
+          <input
+            onChange={({ target }) => changeSearch(target.value)}
+            value={search}
+            type="search"
+            spellCheck="false"
+            placeholder="Search article"
+            className="bg-transparent text-xl min-w-[260px]"
+          />
+        </span>
 
         <div className="max-w-5xl flex justify-center flex-wrap space-x-2">
           {group.map(({ fieldValue }) => {
@@ -116,30 +175,37 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           })}
         </div>
       </section>
-      <div className="container my-4 md:my-12 mx-auto">
-        <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
-          {articles.map(
-            ({
-              frontmatter: { title, thumbnail, description, date, slug },
-              fields
-            }) => (
-              <li className="-mx-2 md:mx-auto" key={slug}>
-                <ArticleHeadline
-                  title={title}
-                  description={description}
-                  to={slug}
-                  img={thumbnail.childImageSharp.gatsbyImageData}
-                  readingTime={fields.readingTime.text}
-                  lastUpdated={date}
-                  tags={fields.lowerCaseTags}
-                  alt="thumbnail"
-                />
-              </li>
-            )
-          )}
-        </ul>
-      </div>
-
+      {isEmpty(articles) ? (
+        <NotFoundQueryString
+          className="my-12"
+          query={search}
+          tag={selectedTag}
+        />
+      ) : (
+        <div className="container my-8 md:my-12 mx-auto">
+          <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
+            {articles.map(
+              ({
+                frontmatter: { title, thumbnail, description, date, slug },
+                fields
+              }) => (
+                <li className="-mx-2 md:mx-auto" key={slug}>
+                  <ArticleHeadline
+                    title={title}
+                    description={description}
+                    to={slug}
+                    img={thumbnail.childImageSharp.gatsbyImageData}
+                    readingTime={fields.readingTime.text}
+                    lastUpdated={date}
+                    tags={fields.lowerCaseTags}
+                    alt="thumbnail"
+                  />
+                </li>
+              )
+            )}
+          </ul>
+        </div>
+      )}
       <Newsletter />
     </Layout>
   )

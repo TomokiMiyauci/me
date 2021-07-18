@@ -13,9 +13,6 @@ import tagOutline from '@iconify-icons/mdi/tag-outline'
 import packageVariantClosed from '@iconify-icons/mdi/package-variant-closed'
 import seedOutline from '@iconify-icons/mdi/seed-outline'
 import accessPoint from '@iconify-icons/mdi/access-point'
-import { pipe } from 'fonction'
-
-import { lowerCase } from 'fonction'
 
 const tagIcon = (tag: string) => {
   switch (tag) {
@@ -71,14 +68,12 @@ const tagIcon = (tag: string) => {
   }
 }
 
-const getIcon = pipe(lowerCase, tagIcon)
-
 const Tag: FC<{
   tag: string
   hancleClick?: MouseEventHandler
   className?: string
 }> = ({ tag, hancleClick, className }) => {
-  const icon = getIcon(tag)
+  const icon = tagIcon(tag)
 
   return (
     <span

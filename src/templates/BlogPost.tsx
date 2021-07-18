@@ -15,8 +15,6 @@ import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
 import { makeRepoPostPath } from '../utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
-import robotIcon from '@iconify-icons/mdi/robot'
-import sourcePull from '@iconify-icons/mdi/source-pull'
 import SnsShare from '../components/SnsShare'
 import Comment from '../components/Comment'
 import Newsletter from '../components/Newsletter'
@@ -38,8 +36,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     fields: {},
     items: []
   }
-  const { isModified, gitAuthorTime, readingTime } = fields
-  const { title, description, hero, date, tags, slug } = frontmatter
+  const { isModified, gitAuthorTime, readingTime, lowerCaseTags } = fields
+  const { title, description, hero, date, slug } = frontmatter
   const { publicURL, childImageSharp } = hero
   const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
@@ -74,7 +72,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             relativePath={location.pathname}
             url={fullpath}
             slug={slug}
-            tags={tags ?? []}
+            tags={lowerCaseTags}
             date={new Date(date).toLocaleDateString(locale)}
             modifiedDate={new Date(gitAuthorTime).toLocaleDateString(locale)}
             isModified={isModified}
@@ -137,7 +135,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                       to={previous.frontmatter.slug}
                       readingTime={previous.fields.readingTime.text}
                       lastUpdated={previous.frontmatter.date}
-                      tags={previous.frontmatter.tags ?? []}
+                      tags={previous.fields.lowerCaseTags}
                       alt="previous article thumbnail"
                     />
                   </li>
@@ -152,7 +150,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                           .gatsbyImageData
                       }
                       to={next.frontmatter.slug}
-                      tags={next.frontmatter.tags ?? []}
+                      tags={next.fields.lowerCaseTags}
                       readingTime={next.fields.readingTime.text}
                       lastUpdated={next.frontmatter.date}
                       alt="next article thumbnail"
@@ -228,6 +226,7 @@ export const pageQuery = graphql`
         readingTime {
           text
         }
+        lowerCaseTags
         gitAuthorTime
         isModified
       }
@@ -242,7 +241,6 @@ export const pageQuery = graphql`
             gatsbyImageData(layout: CONSTRAINED)
           }
         }
-        tags
         date
         slug
       }
@@ -256,6 +254,7 @@ export const pageQuery = graphql`
         readingTime {
           text
         }
+        lowerCaseTags
       }
       frontmatter {
         title
@@ -266,7 +265,6 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
-        tags
         slug
       }
     }
@@ -278,6 +276,7 @@ export const pageQuery = graphql`
         readingTime {
           text
         }
+        lowerCaseTags
       }
       frontmatter {
         title
@@ -288,7 +287,6 @@ export const pageQuery = graphql`
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
           }
         }
-        tags
         slug
       }
     }
