@@ -2878,6 +2878,11 @@
   resolved "https://registry.yarnpkg.com/@iconify-icons/feather/-/feather-1.1.0.tgz#49fd9afb5e67873eb2ac28b67754268d75595fbe"
   integrity sha512-jBq1yuHJAdCN3CvEby6s++xy5rQFBUvRt/iIn1yFlSrFYdwwXbhsR2AGuior8Gu67x4b8X0wUQ0FSlIooOviBw==
 
+"@iconify-icons/ic@^1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/ic/-/ic-1.1.7.tgz#c72e79afce27a48e0f7987333b7b6a08947c918e"
+  integrity sha512-lQtWqePy76zL6AVExPSy5O5Npix+LWsGzzGcuv32nTXYKvA8dy55ZCQpM+Xe1OYi2wxb9sDJjWOZ99FF5GXF9Q==
+
 "@iconify-icons/logos@^1.1.10":
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/@iconify-icons/logos/-/logos-1.1.10.tgz#e77c9303804e5fff4e0b5257c1ad982ca5528187"
