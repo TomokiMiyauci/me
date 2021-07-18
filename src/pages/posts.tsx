@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, MouseEventHandler, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { BlogPostsQuery } from '../../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'
@@ -10,6 +10,8 @@ import { useMemo } from 'react'
 import Tag from '@/components/Tag'
 import { includes } from 'core-fn'
 import { isEmpty } from '@miyauci/is-valid'
+import { navigate } from '@reach/router'
+import { useEffect } from 'react'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -22,7 +24,11 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     site: { siteMetadata }
   } = data
   const { siteUrl } = siteMetadata
-  const [selectedTag, selectTag] = useState<string>('')
+  const [selectedTag, changeTag] = useState<string>('')
+
+  useEffect(() => {
+    changeTag(new URLSearchParams(location.search).get('tag') ?? '')
+  }, [])
 
   const p = locale === 'en' ? '/' : '/ja'
 
@@ -57,9 +63,23 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     )
   }, [selectedTag])
   const isSelecting = useMemo(
-    () => (tag: string) => tag === selectedTag,
+    () => (tag: string) => {
+      return tag === selectedTag
+    },
     [selectedTag]
   )
+
+  const handleClick = (tag: string) => {
+    const tagQuery = isEmpty(selectedTag) || selectedTag !== tag ? tag : ''
+
+    const url = new URL(location.href)
+    url.search = isEmpty(tagQuery)
+      ? ''
+      : new URLSearchParams({ tag: tagQuery }).toString()
+    navigate(url.href, { replace: true })
+
+    changeTag(tagQuery)
+  }
 
   return (
     <Layout originalPath={originalPath} currentPath={location.pathname}>
@@ -85,17 +105,10 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           {group.map(({ fieldValue }) => {
             return (
               <Tag
-                className={`cursor-pointer m-0.5 md:m-1 ${
+                className={`select-none cursor-pointer m-0.5 md:m-1 ${
                   isSelecting(fieldValue) ? 'ring ring-accent' : ''
                 }`}
-                hancleClick={() => {
-                  console.log(selectTag !== fieldValue)
-                  selectTag(
-                    isEmpty(selectedTag) || selectedTag !== fieldValue
-                      ? fieldValue
-                      : ''
-                  )
-                }}
+                hancleClick={() => handleClick(fieldValue)}
                 key={fieldValue}
                 tag={fieldValue}
               />
