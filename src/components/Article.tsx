@@ -12,6 +12,7 @@ import SnsShare from '../components/SnsShare'
 import Clap from '../components/Clap'
 import Pullrequest from '@/components/Pullrequest'
 import { useLocalization } from 'gatsby-theme-i18n'
+import { iconMeta } from '@/utils/tag'
 
 interface ArticleProps {
   children: ReactChild
@@ -87,9 +88,18 @@ const Article: FC<ArticleProps> = ({
 
         <div className="flex items-center justify-between my-2">
           <div className="space-x-4">
-            {tags.map((tag) => (
-              <Tag key={tag} tag={tag} />
-            ))}
+            {tags.map((tag) => {
+              const { tagIcon, wellKnown } = iconMeta(tag)
+
+              return (
+                <Tag
+                  className={wellKnown ? '' : 'hidden md:inline-flex'}
+                  key={tag}
+                  tag={tagIcon}
+                  label={tag}
+                />
+              )
+            })}
           </div>
         </div>
 

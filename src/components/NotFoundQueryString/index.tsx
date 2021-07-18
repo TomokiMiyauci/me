@@ -3,6 +3,7 @@ import roundSearchOff from '@iconify-icons/ic/round-search-off'
 import { Icon } from '@iconify/react'
 import Tag from '@/components/Tag'
 import magnify from '@iconify-icons/mdi/magnify'
+import { iconMeta } from '@/utils/tag'
 
 const Index: FC<{ query?: string; tag?: string; className?: string }> = ({
   query,
@@ -23,7 +24,7 @@ const Index: FC<{ query?: string; tag?: string; className?: string }> = ({
         </span>
       )}
 
-      {tag && <Tag tag={tag} />}
+      {tag && <Tag tag={iconMeta(tag).tagIcon} label={tag} />}
     </div>
   )
 }

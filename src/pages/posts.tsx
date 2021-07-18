@@ -16,6 +16,7 @@ import { useEffect } from 'react'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
 import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react'
+import { iconMeta } from '@/utils/tag'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -162,6 +163,8 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 
         <div className="max-w-5xl flex justify-center flex-wrap space-x-2">
           {group.map(({ fieldValue }) => {
+            const { tagIcon, wellKnown } = iconMeta(fieldValue)
+            if (!wellKnown) return
             return (
               <Tag
                 className={`select-none cursor-pointer m-0.5 md:m-1 ${
@@ -169,7 +172,8 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
                 }`}
                 hancleClick={() => handleClick(fieldValue)}
                 key={fieldValue}
-                tag={fieldValue}
+                tag={tagIcon}
+                label={fieldValue}
               />
             )
           })}
