@@ -3,6 +3,7 @@ import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import { isLength0 } from '@miyauci/is-valid'
 import Tag from './Tag'
+import { iconMeta } from '@/utils/tag'
 
 const ArticleHeadline: FC<{
   title: string
@@ -62,9 +63,17 @@ const ArticleHeadline: FC<{
 
         {!isLength0(tags) && (
           <div className="space-x-2">
-            {tags.map((tag) => (
-              <Tag key={tag} tag={tag} />
-            ))}
+            {tags.map((tag) => {
+              const { tagIcon, wellKnown } = iconMeta(tag)
+              return (
+                <Tag
+                  className={wellKnown ? '' : 'hidden md:inline-flex'}
+                  key={tag}
+                  tag={tagIcon}
+                  label={tag}
+                />
+              )
+            })}
           </div>
         )}
 
