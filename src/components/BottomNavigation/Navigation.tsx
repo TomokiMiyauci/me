@@ -14,7 +14,7 @@ const Inner: FC<{ navigations: Navi[]; currentPath: string }> = ({
       () =>
         currentPath === path ||
         (endsWithPosts(path) && endsWithPosts(currentPath)),
-      []
+      [currentPath]
     )
 
   return (
