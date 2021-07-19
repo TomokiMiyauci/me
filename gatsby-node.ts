@@ -10,7 +10,7 @@ const createPages: GatsbyNode['createPages'] = async ({
   reporter
 }) => {
   const { createPage } = actions
-  const blogPost = resolve(`./src/templates/BlogPost.tsx`)
+  const blogPost = resolve('./src/templates/BlogPost.tsx')
   const result = await graphql(`
     {
       blog: allMdx(
