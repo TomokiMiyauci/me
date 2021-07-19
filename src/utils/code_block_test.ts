@@ -64,6 +64,10 @@ describe('parseBlockName', () => {
     [
       'ts:filePath.ts{1,2,4-6}',
       { ext: 'ts', filePath: 'filePath.ts', highlights: '1,2,4-6' }
+    ],
+    [
+      'ts:file-path.ts{1,2,4-6}',
+      { ext: 'ts', filePath: 'file-path.ts', highlights: '1,2,4-6' }
     ]
   ]
   it.each(table)('parseBlockName(%s) -> %s', (val, expected) => {
@@ -152,6 +156,14 @@ describe('parseCodeBlockHeader', () => {
       {
         ext: 'json',
         filePath: 'src/filepath.json',
+        highlights: [1, 2, 3, 5, 6, 7, 8]
+      }
+    ],
+    [
+      'json:src/file-path.json{1,2,3,5-8}',
+      {
+        ext: 'json',
+        filePath: 'src/file-path.json',
         highlights: [1, 2, 3, 5, 6, 7, 8]
       }
     ]
