@@ -2,7 +2,6 @@ import React, { FC } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
-import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react'
 import confetti from 'canvas-confetti'
 import { languageMap, parseCodeBlockHeader } from '../utils/code_block'
@@ -94,7 +93,10 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
               p-1
               md:p-2"
             >
-              <Icon className={`rounded-md flex w-6 h-6`} icon={contentCopy} />
+              <Icon
+                className={`rounded-md flex w-6 h-6`}
+                icon="mdi:content-copy"
+              />
             </button>
           </div>
         )

@@ -1,20 +1,12 @@
 import React, { FC, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
-import Layout from '../components/Layout'
 import Seo from '../components/seo'
 import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
-import closeIcon from '@iconify-icons/mdi/close'
-import chevronLeft from '@iconify-icons/mdi/chevron-left'
-import chevronRight from '@iconify-icons/mdi/chevron-right'
 import { Icon } from '@iconify/react'
 
-const Photos: FC<PageProps> = ({
-  data,
-  pageContext: { originalPath },
-  location
-}) => {
+const Photos: FC<PageProps> = ({ data, location }) => {
   const {
     site: { siteMetadata }
   } = data
@@ -40,7 +32,7 @@ const Photos: FC<PageProps> = ({
   })
 
   return (
-    <Layout originalPath={originalPath}>
+    <>
       <Seo title="Photo" fullpath={fullpath} />
       {isShow && (
         <div className={`inset-0 fixed z-[1] text-gray-800`}>
@@ -49,7 +41,7 @@ const Photos: FC<PageProps> = ({
               onClick={() => changeShow(false)}
               className="z-[1] rounded-full bg-gray-200 hover:bg-opacity-75 transition duration-300 bg-opacity-40 p-1 absolute right-4 top-4"
             >
-              <Icon className="w-8 h-8" icon={closeIcon} />
+              <Icon className="w-8 h-8" icon="mdi:close" />
             </button>
             <Carousel
               hasMediaButton={false}
@@ -59,13 +51,13 @@ const Photos: FC<PageProps> = ({
               leftIcon={
                 <Icon
                   className="hidden md:inline ml-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon={chevronLeft}
+                  icon="mdi:chevron-left"
                 />
               }
               rightIcon={
                 <Icon
                   className="hidden md:inline mr-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon={chevronRight}
+                  icon="mdi:chevron-right"
                 />
               }
               images={images}
@@ -94,7 +86,7 @@ const Photos: FC<PageProps> = ({
           )
         })}
       </div>
-    </Layout>
+    </>
   )
 }
 

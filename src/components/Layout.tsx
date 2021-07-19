@@ -1,4 +1,4 @@
-import React, { FC, ReactChildren } from 'react'
+import React, { FC } from 'react'
 import AppFrame from './AppFrame'
 import MDXProvider from '../components/MdxProvider'
 import Snackbar from '../components/Snackbar'
@@ -6,7 +6,6 @@ import { useAuthProvider } from '../hooks/auth'
 import AuthContext from '../contexts/auth'
 
 const Layout: FC<{
-  children: ReactChildren
   originalPath: string
   currentPath: string
 }> = ({ children, currentPath, originalPath }) => {

@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react'
-import invertColors from '@iconify-icons/mdi/invert-colors'
 import { Icon } from '@iconify/react'
 import { useAccentColor } from '../utils/use_accent_color'
 import { Transition } from '@headlessui/react'
@@ -15,7 +14,7 @@ const AccentColor: FC = () => {
         className="flex"
         onClick={() => changeShow(!isShow)}
       >
-        <Icon className="w-8 h-8 text-accent" icon={invertColors} />
+        <Icon className="w-8 h-8 text-accent" icon="mdi:invert-colors" />
       </button>
 
       <Transition

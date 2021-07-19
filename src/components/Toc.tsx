@@ -7,7 +7,6 @@ import React, {
 } from 'react'
 import { AnyFn } from 'fonction'
 import { replace } from 'core-fn'
-import bookmarkMinusOutline from '@iconify-icons/mdi/bookmark-minus-outline'
 import { Icon } from '@iconify/react'
 
 const linkFormat = replace('#', '')
@@ -73,7 +72,7 @@ const Toc: FC<{ className?: string; toc: Toc[]; onClickLink?: AnyFn }> = ({
   return (
     <div className={`p-3 ${className}`}>
       <h3 className="space-x-2 my-2 text-xl text-accent">
-        <Icon icon={bookmarkMinusOutline} className="w-7 h-7" />
+        <Icon icon="mdi:bookmark-minus-outline" className="w-7 h-7" />
         <span>Table of Contents</span>
       </h3>
       <ul ref={ul} className="space-y-2 md:inset-x-2.5">

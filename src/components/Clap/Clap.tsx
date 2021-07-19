@@ -1,6 +1,4 @@
 import React, { FC, ButtonHTMLAttributes } from 'react'
-import heartOutline from '@iconify-icons/mdi/heart-outline'
-import heart from '@iconify-icons/mdi/heart'
 import { Icon } from '@iconify/react'
 
 type EventHandler<T = undefined> = {
@@ -20,7 +18,7 @@ const Clap: FC<
   return (
     <button {...props} className="space-x-1 group" onClick={handleClick}>
       <Icon
-        icon={fill ? heart : heartOutline}
+        icon={fill ? 'mdi:heart' : 'mdi:heart-outline'}
         className={`w-9 h-9 md:w-10 md:h-10 rounded-full p-1 group-hover:text-accent group-hover:bg-gray-200 dark:group-hover:bg-gray-700 group-hover:bg-opacity-50 transition duration-300 ${
           fill ? 'text-accent' : 'text-gray-500'
         }`}

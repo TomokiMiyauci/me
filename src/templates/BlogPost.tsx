@@ -3,7 +3,6 @@ import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'
-import Layout from '../components/Layout'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
@@ -11,18 +10,15 @@ import { useLocalization } from 'gatsby-theme-i18n'
 import Toc from '../components/Toc'
 import { Popover, Transition } from '@headlessui/react'
 import { Icon } from '@iconify/react'
-import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
 import { makeRepoPostPath } from '../utils/parser'
-import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import SnsShare from '../components/SnsShare'
 import Comment from '../components/Comment'
 import Newsletter from '../components/Newsletter'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
-  location,
-  pageContext
+  location
 }) => {
   const {
     previous,
@@ -46,10 +42,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
   return (
-    <Layout
-      originalPath={pageContext.originalPath}
-      currentPath={location.pathname}
-    >
+    <>
       <Seo
         title={title}
         description={description}
@@ -95,7 +88,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   target="_blank"
                 >
                   <span>Edit this page on GitHub</span>
-                  <Icon icon={icon} className="w-5 h-5" />
+                  <Icon
+                    icon="mdi:pencil-box-multiple-outline"
+                    className="w-5 h-5"
+                  />
                 </a>
 
                 <div className="space-x-4 my-4">
@@ -176,7 +172,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   title="Table of Contents"
                   className="fixed md:hidden bottom-2 p-2 shadow-xl border dark:border-blue-gray-700 bg-gray-100 dark:bg-blue-gray-800 rounded-full text-accent right-6"
                 >
-                  <Icon className="w-8 h-8" icon={book} />
+                  <Icon
+                    className="w-8 h-8"
+                    icon="mdi:book-open-page-variant-outline"
+                  />
                 </Popover.Button>
 
                 <Popover.Overlay className={`backdrop-blur-sm fixed inset-0`} />
@@ -205,7 +204,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
-    </Layout>
+    </>
   )
 }
 
