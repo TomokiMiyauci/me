@@ -126,8 +126,6 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     navigate(url.href, { replace: true })
   }, [search])
 
-  console.log(11111)
-
   return (
     <Layout originalPath={originalPath} currentPath={location.pathname}>
       <Seo
