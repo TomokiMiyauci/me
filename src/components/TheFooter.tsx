@@ -1,11 +1,6 @@
 import React, { FC } from 'react'
-import { Icon } from '@iconify/react'
-import firebaseIcon from '@iconify-icons/logos/firebase'
+import { Icon } from '@iconify/react/'
 import Logo from './Logo'
-import gatsby from '@iconify-icons/logos/gatsby'
-import twitter from '@iconify-icons/uil/twitter-alt'
-import github from '@iconify-icons/uil/github-alt'
-import npmOutline from '@iconify-icons/eva/npm-outline'
 
 const TheFooter: FC = () => {
   return (
@@ -13,7 +8,7 @@ const TheFooter: FC = () => {
       <div className="py-4">
         <span className="space-x-2">
           <span className="font-bold text-xl align-middle">DEPLOYS BY</span>
-          <Icon icon={firebaseIcon} className="w-7 h-7" />
+          <Icon icon="logos:firebase" className="w-7 h-7" />
         </span>
       </div>
 
@@ -24,7 +19,7 @@ const TheFooter: FC = () => {
           <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
             <span>
               <span className="font-semibold">Made by</span>
-              <Icon icon={gatsby} className="w-5 h-5 mx-2" />
+              <Icon icon="logos:gatsby" className="w-5 h-5 mx-2" />
               TomokiMiyauci
             </span>
             <span className="text-sm">
@@ -40,7 +35,7 @@ const TheFooter: FC = () => {
               target="_blank"
               className="transition duration-200 hover:text-accent"
             >
-              <Icon icon={npmOutline} className="w-8 h-8" />
+              <Icon icon="eva:npm-outline" className="w-8 h-8" />
             </a>
 
             <a
@@ -48,7 +43,7 @@ const TheFooter: FC = () => {
               target="_blank"
               className="transition duration-200 hover:text-accent"
             >
-              <Icon icon={twitter} className="w-8 h-8" />
+              <Icon icon="uil:twitter-alt" className="w-8 h-8" />
             </a>
 
             <a
@@ -56,7 +51,7 @@ const TheFooter: FC = () => {
               target="_blank"
               className="transition duration-200 hover:text-accent"
             >
-              <Icon icon={github} className="w-8 h-8" />
+              <Icon icon="uil:github-alt" className="w-8 h-8" />
             </a>
           </div>
         </div>

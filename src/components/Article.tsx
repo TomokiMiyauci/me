@@ -1,7 +1,6 @@
 import React, { FC, ReactChild } from 'react'
 import Breadcrumb from './Breadcrumb'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import timerSand from '@iconify-icons/mdi/timer-sand'
 import Tag from './Tag'
 import IconWith from '../components/IconWith'
 import { useCommentCount } from './Comment/CommentCount/hooks'
@@ -116,7 +115,7 @@ space-x-2 sm:space-x-4 md:space-x-8 my-6"
           </span>
           <span className="flex items-center">
             <IconWith
-              icon={timerSand}
+              icon="mdi:timer-sand"
               className="text-accent w-6 h-6 md:w-7 md:h-7"
             >
               <span className="md:text-xl">{readingTime}</span>

@@ -13,14 +13,13 @@ import { navigate } from '@reach/router'
 import { pipe } from 'fonction'
 import { useEffect } from 'react'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
-import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react'
 import { iconMeta } from '@/utils/tag'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
     data,
-    pageContext: { originalPath, locale },
+    pageContext: { locale },
     location
   } = a
   const {
@@ -142,11 +141,11 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <meta name="twitter:card" content="summary" />
       </Helmet>
 
-      <section className="-mx-4 p-2 space-y-6 md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-jupiter-gray-200 dark:heropattern-jupiter-gray-700 flex flex-col justify-center items-center">
+      <section className="-mx-4 p-2 space-y-6 md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-curtain-gray-200 dark:heropattern-jupiter-gray-700 flex flex-col justify-center items-center">
         <h1 className="text-center text-5xl p-2 ">Blog</h1>
 
         <span className="rounded-full px-2 hover:shadow-md focus-within:ring ring-accent transition duration-300 py-0.5 space-x-2 shadow inline-flex bg-gray-100 dark:bg-blue-gray-900 border dark:border-blue-gray-700">
-          <Icon icon={magnify} className="w-9 h-9 text-gray-500" />
+          <Icon icon="mdi:magnify" className="w-9 h-9 text-gray-500" />
 
           <input
             onChange={({ target }) => changeSearch(target.value)}

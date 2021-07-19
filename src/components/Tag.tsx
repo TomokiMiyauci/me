@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler } from 'react'
 import { Icon } from '@iconify/react'
 
 const Tag: FC<{
-  tag: object
+  tag: string
   label: string
   hancleClick?: MouseEventHandler
   className?: string
