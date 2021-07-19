@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import Me from '../components/Me'
-import Layout from '../components/Layout'
 import Seo from '../components/seo'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
@@ -9,11 +8,7 @@ import { Icon } from '@iconify/react'
 import camera from '@iconify-icons/mdi/camera-outline'
 
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
-const IndexPage: FC<PageProps> = ({
-  pageContext: { originalPath },
-  data,
-  location
-}) => {
+const IndexPage: FC<PageProps> = ({ data, location }) => {
   const {
     site: { siteMetadata }
   } = data
@@ -22,7 +17,7 @@ const IndexPage: FC<PageProps> = ({
   const fullpath = new URL(location.pathname, siteUrl).toString()
 
   return (
-    <Layout originalPath={originalPath} currentPath={location.pathname}>
+    <>
       <Seo title="Home" fullpath={fullpath} />
 
       <Helmet>
@@ -65,7 +60,7 @@ const IndexPage: FC<PageProps> = ({
           </LocalizedLink>
         </div>
       </div>
-    </Layout>
+    </>
   )
 }
 

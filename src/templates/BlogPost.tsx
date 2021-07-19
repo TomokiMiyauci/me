@@ -3,7 +3,6 @@ import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '../../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'
-import Layout from '../components/Layout'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
@@ -21,8 +20,7 @@ import Newsletter from '../components/Newsletter'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
-  location,
-  pageContext
+  location
 }) => {
   const {
     previous,
@@ -46,10 +44,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
   return (
-    <Layout
-      originalPath={pageContext.originalPath}
-      currentPath={location.pathname}
-    >
+    <>
       <Seo
         title={title}
         description={description}
@@ -205,7 +200,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
-    </Layout>
+    </>
   )
 }
 
