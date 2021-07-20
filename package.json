@@ -124,13 +124,10 @@
     "remark-emoji": "^2.2.0",
     "remark-external-links": "^8.0.0",
     "storybook-builder-vite": "^0.0.10",
-    "storybook-tailwind-dark-mode": "^1.0.9",
+    "storybook-dark-mode": "^1.0.8",
     "tailwindcss": "^2.2.2",
     "tailwindcss-hero-patterns": "^0.0.1",
     "utilitypes": "^1.0.0-beta.4",
     "vite": "^2.3.8"
-  },
-  "resolutions": {
-    "postcss": "^8.3.5"
   }
 }
