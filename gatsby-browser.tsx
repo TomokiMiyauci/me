@@ -1,7 +1,7 @@
 import React from 'react'
 
-import './assets/global.scss'
-import './assets/prose.scss'
+import '@/assets/global.scss'
+import '@/assets/prose.scss'
 import Layout from '@/components/Layout'
 import type { GatsbyBrowser } from 'gatsby'
 import Context from './src/contexts'

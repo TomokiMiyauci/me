@@ -18,7 +18,7 @@ const parameters: Parameters = {
   }
 }
 
-import('../assets/global.scss')
-import('../assets/prose.scss')
+import('../src/assets/global.scss')
+import('../src/assets/prose.scss')
 
 export { parameters }
