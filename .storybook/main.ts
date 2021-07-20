@@ -12,13 +12,18 @@ interface CustomizedStorybookConfig extends Weaken<StorybookConfig, 'core'> {
 
 const config: CustomizedStorybookConfig = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-a11y',
+    'storybook-dark-mode'
+  ],
   core: {
     builder: 'storybook-builder-vite'
   },
   viteFinal: (config) => {
     if (process.env.NODE_ENV === 'production') {
-      config.build.chunkSizeWarningLimit = 1200
+      config.build.chunkSizeWarningLimit = 1700
     }
 
     config.resolve.alias = {
