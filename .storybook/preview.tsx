@@ -1,16 +1,12 @@
 import React from 'react'
-import { BaseDecorators } from '@storybook/addons'
+import { BaseDecorators, Parameters } from '@storybook/addons'
 import { action } from '@storybook/addon-actions'
 
-global.___loader = {
-  enqueue: () => {},
-  hovering: () => {}
-}
-global.__BASE_PATH__ = '/'
 window.___navigate = (pathname) => {
   action('NavigateTo:')(pathname)
 }
-const parameters = {
+
+const parameters: Parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
