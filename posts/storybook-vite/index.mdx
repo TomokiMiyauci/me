@@ -241,7 +241,7 @@ import { Weaken } from 'utilitypes'
 interface CustomizedCoreConfig extends Weaken<CoreConfig, 'builder'> {
   builder: CoreConfig['builder'] | 'storybook-builder-vite'
 }
-interface CustomizedStroybookConfig extends Weaken<StorybookConfig, 'core'> {
+interface CustomizedStorybookConfig extends Weaken<StorybookConfig, 'core'> {
   core: CustomizedCoreConfig
   viteFinal?: (config: UserConfig, options: Options) => UserConfig
 }
@@ -284,12 +284,12 @@ import { Weaken } from 'utilitypes'
 interface CustomizedCoreConfig extends Weaken<CoreConfig, 'builder'> {
   builder: CoreConfig['builder'] | 'storybook-builder-vite'
 }
-interface CustomizedStroybookConfig extends Weaken<StorybookConfig, 'core'> {
+interface CustomizedStorybookConfig extends Weaken<StorybookConfig, 'core'> {
   core: CustomizedCoreConfig
   viteFinal?: (config: UserConfig, options: Options) => UserConfig
 }
 
-const config: CustomizedStroybookConfig = {
+const config: CustomizedStorybookConfig = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
   core: {

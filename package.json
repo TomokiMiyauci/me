@@ -90,6 +90,7 @@
     "@iconify-icons/eva": "^1.1.0",
     "@iconify-icons/ic": "^1.1.7",
     "@iconify/react": "^3.0.0-beta.1",
+    "@mdx-js/preact": "^1.6.22",
     "@storybook/addon-a11y": "^6.3.2",
     "@storybook/addon-actions": "^6.3.2",
     "@storybook/addon-essentials": "^6.3.2",
@@ -129,6 +130,7 @@
     "storybook-tailwind-dark-mode": "^1.0.9",
     "tailwindcss": "^2.2.2",
     "tailwindcss-hero-patterns": "^0.0.1",
+    "utilitypes": "^1.0.0-beta.4",
     "vite": "^2.3.8"
   },
   "resolutions": {

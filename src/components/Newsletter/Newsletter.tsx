@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler, useState, useMemo } from 'react'
 import { Icon } from '@iconify/react'
 import Loader from 'react-loader-spinner'
 
-const isEmail = require('is-email')
+import isEmail from 'is-email'
 
 type ClickEventHandler = (email: string) => Promise<void>
 

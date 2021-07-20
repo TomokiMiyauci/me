@@ -1,63 +1,29 @@
-import { StorybookConfig } from '@storybook/core-common'
-// import { UserConfig } from 'vite'
-// import { resolve } from 'path'
+import { StorybookConfig, CoreConfig, Options } from '@storybook/core-common'
+import { UserConfig } from 'vite'
+import { Weaken } from 'utilitypes'
+import { resolve } from 'path'
+interface CustomizedCoreConfig extends Weaken<CoreConfig, 'builder'> {
+  builder: CoreConfig['builder'] | 'storybook-builder-vite'
+}
+interface CustomizedStorybookConfig extends Weaken<StorybookConfig, 'core'> {
+  core: CustomizedCoreConfig
+  viteFinal?: (config: UserConfig, options: Options) => UserConfig
+}
 
-// type WeakenMap<T, K extends keyof T> = {
-//   [P in keyof T]: P extends K ? any : T[P]
-// }
-
-// interface ExtendedCoreConfig extends WeakenMap<CoreConfig, 'builder'> {
-//   builder: 'webpack4' | 'webpack5' | 'storybook-builder-vite'
-// }
-
-// interface ExtendedStorybookConfig extends WeakenMap<StorybookConfig, 'core'> {
-//   core: ExtendedCoreConfig
-//   viteFinal?: (config: UserConfig) => UserConfig
-// }
-
-const config: StorybookConfig = {
-  stories: ['../src/components/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    'storybook-tailwind-dark-mode',
-    '@storybook/addon-a11y'
-  ],
+const config: CustomizedStorybookConfig = {
+  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
   core: {
-    builder: 'webpack4'
+    builder: 'storybook-builder-vite'
   },
-  webpackFinal: (config) => {
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
-    })
+  viteFinal: (config) => {
+    if (process.env.NODE_ENV === 'production') {
+      config.build.chunkSizeWarningLimit = 1200
+    }
 
-    config.module.rules[0].exclude = [
-      /node_modules\/(?!(gatsby|gatsby-theme-i18n)\/)/
-    ]
-    config.module.rules[0].use[0].loader = require.resolve('babel-loader')
-    config.module.rules[0].use[0].options.presets = [
-      require.resolve('@babel/preset-react'),
-      require.resolve('@babel/preset-env')
-    ]
-    config.module.rules[0].use[0].options.plugins = [
-      require.resolve('@babel/plugin-proposal-class-properties'),
-      require.resolve('babel-plugin-remove-graphql-queries')
-    ]
-    config.resolve.mainFields = ['module', 'main']
-
-    config.module.rules.push({
-      test: /\.(ts|tsx)$/,
-      loader: require.resolve('babel-loader'),
-      options: {
-        presets: [['react-app', { flow: false, typescript: true }]],
-        plugins: [
-          require.resolve('@babel/plugin-proposal-class-properties'),
-          require.resolve('babel-plugin-remove-graphql-queries')
-        ]
-      }
-    })
-    config.resolve.extensions.push('.ts', '.tsx')
+    config.resolve.alias = {
+      '@': resolve(__dirname, '..', 'src')
+    }
 
     return config
   }
