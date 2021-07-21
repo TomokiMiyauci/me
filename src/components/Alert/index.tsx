@@ -1,12 +1,13 @@
 import React, { FC } from 'react'
-import { Icon } from '@iconify/react'
+import alert from '@iconify-icons/mdi/alert'
+import { Icon } from '@iconify/react/dist/offline'
 
 type AlertType = 'warning'
 
 const getIcon = (type?: AlertType) => {
   switch (type) {
     case 'warning': {
-      return 'mdi:alert'
+      return alert
     }
   }
 }

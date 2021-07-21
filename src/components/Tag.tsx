@@ -1,8 +1,8 @@
 import React, { FC, MouseEventHandler } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 
 const Tag: FC<{
-  tag: string
+  tag: object
   label: string
   hancleClick?: MouseEventHandler
   className?: string

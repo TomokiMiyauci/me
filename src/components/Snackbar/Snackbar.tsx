@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import { Transition } from '@headlessui/react'
 import { Notice } from '../../types/notice'
 

@@ -13,13 +13,14 @@ import { navigate } from '@reach/router'
 import { pipe } from 'fonction'
 import { useEffect } from 'react'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
-import { Icon } from '@iconify/react'
+import magnify from '@iconify-icons/mdi/magnify'
+import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
     data,
-    pageContext: { locale },
+    pageContext: { originalPath, locale },
     location
   } = a
   const {
@@ -145,7 +146,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <h1 className="text-center text-5xl p-2 ">Blog</h1>
 
         <span className="rounded-full px-2 hover:shadow-md focus-within:ring ring-accent transition duration-300 py-0.5 space-x-2 shadow inline-flex bg-gray-100 dark:bg-blue-gray-900 border dark:border-blue-gray-700">
-          <Icon icon="mdi:magnify" className="w-9 h-9 text-gray-500" />
+          <Icon icon={magnify} className="w-9 h-9 text-gray-500" />
 
           <input
             onChange={({ target }) => changeSearch(target.value)}

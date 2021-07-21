@@ -4,7 +4,10 @@ import { GatsbyImage } from 'gatsby-plugin-image'
 import Seo from '../components/seo'
 import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
-import { Icon } from '@iconify/react'
+import closeIcon from '@iconify-icons/mdi/close'
+import chevronLeft from '@iconify-icons/mdi/chevron-left'
+import chevronRight from '@iconify-icons/mdi/chevron-right'
+import { Icon } from '@iconify/react/dist/offline'
 
 const Photos: FC<PageProps> = ({ data, location }) => {
   const {
@@ -41,7 +44,7 @@ const Photos: FC<PageProps> = ({ data, location }) => {
               onClick={() => changeShow(false)}
               className="z-[1] rounded-full bg-gray-200 hover:bg-opacity-75 transition duration-300 bg-opacity-40 p-1 absolute right-4 top-4"
             >
-              <Icon className="w-8 h-8" icon="mdi:close" />
+              <Icon className="w-8 h-8" icon={closeIcon} />
             </button>
             <Carousel
               hasMediaButton={false}
@@ -51,13 +54,13 @@ const Photos: FC<PageProps> = ({ data, location }) => {
               leftIcon={
                 <Icon
                   className="hidden md:inline ml-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon="mdi:chevron-left"
+                  icon={chevronLeft}
                 />
               }
               rightIcon={
                 <Icon
                   className="hidden md:inline mr-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon="mdi:chevron-right"
+                  icon={chevronRight}
                 />
               }
               images={images}

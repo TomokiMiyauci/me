@@ -1,13 +1,17 @@
+import blogicon from '@iconify-icons/carbon/blog'
+import accountIcon from '@iconify-icons/mdi/account-outline'
+import camera from '@iconify-icons/mdi/camera-outline'
+
 type Navi = {
   title: string
   to: string
-  icon: string
+  icon: object
 }
 
 const navigations: Navi[] = [
-  { title: 'About', to: '/', icon: 'mdi:account-outline' },
-  { title: 'Blog', to: '/posts/', icon: 'carbon:blog' },
-  { title: 'Photo', to: '/photos/', icon: 'mdi:camera-outline' }
+  { title: 'About', to: '/', icon: accountIcon },
+  { title: 'Blog', to: '/posts/', icon: blogicon },
+  { title: 'Photo', to: '/photos/', icon: camera }
 ]
 
 export { navigations }
