@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import roundSearchOff from '@iconify-icons/ic/round-search-off'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import Tag from '@/components/Tag'
 import magnify from '@iconify-icons/mdi/magnify'
 import { iconMeta } from '@/utils/tag'

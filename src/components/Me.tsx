@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { StaticImage } from 'gatsby-plugin-image'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import github from '@iconify-icons/uil/github-alt'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import atSign from '@iconify-icons/feather/at-sign'

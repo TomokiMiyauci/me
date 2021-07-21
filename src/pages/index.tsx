@@ -4,7 +4,7 @@ import Seo from '../components/seo'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import blogicon from '@iconify-icons/carbon/blog'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import camera from '@iconify-icons/mdi/camera-outline'
 
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'

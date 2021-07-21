@@ -3,7 +3,7 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
 import contentCopy from '@iconify-icons/mdi/content-copy'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import confetti from 'canvas-confetti'
 import { languageMap, parseCodeBlockHeader } from '../utils/code_block'
 

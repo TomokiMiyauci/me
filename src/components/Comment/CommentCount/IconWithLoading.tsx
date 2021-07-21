@@ -1,6 +1,6 @@
 import React, { FC, CSSProperties } from 'react'
 import commentEditOutline from '@iconify-icons/mdi/comment-edit-outline'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import Placeholder from '../../Placeholder'
 
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'

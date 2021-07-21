@@ -14,7 +14,7 @@ import { pipe } from 'fonction'
 import { useEffect } from 'react'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
 import magnify from '@iconify-icons/mdi/magnify'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {

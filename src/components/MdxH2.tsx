@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import linkVariant from '@iconify-icons/mdi/link-variant'
 
 const MdxH2: FC<{ id: string; title: string }> = ({ id, title }) => (

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { LocalizedLink as Link } from 'gatsby-theme-i18n'
 import { useLocalization } from 'gatsby-theme-i18n'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import ChevronDouble from '@iconify-icons/mdi/chevron-right'
 import blogicon from '@iconify-icons/carbon/blog'
 

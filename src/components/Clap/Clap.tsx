@@ -1,7 +1,7 @@
 import React, { FC, ButtonHTMLAttributes } from 'react'
 import heartOutline from '@iconify-icons/mdi/heart-outline'
 import heart from '@iconify-icons/mdi/heart'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 
 type EventHandler<T = undefined> = {
   on: T extends undefined ? () => Promise<any> : (val: T) => Promise<boolean>

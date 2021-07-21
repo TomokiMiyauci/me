@@ -7,7 +7,7 @@ import 'react-gallery-carousel/dist/index.css'
 import closeIcon from '@iconify-icons/mdi/close'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 
 const Photos: FC<PageProps> = ({ data, location }) => {
   const {

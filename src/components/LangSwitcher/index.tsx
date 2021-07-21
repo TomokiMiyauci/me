@@ -2,7 +2,7 @@ import React, { FC, useState, useRef } from 'react'
 import { Transition } from '@headlessui/react'
 import { ifElseFn } from 'fonction'
 import translateIcon from '@iconify-icons/mdi/translate'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useClickOutside } from '@miyauci/react-click-outside'
 

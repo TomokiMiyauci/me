@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import calendarTextOutline from '@iconify-icons/mdi/calendar-text-outline'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import cached from '@iconify-icons/mdi/cached'
 
 const ArticleDate: FC<{

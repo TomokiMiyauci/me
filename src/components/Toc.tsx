@@ -8,7 +8,7 @@ import React, {
 import { AnyFn } from 'fonction'
 import { replace } from 'core-fn'
 import bookmarkMinusOutline from '@iconify-icons/mdi/bookmark-minus-outline'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 
 const linkFormat = replace('#', '')
 

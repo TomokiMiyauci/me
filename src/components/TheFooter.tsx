@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import firebaseIcon from '@iconify-icons/logos/firebase'
 import Logo from './Logo'
 import gatsby from '@iconify-icons/logos/gatsby'
