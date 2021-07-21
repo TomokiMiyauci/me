@@ -1,6 +1,7 @@
 import React, { FC, useState, useRef } from 'react'
 import { Transition } from '@headlessui/react'
 import { ifElseFn } from 'fonction'
+import translateIcon from '@iconify-icons/mdi/translate'
 import { Icon } from '@iconify/react'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useClickOutside } from '@miyauci/react-click-outside'
@@ -19,7 +20,7 @@ const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
   return (
     <div className="relative flex items-center">
       <button className="flex text-accent" onClick={toggleShow}>
-        <Icon className="w-8 h-8" icon="mdi:translate" />
+        <Icon className="w-8 h-8" icon={translateIcon} />
       </button>
 
       <Transition

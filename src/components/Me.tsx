@@ -1,6 +1,9 @@
 import React, { FC } from 'react'
 import { StaticImage } from 'gatsby-plugin-image'
 import { Icon } from '@iconify/react'
+import github from '@iconify-icons/uil/github-alt'
+import twitter from '@iconify-icons/uil/twitter-alt'
+import atSign from '@iconify-icons/feather/at-sign'
 import GitHubCalendar from 'react-github-calendar'
 import ReactTooltip from 'react-tooltip'
 const Me: FC = () => {
@@ -45,7 +48,7 @@ const Me: FC = () => {
               href="https://github.com/TomokiMiyauci"
               target="_blank"
             >
-              <Icon className="w-8 h-8" icon="uil:github-alt" />
+              <Icon className="w-8 h-8" icon={github}></Icon>
             </a>
             <a
               title="Twitter"
@@ -53,7 +56,7 @@ const Me: FC = () => {
               href="https://twitter.com/tomoki_miyauci"
               target="_blank"
             >
-              <Icon className="w-8 h-8" icon="uil:twitter-alt" />
+              <Icon className="w-8 h-8" icon={twitter}></Icon>
             </a>
 
             <a
@@ -61,7 +64,7 @@ const Me: FC = () => {
               className="hover:text-accent transition-colors duration-300"
               href="mailto:contact&#64;miyauchi.dev"
             >
-              <Icon className="w-8 h-8" icon="feather:at-sign" />
+              <Icon className="w-8 h-8" icon={atSign} />
             </a>
           </div>
         </div>

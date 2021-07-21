@@ -1,4 +1,5 @@
 import React, { FC, MouseEventHandler, useState, useMemo } from 'react'
+import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react'
 import Loader from 'react-loader-spinner'
 
@@ -50,7 +51,7 @@ const Newsletter: FC<{
           className="inline-flex w-full sm:w-auto focus-within:ring hover:bg-opacity-70 transition duration-300 ring-accent flex-col md:flex-row bg-gray-200 dark:bg-blue-gray-800 overflow-x-hidden  rounded-md"
         >
           <span className="py-3 md:py-2 p-2 inline-flex text-accent">
-            <Icon icon="mdi:email" className="w-8 h-8 md:w-12 md:h-12" />
+            <Icon icon={emailIcon} className="w-8 h-8 md:w-12 md:h-12" />
             <input
               className="bg-transparent ml-2 text-2xl md:w-auto md:text-3xl"
               spellCheck="false"

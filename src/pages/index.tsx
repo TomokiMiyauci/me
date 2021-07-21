@@ -3,7 +3,9 @@ import Me from '../components/Me'
 import Seo from '../components/seo'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
+import blogicon from '@iconify-icons/carbon/blog'
 import { Icon } from '@iconify/react'
+import camera from '@iconify-icons/mdi/camera-outline'
 
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 const IndexPage: FC<PageProps> = ({ data, location }) => {
@@ -33,7 +35,7 @@ const IndexPage: FC<PageProps> = ({ data, location }) => {
             className="rounded-md hover:scale-105 hover:-translate-y-2 hover:opacity-80 transition duration-300 transform block bg-gradient-to-r min-h-[260px] p-6 md:p-10 from-purple-800 to-pink-700 text-2xl shadow relative"
           >
             <Icon
-              icon="carbon:blog"
+              icon={blogicon}
               className="absolute w-full h-full top-0 left-0 fill-current dark:opacity-10 opacity-30"
             />
             <p className="text-gray-200 z-10">
@@ -50,7 +52,7 @@ const IndexPage: FC<PageProps> = ({ data, location }) => {
             className="rounded-md hover:scale-105 hover:-translate-y-2 hover:opacity-80 transition duration-300 transform flex flex-col justify-between min-h-[260px] bg-gradient-to-r p-6 md:p-10 from-cyan-500 to-emerald-700 text-2xl shadow relative"
           >
             <Icon
-              icon="mdi:camera-outline"
+              icon={camera}
               className="absolute w-full h-full top-0 left-0 fill-current dark:opacity-10 opacity-20"
             />
             <p className="text-gray-200">My photo gallery</p>
