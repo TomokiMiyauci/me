@@ -7,11 +7,11 @@ on:
     branches:
       - main
 
-strategy:
-  matrix:
-    node-version: [14.x]
-
 jobs:
+  strategy:
+    matrix:
+      node-version: [14.x]
+
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
