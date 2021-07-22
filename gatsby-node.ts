@@ -1,8 +1,14 @@
-import { resolve } from 'path'
-import { GatsbyNode } from 'gatsby'
+import { resolve, join } from 'path'
+import { GatsbyNode, BuildArgs } from 'gatsby'
 import { execSync } from 'child_process'
 import moment from 'moment'
 import { toLowerCase } from 'core-fn'
+import type { SiteMetaData, Locale } from './config/types'
+import admin from 'firebase-admin'
+import { isUndefined } from '@miyauci/is-valid'
+import { exec } from 'core-fn'
+
+const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 
 const createPages: GatsbyNode['createPages'] = async ({
   graphql,
@@ -89,4 +95,104 @@ const onCreateNode: GatsbyNode<{
   }
 }
 
-export { createPages, onCreateNode }
+const onPostBuild: GatsbyNode['onPostBuild'] = (buildArgs) => {
+  if (process.env.STAGE === 'main') {
+    useMetaPoster(buildArgs)
+  }
+}
+
+const makeFullPath = (
+  {
+    base,
+    path
+  }: {
+    base: string
+    path: string
+  },
+  locale: Locale
+): string => {
+  const _path = locale === 'en' ? path : join(locale, path)
+  return new URL(_path, base).toString()
+}
+
+const postMeta = (
+  {
+    slug,
+    locale
+  }: {
+    slug: string
+    locale: Locale
+  },
+  content: {
+    url: string
+    title: string
+    description: string
+  }
+) => {
+  return admin
+    .firestore()
+    .collection('meta')
+    .doc(slug)
+    .collection('locales')
+    .doc(locale)
+    .set({
+      ...content,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    })
+}
+
+const initializeApp = (clientEmail: string, privateKey: string) => {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      clientEmail,
+      privateKey,
+      projectId: 'blorogue'
+    })
+  })
+}
+
+const useMetaPoster = ({ reporter, getNodesByType, getNode }: BuildArgs) => {
+  const clientEmail = process.env.CLIENT_EMAIL
+  const privateKey = process.env.PRIVATE_KEY
+  if (isUndefined(clientEmail) || isUndefined(privateKey)) {
+    reporter.error('No credential')
+    return
+  }
+
+  initializeApp(clientEmail, privateKey)
+
+  const site = getNode('Site')
+
+  const { siteUrl } = site.siteMetadata as SiteMetaData
+
+  const mdxs = getNodesByType('Mdx')
+
+  mdxs.forEach(({ fields, frontmatter }) => {
+    const { locale } = fields as { locale: Locale }
+
+    const { title, description, slug } = frontmatter as {
+      title: string
+      description: string
+      slug: string
+    }
+    const { slug: _slug } = parseSlug(slug)?.groups ?? { slug: '' }
+
+    if (!_slug) return
+
+    const fullPath = makeFullPath(
+      {
+        base: siteUrl,
+        path: slug
+      },
+      locale
+    )
+
+    const url = new URL(fullPath, siteUrl).toString()
+
+    postMeta({ slug: _slug, locale }, { url, title, description })
+  })
+
+  reporter.success('post meta info is updated')
+}
+
+export { createPages, onCreateNode, onPostBuild }

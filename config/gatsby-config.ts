@@ -5,6 +5,7 @@ import { SITE_URL as siteUrl } from './constants'
 import emoji from 'remark-emoji'
 import remarkExternalLinks from 'remark-external-links'
 import { config as _config } from 'dotenv'
+import { SiteMetaData } from './types'
 _config()
 const name = 'miyauci.me'
 
@@ -177,7 +178,7 @@ const plugins: GatsbyConfig['plugins'] = [
   'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
-const siteMetadata: GatsbyConfig['siteMetadata'] = {
+const _siteMetaData: SiteMetaData = {
   siteUrl,
   title: name,
   description:
@@ -190,6 +191,8 @@ const siteMetadata: GatsbyConfig['siteMetadata'] = {
     github: 'TomokiMiyauci'
   }
 }
+
+const siteMetadata: GatsbyConfig['siteMetadata'] = _siteMetaData
 
 const config: GatsbyConfig = {
   siteMetadata,
