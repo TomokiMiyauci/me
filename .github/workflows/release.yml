@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-strategy:
-  matrix:
-    node-version: [14.x]
-
 jobs:
   setup:
     runs-on: ubuntu-latest
