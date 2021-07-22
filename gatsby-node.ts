@@ -6,10 +6,10 @@ import { toLowerCase } from 'core-fn'
 import type { SiteMetaData, Locale } from './config/types'
 import admin from 'firebase-admin'
 import { isUndefined } from '@miyauci/is-valid'
-import { exec } from 'core-fn'
+import { exec, replace } from 'core-fn'
 
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
-
+const pretty = replace(/\\n/g, '\n')
 const createPages: GatsbyNode['createPages'] = async ({
   graphql,
   actions,
@@ -159,7 +159,7 @@ const useMetaPoster = ({ reporter, getNodesByType, getNode }: BuildArgs) => {
     return
   }
 
-  initializeApp(clientEmail, privateKey)
+  initializeApp(clientEmail, pretty(privateKey))
 
   const site = getNode('Site')
 
