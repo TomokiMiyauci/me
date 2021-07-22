@@ -174,8 +174,8 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   'gatsby-plugin-sass',
-  'gatsby-plugin-offline',
-  'gatsby-plugin-webpack-bundle-analyser-v2'
+  'gatsby-plugin-offline'
+  // 'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
 const _siteMetaData: SiteMetaData = {
