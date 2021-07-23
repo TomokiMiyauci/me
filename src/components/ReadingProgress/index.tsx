@@ -8,22 +8,16 @@ const useReading = () => {
     val: 0
   })
   useEffect(() => {
-    let isMounted = true
     const fn = optimizer(() => {
-      if (isMounted) {
-        changeReading({
-          max: document.body.clientHeight - innerHeight,
-          val: scrollY
-        })
-      }
+      changeReading({
+        max: document.body.clientHeight - innerHeight,
+        val: scrollY
+      })
     })
 
-    addEventListener('scroll', fn, { passive: true })
+    addEventListener('scroll', fn)
 
-    return () => {
-      isMounted = false
-      removeEventListener('scroll', fn)
-    }
+    return () => removeEventListener('scroll', fn)
   }, [reading])
 
   return reading
