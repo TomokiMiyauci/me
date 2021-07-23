@@ -9,13 +9,14 @@ import { useClickOutside } from '@miyauci/react-click-outside'
 const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
   const [isShow, changeShow] = useState(false)
   const ref = useRef<HTMLUListElement>(null)
+  const hide = () => changeShow(false)
 
   const toggleShow = ifElseFn(
     () => isShow,
-    () => changeShow(false),
+    hide,
     () => changeShow(true)
   )
-  useClickOutside(ref, () => changeShow(false), 'mousedown' as any)
+  useClickOutside(ref, hide, 'mousedown' as any)
 
   return (
     <div className="relative flex items-center">
@@ -52,12 +53,12 @@ const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
 "
         >
           <li>
-            <LocalizedLink to={originalPath} language="en">
+            <LocalizedLink onClick={hide} to={originalPath} language="en">
               English
             </LocalizedLink>
           </li>
           <li>
-            <LocalizedLink to={originalPath} language="ja">
+            <LocalizedLink onClick={hide} to={originalPath} language="ja">
               日本語
             </LocalizedLink>
           </li>
