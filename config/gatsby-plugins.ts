@@ -169,9 +169,9 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   'gatsby-plugin-sass',
-  'gatsby-plugin-offline',
-  'gatsby-plugin-preact',
-  'gatsby-plugin-webpack-bundle-analyser-v2'
+  'gatsby-plugin-offline'
+  // 'gatsby-plugin-preact'
+  // 'gatsby-plugin-webpack-bundle-analyser-v2'
 ]
 
 export default plugins
