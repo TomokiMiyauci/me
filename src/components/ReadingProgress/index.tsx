@@ -1,9 +1,10 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useEffect } from 'react'
 import { optimizer } from '@/utils/optimizer'
 import ProgressBar from '@/components/ReadingProgress/ProgressBar'
+import { useStateIfMounted } from 'use-state-if-mounted'
 
 const useReading = () => {
-  const [reading, changeReading] = useState({
+  const [reading, changeReading] = useStateIfMounted({
     max: 0,
     val: 0
   })
@@ -15,9 +16,7 @@ const useReading = () => {
       })
     })
 
-    addEventListener('scroll', fn)
-
-    return () => removeEventListener('scroll', fn)
+    addEventListener('scroll', fn, { once: true, passive: true })
   }, [reading])
 
   return reading
