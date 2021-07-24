@@ -369,27 +369,14 @@ Storybook provides a large number of files, so it was hard to find the type:swea
 
 Now we can develop in a type-safe way.
 
-## Preview the production code.
+## Preview the production code
 
 This is a extra. Sometimes you want to check the pre-built code.
 This is especially true if you are switching from `Webpack` to `vite`.
 
-For some reason, Storybook does not provide a command for previewing.
+Storybook does not provide a command for previewing.
 So you have to build a static file server yourself. It's easy, though.
 
-If you use `Deno`, you don't need to install it [^2], so you can try it easily.
+`npx http-server storybook-static`
 
-[^2]: It will stay in the cache.
-
-```ts
-import {
-  createApp,
-  serveStatic
-} from 'https://deno.land/x/servest@v1.3.2/mod.ts'
-const app = createApp()
-
-app.use(serveStatic('./storybook-static'))
-app.listen({ port: 8899 })
-```
-
-You can do `Express` or `fastify` or whatever. Just for reference.
+Now you can preview.

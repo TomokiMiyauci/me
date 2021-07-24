@@ -374,22 +374,9 @@ Storybook は大量のファイルを提供しているので、型を見つけ�
 完全におまけです。ビルド済みのコードを確認したいことありますよね。
 `Webpack`から `vite` へ切り替えるような場合はなおさらです。
 
-なぜか、Storybook にはプレビュー用のコマンドが用意されていません。
+Storybook にはプレビュー用のコマンドが用意されていません。
 なので、静的ファイルサーバーを自分で建てなければなりません。といっても簡単ですが。
 
-`Deno` だとインストール不要[^2]なので、手軽に試せます。
+`npx http-server storybook-static`
 
-[^2]: キャッシュには残ります。
-
-```ts
-import {
-  createApp,
-  serveStatic
-} from 'https://deno.land/x/servest@v1.3.2/mod.ts'
-const app = createApp()
-
-app.use(serveStatic('./storybook-static'))
-app.listen({ port: 8899 })
-```
-
-`Express` でも `fastify` でもなんでもできますが、参考までに。
+これでプレビューができますね。
