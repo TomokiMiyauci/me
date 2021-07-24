@@ -170,10 +170,10 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   'gatsby-plugin-sass',
   {
-    resolve: `gatsby-plugin-offline`,
-    options: {
-      precachePages: ['/posts/', '/posts/*', '/ja/posts/', '/ja/posts/*']
-    }
+    resolve: `gatsby-plugin-offline`
+    // options: {
+    //   precachePages: ['/posts/', '/posts/*', '/ja/posts/', '/ja/posts/*']
+    // }
   }
   // 'gatsby-plugin-preact'
   // 'gatsby-plugin-webpack-bundle-analyser-v2'
