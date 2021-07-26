@@ -1,0 +1,236 @@
+---
+title: TypeScriptで型安全にツイートする
+description: プログラムからツイッターのAPIを使ってツイートする方法を紹介します。TypeScript-firstな Twitter クライアントとして twitter-api-v2 を用いて実際にツイートを行い、エラー処理についても解説しています。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-07-26
+slug: /posts/tweet-typescript/
+tags:
+  - twitter
+  - TypeScript
+---
+
+## はじめに
+
+プログラムから動的にツイートする方法を紹介します。
+
+自動ツイートの一翼を担う部分なので、色々応用できると自動化が捗るかもしれません。
+
+今回は、数あるツイッタークライアントの中でもおすすめな、 [`twitter-api-v2`](https://www.npmjs.com/package/twitter-api-v2) を中心に説明します。
+
+## Twitter Client の選定
+
+まず、Client ライブラリを使用するのか否かという判断ですが、個人的には使用すべきだと思います。
+
+[公式のサンプル](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update)を見てみましょう。
+
+```bash
+curl -XPOST
+  --url 'https://api.twitter.com/1.1/statuses/update.json?status=hello'
+  --header 'authorization: OAuth
+  oauth_consumer_key="oauth_customer_key",
+  oauth_nonce="generated_oauth_nonce",
+  oauth_signature="generated_oauth_signature",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_timestamp="generated_timestamp",
+  oauth_token="oauth_token",
+  oauth_version="1.0"'
+```
+
+プログラムからツイートするためには、 oauth_signature を計算する必要があります。
+oauth_signature は、signature base string[^1] と signing key[^2] を `HMAC-SHA1` でハッシュ化する必要があります[^3]。
+
+[^1]: HTTP メソッド、base URL、および 7 つのパラメーター文字列
+[^2]: `Consumer secret`と `OAuth token secret `をパーセントエンコードして、 `&` で結合
+[^3]: 詳しくは[公式ドキュメント](https://developer.twitter.com/ja/docs/basics/authentication/guides/creating-a-signature)を参照
+
+この作業はあまり本質的ではないので、コードベースのサイズがシビアでない限りは、再開発を避け素直にライブラリを使うべきでしょう。
+
+さて、`Node.js` で利用可能な Twitter Client ライブラリは多くあります。
+
+基本的には `Declaretion file` が提供されているので、 TypeScript で問題なく使うことができます。
+なので、なんでも良いとも言えますが、
+ツイート をプログラムからするという用途であれば、`twitter-api-v2` をおすすめします。
+
+最も有名な Client ライブラリは [`twitter`](https://www.npmjs.com/package/twitter)だと思いますが、それと比較して`twitter-api-v2` は以下の３つの特徴があります。
+
+- パッケージサイズが小さい
+- 強い型付け
+- Promise ベース
+
+それぞれ簡単に見ていきましょう。
+
+### パッケージサイズが小さい
+
+`twitter` クライアントよりも、パッケージサイズが 15 分の 1 程度になっています。
+Twitter Client はサーバーサイドで使用されるため、パッケージサイズに関してはそこまでシビアになることはありません。
+
+ただサーバーレス環境ではコンテナなどのイメージサイズなどに影響しますし、インストールの時間によりワークフローの速度にも影響があるため、小さいに越したことはありません。
+
+`twitter-api-v2` は依存パッケージがないため、かなりサイズを削減できています。
+
+### 強い型付け
+
+すべての Twitter クライアントライブラリは基本的には、エンドポイントへのリクエストのラッパーです。
+
+ライブラリにより AOuth ヘッダーの作成の手間から開放されます。ただ、そのほとんどでレスポンス型は `any` などの弱い型になっています。
+これには理由があります。`twitter-api-v2` 以外のライブラリでは、HTTP クライアントの薄いラッパーを目指して実装されています。
+
+例えば、次のエンドポイントへのリクエストを`twitter` クライアントを使うと以下のようになります。
+
+https://api.twitter.com/1.1/statuses/update.json
+
+```ts
+import Twitter from 'twitter'
+import type { ResponseData } from 'twitter'
+import type { Response } from 'request'
+
+const client = new Twitter(credentials)
+client.post(
+  'statuses/update',
+  {
+    status: 'tweet content'
+  },
+  (error, responseData, response) => {
+    error // any
+    resonseData // ResponseData
+    response // Response
+  }
+)
+```
+
+レスポンスはコールバック関数によって取得できます。これは後述する Promise ベースに対する特徴になっています。
+レスポンスのコールバック関数を見てみると、第一引数は `any` 型となっています。
+また、第２引数は `ResponseData` という型が返ってきます。この実態は次の型です。
+
+```ts
+interface ResponseData {
+  [key: string]: any
+}
+```
+
+また、第 3 引数は [`request`](https://www.npmjs.com/package/request) の `Response` 型が返ってきます。このことから、 `twitter` は http リクエストに `request` を使っていることが推定できます。
+残念ながら、この３つの引数は型安全とは言えません。
+
+一方、 `twitter-api-v2` を使った場合は次のようになります。
+
+```ts
+import Twitter, { TweetV1 } from 'twitter-api-v2'
+
+const client = new Twitter(credentials)
+const result = await client.v1.tweet('tweet content')
+
+result // TweetV1
+```
+
+`twitter-api-v2` は ツイートや ユーザー情報、メディア情報のための専用のインターフェイスがあるため、
+強い型付けにより安全にレスポンスの処理ができます。
+
+単にツイートしたいだけなら、エラー処理はあまり厳密でなくてもいいかもしれませんが、
+型安全に越したことはないですよね。
+
+### Promise ベース
+
+すでに例示しているように `twitter-api-v2` は Promise オブジェクトを戻り値とします。
+`Promise` であることの優位点は今更述べる必要はないと思いますが、可読性の高い記述ができます。
+
+以上のように `Node.js`を使ってツイートするなら、`twitter-api-v2` がよりベターなことがわかるかと思います。
+
+## ツイートする
+
+さて、実際にツイートしてみましょう。なお、[Twitter developer platform](https://developer.twitter.com/en)への登録は済んでいる前提で解説します。
+
+まずは、Twitter の Developer Portal から、プロジェクトを作成し API Key を生成します。
+
+![developer portal](./developer-portal.png)
+
+Customer Keys から
+
+- API Key
+- API Secret Key
+
+が、
+
+Authentication Tokens から
+
+- Access Token
+- Access Token Secret
+
+が取得できます。
+このとき、Authentication Tokens のパーミッションに注意が必要です。
+
+パーミッションは次の 3 種類あります。
+
+- Read only
+- Read and write
+- Read, write and access Direct Messages
+
+トークンをツイートに用いる場合、パーミッションは `Read and Write` 以上でなくてはなりません。
+`Read only` だった場合は、権限を変更した上で、**トークンの再生成**が必要です。
+
+さて 4 つの値が取得できたらあとは簡単です。
+
+まず、 `twitter-api-v2` をインストールします。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D twitter-api-v2
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D twitter-api-v2
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+コンストラクタに 4 つの値を与えます。インターフェイスのキーの名称が若干異なります。
+
+| Developer Portal    | Constractor  |
+| ------------------- | ------------ |
+| API Key             | appKey       |
+| API Secret Key      | appSecret    |
+| Access Token        | accessToken  |
+| Access Token Secret | accessSecret |
+
+```ts
+import Twitter from 'twitter-api-v2'
+
+const client = new Twitter({
+  appKey,
+  appSecret,
+  accessToken,
+  accessSecret
+})
+
+client.v1.tweet('test')
+```
+
+これでツイートができたかと思います。できない場合は、パーミッションを見直してみるといいかもしれません。
+
+## エラー処理
+
+基本的は上の例で問題ありませんが、エラーが発生するパターンが存在します。
+ツイートの重複とレートリミットです。
+
+エラーの場合は、そのどちらも 403 エラーが発生します。
+
+### ツイートの重複
+
+ツイート内容は最近のツイートと比較され、重複があった場合にエラーが発生します。
+
+ここで重要なのは、**最直近のツイート**のみが比較されるわけではないということです。
+最新のツイートと比較的近い期間に行ったツイートが比較され、同じ内容をツイートできないような仕様になっているようです。
+
+### レートリミット
+
+3 時間で 300 件以下しかツイートは行えません。これにはリツイートも含むので、プログラムからリツイートしている場合は、上限に注意が必要です。
+
+どちらのエラーも Promise の `reject` メソッドが呼ばれます。
+なので、通常のエラー処理のように`try-catch` で補足するか、Promise の `catch` メソッドで補足できます。
