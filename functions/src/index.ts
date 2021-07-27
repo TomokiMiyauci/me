@@ -1,10 +1,20 @@
 import functions from 'firebase-functions'
 import type { Locale } from '../../config/types'
 import { renderFile, configure } from 'eta'
-import Twitter from 'twitter'
+import Twitter from 'twitter-api-v2'
 
-const twitterConfig = (functions.config() as Config).twitter
-const client = new Twitter(twitterConfig)
+const {
+  app_key: appKey,
+  app_secret: appSecret,
+  access_token: accessToken,
+  access_secret: accessSecret
+} = (functions.config() as Config).twitter
+const client = new Twitter({
+  appKey,
+  appSecret,
+  accessToken,
+  accessSecret
+})
 configure({
   views: 'views'
 })
@@ -23,10 +33,10 @@ type Params = {
 
 type Config = {
   twitter: {
-    consumer_key: string
-    consumer_secret: string
-    access_token_key: string
-    access_token_secret: string
+    app_key: string
+    app_secret: string
+    access_token: string
+    access_secret: string
   }
 }
 
@@ -49,17 +59,10 @@ export const onCreateMetaPost = functions
     })
 
     if (!content) return
-    client.post(
-      'statuses/update',
-      {
-        status: content
-      },
-      (error) => {
-        if (error) {
-          functions.logger.error(error)
-        }
-      }
-    )
+
+    return client.v1.tweet(content).catch((e) => {
+      functions.logger.error(e)
+    })
   })
 
 const templateName = (locale: Locale): string => {
