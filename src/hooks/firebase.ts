@@ -4,10 +4,10 @@ import { useFirestoreEmulator } from 'firebase/firestore/lite'
 import { useAuthEmulator } from 'firebase/auth'
 import { isLength0 } from '@miyauci/is-valid'
 import { pipe } from 'fonction'
-import { firebaseOptions } from '../../config/constants'
-import FirebaseContext from '../contexts/firebase'
-import { FirebaseState } from '../types/firebase'
-import { isBrowser } from '../utils/browser'
+import { firebaseOptions } from '@/../config/constants'
+import FirebaseContext from '@/contexts/firebase'
+import { FirebaseState } from '@/types/firebase'
+import { isBrowser } from '@/utils/browser'
 
 const notInitialized = pipe(getApps, isLength0)
 
@@ -32,7 +32,10 @@ const useFirebaseProvider = () => {
         useAuthEmulator(auth, 'http://localhost:9099')
       }
 
-      if (window && process.env.NODE_ENV === 'production') {
+      const { initializePerformance } = await import('firebase/performance')
+      initializePerformance(app)
+
+      if (process.env.NODE_ENV === 'production') {
         const { isSupported, initializeAnalytics } = await import(
           'firebase/analytics'
         )
