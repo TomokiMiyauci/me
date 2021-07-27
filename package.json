@@ -110,6 +110,7 @@
     "gatsby-alias-imports": "^1.0.6",
     "gatsby-plugin-graphql-codegen": "^3.0.0",
     "gatsby-plugin-postcss": "^4.7.1",
+    "gatsby-plugin-robots-txt": "^1.6.8",
     "gatsby-plugin-sharp": "^3.7.1",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.22",
     "gatsby-remark-images": "^5.4.1",

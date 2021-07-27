@@ -117,7 +117,7 @@ const plugins: GatsbyConfig['plugins'] = [
   //     queries
   //   }
   // },
-
+  'gatsby-plugin-robots-txt',
   {
     resolve: `gatsby-plugin-sitemap`,
     options: {
