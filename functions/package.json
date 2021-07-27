@@ -17,7 +17,7 @@
   "dependencies": {
     "firebase-admin": "^9.8.0",
     "firebase-functions": "^3.14.1",
-    "twitter": "^1.7.1"
+    "twitter-api-v2": "^1.1.1"
   },
   "devDependencies": {
     "@types/twitter": "^1.7.1",

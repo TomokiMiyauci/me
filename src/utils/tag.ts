@@ -13,6 +13,8 @@ import packageVariantClosed from '@iconify-icons/mdi/package-variant-closed'
 import seedOutline from '@iconify-icons/mdi/seed-outline'
 import accessPoint from '@iconify-icons/mdi/access-point'
 import gatsby from '@iconify-icons/logos/gatsby'
+import twitter from '@iconify-icons/logos/twitter'
+
 import { isUndefined } from '@miyauci/is-valid'
 
 const iconMeta = (tag: string) => {
@@ -37,6 +39,7 @@ const ICON_MAP = {
   package: packageVariantClosed,
   tutorial: seedOutline,
   vue3,
+  twitter,
   tailwindcss,
   gatsby
 }
