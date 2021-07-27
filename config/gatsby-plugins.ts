@@ -168,6 +168,50 @@ const plugins: GatsbyConfig['plugins'] = [
       }
     }
   },
+  {
+    resolve: `gatsby-plugin-feed`,
+    options: {
+      feeds: [
+        {
+          serialize: ({ query: { allMdx } }) => {
+            return allMdx.nodes.map(({ frontmatter, excerpt, fields }) => {
+              const { title, date } = frontmatter
+              const { fullPath } = fields
+
+              return {
+                title,
+                description: excerpt,
+                date,
+                url: fullPath,
+                guid: fullPath
+              }
+            })
+          },
+          query: `
+            {
+              allMdx(
+                sort: { order: DESC, fields: [frontmatter___date] },
+              ) {
+                nodes {
+                  excerpt
+                  fields {
+                    fullPath
+                  }
+                  frontmatter {
+                    title
+                    date
+                  }
+                }
+              }
+            }
+          `,
+          output: '/rss.xml',
+          title: name,
+          match: '^/posts/'
+        }
+      ]
+    }
+  },
   'gatsby-plugin-sass',
   {
     resolve: `gatsby-plugin-offline`

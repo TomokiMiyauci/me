@@ -62,10 +62,16 @@ const createPages: GatsbyNode['createPages'] = async ({
 
 const onCreateNode: GatsbyNode<{
   fileAbsolutePath: string
-  frontmatter: { date?: string; tags?: string[] }
-}>['onCreateNode'] = ({ node, actions }) => {
+  frontmatter: { date?: string; tags?: string[]; slug: string }
+  fields: { locale: Locale }
+}>['onCreateNode'] = ({ node, actions, getNode }) => {
+  const site = getNode('Site')
+  const { siteUrl } = site.siteMetadata as SiteMetaData
+
   if (node.internal.type === 'Mdx') {
-    const { date, tags } = node.frontmatter!
+    const { date, tags, slug } = node.frontmatter!
+    const { locale } = node.fields
+
     if (!date) {
       console.error('Not exists date property in frontmatter')
     }
@@ -91,6 +97,20 @@ const onCreateNode: GatsbyNode<{
       node,
       name: 'lowerCaseTags',
       value: tags?.map(toLowerCase) ?? []
+    })
+
+    const fullPath = makeFullPath(
+      {
+        base: siteUrl,
+        path: slug
+      },
+      locale
+    )
+
+    actions.createNodeField({
+      node,
+      name: 'fullPath',
+      value: fullPath
     })
   }
 }
