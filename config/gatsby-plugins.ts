@@ -83,18 +83,6 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   {
-    resolve: `gatsby-plugin-manifest`,
-    options: {
-      name,
-      short_name: name,
-      start_url: `/`,
-      background_color: '#06b6d4',
-      theme_color: `#e11d48`,
-      display: `standalone`,
-      icon: resolve(__dirname, '..', 'static', 'favicon.svg')
-    }
-  },
-  {
     resolve: `gatsby-plugin-clarity`,
     options: {
       clarity_project_id: '5ipdtj3l7s',
@@ -214,10 +202,25 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   'gatsby-plugin-sass',
   {
-    resolve: `gatsby-plugin-offline`
-    // options: {
-    //   precachePages: ['/posts/', '/posts/*', '/ja/posts/', '/ja/posts/*']
-    // }
+    resolve: 'gatsby-plugin-manifest',
+    options: {
+      name,
+      short_name: name,
+      start_url: `/`,
+      background_color: '#06b6d4',
+      theme_color: `#e11d48`,
+      display: `standalone`,
+      icon: resolve(__dirname, '..', 'static', 'favicon.svg'),
+      cache_busting_mode: 'none'
+    }
+  },
+  {
+    resolve: 'gatsby-plugin-offline',
+    options: {
+      workboxConfig: {
+        globPatterns: ['**/icon-path*']
+      }
+    }
   }
   // 'gatsby-plugin-preact'
   // 'gatsby-plugin-webpack-bundle-analyser-v2'
