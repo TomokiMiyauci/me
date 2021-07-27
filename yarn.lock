@@ -2818,6 +2818,11 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
+"@iconify-icons/bi@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/bi/-/bi-1.1.5.tgz#2da50c5abae72eaac2014fc34b9b90ca7085765e"
+  integrity sha512-K/g++iPY0oizeLqtBKUwGGfBcx1Byba2EpXXQOCknxX7eR2pyn08wwCu050k9q7I2dcvMxA/eTW3VMCimJ1lSQ==
+
 "@iconify-icons/bx@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@iconify-icons/bx/-/bx-1.1.1.tgz#51a4c34afbfc7dafe359f9a02d82376dd8810707"

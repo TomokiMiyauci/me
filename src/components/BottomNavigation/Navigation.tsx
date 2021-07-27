@@ -19,9 +19,9 @@ const Inner: FC<{ navigations: Navi[]; currentPath: string }> = ({
 
   return (
     <ul className="flex text-gray-500 dark:text-gray-400 justify-around items-center">
-      {navigations.map(({ title, to, icon }) => {
+      {navigations.map(({ title, to, icon, className }) => {
         return (
-          <li key={to} className="w-full">
+          <li key={to} className={`w-full ${className ?? ''}`}>
             <IconTextLink
               to={to}
               icon={icon}

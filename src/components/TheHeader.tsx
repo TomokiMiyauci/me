@@ -5,6 +5,9 @@ import DarkMode from './DarkMode'
 import LangSwitcher from './LangSwitcher'
 import Navigation from './BottomNavigation/Navigation'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
+// import Search from '@/components/search'
+
+// const indices = ['Pages']
 
 const Inner: FC<{
   originalPath: string
@@ -27,7 +30,7 @@ justify-between flex"
         />
       </span>
 
-      <div className="flex space-x-5 md:space-x-8 items-center">
+      <div className="flex space-x-5 lg:space-x-8 items-center">
         {/* <Search indices={indices} /> */}
 
         <LangSwitcher originalPath={originalPath} />
