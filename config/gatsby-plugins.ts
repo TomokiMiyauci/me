@@ -129,7 +129,7 @@ const plugins: GatsbyConfig['plugins'] = [
             }
           }
 
-          allSitePage(filter: {context: {originalPath: {nin: ["/404/", "/404.html"]}}}) {
+          allSitePage(filter: {context: {originalPath: {nin: ["/404/", "/404.html", "/offline-plugin-app-shell-fallback/"]}}}) {
             nodes {
               path
               context {
