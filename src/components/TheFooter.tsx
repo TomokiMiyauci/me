@@ -15,6 +15,7 @@ const TheFooter: FC = () => {
         <span className="flex flex-col md:flex-row md:space-x-6 items-start font-bold text-xl ">
           <a
             href="https://miyauchi-storybook.web.app/"
+            target="_blank"
             className="space-x-2 underline py-4 md:p-0 md:no-underline md:hover:underline"
           >
             <span className="align-middle">DESIGNED BY</span>

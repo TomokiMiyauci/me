@@ -10,11 +10,10 @@ const useLocalizedPath = () => {
 const useLocalizedNavigations = () => {
   const localePath = useLocalizedPath()
 
-  return navigations.map(({ title, to, icon, className }) => ({
+  return navigations.map(({ title, to, icon }) => ({
     title,
     icon,
-    to: localePath(to),
-    className
+    to: localePath(to)
   }))
 }
 
