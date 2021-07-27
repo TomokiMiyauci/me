@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import firebaseIcon from '@iconify-icons/logos/firebase'
+import storybookIcon from '@iconify-icons/logos/storybook-icon'
 import Logo from './Logo'
 import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
@@ -10,10 +11,19 @@ import npmOutline from '@iconify-icons/eva/npm-outline'
 const TheFooter: FC = () => {
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
-      <div className="py-4">
-        <span className="space-x-2">
-          <span className="font-bold text-xl align-middle">DEPLOYS BY</span>
-          <Icon icon={firebaseIcon} className="w-7 h-7" />
+      <div className="md:py-4">
+        <span className="flex flex-col md:flex-row md:space-x-6 items-start font-bold text-xl ">
+          <a
+            href="https://miyauchi-storybook.web.app/"
+            className="space-x-2 underline py-4 md:p-0 md:no-underline md:hover:underline"
+          >
+            <span className="align-middle">DESIGNED BY</span>
+            <Icon icon={storybookIcon} className="w-7 h-7" />
+          </a>
+          <span className="space-x-2">
+            <span className="align-middle py-4 md:p-0">DEPLOYS BY</span>
+            <Icon icon={firebaseIcon} className="w-7 h-7" />
+          </span>
         </span>
       </div>
 
@@ -52,7 +62,7 @@ const TheFooter: FC = () => {
             </a>
 
             <a
-              href="https://github.com/TomokiMiyauci"
+              href="https://github.com/TomokiMiyauci/me"
               target="_blank"
               className="transition duration-200 hover:text-accent"
             >
