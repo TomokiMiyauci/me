@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { getApps } from 'firebase/app'
-import { useFirestoreEmulator } from 'firebase/firestore/lite'
-import { useAuthEmulator } from 'firebase/auth'
+import { connectFirestoreEmulator } from 'firebase/firestore/lite'
+import { connectAuthEmulator } from 'firebase/auth'
 import { isLength0 } from '@miyauci/is-valid'
 import { pipe } from 'fonction'
 import { firebaseOptions } from '@/../config/constants'
@@ -28,8 +28,8 @@ const useFirebaseProvider = () => {
       })
 
       if (process.env.NODE_ENV === 'development') {
-        useFirestoreEmulator(firestore, 'localhost', 8081)
-        useAuthEmulator(auth, 'http://localhost:9099')
+        connectFirestoreEmulator(firestore, 'localhost', 8081)
+        connectAuthEmulator(auth, 'http://localhost:9099')
       }
 
       const { initializePerformance } = await import('firebase/performance')
