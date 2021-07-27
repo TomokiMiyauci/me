@@ -210,17 +210,11 @@ const plugins: GatsbyConfig['plugins'] = [
       background_color: '#06b6d4',
       theme_color: `#e11d48`,
       display: `standalone`,
-      icon: resolve(__dirname, '..', 'static', 'favicon.svg'),
-      cache_busting_mode: 'none'
+      icon: resolve(__dirname, '..', 'static', 'favicon.svg')
     }
   },
   {
-    resolve: 'gatsby-plugin-offline',
-    options: {
-      workboxConfig: {
-        globPatterns: ['**/*']
-      }
-    }
+    resolve: 'gatsby-plugin-offline'
   }
   // 'gatsby-plugin-preact'
   // 'gatsby-plugin-webpack-bundle-analyser-v2'
