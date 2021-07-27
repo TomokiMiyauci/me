@@ -5,6 +5,12 @@ import DarkMode from './DarkMode'
 import LangSwitcher from './LangSwitcher'
 import Navigation from './BottomNavigation/Navigation'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
+import rss from '@iconify-icons/bi/rss'
+import IconWith from '@/components/IconWith'
+
+// import Search from '@/components/search'
+
+// const indices = ['Pages']
 
 const Inner: FC<{
   originalPath: string
@@ -17,7 +23,7 @@ const Inner: FC<{
       className="container max-w-8xl py-2 md:py-0 px-3 mx-auto items-center
 justify-between flex"
     >
-      <span className="flex space-x-6 items-center">
+      <span className="flex space-x-2 lg:space-x-6 items-center">
         <Logo shrink />
 
         <Navigation
@@ -25,9 +31,19 @@ justify-between flex"
           navigations={localizedNavs}
           currentPath={currentPath}
         />
+
+        <a
+          className="hidden md:flex text-gray-500 dark:text-gray-400 p-2 md:py-4 md:px-6 hover:bg-gray-200 dark:hover:bg-blue-gray-800 hover:opacity-70 duration-300 transition flex-col justify-center items-center"
+          target="_blank"
+          href="/rss.xml"
+        >
+          <IconWith icon={rss} className="w-7 h-7 md:w-9 md:h-9">
+            <span className="text-[0.65rem] md:text-xs">RSS</span>
+          </IconWith>
+        </a>
       </span>
 
-      <div className="flex space-x-5 md:space-x-8 items-center">
+      <div className="flex space-x-5 lg:space-x-8 items-center">
         {/* <Search indices={indices} /> */}
 
         <LangSwitcher originalPath={originalPath} />
