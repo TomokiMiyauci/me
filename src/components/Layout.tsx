@@ -12,7 +12,7 @@ const Layout: FC<{
   const auth = useAuthProvider()
   return (
     <AuthContext.Provider value={auth}>
-      <main className="p-4 min-h-[90vh] mt-14 md:mt-24">
+      <main className="p-4 min-h-[80vh] mt-14 md:mt-24">
         <MDXProvider>{children}</MDXProvider>
       </main>
 
