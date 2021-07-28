@@ -4,6 +4,8 @@ import Seo from '../components/seo'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import blogicon from '@iconify-icons/carbon/blog'
+import code from '@iconify-icons/carbon/code'
+
 import { Icon } from '@iconify/react/dist/offline'
 import camera from '@iconify-icons/mdi/camera-outline'
 
@@ -44,6 +46,20 @@ const IndexPage: FC<PageProps> = ({ data, location }) => {
             </p>
 
             <h2 className="mt-10 text-5xl font-semibold text-white">Blog</h2>
+          </LocalizedLink>
+
+          <LocalizedLink
+            to="/projects/"
+            language={locale}
+            className="flex flex-col rounded-md hover:scale-105 hover:-translate-y-2 hover:opacity-80 transition duration-300 transform bg-gradient-to-r min-h-[260px] p-6 md:p-10 from-yellow-500 to-amber-600 text-2xl shadow relative"
+          >
+            <Icon
+              icon={code}
+              className="absolute w-full h-full top-0 left-0 fill-current dark:opacity-10 opacity-30"
+            />
+            <p className="text-gray-200 flex-1 z-10">My project collection.</p>
+
+            <h2 className="mt-10 text-5xl font-semibold text-white">Project</h2>
           </LocalizedLink>
 
           <LocalizedLink
