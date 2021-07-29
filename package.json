@@ -90,6 +90,7 @@
     "@iconify-icons/bi": "^1.1.5",
     "@iconify-icons/bx": "^1.1.0",
     "@iconify-icons/eva": "^1.1.0",
+    "@iconify-icons/foundation": "^1.1.0",
     "@iconify-icons/ic": "^1.1.7",
     "@iconify/react": "^3.0.0-beta.1",
     "@mdx-js/preact": "^1.6.22",
