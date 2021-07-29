@@ -5,7 +5,7 @@ import { isLength0 } from '@miyauci/is-valid'
 import Tag from './Tag'
 import { iconMeta } from '@/utils/tag'
 
-const ArticleHeadline: FC<{
+type ArticleHeadlineProps = {
   title: string
   description: string
   img: IGatsbyImageData
@@ -14,7 +14,18 @@ const ArticleHeadline: FC<{
   tags: string[]
   lastUpdated?: number
   readingTime?: string
-}> = ({ title, description, img, to, alt, lastUpdated, readingTime, tags }) => {
+}
+
+const ArticleHeadline: FC<ArticleHeadlineProps> = ({
+  title,
+  description,
+  img,
+  to,
+  alt,
+  lastUpdated,
+  readingTime,
+  tags
+}) => {
   const { locale } = useLocalization()
   return (
     <LocalizedLink
@@ -93,3 +104,4 @@ const ArticleHeadline: FC<{
 }
 
 export default ArticleHeadline
+export type { ArticleHeadlineProps }
