@@ -14,9 +14,11 @@ import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import ReadingProgress from '../components/ReadingProgress'
 import { makeRepoPostPath } from '../utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
-import SnsShare from '../components/SnsShare'
-import Comment from '../components/Comment'
-import Newsletter from '../components/Newsletter'
+import SnsShare from '@/components/SnsShare'
+import Comment from '@/components/Comment'
+import Newsletter from '@/components/Newsletter'
+import chevronRight from '@iconify-icons/mdi/chevron-right'
+import chevronLeft from '@iconify-icons/mdi/chevron-left'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -120,6 +122,11 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               <ul className="space-y-2 -mx-2">
                 {previous && (
                   <li>
+                    <h4>
+                      <Icon icon={chevronLeft} className="w-7 h-7" />
+                      <span className="align-middle">Next</span>
+                    </h4>
+
                     <ArticleHeadline
                       title={previous.frontmatter.title}
                       description={previous.frontmatter.description}
@@ -137,6 +144,10 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 )}
                 {next && (
                   <li>
+                    <h4 className="text-right">
+                      <span className="align-middle">Prev</span>
+                      <Icon icon={chevronRight} className="w-7 h-7" />
+                    </h4>
                     <ArticleHeadline
                       title={next.frontmatter.title}
                       description={next.frontmatter.description}

@@ -55,7 +55,7 @@ const Article: FC<ArticleProps> = ({
           <Pullrequest className="mb-5 md:mb-6 -mx-4 sm:mx-0" href={editLink} />
         )}
 
-        <div className="space-x-2  text-right my-2 md:space-x-4">
+        <div className="space-x-2 text-right my-2 md:space-x-4">
           <SnsShare title={title} url={url} />
         </div>
 
@@ -66,6 +66,8 @@ const Article: FC<ArticleProps> = ({
           sm:text-5xl
           md:text-6xl
           lg:text-8xl
+          sm:py-1
+          md:py-2
           mb-4
           text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500
         "
