@@ -1,3 +1,4 @@
+import type { IconifyIcon } from '@iconify/react/dist/offline'
 import { props } from 'fonction'
 import typescript from '@iconify-icons/logos/typescript-icon'
 import yarn from '@iconify-icons/logos/yarn'
@@ -18,7 +19,7 @@ import twitter from '@iconify-icons/logos/twitter'
 import { isUndefined } from '@miyauci/is-valid'
 
 const iconMeta = (tag: string) => {
-  const icon = props(tag, ICON_MAP) as object | undefined
+  const icon = props(tag, ICON_MAP) as IconifyIcon
   const wellKnown = !isUndefined(icon)
 
   return {
