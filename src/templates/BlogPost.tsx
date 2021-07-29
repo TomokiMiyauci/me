@@ -19,12 +19,12 @@ import Comment from '@/components/Comment'
 import Newsletter from '@/components/Newsletter'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
-
+import RelatedArticle from '@/components/RelatedArticle'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
 }) => {
-  const { previous, next, mdx } = data
+  const { previous, next, mdx, allMdx } = data
 
   const { frontmatter, body, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
@@ -117,11 +117,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             <nav>
               <ul className="space-y-2 -mx-2">
                 {previous && (
-                  <li>
-                    <h4>
-                      <Icon icon={chevronLeft} className="w-7 h-7" />
-                      <span className="align-middle">Next</span>
-                    </h4>
+                  <li className="relative">
+                    <span className="absolute opacity-80 bottom-0 left-0 ">
+                      <Icon
+                        icon={chevronLeft}
+                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
+                      />
+                    </span>
 
                     <ArticleHeadline
                       title={previous.frontmatter.title}
@@ -139,11 +141,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   </li>
                 )}
                 {next && (
-                  <li>
-                    <h4 className="text-right">
-                      <span className="align-middle">Prev</span>
-                      <Icon icon={chevronRight} className="w-7 h-7" />
-                    </h4>
+                  <li className="relative">
+                    <span className="absolute opacity-80 bottom-0 right-0 ">
+                      <Icon
+                        icon={chevronRight}
+                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
+                      />
+                    </span>
                     <ArticleHeadline
                       title={next.frontmatter.title}
                       description={next.frontmatter.description}
@@ -160,6 +164,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   </li>
                 )}
               </ul>
+
+              <RelatedArticle articles={allMdx.nodes} />
             </nav>
           </div>
 
@@ -248,6 +254,36 @@ export const pageQuery = graphql`
         slug
       }
       body
+    }
+    allMdx(
+      filter: {
+        fields: { locale: { eq: $locale } }
+        frontmatter: {
+          slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
+        }
+      }
+      sort: { fields: frontmatter___date, order: DESC }
+      limit: 5
+    ) {
+      nodes {
+        fields {
+          readingTime {
+            text
+          }
+          lowerCaseTags
+        }
+        frontmatter {
+          title
+          description
+          date
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
+            }
+          }
+          slug
+        }
+      }
     }
     previous: mdx(
       fields: { locale: { eq: $locale } }
