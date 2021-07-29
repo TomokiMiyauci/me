@@ -117,11 +117,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             <nav>
               <ul className="space-y-2 -mx-2">
                 {previous && (
-                  <li>
-                    <h4>
-                      <Icon icon={chevronLeft} className="w-7 h-7" />
-                      <span className="align-middle">Next</span>
-                    </h4>
+                  <li className="relative">
+                    <span className="absolute opacity-80 bottom-0 left-0 ">
+                      <Icon
+                        icon={chevronLeft}
+                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
+                      />
+                    </span>
 
                     <ArticleHeadline
                       title={previous.frontmatter.title}
@@ -139,11 +141,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   </li>
                 )}
                 {next && (
-                  <li>
-                    <h4 className="text-right">
-                      <span className="align-middle">Prev</span>
-                      <Icon icon={chevronRight} className="w-7 h-7" />
-                    </h4>
+                  <li className="relative">
+                    <span className="absolute opacity-80 bottom-0 right-0 ">
+                      <Icon
+                        icon={chevronRight}
+                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
+                      />
+                    </span>
                     <ArticleHeadline
                       title={next.frontmatter.title}
                       description={next.frontmatter.description}
