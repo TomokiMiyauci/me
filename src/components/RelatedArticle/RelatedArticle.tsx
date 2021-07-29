@@ -41,11 +41,8 @@ const RelatedArticle: FC<{ articles: ArticleHeadlineProps[] }> = ({
       <ul className="-mx-2 space-y-2">
         {data.map((articleHeadlineProps) => {
           return (
-            <li>
-              <ArticleHeadline
-                key={articleHeadlineProps.to}
-                {...articleHeadlineProps}
-              />
+            <li key={articleHeadlineProps.to}>
+              <ArticleHeadline {...articleHeadlineProps} />
             </li>
           )
         })}
