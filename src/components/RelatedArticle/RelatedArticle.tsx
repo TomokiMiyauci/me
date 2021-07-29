@@ -1,6 +1,8 @@
 import React, { FC, Reducer, useReducer, useMemo } from 'react'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline'
 import ArticleHeadline from '@/components/ArticleHeadline'
+import { Icon } from '@iconify/react/dist/offline'
+import burstNew from '@iconify-icons/foundation/burst-new'
 
 type DataType = 'RECENT'
 
@@ -33,8 +35,9 @@ const RelatedArticle: FC<{ articles: ArticleHeadlineProps[] }> = ({
   return (
     <>
       <div className="p-2 flex justify-center">
-        <button className="text-accent bg-gray-100 dark:bg-blue-gray-800 text-lg px-3 py-1 rounded-full">
-          Recent
+        <button className="text-accent bg-gray-100 space-x-1 dark:bg-blue-gray-800 text-lg px-3 py-1 rounded-full">
+          <Icon icon={burstNew} className="w-7 h-7" />
+          <span className="align-middle">Recent</span>
         </button>
       </div>
 
