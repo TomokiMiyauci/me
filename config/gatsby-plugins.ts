@@ -83,6 +83,13 @@ const plugins: GatsbyConfig['plugins'] = [
     }
   },
   {
+    resolve: 'gatsby-source-filesystem',
+    options: {
+      name: 'media',
+      path: resolve(__dirname, '..', 'media')
+    }
+  },
+  {
     resolve: `gatsby-plugin-clarity`,
     options: {
       clarity_project_id: '5ipdtj3l7s',
@@ -178,6 +185,9 @@ const plugins: GatsbyConfig['plugins'] = [
           query: `
             {
               allMdx(
+                filter: {
+                  fileAbsolutePath: { regex: "//posts//" }
+                }
                 sort: { order: DESC, fields: [frontmatter___date] },
               ) {
                 nodes {

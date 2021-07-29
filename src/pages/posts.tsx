@@ -217,7 +217,10 @@ export default Posts
 export const query = graphql`
   query BlogPosts($locale: String!) {
     allMdx(
-      filter: { fields: { locale: { eq: $locale } } }
+      filter: {
+        fields: { locale: { eq: $locale } }
+        fileAbsolutePath: { regex: "//posts//" }
+      }
       sort: { fields: frontmatter___date, order: DESC }
     ) {
       group(field: fields___lowerCaseTags) {

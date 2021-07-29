@@ -6,8 +6,9 @@ import { toLowerCase } from 'core-fn'
 import type { SiteMetaData, Locale } from './config/types'
 import admin from 'firebase-admin'
 import { isUndefined } from '@miyauci/is-valid'
-import { exec, replace } from 'core-fn'
+import { exec, replace, test } from 'core-fn'
 
+const isPosts = test(/\/posts\//)
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 const pretty = replace(/\\n/g, '\n')
 const createPages: GatsbyNode['createPages'] = async ({
@@ -20,7 +21,10 @@ const createPages: GatsbyNode['createPages'] = async ({
   const result = await graphql(`
     {
       blog: allMdx(
-        filter: { fields: { locale: { eq: "ja" } } }
+        filter: {
+          fields: { locale: { eq: "ja" } }
+          fileAbsolutePath: { regex: "//posts//" }
+        }
         sort: { fields: frontmatter___date, order: DESC }
       ) {
         nodes {
@@ -72,7 +76,7 @@ const onCreateNode: GatsbyNode<{
   const site = getNode('Site')
   const { siteUrl } = site.siteMetadata as SiteMetaData
 
-  if (node.internal.type === 'Mdx') {
+  if (node.internal.type === 'Mdx' && isPosts(node.fileAbsolutePath)) {
     const { date, tags, slug } = node.frontmatter!
     const { locale } = node.fields
 
