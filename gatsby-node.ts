@@ -24,6 +24,9 @@ const createPages: GatsbyNode['createPages'] = async ({
         sort: { fields: frontmatter___date, order: DESC }
       ) {
         nodes {
+          fields {
+            lowerCaseTags
+          }
           frontmatter {
             slug
           }
@@ -42,7 +45,7 @@ const createPages: GatsbyNode['createPages'] = async ({
 
   const posts = result.data.blog.nodes
 
-  posts.forEach(({ frontmatter }, index) => {
+  posts.forEach(({ frontmatter, fields }, index) => {
     const previousPostSlug =
       index === 0 ? null : posts[index - 1].frontmatter.slug
     const nextPostSlug =
@@ -54,7 +57,8 @@ const createPages: GatsbyNode['createPages'] = async ({
       context: {
         previousPostSlug,
         nextPostSlug,
-        slug: frontmatter.slug
+        slug: frontmatter.slug,
+        tags: fields.lowerCaseTags
       }
     })
   })

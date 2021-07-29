@@ -1,12 +1,13 @@
 import React, { FC, MouseEventHandler } from 'react'
-import { Icon } from '@iconify/react/dist/offline'
+import { Icon, IconifyIcon } from '@iconify/react/dist/offline'
 
 const Tag: FC<{
-  tag: object
-  label: string
+  tag: IconifyIcon | string
+  label?: string
   hancleClick?: MouseEventHandler
   className?: string
-}> = ({ tag, hancleClick, className, label }) => {
+  shrink?: boolean
+}> = ({ tag, hancleClick, className, label, shrink = false }) => {
   return (
     <span
       onClick={hancleClick}
@@ -14,9 +15,11 @@ const Tag: FC<{
     >
       <Icon className="w-7 h-7 text-accent rounded" icon={tag} />
 
-      <span className="lowercase hidden md:inline dark:text-gray-200">
-        {label}
-      </span>
+      {label && (
+        <span className="lowercase hidden md:inline dark:text-gray-200">
+          {label}
+        </span>
+      )}
     </span>
   )
 }

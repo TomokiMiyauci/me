@@ -2837,6 +2837,11 @@
   resolved "https://registry.yarnpkg.com/@iconify-icons/carbon/-/carbon-1.1.5.tgz#2550864312e2da2528fa85a06a2d2c51587c4d3f"
   integrity sha512-GViDfVlKV9+SpRuc+g4UciM9OTCQRfEnxLSh2oQswBxL1yyxj/Qh6vHZSyjZHRA1+/QjfT9aYoXzSHWlfV20+g==
 
+"@iconify-icons/codicon@^1.1.18":
+  version "1.1.18"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/codicon/-/codicon-1.1.18.tgz#41e2987bd68da234044b6b298e6083a11baac67a"
+  integrity sha512-QmtVWW7gD5JvVwSmgQdHOnPKyeDWZnw5RJVxiXKYpUH9EPb1mer4BhATmvgGoc7+urU9CeaPw70ktv/Lp5IZzA==
+
 "@iconify-icons/eva@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@iconify-icons/eva/-/eva-1.1.0.tgz#4a3bc46625f7bffad0b298d48a587be360952c71"

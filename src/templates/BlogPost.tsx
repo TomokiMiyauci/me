@@ -24,7 +24,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
 }) => {
-  const { previous, next, mdx, allMdx } = data
+  const { previous, next, mdx, recentArticles, sameTagArticles } = data
 
   const { frontmatter, body, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
@@ -165,7 +165,11 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 )}
               </ul>
 
-              <RelatedArticle articles={allMdx.nodes} />
+              <RelatedArticle
+                recentArticles={recentArticles.nodes}
+                sameTagArticles={sameTagArticles.nodes}
+                tags={lowerCaseTags}
+              />
             </nav>
           </div>
 
@@ -225,6 +229,7 @@ export const pageQuery = graphql`
     $slug: String!
     $previousPostSlug: String
     $nextPostSlug: String
+    $tags: [String!]!
   ) {
     mdx(
       fields: { locale: { eq: $locale } }
@@ -255,9 +260,39 @@ export const pageQuery = graphql`
       }
       body
     }
-    allMdx(
+    recentArticles: allMdx(
       filter: {
         fields: { locale: { eq: $locale } }
+        frontmatter: {
+          slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
+        }
+      }
+      sort: { fields: frontmatter___date, order: DESC }
+      limit: 5
+    ) {
+      nodes {
+        fields {
+          readingTime {
+            text
+          }
+          lowerCaseTags
+        }
+        frontmatter {
+          title
+          description
+          date
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
+            }
+          }
+          slug
+        }
+      }
+    }
+    sameTagArticles: allMdx(
+      filter: {
+        fields: { locale: { eq: $locale }, lowerCaseTags: { in: $tags } }
         frontmatter: {
           slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
         }
