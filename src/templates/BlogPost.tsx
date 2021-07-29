@@ -1,7 +1,7 @@
 import React, { FC, Fragment, useRef } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
-import { BlogPostBySlugQuery } from '../../graphql-types'
+import { BlogPostBySlugQuery } from '@/../graphql-types'
 import ArticleHeadline from '../components/ArticleHeadline'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Seo from '../components/seo'
@@ -24,22 +24,18 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
 }) => {
-  const {
-    previous,
-    next,
-    mdx,
-    site: { siteMetadata }
-  } = data
+  const { previous, next, mdx } = data
 
   const { frontmatter, body, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
     fields: {},
     items: []
   }
-  const { isModified, gitAuthorTime, readingTime, lowerCaseTags } = fields
+
+  const { isModified, gitAuthorTime, readingTime, lowerCaseTags, fullPath } =
+    fields
   const { title, description, hero, date, slug } = frontmatter
   const { publicURL, childImageSharp } = hero
-  const fullpath = new URL(location.pathname, siteMetadata.siteUrl).toString()
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -50,7 +46,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       <Seo
         title={title}
         description={description}
-        fullpath={fullpath}
+        fullpath={fullPath}
         imgUrl={publicURL}
       />
 
@@ -67,7 +63,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             hero={childImageSharp.gatsbyImageData}
             readingTime={readingTime.text}
             relativePath={location.pathname}
-            url={fullpath}
+            url={fullPath}
             slug={slug}
             tags={lowerCaseTags}
             date={new Date(date).toLocaleDateString(locale)}
@@ -96,7 +92,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 </a>
 
                 <div className="space-x-4 my-4">
-                  <SnsShare title={title} url={fullpath} />
+                  <SnsShare title={title} url={fullPath} />
                 </div>
               </section>
 
@@ -235,6 +231,7 @@ export const pageQuery = graphql`
         lowerCaseTags
         gitAuthorTime
         isModified
+        fullPath
       }
       tableOfContents
       frontmatter {
