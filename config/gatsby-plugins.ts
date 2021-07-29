@@ -215,6 +215,12 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   {
     resolve: 'gatsby-plugin-offline'
+  },
+  {
+    resolve: `gatsby-plugin-google-adsense`,
+    options: {
+      publisherId: `ca-pub-3149742411805247`
+    }
   }
   // 'gatsby-plugin-preact'
   // 'gatsby-plugin-webpack-bundle-analyser-v2'
