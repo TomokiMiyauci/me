@@ -4,7 +4,7 @@ import '@/assets/global.scss'
 import '@/assets/prose.scss'
 import Layout from '@/components/Layout'
 import type { GatsbyBrowser } from 'gatsby'
-import Context from './src/contexts'
+import Context from '@/contexts'
 
 const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
@@ -23,15 +23,15 @@ type PageContext = {
 const wrapPageElement: GatsbyBrowser<
   Record<string, unknown>,
   PageContext
->['wrapPageElement'] = ({ element, props: { pageContext, location } }) => {
+>['wrapPageElement'] = ({ props, element }) => {
   return (
     <Layout
-      originalPath={pageContext.originalPath}
-      currentPath={location.pathname}
+      originalPath={props.pageContext.originalPath}
+      currentPath={props.location.pathname}
+      locale={props.pageContext.locale}
     >
       {element}
     </Layout>
   )
 }
-
 export { wrapRootElement, wrapPageElement }

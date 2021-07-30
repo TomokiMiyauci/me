@@ -7,6 +7,7 @@ import Navigation from './BottomNavigation/Navigation'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
 import IconWith from '@/components/IconWith'
+import type { Locale } from '@/../config/types'
 
 // import Search from '@/components/search'
 
@@ -15,8 +16,9 @@ import IconWith from '@/components/IconWith'
 const Inner: FC<{
   originalPath: string
   currentPath: string
-}> = ({ originalPath, currentPath }) => {
-  const localizedNavs = useLocalizedNavigations()
+  locale: Locale
+}> = ({ originalPath, currentPath, locale }) => {
+  const localizedNavs = useLocalizedNavigations(locale)
 
   return (
     <div
@@ -24,7 +26,7 @@ const Inner: FC<{
 justify-between flex"
     >
       <span className="flex space-x-2 lg:space-x-6 items-center">
-        <Logo shrink />
+        <Logo shrink locale={locale} />
 
         <Navigation
           className="hidden md:block"
@@ -62,7 +64,8 @@ const TheHeader: FC<{
   originalPath: string
   className?: string
   currentPath: string
-}> = ({ originalPath, className, currentPath }) => {
+  locale: Locale
+}> = ({ originalPath, className, currentPath, locale }) => {
   return (
     <header
       className={`
@@ -77,7 +80,11 @@ const TheHeader: FC<{
       dark:border-gray-800 ${className}`}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
-      <MemoInner currentPath={currentPath} originalPath={originalPath} />
+      <MemoInner
+        locale={locale}
+        currentPath={currentPath}
+        originalPath={originalPath}
+      />
     </header>
   )
 }

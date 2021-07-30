@@ -4,11 +4,13 @@ import MDXProvider from '../components/MdxProvider'
 import Snackbar from '../components/Snackbar'
 import { useAuthProvider } from '../hooks/auth'
 import AuthContext from '../contexts/auth'
+import type { Locale } from '@/../config/types'
 
 const Layout: FC<{
   originalPath: string
   currentPath: string
-}> = ({ children, currentPath, originalPath }) => {
+  locale: Locale
+}> = ({ children, currentPath, originalPath, locale }) => {
   const auth = useAuthProvider()
   return (
     <AuthContext.Provider value={auth}>
@@ -16,7 +18,11 @@ const Layout: FC<{
         <MDXProvider>{children}</MDXProvider>
       </main>
 
-      <AppFrame currentPath={currentPath} originalPath={originalPath} />
+      <AppFrame
+        locale={locale}
+        currentPath={currentPath}
+        originalPath={originalPath}
+      />
       <Snackbar />
     </AuthContext.Provider>
   )

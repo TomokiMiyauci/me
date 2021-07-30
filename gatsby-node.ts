@@ -37,6 +37,13 @@ const createPages: GatsbyNode['createPages'] = async ({
           id
         }
       }
+      media: allMdx(filter: { fileAbsolutePath: { regex: "//media//" } }) {
+        nodes {
+          frontmatter {
+            slug
+          }
+        }
+      }
     }
   `)
   if (result.errors) {
@@ -48,6 +55,9 @@ const createPages: GatsbyNode['createPages'] = async ({
   }
 
   const posts = result.data.blog.nodes
+  const media = result.data.media.nodes
+
+  const plainText = resolve('./src/templates/PlainText.tsx')
 
   posts.forEach(({ frontmatter, fields }, index) => {
     const previousPostSlug =
@@ -63,6 +73,16 @@ const createPages: GatsbyNode['createPages'] = async ({
         nextPostSlug,
         slug: frontmatter.slug,
         tags: fields.lowerCaseTags
+      }
+    })
+  })
+
+  media.forEach(({ frontmatter: { slug } }) => {
+    createPage({
+      path: slug,
+      component: plainText,
+      context: {
+        slug
       }
     })
   })

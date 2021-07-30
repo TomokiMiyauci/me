@@ -82,13 +82,13 @@ const plugins: GatsbyConfig['plugins'] = [
       path: resolve(__dirname, '..', 'photos')
     }
   },
-  // {
-  //   resolve: 'gatsby-source-filesystem',
-  //   options: {
-  //     name: 'media',
-  //     path: resolve(__dirname, '..', 'media')
-  //   }
-  // },
+  {
+    resolve: 'gatsby-source-filesystem',
+    options: {
+      name: 'media',
+      path: resolve(__dirname, '..', 'media')
+    }
+  },
   {
     resolve: `gatsby-plugin-clarity`,
     options: {

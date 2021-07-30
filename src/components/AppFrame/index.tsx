@@ -3,6 +3,7 @@ import { scrollInfoEvent } from '../../utils/scroll'
 import BottomNavigation from '../BottomNavigation'
 import TheHeader from '../TheHeader'
 import TheFooter from '../TheFooter'
+import type { Locale } from '@/../config/types'
 
 const MemoedTheFooter = memo(TheFooter)
 
@@ -25,10 +26,11 @@ const useScrollShower = (init?: boolean) => {
   return isShow
 }
 
-const AppFrame: FC<{ originalPath: string; currentPath: string }> = ({
-  originalPath,
-  currentPath
-}) => {
+const AppFrame: FC<{
+  originalPath: string
+  currentPath: string
+  locale: Locale
+}> = ({ originalPath, currentPath, locale }) => {
   const isShowHeader = useScrollShower(true)
 
   return (
@@ -36,15 +38,17 @@ const AppFrame: FC<{ originalPath: string; currentPath: string }> = ({
       <TheHeader
         originalPath={originalPath}
         currentPath={currentPath}
+        locale={locale}
         className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500 ${
           isShowHeader ? '' : '-translate-y-full'
         }`}
       />
 
-      <MemoedTheFooter />
+      <MemoedTheFooter locale={locale} />
 
       <BottomNavigation
         currentPath={currentPath}
+        locale={locale}
         className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
           isShowHeader ? '' : 'translate-y-full'
         }`}

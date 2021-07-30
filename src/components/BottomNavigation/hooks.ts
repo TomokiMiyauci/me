@@ -1,14 +1,15 @@
 import { useLocalization } from 'gatsby-theme-i18n'
 import { navigations } from './constants'
+import type { Locale } from '@/../config/types'
 
-const useLocalizedPath = () => {
+const useLocalizedPath = (locale: Locale) => {
   const { localizedPath, ...rest } = useLocalization()
 
-  return (path: string) => localizedPath({ ...rest, path }) as string
+  return (path: string) => localizedPath({ ...rest, locale, path }) as string
 }
 
-const useLocalizedNavigations = () => {
-  const localePath = useLocalizedPath()
+const useLocalizedNavigations = (locale: Locale) => {
+  const localePath = useLocalizedPath(locale)
 
   return navigations.map(({ title, to, icon }) => ({
     title,
