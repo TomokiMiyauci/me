@@ -7,8 +7,11 @@ import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'
 import npmOutline from '@iconify-icons/eva/npm-outline'
+import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 
 const TheFooter: FC = () => {
+  const { locale } = useLocalization()
+
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
       <div className="md:py-4">
@@ -43,6 +46,14 @@ const TheFooter: FC = () => {
             </span>
           </span>
         </span>
+
+        <LocalizedLink
+          language={locale}
+          className="md:self-end text-gray-500"
+          to="/privacy-policy"
+        >
+          Privacy Policy
+        </LocalizedLink>
 
         <div className="flex flex-col md:flex-row items-center md:space-x-7">
           <div className="my-4 text-gray-500 space-x-6">
