@@ -91,6 +91,9 @@ module.exports = {
             h6: {
               color: false
             },
+            strong: {
+              color: false
+            },
             'ul > li': false,
             'ul > li::before': false,
             'code::before': false,
