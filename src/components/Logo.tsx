@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
-import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
+import { LocalizedLink } from 'gatsby-theme-i18n'
 import LogoSvg from '@/assets/logo.svg'
+import type { Locale } from '@/../config/types'
 
-const Logo: FC<{ shrink?: boolean }> = ({ shrink }) => {
-  const { locale } = useLocalization()
+const Logo: FC<{ shrink?: boolean; locale: Locale }> = ({ shrink, locale }) => {
   return (
     <LocalizedLink language={locale} className="text-4xl space-x-4" to="/">
       <LogoSvg className="w-10 fill-current text-accent align-middle h-10" />

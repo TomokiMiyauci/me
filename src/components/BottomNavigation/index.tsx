@@ -1,12 +1,14 @@
 import React, { FC, memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
+import type { Locale } from '@/../config/types'
 
 import Navigation from './Navigation'
 
-const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
-  currentPath,
-  className
-}) => {
+const BottomNavigation: FC<{
+  className?: string
+  currentPath: string
+  locale: Locale
+}> = ({ currentPath, className, locale }) => {
   return (
     <div
       className={`bg-gray-50
@@ -17,13 +19,16 @@ const BottomNavigation: FC<{ className?: string; currentPath: string }> = ({
   `}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
-      <Memo currentPath={currentPath} />
+      <Memo locale={locale} currentPath={currentPath} />
     </div>
   )
 }
 
-const Nav: FC<{ currentPath: string }> = ({ currentPath }) => {
-  const localizedNavs = useLocalizedNavigations()
+const Nav: FC<{ currentPath: string; locale: Locale }> = ({
+  currentPath,
+  locale
+}) => {
+  const localizedNavs = useLocalizedNavigations(locale)
 
   return <Navigation navigations={localizedNavs} currentPath={currentPath} />
 }

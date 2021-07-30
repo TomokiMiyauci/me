@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { GatsbySSR } from 'gatsby'
-import Context from './src/contexts'
+import Context from '@/contexts'
 import Layout from '@/components/Layout'
 
 const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
@@ -21,11 +21,12 @@ type PageContext = {
 const wrapPageElement: GatsbySSR<
   Record<string, unknown>,
   PageContext
->['wrapPageElement'] = ({ element, props: { pageContext, location } }) => {
+>['wrapPageElement'] = ({ props, element }) => {
   return (
     <Layout
-      originalPath={pageContext.originalPath}
-      currentPath={location.pathname}
+      originalPath={props.pageContext.originalPath}
+      currentPath={props.location.pathname}
+      locale={props.pageContext.locale}
     >
       {element}
     </Layout>

@@ -7,11 +7,9 @@ import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'
 import npmOutline from '@iconify-icons/eva/npm-outline'
-import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
-
-const TheFooter: FC = () => {
-  const { locale } = useLocalization()
-
+import { LocalizedLink } from 'gatsby-theme-i18n'
+import type { Locale } from '@/../config/types'
+const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
       <div className="md:py-4">
@@ -33,7 +31,7 @@ const TheFooter: FC = () => {
 
       <div className="flex-col items-center md:flex-row flex md:justify-between">
         <span className="flex flex-col md:flex-row items-center space-x-4">
-          <Logo />
+          <Logo locale={locale} />
 
           <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
             <span>
