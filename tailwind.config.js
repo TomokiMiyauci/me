@@ -73,6 +73,9 @@ module.exports = {
               marginTop: '1rem',
               marginBottom: '1rem'
             },
+            h1: {
+              color: false
+            },
             h2: {
               color: false
             },
