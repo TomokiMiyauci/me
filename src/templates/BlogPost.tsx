@@ -232,6 +232,7 @@ export const pageQuery = graphql`
     $tags: [String!]!
   ) {
     mdx(
+      fileAbsolutePath: { regex: "//posts//" }
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $slug } }
     ) {
@@ -262,6 +263,7 @@ export const pageQuery = graphql`
     }
     recentArticles: allMdx(
       filter: {
+        fileAbsolutePath: { regex: "//posts//" }
         fields: { locale: { eq: $locale } }
         frontmatter: {
           slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
@@ -292,6 +294,7 @@ export const pageQuery = graphql`
     }
     sameTagArticles: allMdx(
       filter: {
+        fileAbsolutePath: { regex: "//posts//" }
         fields: { locale: { eq: $locale }, lowerCaseTags: { in: $tags } }
         frontmatter: {
           slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
@@ -321,6 +324,7 @@ export const pageQuery = graphql`
       }
     }
     previous: mdx(
+      fileAbsolutePath: { regex: "//posts//" }
       fields: { locale: { eq: $locale } }
       frontmatter: { slug: { eq: $previousPostSlug } }
     ) {
