@@ -45,13 +45,54 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
           </span>
         </span>
 
-        <LocalizedLink
-          language={locale}
-          className="md:self-end text-gray-500"
-          to="/privacy-policy"
-        >
-          Privacy Policy
-        </LocalizedLink>
+        <nav className="flex justify-around flex-row lg:space-x-12 lg:flex-wrap gap-2 w-full md:w-auto">
+          <ul className="space-y-4">
+            <li>
+              <LocalizedLink language={locale} className="text-gray-500" to="/">
+                About
+              </LocalizedLink>
+            </li>
+
+            <li>
+              <LocalizedLink
+                language={locale}
+                className="text-gray-500"
+                to="/posts"
+              >
+                Blog
+              </LocalizedLink>
+            </li>
+            <li>
+              <LocalizedLink
+                language={locale}
+                className="text-gray-500"
+                to="/projects"
+              >
+                Project
+              </LocalizedLink>
+            </li>
+            <li>
+              <LocalizedLink
+                language={locale}
+                className="text-gray-500"
+                to="/photos"
+              >
+                Photo
+              </LocalizedLink>
+            </li>
+          </ul>
+          <ul>
+            <li>
+              <LocalizedLink
+                language={locale}
+                className="text-gray-500"
+                to="/privacy-policy"
+              >
+                Privacy Policy
+              </LocalizedLink>
+            </li>
+          </ul>
+        </nav>
 
         <div className="flex flex-col md:flex-row items-center md:space-x-7">
           <div className="my-4 text-gray-500 space-x-6">
