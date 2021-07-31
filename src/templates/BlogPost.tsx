@@ -20,6 +20,7 @@ import Newsletter from '@/components/Newsletter'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import RelatedArticle from '@/components/RelatedArticle'
+import { useAccessCounter } from '@/hooks/access_counter'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
@@ -40,6 +41,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
+
+  useAccessCounter(slug)
 
   return (
     <>
