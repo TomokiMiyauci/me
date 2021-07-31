@@ -8,6 +8,20 @@ const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
 }
 
+const onRenderBody: GatsbySSR['onRenderBody'] = ({ setHeadComponents }) => {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
+  setHeadComponents([
+    <script
+      key="google-adsense-auto"
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3149742411805247"
+      crossOrigin="anonymous"
+    ></script>
+  ])
+}
+
 type PageContext = {
   previousPostSlug: string
   nextPostSlug: string
@@ -32,4 +46,4 @@ const wrapPageElement: GatsbySSR<
     </Layout>
   )
 }
-export { wrapRootElement, wrapPageElement }
+export { wrapRootElement, wrapPageElement, onRenderBody }
