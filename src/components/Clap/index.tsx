@@ -7,9 +7,9 @@ import {
   DocumentReference,
   Timestamp,
   arrayUnion,
-  arrayRemove,
-  FieldValue
+  arrayRemove
 } from 'firebase/firestore/lite'
+import type { PostsField } from '@/types/firestore'
 import { useFirebase } from '../../hooks/firebase'
 import { useAuth } from '../../hooks/auth'
 import Clap from './Clap'
@@ -19,13 +19,6 @@ type PostMeta = {
   slug?: string
   clap?: number
   clapBy?: string[]
-}
-
-type PostsField = {
-  createdAt?: Timestamp
-  slug?: string
-  clap: FieldValue
-  clapBy: FieldValue
 }
 
 const Index: FC<{ slug: string }> = ({ slug }) => {

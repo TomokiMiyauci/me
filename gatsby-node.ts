@@ -135,6 +135,12 @@ const onCreateNode: GatsbyNode<{
       locale
     )
 
+    const { slug: _slug } = parseSlug(slug)?.groups ?? { slug: '' }
+
+    if (_slug) {
+      actions.createNodeField({ node, name: 'dirName', value: _slug })
+    }
+
     actions.createNodeField({
       node,
       name: 'fullPath',
