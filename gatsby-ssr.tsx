@@ -18,7 +18,10 @@ const onRenderBody: GatsbySSR['onRenderBody'] = ({ setHeadComponents }) => {
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3149742411805247"
       crossOrigin="anonymous"
-    ></script>
+    />,
+    <script key="google-ads">
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
   ])
 }
 
