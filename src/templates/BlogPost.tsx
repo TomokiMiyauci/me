@@ -107,6 +107,15 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
           <hr className="prose mx-auto my-10" />
 
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block', textAlign: 'center' }}
+            data-ad-layout="in-article"
+            data-ad-format="fluid"
+            data-ad-client="ca-pub-3149742411805247"
+            data-ad-slot="3091227579"
+          />
+
           <div className="max-w-5xl mx-auto">
             <Newsletter />
           </div>
