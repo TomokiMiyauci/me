@@ -21,7 +21,7 @@ import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
-import GoogleAdsense from '@/components/GoogleAdsense'
+// import GoogleAdsense from '@/components/GoogleAdsense'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
@@ -111,7 +111,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
           <hr className="prose mx-auto my-10" />
 
-          <GoogleAdsense />
+          {/* <GoogleAdsense /> */}
 
           <div className="max-w-5xl mx-auto">
             <Newsletter />
