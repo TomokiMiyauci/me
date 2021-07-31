@@ -16,6 +16,7 @@ const useAccessCounter = (slug: string) => {
     setDoc(
       document,
       {
+        slug,
         view: increment(1)
       },
       {
