@@ -8,4 +8,12 @@ type PostsField = {
   view: FieldValue
 }
 
-export type { PostsField }
+type Post = {
+  createdAt?: Timestamp
+  slug: string
+  clap?: number
+  clapBy?: string[]
+  view: number
+}
+
+export type { PostsField, Post }

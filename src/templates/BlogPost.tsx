@@ -26,7 +26,8 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
 }) => {
-  const { previous, next, mdx, recentArticles, sameTagArticles } = data
+  const { previous, next, mdx, recentArticles, sameTagArticles, hotArticles } =
+    data
 
   const { frontmatter, body, tableOfContents, fields } = mdx || {
     frontmatter: { hero: {} },
@@ -173,6 +174,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
               <RelatedArticle
                 recentArticles={recentArticles.nodes}
+                hotArticles={hotArticles.nodes}
                 sameTagArticles={sameTagArticles.nodes}
                 tags={lowerCaseTags}
               />
@@ -284,6 +286,38 @@ export const pageQuery = graphql`
             text
           }
           lowerCaseTags
+        }
+        frontmatter {
+          title
+          description
+          date
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
+            }
+          }
+          slug
+        }
+      }
+    }
+    hotArticles: allMdx(
+      filter: {
+        fileAbsolutePath: { regex: "//posts//" }
+        fields: { locale: { eq: $locale }, view: { gt: 0 } }
+        frontmatter: {
+          slug: { nin: [$slug, $previousPostSlug, $nextPostSlug] }
+        }
+      }
+      sort: { fields: fields___view, order: DESC }
+      limit: 5
+    ) {
+      nodes {
+        fields {
+          readingTime {
+            text
+          }
+          lowerCaseTags
+          view
         }
         frontmatter {
           title
