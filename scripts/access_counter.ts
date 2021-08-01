@@ -11,6 +11,13 @@ import {
 } from 'firebase/firestore/lite'
 import type { Post } from '../src/types/firestore'
 
+const wait = (milliseconds: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, milliseconds)
+  })
+
 const setupAccessCount = () => {
   let data: Record<string, number | undefined> = {}
   let called: boolean = false
@@ -24,27 +31,30 @@ const setupAccessCount = () => {
       const app = initializeApp(firebaseOptions)
       const firestore = initializeFirestore(app, {})
       const col = collection(firestore, 'posts') as CollectionReference<Post>
-      const docs = await getDocs(query(col, orderBy('view', 'desc'), limit(5)))
 
-      docs.forEach((doc) => {
-        const { slug, view } = doc.data()
-        data = { ...data, [slug]: view }
-      })
+      try {
+        const docs = await getDocs(
+          query(col, orderBy('view', 'desc'), limit(5))
+        )
 
-      console.info('fetch post data')
-      done = true
+        docs.forEach((doc) => {
+          const { slug, view } = doc.data()
+          data = { ...data, [slug]: view }
+        })
+      } finally {
+        console.info('fetch post data')
+        done = true
+      }
       return data
     } else {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log('timer')
-          if (done) {
-            resolve(data)
-          } else {
-            console.log('retry')
-            getAccessCount()
-          }
-        }, 2000)
+      return new Promise(async (resolve) => {
+        console.log('wait')
+        while (!done) {
+          console.log('waiting')
+          await wait(1000)
+        }
+
+        resolve(data)
       })
     }
   }
