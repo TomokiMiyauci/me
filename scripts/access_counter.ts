@@ -42,7 +42,7 @@ const setupAccessCount = () => {
           } else {
             getAccessCount()
           }
-        }, 500)
+        }, 2000)
       })
     }
   }
