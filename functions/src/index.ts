@@ -2,6 +2,13 @@ import functions from 'firebase-functions'
 import type { Locale } from '../../config/types'
 import { renderFile, configure } from 'eta'
 import Twitter from 'twitter-api-v2'
+import type { Config } from './types'
+
+export { line } from './line'
+
+import admin from 'firebase-admin'
+
+admin.initializeApp()
 
 const {
   app_key: appKey,
@@ -29,15 +36,6 @@ type Post = {
 type Params = {
   locale: Locale
   slug: string
-}
-
-type Config = {
-  twitter: {
-    app_key: string
-    app_secret: string
-    access_token: string
-    access_secret: string
-  }
 }
 
 export const onCreateMetaPost = functions
