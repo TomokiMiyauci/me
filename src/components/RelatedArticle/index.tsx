@@ -25,12 +25,18 @@ const flatArticleMetaInfo =
 
 const Index: FC<{
   recentArticles: ArticlesMetaInfo
+  hotArticles: ArticlesMetaInfo
   sameTagArticles: ArticlesMetaInfo
   tags?: string[]
-}> = ({ recentArticles, sameTagArticles, tags = [] }) => {
+}> = ({ recentArticles, sameTagArticles, hotArticles, tags = [] }) => {
   const _recentArticles = useMemo<ArticleHeadlineProps[]>(
     () => recentArticles.map(flatArticleMetaInfo('recent article image')),
     [recentArticles]
+  )
+
+  const _hotArticles = useMemo<ArticleHeadlineProps[]>(
+    () => hotArticles.map(flatArticleMetaInfo('hot article image')),
+    [hotArticles]
   )
 
   const _sameTagArticles = useMemo<ArticleHeadlineProps[]>(
@@ -41,6 +47,7 @@ const Index: FC<{
   return (
     <RelatedArticle
       recentArticles={_recentArticles}
+      hotArticles={_hotArticles}
       sameTagArticles={_sameTagArticles}
       tags={tags}
     />

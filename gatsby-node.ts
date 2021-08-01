@@ -7,6 +7,11 @@ import type { SiteMetaData, Locale } from './config/types'
 import admin from 'firebase-admin'
 import { isUndefined } from '@miyauci/is-valid'
 import { exec, replace, test } from 'core-fn'
+import { setupAccessCount } from './scripts/access_counter'
+import { props } from 'fonction'
+import { Mdx } from './graphql-types'
+
+const { getAccessCount } = setupAccessCount()
 
 const isPosts = test(/\/posts\//)
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
@@ -88,17 +93,18 @@ const createPages: GatsbyNode['createPages'] = async ({
   })
 }
 
-const onCreateNode: GatsbyNode<{
-  fileAbsolutePath: string
-  frontmatter: { date?: string; tags?: string[]; slug: string }
-  fields: { locale: Locale }
-}>['onCreateNode'] = ({ node, actions, getNode }) => {
+const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
+  node,
+  actions,
+  getNode
+}) => {
   const site = getNode('Site')
   const { siteUrl } = site.siteMetadata as SiteMetaData
 
   if (node.internal.type === 'Mdx' && isPosts(node.fileAbsolutePath)) {
+    const slugViewMap = await getAccessCount()
     const { date, tags, slug } = node.frontmatter!
-    const { locale } = node.fields
+    const { locale } = node.fields!
 
     if (!date) {
       console.error('Not exists date property in frontmatter')
@@ -130,12 +136,12 @@ const onCreateNode: GatsbyNode<{
     const fullPath = makeFullPath(
       {
         base: siteUrl,
-        path: slug
+        path: slug!
       },
-      locale
+      locale as Locale
     )
 
-    const { slug: _slug } = parseSlug(slug)?.groups ?? { slug: '' }
+    const { slug: _slug } = parseSlug(slug!)?.groups ?? { slug: '' }
 
     if (_slug) {
       actions.createNodeField({ node, name: 'dirName', value: _slug })
@@ -146,6 +152,16 @@ const onCreateNode: GatsbyNode<{
       name: 'fullPath',
       value: fullPath
     })
+
+    const view = props(slug!, slugViewMap)
+
+    if (view) {
+      actions.createNodeField({
+        node,
+        name: 'view',
+        value: view
+      })
+    }
   }
 }
 
