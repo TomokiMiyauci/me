@@ -37,9 +37,11 @@ const setupAccessCount = () => {
     } else {
       return new Promise((resolve) => {
         setTimeout(() => {
+          console.log('timer')
           if (done) {
             resolve(data)
           } else {
+            console.log('retry')
             getAccessCount()
           }
         }, 2000)
