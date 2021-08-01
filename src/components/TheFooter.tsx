@@ -86,7 +86,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
               <LocalizedLink
                 language={locale}
                 className="text-gray-500"
-                to="/privacy-policy"
+                to="/privacy/"
               >
                 Privacy Policy
               </LocalizedLink>
