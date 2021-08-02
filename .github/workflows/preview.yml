@@ -3,7 +3,12 @@
 
 name: preview
 on:
+  ignore-paths:
+    - 'functions/**'
+
   pull_request:
+    branches:
+      - 'next*'
 
 jobs:
   build_and_deploy:

@@ -3,6 +3,9 @@
 
 name: release-storybook
 on:
+  ignore-paths:
+    - 'functions/**'
+
   push:
     branches:
       - main
