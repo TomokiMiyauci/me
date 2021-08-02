@@ -3,10 +3,10 @@
 
 name: preview-storybook
 on:
-  ignore-paths:
-    - 'functions/**'
-
   pull_request:
+    ignore-paths:
+      - 'functions/**'
+
     branches:
       - 'next*'
 
