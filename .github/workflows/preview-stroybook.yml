@@ -4,11 +4,8 @@
 name: preview-storybook
 on:
   pull_request:
-    paths-ignore:
-      - 'functions/**'
-
     branches:
-      - 'next'
+      - next
 
 jobs:
   build_and_deploy:
