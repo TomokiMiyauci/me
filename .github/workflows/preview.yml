@@ -4,7 +4,7 @@
 name: preview
 on:
   pull_request:
-    ignore-paths:
+    paths-ignore:
       - 'functions/**'
 
     branches:

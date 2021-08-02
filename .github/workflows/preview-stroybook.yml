@@ -4,7 +4,7 @@
 name: preview-storybook
 on:
   pull_request:
-    ignore-paths:
+    paths-ignore:
       - 'functions/**'
 
     branches:
