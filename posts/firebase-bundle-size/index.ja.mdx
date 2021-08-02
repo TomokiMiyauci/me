@@ -1,0 +1,373 @@
+---
+title: Firebase のモジュラーSDKでバンドルサイズ比較
+description: 新しい Firebase モジュールによって、どれほどバンドルサイズが削減できるか解説します。Firebase モジュールの中でも、特に利用頻度の高い Cloud Firestore と Authentication のバンドルサイズを中心に解説しています。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-08-02
+slug: /posts/firebase-bundle-size/
+tags:
+  - firebase
+---
+
+## はじめに
+
+Firebase の SDK は、古くからバンドルサイズが大きいことが問題視されていました。
+この問題に対処しようと Firebase V9 モジュラー SDK がプレリリースされました。
+
+V9 モジュラー SDK はこの記事の執筆時点ではまだベータ版ですが、
+このブログでも利用しています。
+
+今回は、V9 モジュラー SDK によって、どれほどバンドルサイズが削減できるのか比較したいと思います。
+
+## V9 モジュラー SDK の変更点
+
+V9 モジュラー SDK は、バンドルサイズの削減を主目的にしたリリースブランチです。
+V8 SDK との最大の違いは、コードベースがクラスベースから関数ベースへ変更されたことです。
+
+V9 モジュラー SDK を使用すると、V8 SDK を使用して構築された同等のアプリよりも 80％少なくなる可能性があるようです[^1]。
+
+[^1]: [新しい Firebase JS SDK の紹介](https://firebase.googleblog.com/2021/07/introducing-the-new-firebase-js-sdk.html)
+
+V8 SDK では、クラスからメソッドチェーンスタイルで実行するのが印象的です。
+クラスは、バンドラーのツリーシェイキングの恩恵を受けれないため、未使用のメソッドでも全てバンドルされます。
+これにより、例えばただ `Cloud Firestore` からデータを読み込むだけでも、爆発的にバンドルサイズが増加します。
+
+一方、V9 モジュラー SDK では、元々クラスのメソッドだったものを関数化しています。
+これにより、未使用の関数はバンドラーによってツリーシェイキングされます。
+
+他方で、V8 SDK との互換性はないので、V9 モジュラー SDK に切り替えるにはリファクタリングが必要になります。
+Compat ライブラリがあるので、段階的に移行することができますが、これから始めるプロジェクトでは、
+V9 モジュラー SDK を使用するのがいいかもしれません。
+
+## バンドルサイズ比較
+
+V9 モジュラー SDK は利用する関数が多いほどバンドルサイズが増加するはずです。
+また、インポートする関数によってバンドルサイズは様々になります。
+
+そこで、この記事ではバンドルサイズの上限と下限を示すことで比較することとします。
+V9 モジュラー SDK では、`Firebase` のそれぞれのリソースを扱う際、必ず初期化処理が必要です。
+その初期化処理のみを行った状態をバンドルサイズの下限とします。
+
+また、ツリーシェイキングを行わずにすべてをバンドルした場合を、バンドルサイズの上限とします。
+通常の利用では、バンドルサイズは上下限値の間になります。
+
+一方、V8 SDK ではツリーシェイキングは効かないため、バンドルサイズは一定です。
+
+## 検証環境
+
+バンドラーに `vite` を使ったプロジェクトでバンドルサイズを比較します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn create @vitejs/app <project-name> --template preact-ts
+cd <project-name>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm init @vitejs/app <project-name> -- --template preact-ts
+cd <project-name>
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`firebase` モジュールの V9 はまだベータ版なので、インストールには `beta` フラグが必要です。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+// V8
+yarn add firebase
+
+// V9
+yarn add firebase@beta
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+// V8
+npm i firebase
+
+// V9
+npm i firebase@beta
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`vite` でコメントやライセンスを削除するために `vite.config.ts` を次のように変更します。
+
+```ts:vite.config.ts
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  build: {
+    terserOptions: {
+      format: {
+        comments: false
+      }
+    }
+  }
+})
+```
+
+もしデプロイする場合は、ライセンス情報は別途ほかのファイルへ出力するなどの対応が必要です。
+
+## Firebase App
+
+どの `Firebase` プロジェクトでも初期化処理は必要です。
+まずは、Firebase App の初期化に伴うバンドルサイズについて見てみます。
+
+### Firebase App のフルバンドルサイズ
+
+Firebase App をすべてバンドルした場合のサイズについて見てみます。
+
+<Alert type="warning">すべてのモジュールをバンドルするコードの一例です</Alert>
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import firebase from 'firebase/app'
+
+firebase.initializeApp({ /* config */ })
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as firebase from 'firebase/app'
+
+console.log(firebase)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール   | Version | Size     |
+| ------------ | ------- | -------- |
+| firebase/app | V8      | 21.99 kb |
+| firebase/app | V9      | 17.51 kb |
+
+V9 モジュラー SDK ではデフォルトエクスポートがないので、上記のようにすることで、ツリーシェイキングを無効にできます。
+バージョンが違うだけで結構サイズが違うことがわかります。
+
+ここで重要なのは、V9 モジュラー SDK の方は、ツリーシェイキングによって、バンドルサイズを削減できる可能性があることです。
+一方で、V8 SDK のバンドルサイズは不変です。
+それでは名前付きインポートのバンドルサイズを見てみましょう。
+
+### initializeApp のバンドルサイズ
+
+`initializeApp` 関数は すべての `Firebase` リソースの初期化に先立って実行する必要があります。
+
+```ts:main.ts
+import { initializeApp } from　'firebase/app'
+
+initializeApp(firebaseOptions)
+```
+
+`initializeApp` 関数のみバンドルすると、`15.99 kb` になりました。
+つまり、 `firebase/app`   モジュールを利用する場合の上下限は以下のようになります。
+
+| モジュール   | Version | 下限     | 上限     |
+| ------------ | ------- | -------- | -------- |
+| firebase/app | V9      | 15.99 kb | 17.51 kb |
+
+ツリーシェイキングによって、バンドルサイズを更に削減できました。
+V8 SDK を使った場合は `21.99 kb` だったので、V9 モジュラー SDK を利用したほうが、バンドルサイズが小さくなることがわかります。
+
+このように、V9 モジュラー SDK はモジュール全体のサイズが削減されており、
+かつツリーシェイキングにより更にバンドルサイズを削減できることがわかります。
+
+実は、[公式](https://firebase.googleblog.com/2021/07/introducing-the-new-firebase-js-sdk.html)ではバンドルサイズの改善領域として次の２つを掲げています。
+
+- Cloud Firestore
+- Authentication
+
+Firebase App の初期化についてサイズ削減が見れたので、
+この２つについて詳しく見てみましょう。
+
+## Cloud Firestore
+
+V9 モジュラー SDK では Cloud Firestore に `lite` というサブモジュールが追加されました。
+リアルタイムストリーミングを使わない場合、これに切り替えることで更に軽量化することができます。
+
+また、V8 SDK では `memory` サブモジュールがあります。
+通常、データは `IndexedDB` に保持しますが、これに切り替えるとデータをメモリに保持します。
+
+そして、`IndexedDB` 関連するコードがないため、フル機能のビルドよりもバンドルサイズは小さくなります。
+これはセッション間でデータを永続化する必要がない場合に利用できます。
+
+まずは、Cloud Firestore モジュールをすべてバンドルした場合のサイズについて見てみます。
+
+### Cloud Firestore のフルバンドルサイズ
+
+まずは、ツリーシェイキングを効かせずにすべてをバンドルした場合のサイズについて見てみましょう。
+サブモジュールを利用した場合も含めて、Cloud Firestore モジュールは 4 つのパターンがあります。
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import 'firebase/firestore'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V8(memory)">
+
+```ts:main.ts
+import 'firebase/firestore/memory'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as firestore from 'firebase/firestore'
+
+console.log(firestore)
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9(lite)">
+
+```ts:main.ts
+import * as firestore from 'firebase/firestore/lite'
+
+console.log(firestore)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール                | Version | Size      |
+| ------------------------- | ------- | --------- |
+| firebase/firestore        | V8      | 342.13 kb |
+| firebase/firestore/memory | V8      | 276.45 kb |
+| firebase/firestore        | V9      | 271.26 kb |
+| firebase/firestore/lite   | V9      | 80.70 kb  |
+
+これがそれぞれの場合の、バンドルサイズの上限になります。
+V8 SDK では初期化段階ですべてのメソッドを利用できるので、これ以上バンドルサイズは増減しません。
+
+比較すると、フルバンドルでは大きな差があることがわかります。
+特に、V9 モジュラー SDK の `lite` サブモジュールを利用することで、バンドルサイズを大きく削減できそうです。
+続いてツリーシェイキングを効かした場合にどうなるか見てみましょう。
+
+### initializeFirestore のバンドルサイズ
+
+V9 モジュラー SDK では `initializeFirestore` を行なった状態を、バンドルサイズが下限であるとします。
+
+<CodeGroups>
+  <CodeGroup label="V9" active>
+
+```ts:main.ts
+import { initializeFirestore } from 'firebase/firestore'
+
+const firestore = initializeFirestore(app, {})
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9(lite)">
+
+```ts:main.ts
+import { initializeFirestore } from 'firebase/firestore/lite'
+
+const firestore = initializeFirestore(app, {})
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール              | Version | 下限     | 上限      |
+| ----------------------- | ------- | -------- | --------- |
+| firebase/firestore      | V9      | 62.85 kb | 271.26 kb |
+| firebase/firestore/lite | V9      | 14.64 kb | 80.70kb   |
+
+ここから、モジュールの関数をインポートし利用する分だけ、バンドルサイズは増加していきます。
+
+参考までに、`lite` サブモジュールでドキュメント ID を指定して `read` する以下のコードでは、バンドルサイズは `38.21kb` になりました。
+
+```ts
+import { doc, getDoc, initializeFirestore } from 'firebase/firestore/lite'
+
+const firestore = initializeFirestore(app, {})
+const document = doc(firestore, 'posts', 'id')
+getDoc(document)
+```
+
+想像よりも一つの関数で増加するバンドルサイズは大きいですが、
+それでも、`lite` サブモジュールはサイズ的に非常に小さいことがわかります。
+
+もし、プロジェクトでリアルタイムリスナーが不要な場合、積極的に切り替えることをおすすめします。
+
+## Authentication
+
+同様に  Authentication についても見てみます。
+
+### Authentication のフルバンドルサイズ
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import 'firebase/auth'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as auth from 'firebase/auth'
+
+console.log(auth)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール    | Version | Size     |
+| ------------- | ------- | -------- |
+| firebase/auth | V8      | 197.91kb |
+| firebase/auth | V9      | 114.54kb |
+
+フルバンドルで、40%程度サイズを削減しています。
+
+### initializeAuth のバンドルサイズ
+
+```ts
+import { initializeAuth } from 'firebase/auth'
+
+initializeAuth(app)
+```
+
+| モジュール    | Version | 下限     | 上限     |
+| ------------- | ------- | -------- | -------- |
+| firebase/auth | V9      | 39.88 kb | 114.54kb |
+
+非常に小さくなりました。ここに例えば `signInAnonymously` 関数をインポートし、匿名ユーザーでのサインインを有効にすると、
+バンドルサイズは合計で、`41.07kb` になります[^2]
+
+[^2]: `signInAnonymously`によって 1kb 程度増化
+
+V8 SDK と比較すると、たしかに 80%程度バンドルサイズを削減したことになります。
+
+バンドルサイズの削減はすべての人にとって利益になるので、V9 モジュラー SDK への切り替えを推奨します。
+段階的な切り替えは[バージョン 8 からモジュラー WebSDK にアップグレードします](https://firebase.google.com/docs/web/modular-upgrade)にまとまっているのでご覧ください。

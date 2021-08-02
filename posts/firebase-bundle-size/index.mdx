@@ -1,0 +1,371 @@
+---
+title: Bundle Size Comparison in Firebase Modular SDK
+description: Explain how the new Firebase module can reduce the bundle size. It focuses on Cloud Firestore and Authentication bundle sizes, which are two of the most frequently used Firebase modules.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-08-02
+slug: /posts/firebase-bundle-size/
+tags:
+  - firebase
+---
+
+## Introduction
+
+The Firebase SDKs have long had a problem with large bundle sizes.
+The Firebase V9 modular SDK has been pre-released to address this issue.
+
+The V9 Modular SDK is still in beta at the time of this writing.
+It is also being used on this blog.
+
+In this article, I would like to compare how much the V9 Modular SDK can reduce the bundle size.
+
+## Changes in the V9 Modular SDK
+
+The V9 Modular SDK is a release branch whose main purpose is to reduce the bundle size.
+The biggest difference from the V8 SDK is that the code base has been changed from class-based to function-based.
+
+It appears that using the V9 modular SDK may result in 80% less than a comparable app built using the V8 SDK [^1].
+
+[^1]: [Introducing the new Firebase JS SDK](https://firebase.googleblog.com/2021/07/introducing-the-new-firebase-js-sdk.html)
+
+In the V8 SDK, the method chain style execution from classes is impressive.
+Classes can't benefit from the tree-shaking of the bundler, so all methods are bundled, even unused ones.
+This causes an explosion in bundle size, for example, just loading data from `Cloud Firestore`.
+
+On the other hand, in the V9 Modular SDK, what were originally class methods are now functions.
+This allows unused functions to be tree-shaken by the bundler.
+
+On the other hand, it is not compatible with the V8 SDK, so you will need to refactor to switch to the V9 Modular SDK.
+The Compat library is available to help you make the transition in stages, but for projects that are just starting out, the
+V9 modular SDK may be a better choice for your project.
+
+## Bundle size comparison
+
+The bundle size of the V9 Modular SDK should increase as more functions are used.
+Also, the bundle size will vary depending on the functions you import.
+
+Therefore, in this article, we will compare the bundle size by showing the upper and lower limits of the bundle size.
+In the V9 Modular SDK, the initialization process is always required when handling each resource of `Firebase`.
+The lower limit of the bundle size is defined as the state where only the initialization process is performed.
+
+The upper limit of the bundle size is when all the resources are bundled without tree-shaking.
+In normal use, the bundle size will be between the upper and lower limits.
+
+On the other hand, the V8 SDK does not support tree-shaking, so the bundle size is constant.
+
+## Verification Environment
+
+Compare bundle sizes in a project that uses `vite` as a bundler.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn create @vitejs/app <project-name> --template preact-ts
+cd <project-name>
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm init @vitejs/app <project-name> -- --template preact-ts
+cd <project-name>
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+V9 of the `firebase` module is still in beta, so it needs the `beta` flag to be installed.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+// V8
+yarn add firebase
+
+// V9
+yarn add firebase@beta
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+// V8
+npm i firebase
+
+// V9
+npm i firebase@beta
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+To remove comments and licenses in `vite`, change `vite.config.ts` as follows
+
+```ts:vite.config.ts
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  build: {
+    terserOptions: {
+      format: {
+        comments: false
+      }
+    }
+  }
+})
+```
+
+If you want to deploy it, you will need to output the license information to another file.
+
+## Firebase App
+
+In any `Firebase` project, initialization process is required.
+First, let's look at the bundle size associated with the initialization of Firebase App.
+
+## Full bundle size of Firebase App
+
+Let's look at the size of a full bundle of Firebase App.
+
+<Alert type="warning">Example of code that bundles all modules</Alert>
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import firebase from 'firebase/app'
+
+firebase.initializeApp({ /* config */ })
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as firebase from 'firebase/app'
+
+console.log(firebase)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール   | Version | Size     |
+| ------------ | ------- | -------- |
+| firebase/app | V8      | 21.99 kb |
+| firebase/app | V9      | 17.51 kb |
+
+Since the V9 modular SDK does not have a default export, you can disable tree-shaking by doing the above.
+You can see that the different versions are quite different in size.
+
+The important thing to note here is that the V9 Modular SDK has the potential to reduce the bundle size through tree shaking.
+On the other hand, the bundle size of the V8 SDK remains constant.
+Let's take a look at the bundle size for named imports.
+
+### Bundle size for initializeApp
+
+The `initializeApp` function must be executed prior to the initialization of all `Firebase` resources.
+
+```ts:main.ts
+import { initializeApp } from　'firebase/app'
+
+initializeApp(firebaseOptions)
+```
+
+When only the `initializeApp` function is bundled, the size is `15.99 kb`.
+In other words, the upper and lower limits for using the `firebase/app` module are as follows.
+
+| モジュール   | Version | 下限     | 上限     |
+| ------------ | ------- | -------- | -------- |
+| firebase/app | V9      | 15.99 kb | 17.51 kb |
+
+The bundle size was further reduced by tree-shaking.
+The bundle size was `21.99 kb` when using the V8 SDK, so we can see that the bundle size is smaller with the V9 modular SDK.
+
+The V9 Modular SDK reduces the overall size of the module and the bundle size can be further reduced by tree shaking.
+
+Actually, the [official](https://firebase.googleblog.com/2021/07/introducing-the-new-firebase-js-sdk.html) lists the following two areas for bundle size improvement.
+
+- Cloud Firestore
+- Authentication
+
+Since we saw the size reduction for Firebase App initialization
+Let's take a closer look at these two.
+
+## Cloud Firestore
+
+In the V9 Modular SDK, Cloud Firestore has a new submodule called `lite`.
+If you don't use real-time streaming, you can switch to this to further reduce the weight.
+
+The V8 SDK also has a `memory` submodule.
+Normally, data is kept in `IndexedDB`, but switching to this will keep the data in memory.
+
+And since there is no `IndexedDB` related code, the bundle size is smaller than a full featured build.
+This can be used if you do not need to persist data between sessions.
+
+First, let's look at the size of a bundle with all Cloud Firestore modules.
+
+### Cloud Firestore full bundle size
+
+First, let's look at the size when everything is bundled without any tree-shaking effect.
+There are four patterns for Cloud Firestore modules, including the use of submodules.
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import 'firebase/firestore'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V8(memory)">
+
+```ts:main.ts
+import 'firebase/firestore/memory'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as firestore from 'firebase/firestore'
+
+console.log(firestore)
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9(lite)">
+
+```ts:main.ts
+import * as firestore from 'firebase/firestore/lite'
+
+console.log(firestore)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール                | Version | Size      |
+| ------------------------- | ------- | --------- |
+| firebase/firestore        | V8      | 342.13 kb |
+| firebase/firestore/memory | V8      | 276.45 kb |
+| firebase/firestore        | V9      | 271.26 kb |
+| firebase/firestore/lite   | V9      | 80.70 kb  |
+
+This is the upper limit of the bundle size in each case.
+In the V8 SDK, all methods are available at the initialization stage, so the bundle size will not increase or decrease any further.
+
+In comparison, we can see that there is a big difference in the full bundle.
+In particular, using the `lite` submodule of the V9 modular SDK seems to reduce the bundle size significantly.
+Next, let's see what happens when we turn on the tree shaking.
+
+### Bundle size for initializeFirestore
+
+In the V9 Modular SDK, the state where `initializeFirestore` is performed is considered to be the lower limit of the bundle size.
+
+<CodeGroups>
+  <CodeGroup label="V9" active>
+
+```ts:main.ts
+import { initializeFirestore } from 'firebase/firestore'
+
+const firestore = initializeFirestore(app, {})
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9(lite)">
+
+```ts:main.ts
+import { initializeFirestore } from 'firebase/firestore/lite'
+
+const firestore = initializeFirestore(app, {})
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール              | Version | 下限     | 上限      |
+| ----------------------- | ------- | -------- | --------- |
+| firebase/firestore      | V9      | 62.85 kb | 271.26 kb |
+| firebase/firestore/lite | V9      | 14.64 kb | 80.70kb   |
+
+From here, the bundle size will increase as you import and use more functions of the module.
+
+For your reference, the following code to `read` a document with its ID with the `lite` submodule results in a bundle size of `38.21kb`.
+
+```ts
+import { doc, getDoc, initializeFirestore } from 'firebase/firestore/lite'
+
+const firestore = initializeFirestore(app, {})
+const document = doc(firestore, 'posts', 'id')
+getDoc(document)
+```
+
+Although the bundle size that increases with one function is larger than I imagined
+Still, you can see that the `lite` submodule is very small in size.
+
+If you don't need a real-time listener in your project, we recommend that you switch to it proactively.
+
+## Authentication
+
+Similarly, let's take a look at Authentication.
+
+### Full bundle size for Authentication
+
+<CodeGroups>
+  <CodeGroup label="V8" active>
+
+```ts:main.ts
+import 'firebase/auth'
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="V9">
+
+```ts:main.ts
+import * as auth from 'firebase/auth'
+
+console.log(auth)
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+| モジュール    | Version | Size     |
+| ------------- | ------- | -------- |
+| firebase/auth | V8      | 197.91kb |
+| firebase/auth | V9      | 114.54kb |
+
+The full bundle reduces the size by about 40%.
+
+### Bundle size for initializeAuth
+
+```ts
+import { initializeAuth } from 'firebase/auth'
+
+initializeAuth(app)
+```
+
+| モジュール    | Version | 下限     | 上限     |
+| ------------- | ------- | -------- | -------- |
+| firebase/auth | V9      | 39.88 kb | 114.54kb |
+
+It is now very small. If you import the `signInAnonymously` function here, for example, and enable sign-in as an anonymous user, the total bundle size becomes `41.07kb`[^2].
+
+[^2]: Increased by about 1kb with `signInAnonymously`.
+
+Compared to the V8 SDK, the bundle size is indeed reduced by about 80%.
+
+Since the reduction in bundle size is beneficial to everyone, we recommend switching to the V9 modular SDK.
+Please see [Upgrade from version 8 to the modular Web SDK](https://firebase.google.com/docs/web/modular-upgrade) for a step-by-step guide.
