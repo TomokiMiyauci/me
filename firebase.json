@@ -27,12 +27,19 @@
   "firestore": {
     "rules": "firebase/firestore.rules"
   },
+  "functions": {},
   "emulators": {
+    "auth": {
+      "port": 9099
+    },
     "hosting": {
       "port": 5000
     },
+    "functions": {
+      "port": 5001
+    },
     "firestore": {
-      "port": 8080
+      "port": 8081
     }
   }
 }
