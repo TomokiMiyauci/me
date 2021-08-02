@@ -15,6 +15,7 @@ import seedOutline from '@iconify-icons/mdi/seed-outline'
 import accessPoint from '@iconify-icons/mdi/access-point'
 import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/logos/twitter'
+import firebase from '@iconify-icons/logos/firebase'
 
 import { isUndefined } from '@miyauci/is-valid'
 
@@ -42,7 +43,8 @@ const ICON_MAP = {
   vue3,
   twitter,
   tailwindcss,
-  gatsby
+  gatsby,
+  firebase
 }
 
 export { iconMeta }
