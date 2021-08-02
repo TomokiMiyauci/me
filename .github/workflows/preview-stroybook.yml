@@ -3,8 +3,8 @@
 
 name: preview-storybook
 on:
-  pull_request:
-    ignore-paths:
+  push:
+    paths-ignore:
       - 'functions/**'
 
     branches:

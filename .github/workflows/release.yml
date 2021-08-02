@@ -2,7 +2,7 @@ name: Deploy blog
 
 on:
   push:
-    ignore-paths:
+    paths-ignore:
       - 'functions/**'
 
     branches:

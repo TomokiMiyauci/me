@@ -37,6 +37,7 @@ jobs:
         run: yarn --check-files --frozen-lockfile --non-interactive
 
   lint:
+    needs: setup
     runs-on: ubuntu-latest
 
     strategy:
@@ -58,6 +59,7 @@ jobs:
         run: yarn lint
 
   build:
+    needs: setup
     runs-on: ubuntu-latest
 
     strategy:
