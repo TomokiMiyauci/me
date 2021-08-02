@@ -3,9 +3,12 @@
 
 name: preview-storybook
 on:
-  pull_request:
+  push:
+    paths-ignore:
+      - 'functions/**'
+
     branches:
-      - next
+      - 'next**'
 
 jobs:
   build_and_deploy:
