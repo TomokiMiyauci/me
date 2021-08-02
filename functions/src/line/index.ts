@@ -1,7 +1,8 @@
 import functions from 'firebase-functions'
 import { getKeyValue } from '@/line/util'
-import { parseCommand, commandFn, replay } from '@/line/util'
+import { parseCommand, commandFn, replay, subscribe } from '@/line/util'
 import type { WebhookRequestBody } from '@line/bot-sdk'
+import { SUBSCRIBE } from '@/line/constants'
 
 const line = functions
   .region('asia-northeast1')
@@ -13,42 +14,64 @@ const line = functions
 
     const event = ((body as WebhookRequestBody).events ?? [])[0]
 
-    if (event.type !== 'message') {
+    if (!['message', 'join', 'follow'].includes(event.type)) {
       res.status(200).end()
       return
     }
 
     const [key, value] = getKeyValue(event.source)
 
-    if (!event || event.message.type !== 'text' || !key || !value) {
-      res.status(200).end()
-      return
-    }
-    const [cmd, err] = parseCommand(event.message.text)
+    switch (event.type) {
+      case 'message': {
+        if (!event || event.message.type !== 'text' || !key || !value) {
+          res.status(200).end()
+          return
+        }
+        const [cmd, err] = parseCommand(event.message.text)
 
-    if (!err || !cmd) {
-      res.status(200).end()
-      return
-    }
+        if (!err || !cmd) {
+          res.status(200).end()
+          return
+        }
+        const replyToken = event.replyToken
 
-    const replyToken = event.replyToken
+        const [fn, message] = commandFn(cmd)
 
-    const [fn, message] = commandFn(cmd)
+        try {
+          await fn({ id: value, type: key })
+          await replay(message, replyToken)
+          res.status(200).end()
+          return
+        } catch {
+          await replay(
+            `An error has occurred🚧
 
-    try {
-      await fn({ id: value, type: key })
-      await replay(message, replyToken)
-      res.status(200).end()
-    } catch {
-      await replay(
-        `An error has occurred🚧
+    Please send message after a while.`,
+            replyToken
+          )
 
-Please send message after a while.`,
-        replyToken
-      )
+          res.status(500).end()
+          return
+        }
+      }
 
-      res.status(500).end()
-      return
+      case 'follow':
+      case 'join': {
+        try {
+          const replyToken = event.replyToken
+
+          await subscribe({
+            id: value,
+            type: key
+          })
+          await replay(SUBSCRIBE, replyToken)
+          res.status(200).end()
+          return
+        } catch {
+          res.status(500).end()
+          return
+        }
+      }
     }
   })
 

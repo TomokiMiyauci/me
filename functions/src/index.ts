@@ -1,10 +1,11 @@
 import functions from 'firebase-functions'
-import type { Locale } from '../../config/types'
+import type { Locale } from '@/../../config/types'
 import { renderFile, configure } from 'eta'
 import Twitter from 'twitter-api-v2'
-import type { Config } from './types'
+import type { Config, Post } from '@/types'
 
-export { line } from './line'
+export { line } from '@/line'
+export { onCreateMetaPostJa } from '@/line/newsletter'
 
 import admin from 'firebase-admin'
 
@@ -25,13 +26,6 @@ const client = new Twitter({
 configure({
   views: 'views'
 })
-
-type Post = {
-  url: string
-  title: string
-  description: string
-  locale: Locale
-}
 
 type Params = {
   locale: Locale

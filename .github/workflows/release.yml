@@ -2,6 +2,9 @@ name: Deploy blog
 
 on:
   push:
+    ignore-paths:
+      - 'functions/**'
+
     branches:
       - main
 
