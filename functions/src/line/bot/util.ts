@@ -51,7 +51,7 @@ const help: CommandFn = () => {
   return
 }
 
-const replay = async (message: string, token: string) => {
+const replay = async (message: string, token: string): Promise<void> => {
   const { channel_access_token: channelAccessToken } = (
     functions.config() as Config
   ).line

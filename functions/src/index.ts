@@ -4,8 +4,7 @@ import { renderFile, configure } from 'eta'
 import Twitter from 'twitter-api-v2'
 import type { Config, Post } from '@/types'
 
-export { line } from '@/line'
-export { onCreateMetaPostJa } from '@/line/newsletter'
+export * from '@/line'
 
 import admin from 'firebase-admin'
 

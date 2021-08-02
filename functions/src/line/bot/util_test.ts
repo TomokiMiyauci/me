@@ -1,4 +1,4 @@
-import { parseCommand, ParseResult } from '@/line/util'
+import { parseCommand, ParseResult } from '@/line/bot/util'
 
 describe('parseCommand', () => {
   const table: [string, ParseResult][] = [
