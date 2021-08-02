@@ -1,6 +1,7 @@
 {
   "name": "functions",
   "scripts": {
+    "cz": "yarn --cwd .. cz",
     "lint": "eslint --ext .ts .",
     "build": "esno build.ts",
     "serve": "yarn build && firebase emulators:start --only functions",
