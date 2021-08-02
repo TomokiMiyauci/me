@@ -11,5 +11,6 @@ build({
   sourcemap: true,
   outfile: 'lib/index.js',
   platform: 'node',
-  target: 'node14'
+  target: 'node14',
+  legalComments: 'none'
 })
