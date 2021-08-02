@@ -1,3 +1,4 @@
+import type { Locale } from '@/../../config/types'
 type Config = {
   twitter: {
     app_key: string
@@ -11,4 +12,11 @@ type Config = {
   }
 }
 
-export type { Config }
+type Post = {
+  url: string
+  title: string
+  description: string
+  locale: Locale
+}
+
+export type { Config, Post }

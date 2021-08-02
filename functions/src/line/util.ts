@@ -5,6 +5,7 @@ import { Client } from '@line/bot-sdk'
 import type { Config } from '@/types'
 import functions from 'firebase-functions'
 import type { EventSource } from '@line/bot-sdk'
+import { SUBSCRIBE } from '@/line/constants'
 
 const commands = ['help', 'subscribe', 'unsubscribe'] as const
 
@@ -78,13 +79,7 @@ const commandFn = (type: Commands): [CommandFn, string] => {
     }
 
     case 'subscribe': {
-      return [
-        subscribe,
-        `Subscribe my newsletter🎉
-To unsubscribe,「unsubscribe」
-
-You can find all the commands with 「help」`
-      ]
+      return [subscribe, SUBSCRIBE]
     }
 
     case 'unsubscribe': {
