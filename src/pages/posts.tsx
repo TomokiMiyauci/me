@@ -186,7 +186,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
       ) : (
         <div className="container my-8 md:my-12 mx-auto">
           <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
-            <li className="-mx-2 md:mx-auto">
+            <li className="-mx-2 md:mx-auto min-w-[250px]">
               <Adsense
                 style={{ display: 'block' }}
                 dataAdFormat="fluid"
@@ -199,7 +199,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
                 frontmatter: { title, thumbnail, description, date, slug },
                 fields
               }) => (
-                <li className="-mx-2 md:mx-auto" key={slug}>
+                <li className="-mx-2 md:mx-auto min-w-[250px]" key={slug}>
                   <ArticleHeadline
                     title={title}
                     description={description}
