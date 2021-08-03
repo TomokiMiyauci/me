@@ -3,8 +3,10 @@ import ArticleHeadlineBody from '@/components/ArticleHeadline/ArticleHeadlineBod
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 
 const ArticleHeadline: FC<
-  Omit<ArticleHeadlineProps, 'to' | 'alt' | 'img'> & { Img: ReactChild }
-> = ({ Img, ...rest }) => {
+  Omit<ArticleHeadlineProps, 'to' | 'alt' | 'img'> & {
+    Img: ReactChild
+  }
+> = ({ Img, MMM, ...rest }) => {
   return (
     <article
       className="
@@ -22,7 +24,19 @@ const ArticleHeadline: FC<
     transform
   "
     >
-      <div className="relative">{Img}</div>
+      <div className="relative">
+        {Img}
+        {MMM && (
+          <span
+            className="absolute bottom-3 transform  group-hover:opacity-40 transition-opacity duration-300 rotate-180 text-shadow rounded right-1 opacity-20 text-gray-400 dark:text-blue-gray-400 text-6xl md:text-7xl writing-mode-vertical"
+            style={{
+              writingMode: 'vertical-lr'
+            }}
+          >
+            {MMM}
+          </span>
+        )}
+      </div>
 
       <ArticleHeadlineBody {...rest} />
     </article>

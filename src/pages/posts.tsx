@@ -20,7 +20,7 @@ import { iconMeta } from '@/utils/tag'
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
     data,
-    pageContext: { originalPath, locale },
+    pageContext: { locale },
     location
   } = a
   const {
@@ -200,6 +200,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
                     lastUpdated={date}
                     tags={fields.lowerCaseTags}
                     alt="thumbnail"
+                    MMM={fields.dateByMMM}
                   />
                 </li>
               )
@@ -244,6 +245,7 @@ export const query = graphql`
             text
           }
           lowerCaseTags
+          dateByMMM
         }
       }
     }

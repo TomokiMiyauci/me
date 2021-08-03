@@ -133,6 +133,12 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
       value: tags?.map(toLowerCase) ?? []
     })
 
+    actions.createNodeField({
+      node,
+      name: 'dateByMMM',
+      value: moment(date).format('MMM')
+    })
+
     const fullPath = makeFullPath(
       {
         base: siteUrl,

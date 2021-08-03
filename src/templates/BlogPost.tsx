@@ -286,6 +286,7 @@ export const pageQuery = graphql`
             text
           }
           lowerCaseTags
+          dateByMMM
         }
         frontmatter {
           title

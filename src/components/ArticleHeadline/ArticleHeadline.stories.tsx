@@ -31,5 +31,11 @@ const Template: ComponentStory<typeof ArticleHeadline> = (args) => (
 
 const Default = Template.bind({})
 
+const MMM = Template.bind({})
+
+MMM.args = {
+  MMM: 'Aug'
+}
+
 export default meta
-export { Default }
+export { Default, MMM }

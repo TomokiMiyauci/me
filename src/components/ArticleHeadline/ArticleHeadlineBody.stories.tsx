@@ -22,6 +22,16 @@ const Template: ComponentStory<typeof ArticleHeadlineBody> = (args) => (
 )
 
 const Default = Template.bind({})
+const NoTags = Template.bind({})
+const NoReadingTime = Template.bind({})
+
+NoTags.args = {
+  tags: []
+}
+
+NoReadingTime.args = {
+  readingTime: undefined
+}
 
 export default meta
-export { Default }
+export { Default, NoTags, NoReadingTime }

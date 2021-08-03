@@ -9,7 +9,7 @@ const flatArticleMetaInfo =
   (alt: string) =>
   ({ frontmatter, fields }: ArticlesMetaInfo[number]): ArticleHeadlineProps => {
     const { title, description, thumbnail, slug, date } = frontmatter!
-    const { readingTime, lowerCaseTags } = fields!
+    const { readingTime, lowerCaseTags, dateByMMM } = fields!
 
     return {
       title: title!,
@@ -19,7 +19,8 @@ const flatArticleMetaInfo =
       alt,
       lastUpdated: date,
       readingTime: readingTime?.text!,
-      tags: lowerCaseTags!
+      tags: lowerCaseTags!,
+      MMM: dateByMMM
     }
   }
 

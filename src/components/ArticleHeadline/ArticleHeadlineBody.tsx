@@ -2,16 +2,9 @@ import React, { FC } from 'react'
 import { isLength0 } from '@miyauci/is-valid'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
+import { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 
-type ArticleHeadlineBodyProps = {
-  title: string
-  description: string
-  tags: string[]
-  lastUpdated?: string
-  readingTime?: string
-}
-
-const ArticleHeadline: FC<ArticleHeadlineBodyProps> = ({
+const ArticleHeadline: FC<Omit<ArticleHeadlineProps, 'img' | 'to' | 'alt'>> = ({
   title,
   description,
   lastUpdated,
@@ -71,4 +64,3 @@ const ArticleHeadline: FC<ArticleHeadlineBodyProps> = ({
 }
 
 export default ArticleHeadline
-export type { ArticleHeadlineBodyProps }
