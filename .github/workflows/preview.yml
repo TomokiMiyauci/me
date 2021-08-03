@@ -3,7 +3,7 @@
 
 name: preview
 on:
-  push:
+  pull_request:
     paths-ignore:
       - 'functions/**'
 
@@ -39,4 +39,3 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: blog
-          channelId: 'pr-${{ github.run_id }}'
