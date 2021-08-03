@@ -39,3 +39,4 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: blog
+          channelId: 'pr-${{ github.run_id }}'
