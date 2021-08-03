@@ -37,4 +37,4 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: storybook
-          channelId: preview
+          channelId: 'pr-${{ github.run_id }}'
