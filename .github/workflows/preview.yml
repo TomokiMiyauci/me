@@ -8,7 +8,7 @@ on:
       - 'functions/**'
 
     branches:
-      - 'next**'
+      - 'main'
 
 jobs:
   build_and_deploy:
