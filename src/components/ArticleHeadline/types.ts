@@ -8,6 +8,7 @@ type ArticleHeadlineProps = {
   alt: string
   tags: string[]
   MMM?: string
+  no?: number
   lastUpdated?: string
   readingTime?: string
 }

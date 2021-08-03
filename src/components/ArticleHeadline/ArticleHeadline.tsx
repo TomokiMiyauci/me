@@ -2,11 +2,36 @@ import React, { FC, ReactChild } from 'react'
 import ArticleHeadlineBody from '@/components/ArticleHeadline/ArticleHeadlineBody'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 
+type CardType = 'none' | 'MMM' | 'no'
+
+const detectType = ({
+  MMM,
+  no
+}: Pick<ArticleHeadlineProps, 'MMM' | 'no'>): CardType => {
+  if (!MMM && !no) {
+    return 'none'
+  }
+  return !!MMM ? 'MMM' : 'no'
+}
+
+const typeClass = (type: Exclude<CardType, 'none'>) => {
+  switch (type) {
+    case 'MMM': {
+      return 'transform rotate-180 px-2 text-6xl md:text-7xl writing-mode-vertical'
+    }
+
+    case 'no': {
+      return 'text-7xl text-right px-2'
+    }
+  }
+}
+
 const ArticleHeadline: FC<
   Omit<ArticleHeadlineProps, 'to' | 'alt' | 'img'> & {
     Img: ReactChild
   }
-> = ({ Img, MMM, ...rest }) => {
+> = ({ Img, MMM, no, ...rest }) => {
+  const type = detectType({ MMM, no })
   return (
     <article
       className="
@@ -24,16 +49,15 @@ const ArticleHeadline: FC<
     transform
   "
     >
-      <div className="relative">
+      <div className="flex flex-col justify-between">
         {Img}
-        {MMM && (
+        {type !== 'none' && (
           <span
-            className="absolute bottom-3 transform  group-hover:opacity-40 transition-opacity duration-300 rotate-180 text-shadow rounded right-1 opacity-20 text-gray-400 dark:text-blue-gray-400 text-6xl md:text-7xl writing-mode-vertical"
-            style={{
-              writingMode: 'vertical-lr'
-            }}
+            className={`text-shadow group-hover:opacity-40 self-end transition-opacity duration-300 opacity-20 text-gray-400 dark:text-blue-gray-400  ${typeClass(
+              type
+            )}`}
           >
-            {MMM}
+            {type === 'MMM' ? MMM : String(no).padStart(2, '0')}
           </span>
         )}
       </div>

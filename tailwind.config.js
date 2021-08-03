@@ -1,5 +1,6 @@
 const varAccentColor = 'var(--accent-color)'
 const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   mode: 'jit',
@@ -136,6 +137,15 @@ module.exports = {
     require('@tailwindcss/line-clamp'),
     require('tailwind-scrollbar'),
     require('tailwindcss-hero-patterns'),
-    require('tailwindcss-textshadow')
+    require('tailwindcss-textshadow'),
+    plugin(({ addUtilities }) => {
+      const newUtilities = {
+        '.writing-mode-vertical': {
+          'writing-mode': 'vertical-rl'
+        }
+      }
+
+      addUtilities(newUtilities)
+    })
   ]
 }
