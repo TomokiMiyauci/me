@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react'
 import RelatedArticle from '@/components/RelatedArticle/RelatedArticle'
-import type { ArticleHeadlineProps } from '@/components/ArticleHeadline'
+import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import type { BlogPostBySlugQuery } from '@/../graphql-types'
 
 type ArticlesMetaInfo = BlogPostBySlugQuery['allMdx']['nodes']

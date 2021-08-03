@@ -1,57 +1,25 @@
 import React, { FC } from 'react'
-import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import { isLength0 } from '@miyauci/is-valid'
-import Tag from './Tag'
+import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 
-type ArticleHeadlineProps = {
+type ArticleHeadlineBodyProps = {
   title: string
   description: string
-  img: IGatsbyImageData
-  to: string
-  alt: string
   tags: string[]
-  lastUpdated?: number
+  lastUpdated?: string
   readingTime?: string
 }
 
-const ArticleHeadline: FC<ArticleHeadlineProps> = ({
+const ArticleHeadline: FC<ArticleHeadlineBodyProps> = ({
   title,
   description,
-  img,
-  to,
-  alt,
   lastUpdated,
   readingTime,
   tags
 }) => {
-  const { locale } = useLocalization()
   return (
-    <LocalizedLink
-      to={to}
-      language={locale}
-      className="
-      rounded-md
-      hover:shadow-lg
-      hover:scale-103
-      md:hover:scale-105
-      hover:bg-gray-50
-      dark:hover:bg-blue-gray-800
-      transition
-      duration-500
-      flex
-      mb-4
-      group
-      transform
-    "
-    >
-      <GatsbyImage
-        className="m-2 sm:m-3 rounded overflow-visible"
-        alt={alt}
-        image={img}
-      />
-
+    <>
       <div className="p-1 sm:p-2 flex flex-1 space-y-2 flex-col justify-between">
         <div className="sm:space-y-1">
           <h2
@@ -73,35 +41,34 @@ const ArticleHeadline: FC<ArticleHeadlineProps> = ({
         </div>
 
         {!isLength0(tags) && (
-          <div className="space-x-2">
+          <ul className="space-x-2">
             {tags.map((tag) => {
               const { tagIcon, wellKnown } = iconMeta(tag)
               return (
-                <Tag
-                  className={wellKnown ? '' : 'hidden md:inline-flex'}
-                  key={tag}
-                  tag={tagIcon}
-                  label={tag}
-                />
+                <li className="inline" key={tag}>
+                  <Tag
+                    className={wellKnown ? '' : 'hidden md:inline-flex'}
+                    tag={tagIcon}
+                    label={tag}
+                  />
+                </li>
               )
             })}
-          </div>
+          </ul>
         )}
 
         {(lastUpdated || readingTime) && (
           <div className="time opacity-50 no-underline text-sm -mt-1">
             {lastUpdated && (
-              <span className="mr-4 no-underline">
-                {new Date(lastUpdated).toLocaleDateString()}
-              </span>
+              <span className="mr-4 no-underline">{lastUpdated}</span>
             )}
             {readingTime && <span>{readingTime}</span>}
           </div>
         )}
       </div>
-    </LocalizedLink>
+    </>
   )
 }
 
 export default ArticleHeadline
-export type { ArticleHeadlineProps }
+export type { ArticleHeadlineBodyProps }

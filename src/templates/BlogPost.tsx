@@ -2,7 +2,7 @@ import React, { FC, Fragment, useRef } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '@/../graphql-types'
-import ArticleHeadline from '../components/ArticleHeadline'
+import ArticleHeadline from '@/components/ArticleHeadline'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
@@ -238,6 +238,7 @@ export const pageQuery = graphql`
     $previousPostSlug: String
     $nextPostSlug: String
     $tags: [String!]!
+    $dateFormat: String!
   ) {
     mdx(
       fileAbsolutePath: { regex: "//posts//" }
@@ -257,14 +258,13 @@ export const pageQuery = graphql`
       frontmatter {
         title
         description
-        date
+        date(formatString: $dateFormat)
         hero {
           publicURL
           childImageSharp {
             gatsbyImageData(layout: CONSTRAINED)
           }
         }
-        date
         slug
       }
       body
@@ -290,7 +290,7 @@ export const pageQuery = graphql`
         frontmatter {
           title
           description
-          date
+          date(formatString: $dateFormat)
           thumbnail {
             childImageSharp {
               gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
@@ -322,7 +322,7 @@ export const pageQuery = graphql`
         frontmatter {
           title
           description
-          date
+          date(formatString: $dateFormat)
           thumbnail {
             childImageSharp {
               gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
@@ -353,7 +353,7 @@ export const pageQuery = graphql`
         frontmatter {
           title
           description
-          date
+          date(formatString: $dateFormat)
           thumbnail {
             childImageSharp {
               gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
@@ -377,7 +377,7 @@ export const pageQuery = graphql`
       frontmatter {
         title
         description
-        date
+        date(formatString: $dateFormat)
         thumbnail {
           childImageSharp {
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
@@ -399,7 +399,7 @@ export const pageQuery = graphql`
       frontmatter {
         title
         description
-        date
+        date(formatString: $dateFormat)
         thumbnail {
           childImageSharp {
             gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
