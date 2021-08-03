@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { BlogPostsQuery } from '../../graphql-types'
-import ArticleHeadline from '../components/ArticleHeadline'
+import ArticleHeadline from '@/components/ArticleHeadline'
 import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
 import Newsletter from '@/components/Newsletter'
@@ -20,7 +20,7 @@ import { iconMeta } from '@/utils/tag'
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
     data,
-    pageContext: { originalPath, locale },
+    pageContext: { locale },
     location
   } = a
   const {
@@ -200,6 +200,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
                     lastUpdated={date}
                     tags={fields.lowerCaseTags}
                     alt="thumbnail"
+                    MMM={fields.dateByMMM}
                   />
                 </li>
               )
@@ -215,7 +216,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 export default Posts
 
 export const query = graphql`
-  query BlogPosts($locale: String!) {
+  query BlogPosts($locale: String!, $dateFormat: String!) {
     allMdx(
       filter: {
         fields: { locale: { eq: $locale } }
@@ -231,7 +232,7 @@ export const query = graphql`
         frontmatter {
           title
           description
-          date
+          date(formatString: $dateFormat)
           thumbnail {
             childImageSharp {
               gatsbyImageData(layout: FIXED, aspectRatio: 1, width: 80)
@@ -244,6 +245,7 @@ export const query = graphql`
             text
           }
           lowerCaseTags
+          dateByMMM
         }
       }
     }

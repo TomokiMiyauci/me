@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import type { ArticleHeadlineProps } from '@/components/ArticleHeadline'
+import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import ArticleHeadline from '@/components/ArticleHeadline'
 import { Icon } from '@iconify/react/dist/offline'
 import burstNew from '@iconify-icons/foundation/burst-new'
@@ -9,6 +9,7 @@ import { isLength0 } from '@miyauci/is-valid'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
+import { inc } from 'fonction'
 
 const classNames = (...classes: string[]): string =>
   classes.filter(Boolean).join(' ')
@@ -107,10 +108,10 @@ const RelatedArticle: FC<{
             )}
           >
             <ul className="space-y-2">
-              {hotArticles.map((articleHeadlineProps) => {
+              {hotArticles.map((articleHeadlineProps, i) => {
                 return (
                   <li key={articleHeadlineProps.to}>
-                    <ArticleHeadline {...articleHeadlineProps} />
+                    <ArticleHeadline no={inc(i)} {...articleHeadlineProps} />
                   </li>
                 )
               })}
