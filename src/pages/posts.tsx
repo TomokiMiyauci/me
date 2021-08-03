@@ -16,6 +16,7 @@ import NotFoundQueryString from '@/components/NotFoundQueryString'
 import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
+import Adsense from '@/components/GoogleAdsense'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -185,6 +186,14 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
       ) : (
         <div className="container my-8 md:my-12 mx-auto">
           <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
+            <li className="-mx-2 md:mx-auto">
+              <Adsense
+                style={{ display: 'block' }}
+                dataAdFormat="fluid"
+                dataAdLayoutKey="-gl-26-3o-cn+1e3"
+                dataAdSlot="5986830137"
+              />
+            </li>
             {articles.map(
               ({
                 frontmatter: { title, thumbnail, description, date, slug },
