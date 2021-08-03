@@ -37,3 +37,4 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: storybook
+          channelId: 'pr-${{ github.event.number }}-${{ github.event.pull_request.head.ref }}'
