@@ -3,12 +3,12 @@
 
 name: preview
 on:
-  push:
+  pull_request:
     paths-ignore:
       - 'functions/**'
 
     branches:
-      - 'next**'
+      - 'main'
 
 jobs:
   build_and_deploy:
@@ -39,4 +39,3 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: blog
-          channelId: 'pr-${{ github.run_id }}'

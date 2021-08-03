@@ -1,11 +1,11 @@
 name: preview-storybook
 on:
-  push:
+  pull_request:
     paths-ignore:
       - 'functions/**'
 
     branches:
-      - 'next**'
+      - 'main'
 
 jobs:
   build_and_deploy:
@@ -36,7 +36,6 @@ jobs:
           expires: 1d
           projectId: blorogue
           target: storybook
-          channelId: 'pr-${{ github.run_id }}'
 
       - name: Publish to Chromatic
         uses: chromaui/action@v1
