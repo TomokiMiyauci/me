@@ -48,9 +48,7 @@ const setupAccessCount = () => {
       return data
     } else {
       return new Promise(async (resolve) => {
-        console.log('wait')
         while (!done) {
-          console.log('waiting')
           await wait(1000)
         }
 
