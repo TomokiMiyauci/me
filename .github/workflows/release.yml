@@ -128,6 +128,11 @@ jobs:
           name: dist
           path: public
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: tmp
+          path: tmp
+
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
@@ -146,3 +151,28 @@ jobs:
           channelId: live
           projectId: blorogue
           target: blog
+
+  post-deploy:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: tmp
+          path: tmp
+
+      - name: Post post meta info
+        run: yarn esno scripts/register_post_list.ts
+        env:
+          STAGE: main
+          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
