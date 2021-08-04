@@ -3,8 +3,8 @@ import type { Post } from '@/types'
 import type { Locale } from '@/../../config/types'
 import type { Config } from '@/types'
 import Twitter from 'twitter-api-v2'
+import { ellipsisContent } from '@/twitter/util'
 
-import { renderFile } from 'eta'
 import { templateName } from '@/twitter/util'
 
 type Params = {
@@ -20,14 +20,18 @@ export const onCreateMetaPost = functions
   .firestore.document('meta/{slug}/locales/{locale}')
   .onCreate(async (snapshot, { params }) => {
     const { locale } = params as Params
-    const { url } = snapshot.data() as Partial<Post>
+    const { url, title, description } = snapshot.data() as Partial<Post>
 
-    if (!url) {
+    if (!url || !title || !description) {
       functions.logger.error('Something data is undefined')
       return
     }
-    const content = await renderFile(templateName(locale), {
-      url
+    const template = templateName(locale)
+
+    const content = await ellipsisContent(template, {
+      url,
+      title,
+      description
     })
 
     if (!content) return
