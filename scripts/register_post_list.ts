@@ -81,10 +81,11 @@ const postMeta = (
     .doc(slug)
     .collection('locales')
     .doc(locale)
-    .set({
+    .create({
       ...content,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     })
+    .catch(() => {})
 }
 
 type PostMeta = {
