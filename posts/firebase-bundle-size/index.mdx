@@ -169,7 +169,7 @@ console.log(firebase)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール   | Version | Size     |
+| Module       | Version | Size     |
 | ------------ | ------- | -------- |
 | firebase/app | V8      | 21.99 kb |
 | firebase/app | V9      | 17.51 kb |
@@ -194,9 +194,9 @@ initializeApp(firebaseOptions)
 When only the `initializeApp` function is bundled, the size is `15.99 kb`.
 In other words, the upper and lower limits for using the `firebase/app` module are as follows.
 
-| モジュール   | Version | 下限     | 上限     |
-| ------------ | ------- | -------- | -------- |
-| firebase/app | V9      | 15.99 kb | 17.51 kb |
+| Module       | Version | Lower limit | Upper limit |
+| ------------ | ------- | ----------- | ----------- |
+| firebase/app | V9      | 15.99 kb    | 17.51 kb    |
 
 The bundle size was further reduced by tree-shaking.
 The bundle size was `21.99 kb` when using the V8 SDK, so we can see that the bundle size is smaller with the V9 modular SDK.
@@ -267,7 +267,7 @@ console.log(firestore)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール                | Version | Size      |
+| Module                    | Version | Size      |
 | ------------------------- | ------- | --------- |
 | firebase/firestore        | V8      | 342.13 kb |
 | firebase/firestore/memory | V8      | 276.45 kb |
@@ -307,10 +307,10 @@ const firestore = initializeFirestore(app, {})
   </CodeGroup>
 </CodeGroups>
 
-| モジュール              | Version | 下限     | 上限      |
-| ----------------------- | ------- | -------- | --------- |
-| firebase/firestore      | V9      | 62.85 kb | 271.26 kb |
-| firebase/firestore/lite | V9      | 14.64 kb | 80.70kb   |
+| Module                  | Version | Lower limit | Upper limit |
+| ----------------------- | ------- | ----------- | ----------- |
+| firebase/firestore      | V9      | 62.85 kb    | 271.26 kb   |
+| firebase/firestore/lite | V9      | 14.64 kb    | 80.70kb     |
 
 From here, the bundle size will increase as you import and use more functions of the module.
 
@@ -355,7 +355,7 @@ console.log(auth)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール    | Version | Size     |
+| Module        | Version | Size     |
 | ------------- | ------- | -------- |
 | firebase/auth | V8      | 197.91kb |
 | firebase/auth | V9      | 114.54kb |
@@ -370,9 +370,9 @@ import { initializeAuth } from 'firebase/auth'
 initializeAuth(app)
 ```
 
-| モジュール    | Version | 下限     | 上限     |
-| ------------- | ------- | -------- | -------- |
-| firebase/auth | V9      | 39.88 kb | 114.54kb |
+| Module        | Version | Lower limit | Upper limit |
+| ------------- | ------- | ----------- | ----------- |
+| firebase/auth | V9      | 39.88 kb    | 114.54kb    |
 
 It is now very small. If you import the `signInAnonymously` function here, for example, and enable sign-in as an anonymous user, the total bundle size becomes `41.07kb`[^2].
 
