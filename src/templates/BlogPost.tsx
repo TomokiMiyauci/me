@@ -21,6 +21,7 @@ import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
+import VerificationEnv from '@/components/VerificationEnv'
 // import GoogleAdsense from '@/components/GoogleAdsense'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -37,10 +38,12 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
   const { isModified, gitAuthorTime, readingTime, lowerCaseTags, fullPath } =
     fields
-  const { title, description, hero, date, slug } = frontmatter
+  const { title, description, hero, date, slug, verification } = frontmatter
   const { publicURL, childImageSharp } = hero
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
+
+  console.log(verification, 1)
 
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
@@ -101,12 +104,18 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 </div>
               </section>
 
-              <nav className="lg:w-1/5 pl-4">
-                <Toc
-                  className="sticky hidden lg:block rounded-md top-28 bg-gray-100  dark:bg-blue-gray-800"
-                  toc={tableOfContents.items}
-                />
-              </nav>
+              <div className="lg:w-1/5 pl-4">
+                <div className="sticky space-y-4 lg:block top-24 hidden">
+                  <VerificationEnv {...verification} />
+
+                  <nav>
+                    <Toc
+                      className="rounded-md  bg-gray-100  dark:bg-blue-gray-800"
+                      toc={tableOfContents.items}
+                    />
+                  </nav>
+                </div>
+              </div>
             </div>
           </Article>
 
@@ -266,6 +275,19 @@ export const pageQuery = graphql`
           }
         }
         slug
+        verification {
+          os {
+            name
+            family
+            version
+          }
+          packages {
+            node {
+              name
+              version
+            }
+          }
+        }
       }
       body
     }
