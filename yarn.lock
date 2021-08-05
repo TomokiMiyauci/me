@@ -2899,6 +2899,21 @@
   resolved "https://registry.yarnpkg.com/@iconify-icons/uil/-/uil-1.1.1.tgz#6e7185b73d47eae79f7bf308909e1d59a12a34db"
   integrity sha512-HdSyOZzEPwh2549jpL2YrLkuR4aYRRF47gDRuZcSRRFdgbkmlpGDSSQ1G1PR9E/a3Igg7j9XdIK9HffTFJP0Lg==
 
+"@iconify/icons-ant-design@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-ant-design/-/icons-ant-design-1.1.0.tgz#013574b09d8dd167490e6fd6dd0b2805d7170854"
+  integrity sha512-sE4NKXMfN9arTFmfvt4zARoS+hjhd8P0z5osjWYxVkQPCri1RYpF+NRa9MsDh3ScqAcSU9wfUeQ3X4Gf8GrcNQ==
+
+"@iconify/icons-heroicons-outline@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-heroicons-outline/-/icons-heroicons-outline-1.1.3.tgz#a14a19092baab99a0e72f0c248c2cb14755b40f5"
+  integrity sha512-p4TunU1QxbB1/WzzduoWBhlB/ji9RfHsCfcFkipis7Qy/oB1rHKlrjkwN23cgi9Clo31PCTi91AvGKwD+ryUBA==
+
+"@iconify/icons-teenyicons@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-teenyicons/-/icons-teenyicons-1.1.0.tgz#024d025495431a1b4fb04db73ee72bc9cf208120"
+  integrity sha512-jBrK3vmOEPLrF0vkUwDw7nh1fcoZuINXoC026BfCLqHqvCYI346BXtQIAF+nw1EZn25hX1H0L3bO5lVFxpLkrg==
+
 "@iconify/react@^3.0.0-beta.1":
   version "3.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/@iconify/react/-/react-3.0.0-beta.1.tgz#1f6953a12048c19e8e70233627dda4a182052935"

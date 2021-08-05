@@ -21,6 +21,7 @@ import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
+import VerificationEnv from '@/components/VerificationEnv'
 // import GoogleAdsense from '@/components/GoogleAdsense'
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -37,7 +38,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
   const { isModified, gitAuthorTime, readingTime, lowerCaseTags, fullPath } =
     fields
-  const { title, description, hero, date, slug } = frontmatter
+  const { title, description, hero, date, slug, verification } = frontmatter
   const { publicURL, childImageSharp } = hero
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -76,16 +77,17 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             isModified={isModified}
             editLink={editOnGitHub}
           >
-            <div className="container mx-auto flex flex-wrap ">
-              <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
+            <div className="container mx-auto flex-col xl:flex-row flex flex-wrap ">
+              <aside className="xl:w-1/5 xl:px-10 hidden xl:order-1 xl:block lg:pt-20 xl:pt-28">
                 <ReadingProgress />
               </aside>
 
               <section
-                className="mx-auto w-full prose lg:w-3/5"
+                className="mx-auto w-full prose xl:w-3/5 order-2"
                 itemProp="articleBody"
               >
                 <MDXRenderer>{body}</MDXRenderer>
+                <hr className="prose mx-auto my-10" />
 
                 <a
                   className="text-accent space-x-1 underline md:no-underline hover:underline"
@@ -101,20 +103,22 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 </div>
               </section>
 
-              <nav className="lg:w-1/5 pl-4">
-                <Toc
-                  className="sticky hidden lg:block rounded-md top-28 bg-gray-100  dark:bg-blue-gray-800"
-                  toc={tableOfContents.items}
-                />
-              </nav>
+              <div className="xl:w-1/5 max-w-prose mx-auto order-1 mb-6 xl:order-3 w-full lg:block hidden space-y-4">
+                <VerificationEnv {...verification} />
+
+                <nav className="sticky top-24 ">
+                  <Toc
+                    className="rounded-md  bg-gray-100  dark:bg-blue-gray-800"
+                    toc={tableOfContents.items}
+                  />
+                </nav>
+              </div>
             </div>
           </Article>
 
-          <hr className="prose mx-auto my-10" />
-
           {/* <GoogleAdsense /> */}
 
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl my-8 mx-auto">
             <Newsletter />
           </div>
 
@@ -266,6 +270,19 @@ export const pageQuery = graphql`
           }
         }
         slug
+        verification {
+          os {
+            name
+            family
+            version
+          }
+          packages {
+            node {
+              name
+              version
+            }
+          }
+        }
       }
       body
     }

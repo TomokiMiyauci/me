@@ -1,6 +1,6 @@
 ---
 title: Firebase のモジュラーSDKでバンドルサイズ比較
-description: 新しい Firebase モジュールによって、どれほどバンドルサイズが削減できるか解説します。Firebase モジュールの中でも、特に利用頻度の高い Cloud Firestore と Authentication のバンドルサイズを中心に解説しています。
+description: 新しい Firebase モジュールによって、どのくらいバンドルサイズが削減できるか解説します。Firebase モジュールの中でも、特に利用頻度の高い Cloud Firestore と Authentication のバンドルサイズを中心に解説しています。
 hero: hero.png
 thumbnail: thumbnail.png
 date: 2021-08-02
@@ -9,6 +9,17 @@ tags:
   - firebase
   - TypeScript
   - vite
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    node:
+      - name: firebase
+        version: 9.0.0-beta.8
+      - name: firebase
+        version: 8.8.1
 ---
 
 ## はじめに
@@ -158,10 +169,10 @@ console.log(firebase)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール   | Version | Size     |
-| ------------ | ------- | -------- |
-| firebase/app | V8      | 21.99 kb |
-| firebase/app | V9      | 17.51 kb |
+| モジュール   | バージョン | サイズ   |
+| ------------ | ---------- | -------- |
+| firebase/app | V8         | 21.99 kb |
+| firebase/app | V9         | 17.51 kb |
 
 V9 モジュラー SDK ではデフォルトエクスポートがないので、上記のようにすることで、ツリーシェイキングを無効にできます。
 バージョンが違うだけで結構サイズが違うことがわかります。
@@ -183,9 +194,9 @@ initializeApp(firebaseOptions)
 `initializeApp` 関数のみバンドルすると、`15.99 kb` になりました。
 つまり、 `firebase/app`   モジュールを利用する場合の上下限は以下のようになります。
 
-| モジュール   | Version | 下限     | 上限     |
-| ------------ | ------- | -------- | -------- |
-| firebase/app | V9      | 15.99 kb | 17.51 kb |
+| モジュール   | バージョン | 下限     | 上限     |
+| ------------ | ---------- | -------- | -------- |
+| firebase/app | V9         | 15.99 kb | 17.51 kb |
 
 ツリーシェイキングによって、バンドルサイズを更に削減できました。
 V8 SDK を使った場合は `21.99 kb` だったので、V9 モジュラー SDK を利用したほうが、バンドルサイズが小さくなることがわかります。
@@ -257,12 +268,12 @@ console.log(firestore)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール                | Version | Size      |
-| ------------------------- | ------- | --------- |
-| firebase/firestore        | V8      | 342.13 kb |
-| firebase/firestore/memory | V8      | 276.45 kb |
-| firebase/firestore        | V9      | 271.26 kb |
-| firebase/firestore/lite   | V9      | 80.70 kb  |
+| モジュール                | バージョン | サイズ    |
+| ------------------------- | ---------- | --------- |
+| firebase/firestore        | V8         | 342.13 kb |
+| firebase/firestore/memory | V8         | 276.45 kb |
+| firebase/firestore        | V9         | 271.26 kb |
+| firebase/firestore/lite   | V9         | 80.70 kb  |
 
 これがそれぞれの場合の、バンドルサイズの上限になります。
 V8 SDK では初期化段階ですべてのメソッドを利用できるので、これ以上バンドルサイズは増減しません。
@@ -297,10 +308,10 @@ const firestore = initializeFirestore(app, {})
   </CodeGroup>
 </CodeGroups>
 
-| モジュール              | Version | 下限     | 上限      |
-| ----------------------- | ------- | -------- | --------- |
-| firebase/firestore      | V9      | 62.85 kb | 271.26 kb |
-| firebase/firestore/lite | V9      | 14.64 kb | 80.70kb   |
+| モジュール              | バージョン | 下限     | 上限      |
+| ----------------------- | ---------- | -------- | --------- |
+| firebase/firestore      | V9         | 62.85 kb | 271.26 kb |
+| firebase/firestore/lite | V9         | 14.64 kb | 80.70kb   |
 
 ここから、モジュールの関数をインポートし利用する分だけ、バンドルサイズは増加していきます。
 
@@ -345,10 +356,10 @@ console.log(auth)
   </CodeGroup>
 </CodeGroups>
 
-| モジュール    | Version | Size     |
-| ------------- | ------- | -------- |
-| firebase/auth | V8      | 197.91kb |
-| firebase/auth | V9      | 114.54kb |
+| モジュール    | バージョン | サイズ   |
+| ------------- | ---------- | -------- |
+| firebase/auth | V8         | 197.91kb |
+| firebase/auth | V9         | 114.54kb |
 
 フルバンドルで、40%程度サイズを削減しています。
 
@@ -360,9 +371,9 @@ import { initializeAuth } from 'firebase/auth'
 initializeAuth(app)
 ```
 
-| モジュール    | Version | 下限     | 上限     |
-| ------------- | ------- | -------- | -------- |
-| firebase/auth | V9      | 39.88 kb | 114.54kb |
+| モジュール    | バージョン | 下限     | 上限     |
+| ------------- | ---------- | -------- | -------- |
+| firebase/auth | V9         | 39.88 kb | 114.54kb |
 
 非常に小さくなりました。ここに例えば `signInAnonymously` 関数をインポートし、匿名ユーザーでのサインインを有効にすると、
 バンドルサイズは合計で、`41.07kb` になります[^2]

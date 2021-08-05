@@ -123,7 +123,11 @@ module.exports = {
             },
             'thead th:first-child': false,
             'tbody td:first-child': false,
-            'tbody td:last-child': false
+            'tbody td:last-child': false,
+
+            hr: {
+              color: false
+            }
           }
         }
       }
