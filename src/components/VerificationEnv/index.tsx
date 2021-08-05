@@ -6,7 +6,7 @@ const Index: FC<Verification> = (props) => {
   return (
     <VerificationEnv
       {...props}
-      className="p-2 bg-gray-100 dark:bg-blue-gray-800 rounded-md"
+      className="p-2 xl:bg-gray-100 xl:dark:bg-blue-gray-800 rounded-md"
     />
   )
 }

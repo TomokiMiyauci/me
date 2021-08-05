@@ -52,7 +52,7 @@ const PackageComponent: FC<Packages> = ({ node, deno }) => {
                 <ul className="ml-4">
                   {node.map((props) => {
                     return (
-                      <li>
+                      <li key={`${props.name}@${props.version}`}>
                         <Pkg {...props} />
                       </li>
                     )

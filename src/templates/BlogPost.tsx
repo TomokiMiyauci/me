@@ -43,8 +43,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   const { locale } = useLocalization()
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  console.log(verification, 1)
-
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
   useAccessCounter(slug)
@@ -79,13 +77,13 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             isModified={isModified}
             editLink={editOnGitHub}
           >
-            <div className="container mx-auto flex flex-wrap ">
-              <aside className="lg:w-1/5 xl:px-10 lg:pt-20 xl:pt-28">
+            <div className="container mx-auto flex-col xl:flex-row flex flex-wrap ">
+              <aside className="xl:w-1/5 xl:px-10 hidden xl:order-1 xl:block lg:pt-20 xl:pt-28">
                 <ReadingProgress />
               </aside>
 
               <section
-                className="mx-auto w-full prose lg:w-3/5"
+                className="mx-auto w-full prose xl:w-3/5 order-2"
                 itemProp="articleBody"
               >
                 <MDXRenderer>{body}</MDXRenderer>
@@ -104,17 +102,15 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 </div>
               </section>
 
-              <div className="lg:w-1/5 pl-4">
-                <div className="sticky space-y-4 lg:block top-24 hidden">
-                  <VerificationEnv {...verification} />
+              <div className="xl:w-1/5 max-w-prose mx-auto order-1 mb-6 xl:order-3 w-full lg:block hidden space-y-4">
+                <VerificationEnv {...verification} />
 
-                  <nav>
-                    <Toc
-                      className="rounded-md  bg-gray-100  dark:bg-blue-gray-800"
-                      toc={tableOfContents.items}
-                    />
-                  </nav>
-                </div>
+                <nav className="sticky top-24 ">
+                  <Toc
+                    className="rounded-md  bg-gray-100  dark:bg-blue-gray-800"
+                    toc={tableOfContents.items}
+                  />
+                </nav>
               </div>
             </div>
           </Article>

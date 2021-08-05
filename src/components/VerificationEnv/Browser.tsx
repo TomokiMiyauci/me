@@ -21,7 +21,10 @@ const BrowserComponent: FC<Partial<Browser> & { className?: string }> = ({
   return (
     <span className={`inline-flex flex-col items-center ${className}`}>
       <h3 className="self-start">Browser</h3>
-      <Icon icon={chromeOutline} className={`w-24 px-2 h-24 ${iconClass}`} />
+      <Icon
+        icon={chromeOutline}
+        className={`w-16 xl:w-24 px-2 h-16 xl:h-24 ${iconClass}`}
+      />
       <p className={titleClass}>{title}</p>
     </span>
   )

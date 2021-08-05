@@ -11,7 +11,7 @@ const OScomponent: FC<OS & { className?: string }> = ({
 }) => (
   <span className={`inline-flex flex-col items-center ${className}`}>
     <h3 className="self-start">OS</h3>
-    <Icon icon={appleOutlined} className="w-24 h-24" />
+    <Icon icon={appleOutlined} className="w-16 h-16 xl:w-24 xl:h-24" />
     <p>{name}</p>
     {family}: {version}
   </span>
