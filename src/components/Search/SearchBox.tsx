@@ -28,7 +28,7 @@ const SearchBox: FC<
         placeholder="Search"
         aria-label="Search"
         autoFocus
-        className="bg-transparent text-lg"
+        className="bg-transparent flex-1 text-lg"
         {...props}
       />
 

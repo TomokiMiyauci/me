@@ -13,7 +13,7 @@ const SearchSection: FC<{
       <div className="flex space-x-4 pb-2">
         <SearchField onClose={onClose} searchClassName="flex-1" />
       </div>
-      <hr />
+      <hr className="border-gray-200 dark:border-blue-gray-800" />
       <div className="flex-1 overflow-y-scroll">{querying && searchResult}</div>
       <br />
       {powerdBy}
