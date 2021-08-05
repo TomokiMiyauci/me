@@ -18,6 +18,10 @@ body {
           @apply border-b-gray-200;
         }
       }
+
+      hr {
+        @apply border-gray-200;
+      }
     }
   }
 
@@ -39,6 +43,10 @@ body {
 
       thead {
         @apply bg-blue-gray-700 border-b-gray-500;
+      }
+
+      hr {
+        @apply border-blue-gray-700;
       }
     }
   }

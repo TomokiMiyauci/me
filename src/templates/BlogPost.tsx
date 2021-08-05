@@ -87,6 +87,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 itemProp="articleBody"
               >
                 <MDXRenderer>{body}</MDXRenderer>
+                <hr className="prose mx-auto my-10" />
 
                 <a
                   className="text-accent space-x-1 underline md:no-underline hover:underline"
@@ -115,11 +116,9 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             </div>
           </Article>
 
-          <hr className="prose mx-auto my-10" />
-
           {/* <GoogleAdsense /> */}
 
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl my-8 mx-auto">
             <Newsletter />
           </div>
 
