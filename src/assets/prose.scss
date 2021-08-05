@@ -7,15 +7,10 @@ body {
       code {
         @apply bg-gray-200 border-accent opacity-80 border;
       }
-      thead {
-        @apply bg-gray-200 border-b-gray-300;
-      }
 
       tbody {
-        @apply bg-gray-100;
-
         tr {
-          @apply border-b-gray-200;
+          @apply border-b-gray-200 transition-colors duration-300 hover:bg-gray-100;
         }
       }
 
@@ -33,16 +28,13 @@ body {
       code {
         @apply bg-blue-gray-800 border-accent opacity-80 border;
       }
-      tbody {
-        @apply bg-blue-gray-800;
-
-        tr {
-          @apply border-b-gray-500;
-        }
-      }
-
       thead {
-        @apply bg-blue-gray-700 border-b-gray-500;
+        @apply border-blue-gray-600;
+      }
+      tbody {
+        tr {
+          @apply border-b-gray-700 transition-colors duration-300 hover:bg-blue-gray-800;
+        }
       }
 
       hr {

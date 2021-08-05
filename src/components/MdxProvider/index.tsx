@@ -17,7 +17,7 @@ const components: MDXProviderComponentsProp = {
     return <MdxH2 id={id} title={title} />
   },
   table: (props) => (
-    <div className="w-full rounded-md overflow-x-scroll">
+    <div className="w-full scrollbar-thin scrollbar-thumb-accent rounded overflow-x-scroll">
       <table {...props} />
     </div>
   ),
