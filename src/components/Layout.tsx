@@ -5,6 +5,7 @@ import Snackbar from '../components/Snackbar'
 import { useAuthProvider } from '../hooks/auth'
 import AuthContext from '../contexts/auth'
 import type { Locale } from '@/../config/types'
+import Search from '@/components/Search'
 
 const Layout: FC<{
   originalPath: string
@@ -23,6 +24,8 @@ const Layout: FC<{
         currentPath={currentPath}
         originalPath={originalPath}
       />
+      <Search />
+
       <Snackbar />
     </AuthContext.Provider>
   )

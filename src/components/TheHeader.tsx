@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC, memo, useContext } from 'react'
 import Logo from './Logo'
 import AccentColor from './AccentColor'
 import DarkMode from './DarkMode'
@@ -8,10 +8,8 @@ import { useLocalizedNavigations } from './BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
 import IconWith from '@/components/IconWith'
 import type { Locale } from '@/../config/types'
-
-// import Search from '@/components/search'
-
-// const indices = ['Pages']
+import SearchButton from '@/components/Search/SearchButton'
+import { useSearchShow } from '@/components/Search/hooks'
 
 const Inner: FC<{
   originalPath: string
@@ -19,42 +17,45 @@ const Inner: FC<{
   locale: Locale
 }> = ({ originalPath, currentPath, locale }) => {
   const localizedNavs = useLocalizedNavigations(locale)
+  const [_, toggleSearch] = useSearchShow()
 
   return (
-    <div
-      className="container max-w-8xl py-2 md:py-0 px-3 mx-auto items-center
+    <>
+      <div
+        className="container max-w-8xl py-2 md:py-0 px-3 mx-auto items-center
 justify-between flex"
-    >
-      <span className="flex space-x-2 lg:space-x-6 items-center">
-        <Logo shrink locale={locale} />
+      >
+        <span className="flex space-x-2 lg:space-x-6 items-center">
+          <Logo shrink locale={locale} />
 
-        <Navigation
-          className="hidden md:block"
-          navigations={localizedNavs}
-          currentPath={currentPath}
-        />
+          <Navigation
+            className="hidden md:block"
+            navigations={localizedNavs}
+            currentPath={currentPath}
+          />
 
-        <a
-          className="hidden md:flex text-gray-500 dark:text-gray-400 p-2 md:py-4 md:px-6 hover:bg-gray-200 dark:hover:bg-blue-gray-800 hover:opacity-70 duration-300 transition flex-col justify-center items-center"
-          target="_blank"
-          href="/rss.xml"
-        >
-          <IconWith icon={rss} className="w-7 h-7 md:w-9 md:h-9">
-            <span className="text-[0.65rem] md:text-xs">RSS</span>
-          </IconWith>
-        </a>
-      </span>
+          <a
+            className="hidden md:flex text-gray-500 dark:text-gray-400 p-2 md:py-4 md:px-6 hover:bg-gray-200 dark:hover:bg-blue-gray-800 hover:opacity-70 duration-300 transition flex-col justify-center items-center"
+            target="_blank"
+            href="/rss.xml"
+          >
+            <IconWith icon={rss} className="w-7 h-7 md:w-9 md:h-9">
+              <span className="text-[0.65rem] md:text-xs">RSS</span>
+            </IconWith>
+          </a>
+        </span>
 
-      <div className="flex space-x-5 lg:space-x-8 items-center">
-        {/* <Search indices={indices} /> */}
+        <div className="flex space-x-5 lg:space-x-8 items-center">
+          <SearchButton className="md:hidden" onClick={toggleSearch} />
 
-        <LangSwitcher originalPath={originalPath} />
+          <LangSwitcher originalPath={originalPath} />
 
-        <AccentColor />
+          <AccentColor />
 
-        <DarkMode />
+          <DarkMode />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
