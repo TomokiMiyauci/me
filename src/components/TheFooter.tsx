@@ -99,32 +99,30 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
           </ul>
         </nav>
 
-        <div className="flex flex-col md:flex-row items-center md:space-x-7">
-          <div className="my-4 text-gray-500 space-x-6">
-            <a
-              href="https://www.npmjs.com/~miyauci"
-              target="_blank"
-              className="transition duration-200 hover:text-accent"
-            >
-              <Icon icon={npmOutline} className="w-8 h-8" />
-            </a>
+        <div className="flex  flex-nowrap items-center my-4 text-gray-500 space-x-8 md:space-x-4 lg:space-x-6">
+          <a
+            href="https://www.npmjs.com/~miyauci"
+            target="_blank"
+            className="transition duration-200 hover:text-accent"
+          >
+            <Icon icon={npmOutline} className="w-8 h-8" />
+          </a>
 
-            <a
-              href="https://twitter.com/tomoki_miyauci"
-              target="_blank"
-              className="transition duration-200 hover:text-accent"
-            >
-              <Icon icon={twitter} className="w-8 h-8" />
-            </a>
+          <a
+            href="https://twitter.com/tomoki_miyauci"
+            target="_blank"
+            className="transition duration-200 hover:text-accent"
+          >
+            <Icon icon={twitter} className="w-8 h-8" />
+          </a>
 
-            <a
-              href="https://github.com/TomokiMiyauci/me"
-              target="_blank"
-              className="transition duration-200 hover:text-accent"
-            >
-              <Icon icon={github} className="w-8 h-8" />
-            </a>
-          </div>
+          <a
+            href="https://github.com/TomokiMiyauci/me"
+            target="_blank"
+            className="transition duration-200 hover:text-accent"
+          >
+            <Icon icon={github} className="w-8 h-8" />
+          </a>
         </div>
       </div>
     </footer>
