@@ -20,15 +20,18 @@ export const onCreateMetaPost = functions
   .firestore.document('meta/{slug}/locales/{locale}')
   .onCreate(async (snapshot, { params }) => {
     const { locale } = params as Params
-    const { url, title, description } = snapshot.data() as Partial<Post>
+    const { url, shortUrl, title, description } =
+      snapshot.data() as Partial<Post>
 
     if (!url || !title || !description) {
       functions.logger.error('Something data is undefined')
       return
     }
+
+    const _url = shortUrl ?? url
     const template = templateName(locale)
     const content = await renderTemplate<TemplateData>(template, {
-      url,
+      url: _url,
       title,
       description
     })
