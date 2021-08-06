@@ -1,8 +1,8 @@
 🤖 新しい記事を投稿しました🚀
 
+<%= it.url %>
+
+
 <%= it.title %>
 
 <%= it.description %>
-
-
-<%= it.url %>

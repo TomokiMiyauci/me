@@ -82,7 +82,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               <aside className="xl:w-1/5 max-w-prose mx-auto w-full min-w-[250px] mb-6 xl:mb-0 xl:pb-28 order-1">
                 <div className="xl:sticky top-24">
                   <GoogleAdsense
-                    className="xl:max-w-[250px] 2xl:max-w-none"
                     style={{ display: 'block' }}
                     dataAdFormat="auto"
                     dataAdSlot="4829036417"

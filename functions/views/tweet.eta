@@ -1,8 +1,8 @@
 🤖 A new article has been posted🚀
 
+<%= it.url %>
+
+
 <%= it.title %>
 
 <%= it.description %>
-
-
-<%= it.url %>

@@ -3,7 +3,7 @@ import type { Post } from '@/types'
 import type { Locale } from '@/../../config/types'
 import type { Config } from '@/types'
 import Twitter from 'twitter-api-v2'
-import { ellipsisContent } from '@/twitter/util'
+import { renderTemplate, TemplateData, ellipsis } from '@/twitter/util'
 
 import { templateName } from '@/twitter/util'
 
@@ -27,14 +27,15 @@ export const onCreateMetaPost = functions
       return
     }
     const template = templateName(locale)
-
-    const content = await ellipsisContent(template, {
+    const content = await renderTemplate<TemplateData>(template, {
       url,
       title,
       description
     })
 
     if (!content) return
+    const ellipsisContent = ellipsis(content)
+
     const {
       app_key: appKey,
       app_secret: appSecret,
@@ -48,7 +49,7 @@ export const onCreateMetaPost = functions
       accessSecret
     })
 
-    return client.v1.tweet(content).catch((e) => {
+    return client.v1.tweet(ellipsisContent).catch((e) => {
       functions.logger.error(e)
     })
   })
