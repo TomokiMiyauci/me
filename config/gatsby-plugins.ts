@@ -225,17 +225,6 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   {
     resolve: 'gatsby-plugin-offline'
-  },
-  {
-    resolve: `gatsby-plugin-amp`,
-    options: {
-      canonicalBaseUrl: siteUrl,
-      components: [],
-      excludedPaths: ['/404*', '/', '/ja/', '/projects/', '/photos/'],
-      pathIdentifier: '/amp/',
-      relAmpHtmlPattern: '{{canonicalBaseUrl}}{{pathname}}{{pathIdentifier}}',
-      useAmpClientIdApi: true
-    }
   }
 
   // 'gatsby-plugin-preact'
