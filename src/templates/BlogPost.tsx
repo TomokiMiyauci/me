@@ -22,7 +22,8 @@ import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
 import VerificationEnv from '@/components/VerificationEnv'
-// import GoogleAdsense from '@/components/GoogleAdsense'
+import GoogleAdsense from '@/components/GoogleAdsense'
+
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
   location
@@ -78,8 +79,18 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             editLink={editOnGitHub}
           >
             <div className="container mx-auto flex-col xl:flex-row flex flex-wrap ">
-              <aside className="xl:w-1/5 xl:px-10 hidden xl:order-1 xl:block lg:pt-20 xl:pt-28">
-                <ReadingProgress />
+              <aside className="xl:w-1/5 max-w-prose mx-auto w-full min-w-[250px] mb-6 xl:mb-0 xl:pb-28 order-1">
+                <div className="xl:sticky top-24">
+                  <GoogleAdsense
+                    style={{ display: 'block' }}
+                    dataAdFormat="auto"
+                    dataAdSlot="4829036417"
+                    dataFullWidthResponsive="true"
+                  />
+                  {/* <div className="w-[250px] bg-gray-600 h-[250px]"></div> */}
+
+                  <ReadingProgress />
+                </div>
               </aside>
 
               <section
@@ -106,7 +117,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               <div className="xl:w-1/5 max-w-prose mx-auto order-1 mb-6 xl:order-3 w-full lg:block hidden space-y-4">
                 <VerificationEnv {...verification} />
 
-                <nav className="sticky top-24 ">
+                <nav className="sticky top-24">
                   <Toc
                     className="rounded-md  bg-gray-100  dark:bg-blue-gray-800"
                     toc={tableOfContents.items}
@@ -115,8 +126,6 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
               </div>
             </div>
           </Article>
-
-          {/* <GoogleAdsense /> */}
 
           <div className="max-w-5xl my-8 mx-auto">
             <Newsletter />

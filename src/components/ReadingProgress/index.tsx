@@ -25,6 +25,12 @@ const useReading = () => {
 const ReadingProgress: FC = () => {
   const { max, val } = useReading()
 
-  return <ProgressBar max={max} val={val} />
+  return (
+    <ProgressBar
+      className="fixed xl:static xl:w-56 top-0 inset-x-0 z-[1] xl:z-auto xl:mt-[200px] xl:transform xl:rotate-90"
+      max={max}
+      val={val}
+    />
+  )
 }
 export default ReadingProgress
