@@ -6973,6 +6973,14 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
+bitly@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/bitly/-/bitly-7.1.2.tgz#157e30d3017d8f368e099e515f09020ab7999031"
+  integrity sha512-DWjsnJ7vaQ6PbTZtuYXwDFeJQfqoN7GIbALo6vVfrPc2tp1jWPzn9QVZI1OxwDK6kSwfg5lTvsYu6yvg+3HSUw==
+  dependencies:
+    axios "^0.21.1"
+    valid-url "^1.0.9"
+
 bl@^1.0.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.3.tgz#1e8dd80142eac80d7158c9dccc047fb620e035e7"
