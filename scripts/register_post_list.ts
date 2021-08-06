@@ -3,10 +3,12 @@ import { resolve } from 'path'
 import admin from 'firebase-admin'
 import { BuildArgs } from 'gatsby'
 import type { Locale } from '@/../config/types'
-import { isUndefined } from '@miyauci/is-valid'
-import { replace, test } from 'core-fn'
+import { isUndefined, isLength0 } from '@miyauci/is-valid'
+import { replace, test, length } from 'core-fn'
 import type { Mdx, MdxFrontmatter } from '@/../graphql-types'
 import { config } from 'dotenv'
+import { BitlyClient } from 'bitly'
+import { not } from 'fonction'
 
 const pretty = replace(/\\n/g, '\n')
 const isPosts = test(/\/posts\//)
@@ -34,22 +36,42 @@ const postPostList = async (posts: PostMeta[]): Promise<void> => {
   config()
   const clientEmail = process.env.CLIENT_EMAIL
   const privateKey = process.env.PRIVATE_KEY
-  if (isUndefined(clientEmail) || isUndefined(privateKey)) {
+  const bitlyAccessToken = process.env.BITLY_ACCESS_TOKEN
+  if (
+    isUndefined(clientEmail) ||
+    isUndefined(privateKey) ||
+    isUndefined(bitlyAccessToken)
+  ) {
     console.error('No credential')
     return
   }
 
-  console.log('posts:', posts.length)
+  console.log('All posts:', length(posts))
 
   initializeApp(clientEmail, pretty(privateKey))
 
-  await Promise.all(
-    posts.map(({ locale, url, title, description, slug }) => {
-      if (!url || !description) return
+  const targetPostMeta = await notExistsPostMeta(posts)
+  console.log('Target posts:', length(targetPostMeta))
 
-      postMeta({ slug, locale }, { url, title, description })
-    })
-  )
+  if (isLength0(targetPostMeta)) return
+  const client = new BitlyClient(bitlyAccessToken)
+
+  targetPostMeta.forEach(({ locale, url, title, description, slug }) => {
+    if (!url || !description) return
+
+    client
+      .shorten(url)
+      .then(({ link, long_url }) =>
+        postMeta(
+          { slug, locale },
+          { url: long_url, shortUrl: link, title, description }
+        )
+      )
+      .catch((e) => {
+        console.error(e)
+        console.error({ locale, url, title, description, slug })
+      })
+  })
 }
 
 const initializeApp = (clientEmail: string, privateKey: string) =>
@@ -61,6 +83,40 @@ const initializeApp = (clientEmail: string, privateKey: string) =>
     })
   })
 
+const notExistsPostMeta = async (postMeta: PostMeta[]): Promise<PostMeta[]> => {
+  const result = await Promise.all(
+    postMeta.map(async (post) => {
+      const { slug, locale } = post
+      const result = await isExists({ slug, locale })
+
+      return result ? undefined : post
+    })
+  )
+
+  return result.filter(not(isUndefined)) as PostMeta[]
+}
+
+const isExists = async ({
+  slug,
+  locale
+}: {
+  slug: string
+  locale: Locale
+}): Promise<boolean> => {
+  const { exists } = await admin
+    .firestore()
+    .collection('meta')
+    .doc(slug)
+    .collection('locales')
+    .doc(locale)
+    .get()
+    .catch((e) => {
+      console.error(e)
+      return { exists: true }
+    })
+  return exists
+}
+
 const postMeta = (
   {
     slug,
@@ -71,6 +127,7 @@ const postMeta = (
   },
   content: {
     url: string
+    shortUrl: string
     title: string
     description: string
   }
@@ -85,7 +142,9 @@ const postMeta = (
       ...content,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     })
-    .catch(() => {})
+    .catch((e) => {
+      console.error(e)
+    })
 }
 
 type PostMeta = {
@@ -129,4 +188,4 @@ if (require.main === module) {
   console.info('Post meta info')
 }
 
-export { useMetaPoster, main, isPosts }
+export { useMetaPoster, main, isPosts, notExistsPostMeta, initializeApp }

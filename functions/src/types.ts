@@ -14,6 +14,7 @@ type Config = {
 
 type Post = {
   url: string
+  shortUrl: string
   title: string
   description: string
   locale: Locale
