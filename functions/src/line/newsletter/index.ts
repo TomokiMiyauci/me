@@ -12,14 +12,14 @@ export const onCreateMetaPostJa = functions
   })
   .firestore.document('meta/{slug}/locales/ja')
   .onCreate(async (snapshot) => {
-    const { url } = snapshot.data() as Partial<Post>
+    const { url, shortUrl } = snapshot.data() as Partial<Post>
 
     if (!url) {
       functions.logger.error('Something data is undefined')
       return
     }
     const content = await renderFile('line_newsletter_ja', {
-      url
+      url: shortUrl ?? url
     })
 
     if (!content) return
