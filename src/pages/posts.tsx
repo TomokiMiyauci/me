@@ -18,6 +18,7 @@ import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
 import { inc } from 'fonction'
+import GoogleAdsense from '@/components/GoogleAdsense'
 
 type Order = 'recent' | 'hot'
 
@@ -170,8 +171,8 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
           tag={selectedTag}
         />
       ) : (
-        <div className="container flex lg:flex-row flex-col space-y-4 lg:space-y-0  mx-auto">
-          <ul className="mx-auto min-h-[60vh] order-2 my-4 flex-1 md:grid md:grid-cols-2 md:gap-14 px-2 max-w-5xl">
+        <div className="flex max-w-max lg:flex-row flex-col space-y-4 lg:space-y-0  mx-auto">
+          <ul className="mx-auto min-h-[60vh] order-2 my-4 flex-1 md:grid md:grid-cols-2 md:gap-14 lg:px-4 max-w-5xl">
             {articles.map(
               (
                 {
@@ -236,6 +237,15 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
                 </button>
               </div>
             </div>
+          </div>
+
+          <div className="hidden xl:block order-3 xl:min-w-[250px]">
+            <GoogleAdsense
+              className="hidden xl:block"
+              dataAdFormat="auto"
+              dataAdSlot="4829036417"
+              dataFullWidthResponsive="true"
+            />
           </div>
         </div>
       )}
