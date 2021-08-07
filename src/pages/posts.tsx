@@ -171,7 +171,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
           tag={selectedTag}
         />
       ) : (
-        <div className="flex max-w-max lg:flex-row flex-col space-y-4 lg:space-y-0  mx-auto">
+        <div className="flex max-w-max flex-wrap lg:flex-row flex-col space-y-4 lg:space-y-0 mx-auto">
           <ul className="mx-auto min-h-[60vh] order-2 my-4 flex-1 md:grid md:grid-cols-2 md:gap-14 lg:px-4 max-w-5xl">
             {articles.map(
               (
@@ -239,13 +239,15 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
             </div>
           </div>
 
-          <div className="hidden xl:block order-3 xl:min-w-[250px]">
-            <GoogleAdsense
-              className="hidden xl:block"
-              dataAdFormat="auto"
-              dataAdSlot="4829036417"
-              dataFullWidthResponsive="true"
-            />
+          <div className="w-full xl:w-auto order-3 xl:min-w-[250px]">
+            <div className="xl:sticky top-24">
+              <GoogleAdsense
+                className="mx-auto block"
+                dataAdFormat="auto"
+                dataAdSlot="4829036417"
+                dataFullWidthResponsive="true"
+              />
+            </div>
           </div>
         </div>
       )}
