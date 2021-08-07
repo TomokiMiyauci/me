@@ -10,9 +10,7 @@ import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
 import { inc } from 'fonction'
-
-const classNames = (...classes: string[]): string =>
-  classes.filter(Boolean).join(' ')
+import { classNames } from '@/utils/class_name'
 
 const RelatedArticle: FC<{
   recentArticles: ArticleHeadlineProps[]

@@ -159,13 +159,11 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
 
     const view = props(slug!, slugViewMap)
 
-    if (view) {
-      actions.createNodeField({
-        node,
-        name: 'view',
-        value: view
-      })
-    }
+    actions.createNodeField({
+      node,
+      name: 'view',
+      value: view ?? 0
+    })
   }
 }
 

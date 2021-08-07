@@ -16,17 +16,19 @@ import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
+import fire from '@iconify-icons/mdi/fire'
 
-type Order = 'recent'
+type Order = 'recent' | 'hot'
 
-const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
+const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
     data,
     pageContext: { locale },
     location
-  } = a
+  } = props
   const {
-    allMdx,
+    recent,
+    hot,
     site: { siteMetadata }
   } = data
   const { siteUrl } = siteMetadata
@@ -34,12 +36,16 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const [search, changeSearch] = useQueryString('q', location)
   const [selectedTag, changeTag] = useQueryString('tag', location)
   const [order, changeOrder] = useQueryString<Order>('order', location)
-  const { nodes, group } = allMdx
+  const { nodes, group } = recent
 
   const mapOrder = useMemo(() => {
     switch (order) {
       case 'recent': {
         return nodes
+      }
+
+      case 'hot': {
+        return hot.nodes
       }
 
       default: {
@@ -83,7 +89,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 
       return check(title) || check(description)
     })
-  }, [search])
+  }, [search, mapOrder])
 
   const articles = useMemo(() => {
     if (isEmpty(selectedTag)) return filterByWord
@@ -120,7 +126,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         <meta name="twitter:card" content="summary" />
       </Helmet>
 
-      <section className="-mx-4 p-2 space-y-6 md:p-8 -mt-4 mb-4 md:-mt-7 heropattern-jupiter-gray-200 dark:heropattern-jupiter-gray-700 flex flex-col justify-center items-center">
+      <section className="-mx-4 p-2 space-y-6 md:p-8 -mt-4 md:-mt-7 heropattern-jupiter-gray-200 dark:heropattern-jupiter-gray-700 flex flex-col justify-center items-center">
         <h1 className="text-center text-5xl p-2 ">Blog</h1>
 
         <span className="rounded-full px-2 hover:shadow-md focus-within:ring ring-accent transition duration-300 py-0.5 space-x-2 shadow inline-flex bg-gray-100 dark:bg-blue-gray-900 border dark:border-blue-gray-700">
@@ -163,27 +169,8 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           tag={selectedTag}
         />
       ) : (
-        <div className="container flex lg:flex-row flex-col space-y-4 lg:space-y-0 lg:space-x-8 my-2 md:my-12 mx-auto">
-          <div className="min-w-[200px] xl:min-w-[250px]">
-            <div className="lg:sticky top-24">
-              <div
-                className="flex overflow-x-scroll justify-around flex-nowrap p-1 space-x-1 bg-gray-200/50 dark:bg-blue-gray-800 rounded-xl"
-                role="tablist"
-              >
-                <button
-                  onClick={() => changeOrder('recent')}
-                  className="w-full p-1 space-x-2 whitespace-nowrap font-medium rounded-lg transition duration-300 focus:outline-none focus:ring-2 ring-offset-2 ring-offset-accent ring-white dark:ring-blue-gray-900 hover:bg-opacity-50 hover:bg-white/80 dark:hover:bg-blue-gray-900/80 hover:text-accent"
-                  role="tab"
-                >
-                  <Icon icon={burstNew} className="w-7 h-7" />
-
-                  <span className="align-middle">Recent</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <ul className="mx-auto min-h-[60vh] flex-1 md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
+        <div className="container flex lg:flex-row flex-col space-y-4 lg:space-y-0  mx-auto">
+          <ul className="mx-auto min-h-[60vh] order-2 my-4 flex-1 md:grid md:grid-cols-2 md:gap-14 px-2 max-w-5xl">
             {articles.map(
               ({
                 frontmatter: { title, thumbnail, description, date, slug },
@@ -205,6 +192,43 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
               )
             )}
           </ul>
+
+          <div className="min-w-[200px] lg:py-6 lg:px-2 order-1 sticky top-1 md:top-[5.5rem] bg-gray-50 dark:bg-blue-gray-900 xl:min-w-[250px]">
+            <div className="sticky top-24">
+              <div
+                className="flex lg:flex-col space-x-1 lg:space-x-0 lg:space-y-1 overflow-x-scroll justify-around flex-nowrap p-1 bg-gray-200/50 dark:bg-blue-gray-800 rounded-xl"
+                role="tablist"
+              >
+                <button
+                  onClick={() => changeOrder('recent')}
+                  className={`w-full p-1 space-x-2 whitespace-nowrap font-medium rounded-lg transition duration-300 focus:outline-none focus:ring-2 ring-offset-2 ring-offset-accent ring-white dark:ring-blue-gray-900 hover:bg-opacity-50 ${
+                    ['recent', ''].includes(order)
+                      ? 'bg-white dark:bg-blue-gray-900 shadow text-accent'
+                      : 'hover:bg-white/80 dark:hover:bg-blue-gray-900/80 hover:text-accent'
+                  }`}
+                  role="tab"
+                >
+                  <Icon icon={burstNew} className="w-7 h-7" />
+
+                  <span className="align-middle">Recent</span>
+                </button>
+
+                <button
+                  onClick={() => changeOrder('hot')}
+                  className={`w-full p-1 space-x-2 whitespace-nowrap font-medium rounded-lg transition duration-300 focus:outline-none focus:ring-2 ring-offset-2 ring-offset-accent ring-white dark:ring-blue-gray-900 hover:bg-opacity-50 ${
+                    ['hot'].includes(order)
+                      ? 'bg-white dark:bg-blue-gray-900 shadow text-accent'
+                      : 'hover:bg-white/80 dark:hover:bg-blue-gray-900/80 hover:text-accent'
+                  }`}
+                  role="tab"
+                >
+                  <Icon icon={fire} className="w-7 h-7" />
+
+                  <span className="align-middle">Hot</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       <Newsletter />
@@ -216,7 +240,7 @@ export default Posts
 
 export const query = graphql`
   query BlogPosts($locale: String!, $dateFormat: String!) {
-    allMdx(
+    recent: allMdx(
       filter: {
         fields: { locale: { eq: $locale } }
         fileAbsolutePath: { regex: "//posts//" }
@@ -245,6 +269,34 @@ export const query = graphql`
           }
           lowerCaseTags
           dateByMMM
+        }
+      }
+    }
+    hot: allMdx(
+      filter: {
+        fileAbsolutePath: { regex: "//posts//" }
+        fields: { locale: { eq: $locale } }
+      }
+      sort: { fields: fields___view, order: DESC }
+    ) {
+      nodes {
+        fields {
+          readingTime {
+            text
+          }
+          lowerCaseTags
+          view
+        }
+        frontmatter {
+          title
+          description
+          date(formatString: $dateFormat)
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
+            }
+          }
+          slug
         }
       }
     }
