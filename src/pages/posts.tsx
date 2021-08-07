@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { BlogPostsQuery } from '../../graphql-types'
 import ArticleHeadline from '@/components/ArticleHeadline'
@@ -9,13 +9,12 @@ import { useMemo } from 'react'
 import Tag from '@/components/Tag'
 import { includes, toLowerCase } from 'core-fn'
 import { isEmpty } from '@miyauci/is-valid'
-import { navigate } from '@reach/router'
 import { pipe } from 'fonction'
-import { useEffect } from 'react'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
 import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
+import { useQueryString } from '@/hooks/location'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -28,20 +27,13 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     site: { siteMetadata }
   } = data
   const { siteUrl } = siteMetadata
-  const [selectedTag, changeTag] = useState<string>('')
-  const [search, changeSearch] = useState<string>('')
 
-  useEffect(() => {
-    changeTag(new URLSearchParams(location.search).get('tag') ?? '')
-  }, [])
+  const [search, changeSearch] = useQueryString('q', location)
+  const [selectedTag, changeTag] = useQueryString('tag', location)
 
-  useEffect(() => {
-    changeSearch(new URLSearchParams(location.search).get('q') ?? '')
-  }, [])
+  const localePath = locale === 'en' ? '/' : '/ja'
 
-  const p = locale === 'en' ? '/' : '/ja'
-
-  const fullpath = new URL(location.pathname, siteUrl).toString()
+  const fullPath = new URL(location.pathname, siteUrl).toString()
 
   const breadcrumbList = {
     '@context': 'https://schema.org',
@@ -51,13 +43,13 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: new URL(p, siteUrl)
+        item: new URL(localePath, siteUrl)
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Blog',
-        item: fullpath
+        item: fullPath
       }
     ]
   }
@@ -86,12 +78,9 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     )
   }, [filterByWord, selectedTag])
 
-  const isSelecting = useMemo(
-    () => (tag: string) => {
-      return tag === selectedTag
-    },
-    [selectedTag]
-  )
+  const isSelecting = (tag: string): boolean => {
+    return tag === selectedTag
+  }
 
   const handleClick = (tag: string) => {
     const tagQuery = isEmpty(selectedTag) || selectedTag !== tag ? tag : ''
@@ -99,38 +88,12 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     changeTag(tagQuery)
   }
 
-  useEffect(() => {
-    const url = new URL(location.href)
-    const urlSearchParams = new URLSearchParams(url.search)
-
-    if (selectedTag) {
-      urlSearchParams.set('tag', selectedTag)
-    } else {
-      urlSearchParams.delete('tag')
-    }
-    url.search = urlSearchParams.toString()
-    navigate(url.href, { replace: true })
-  }, [selectedTag])
-
-  useEffect(() => {
-    const url = new URL(location.href)
-
-    const urlSearchParams = new URLSearchParams(url.search)
-    if (search) {
-      urlSearchParams.set('q', search)
-    } else {
-      urlSearchParams.delete('q')
-    }
-    url.search = urlSearchParams.toString()
-    navigate(url.href, { replace: true })
-  }, [search])
-
   return (
     <>
       <Seo
         title="Blog"
         description="Tomoki Miyauchi's technical blog. Mainly aim to disseminate technical and useful information such as information on the latest technology related to the Web and introduction of what was created as a project. I will send live information with a lot of actual code."
-        fullpath={fullpath}
+        fullPath={fullPath}
       />
 
       <Helmet>
@@ -149,7 +112,9 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           <Icon icon={magnify} className="w-9 h-9 text-gray-500" />
 
           <input
-            onChange={({ target }) => changeSearch(target.value)}
+            onChange={({ target }) => {
+              changeSearch(target.value)
+            }}
             value={search}
             type="search"
             spellCheck="false"
@@ -162,11 +127,11 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           {group.map(({ fieldValue }) => {
             const { tagIcon, wellKnown } = iconMeta(fieldValue)
             if (!wellKnown) return
+
+            const className = isSelecting(fieldValue) ? 'ring ring-accent' : ''
             return (
               <Tag
-                className={`select-none cursor-pointer m-0.5 md:m-1 ${
-                  isSelecting(fieldValue) ? 'ring ring-accent' : ''
-                }`}
+                className={`select-none cursor-pointer m-0.5 md:m-1 ${className}`}
                 hancleClick={() => handleClick(fieldValue)}
                 key={fieldValue}
                 tag={tagIcon}
@@ -184,7 +149,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
         />
       ) : (
         <div className="container my-8 md:my-12 mx-auto">
-          <ul className="mx-auto md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
+          <ul className="mx-auto min-h-[60vh] md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
             {articles.map(
               ({
                 frontmatter: { title, thumbnail, description, date, slug },

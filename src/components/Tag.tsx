@@ -7,7 +7,7 @@ const Tag: FC<{
   hancleClick?: MouseEventHandler
   className?: string
   shrink?: boolean
-}> = ({ tag, hancleClick, className, label, shrink = false }) => {
+}> = ({ tag, hancleClick, className, label }) => {
   return (
     <span
       onClick={hancleClick}
