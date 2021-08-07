@@ -8,6 +8,8 @@ import { firebaseOptions } from '@/../config/constants'
 import FirebaseContext from '@/contexts/firebase'
 import { FirebaseState } from '@/types/firebase'
 import { isBrowser } from '@/utils/browser'
+import { initializeAuth, browserLocalPersistence } from 'firebase/auth'
+import { initializeFirestore } from 'firebase/firestore/lite'
 
 const notInitialized = pipe(getApps, isLength0)
 
@@ -18,17 +20,14 @@ const useFirebaseProvider = () => {
     import('firebase/app').then(async ({ initializeApp }) => {
       const app = initializeApp(firebaseOptions)
 
-      const { initializeFirestore } = await import('firebase/firestore/lite')
       const firestore = initializeFirestore(app, {})
-      const { initializeAuth, browserLocalPersistence } = await import(
-        'firebase/auth'
-      )
+
       const auth = initializeAuth(app, {
         persistence: browserLocalPersistence
       })
 
       if (process.env.NODE_ENV === 'development') {
-        connectFirestoreEmulator(firestore, 'localhost', 8081)
+        connectFirestoreEmulator(firestore, 'localhost', 8082)
         connectAuthEmulator(auth, 'http://localhost:9099')
       }
 

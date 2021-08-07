@@ -11209,7 +11209,7 @@ firebase@8.8.1:
     "@firebase/storage" "0.6.1"
     "@firebase/util" "1.2.0"
 
-firebase@^9.0.0-beta.7:
+firebase@^9.0.0-beta.8:
   version "9.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-9.0.0-beta.8.tgz#c1912f76abcef9c3a015a5693f4c5986b2eeb9f5"
   integrity sha512-QPqBJ/oRe+Afwm7dkFQ0Uy85T4+Q+w0yyk5sOyOh6Tx5rpMdBHcPLTje8Nf4qq0k1tOyNrXPTKnVxX/gPjZ7cA==
