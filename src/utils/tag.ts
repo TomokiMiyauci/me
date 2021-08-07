@@ -16,7 +16,7 @@ import accessPoint from '@iconify-icons/mdi/access-point'
 import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/logos/twitter'
 import firebase from '@iconify-icons/logos/firebase'
-
+import bitly from '@iconify/icons-simple-icons/bitly'
 import { isUndefined } from '@miyauci/is-valid'
 
 const iconMeta = (tag: string) => {
@@ -44,7 +44,8 @@ const ICON_MAP = {
   twitter,
   tailwindcss,
   gatsby,
-  firebase
+  firebase,
+  bitly
 }
 
 export { iconMeta }

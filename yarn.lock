@@ -2909,6 +2909,11 @@
   resolved "https://registry.yarnpkg.com/@iconify/icons-heroicons-outline/-/icons-heroicons-outline-1.1.3.tgz#a14a19092baab99a0e72f0c248c2cb14755b40f5"
   integrity sha512-p4TunU1QxbB1/WzzduoWBhlB/ji9RfHsCfcFkipis7Qy/oB1rHKlrjkwN23cgi9Clo31PCTi91AvGKwD+ryUBA==
 
+"@iconify/icons-simple-icons@^1.1.36":
+  version "1.1.36"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-simple-icons/-/icons-simple-icons-1.1.36.tgz#30cc8182aada1b7175060c164666406057f2bc31"
+  integrity sha512-3+Fw/jhX1buCBPJu/gW9KIdprXd4QnKKXg92IvXN4R5sbre2RUmuQMH8Rw7kFQyUcoi3fmzCnu2NVXw6DDYahg==
+
 "@iconify/icons-teenyicons@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@iconify/icons-teenyicons/-/icons-teenyicons-1.1.0.tgz#024d025495431a1b4fb04db73ee72bc9cf208120"
@@ -11882,6 +11887,13 @@ gatsby-plugin-sitemap@^4.3.1:
     common-tags "^1.8.0"
     minimatch "^3.0.4"
     sitemap "^7.0.0"
+
+gatsby-plugin-twitter@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-twitter/-/gatsby-plugin-twitter-3.11.0.tgz#cec50c5aaf76a20460d7491fd1cbe9688374ff44"
+  integrity sha512-oCc56G/jCfJ3Aeb9dGePNY0SWW7iAIXxOT9aZWoMLreQS6BI1VSAEuhjhgaZXxCkVu/VtoQ3+WMmwXSslf40zQ==
+  dependencies:
+    "@babel/runtime" "^7.14.6"
 
 gatsby-plugin-typescript@^3.10.0:
   version "3.10.0"

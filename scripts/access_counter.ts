@@ -34,7 +34,7 @@ const setupAccessCount = () => {
 
       try {
         const docs = await getDocs(
-          query(col, orderBy('view', 'desc'), limit(8))
+          query(col, orderBy('view', 'desc'), limit(10))
         )
 
         docs.forEach((doc) => {

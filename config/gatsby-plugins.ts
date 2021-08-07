@@ -225,7 +225,8 @@ const plugins: GatsbyConfig['plugins'] = [
   },
   {
     resolve: 'gatsby-plugin-offline'
-  }
+  },
+  'gatsby-plugin-twitter'
 
   // 'gatsby-plugin-preact'
   // 'gatsby-plugin-webpack-bundle-analyser-v2'
