@@ -24,7 +24,7 @@ const Layout: FC<{
         currentPath={currentPath}
         originalPath={originalPath}
       />
-      <Search />
+      {/* <Search /> */}
 
       <Snackbar />
     </AuthContext.Provider>
