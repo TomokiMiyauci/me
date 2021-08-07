@@ -15,6 +15,9 @@ import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
+import burstNew from '@iconify-icons/foundation/burst-new'
+
+type Order = 'recent'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
   const {
@@ -30,6 +33,20 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
 
   const [search, changeSearch] = useQueryString('q', location)
   const [selectedTag, changeTag] = useQueryString('tag', location)
+  const [order, changeOrder] = useQueryString<Order>('order', location)
+  const { nodes, group } = allMdx
+
+  const mapOrder = useMemo(() => {
+    switch (order) {
+      case 'recent': {
+        return nodes
+      }
+
+      default: {
+        return nodes
+      }
+    }
+  }, [order])
 
   const localePath = locale === 'en' ? '/' : '/ja'
 
@@ -54,15 +71,13 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
     ]
   }
 
-  const { nodes, group } = allMdx
-
   const filterByWord = useMemo(() => {
-    if (isEmpty(search)) return nodes
+    if (isEmpty(search)) return mapOrder
 
     const searchIncludes = includes(search)
     const check = pipe(toLowerCase, searchIncludes)
 
-    return nodes.filter(({ frontmatter }) => {
+    return mapOrder.filter(({ frontmatter }) => {
       const title = frontmatter?.title ?? ''
       const description = frontmatter?.description ?? ''
 
@@ -148,8 +163,27 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (a) => {
           tag={selectedTag}
         />
       ) : (
-        <div className="container my-8 md:my-12 mx-auto">
-          <ul className="mx-auto min-h-[60vh] md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
+        <div className="container flex lg:flex-row flex-col space-y-4 lg:space-y-0 lg:space-x-8 my-2 md:my-12 mx-auto">
+          <div className="min-w-[200px] xl:min-w-[250px]">
+            <div className="lg:sticky top-24">
+              <div
+                className="flex overflow-x-scroll justify-around flex-nowrap p-1 space-x-1 bg-gray-200/50 dark:bg-blue-gray-800 rounded-xl"
+                role="tablist"
+              >
+                <button
+                  onClick={() => changeOrder('recent')}
+                  className="w-full p-1 space-x-2 whitespace-nowrap font-medium rounded-lg transition duration-300 focus:outline-none focus:ring-2 ring-offset-2 ring-offset-accent ring-white dark:ring-blue-gray-900 hover:bg-opacity-50 hover:bg-white/80 dark:hover:bg-blue-gray-900/80 hover:text-accent"
+                  role="tab"
+                >
+                  <Icon icon={burstNew} className="w-7 h-7" />
+
+                  <span className="align-middle">Recent</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ul className="mx-auto min-h-[60vh] flex-1 md:grid md:grid-cols-2 md:gap-14 max-w-5xl">
             {articles.map(
               ({
                 frontmatter: { title, thumbnail, description, date, slug },
