@@ -125,6 +125,7 @@
     "gatsby-plugin-postcss": "^4.7.1",
     "gatsby-plugin-robots-txt": "^1.6.8",
     "gatsby-plugin-sharp": "^3.7.1",
+    "gatsby-plugin-twitter": "^3.11.0",
     "gatsby-plugin-webpack-bundle-analyser-v2": "^1.1.22",
     "gatsby-remark-images": "^5.4.1",
     "gatsby-remark-plantuml-lite": "^0.0.6",
