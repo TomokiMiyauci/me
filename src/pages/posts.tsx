@@ -17,6 +17,7 @@ import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
+import { inc } from 'fonction'
 
 type Order = 'recent' | 'hot'
 
@@ -172,24 +173,31 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
         <div className="container flex lg:flex-row flex-col space-y-4 lg:space-y-0  mx-auto">
           <ul className="mx-auto min-h-[60vh] order-2 my-4 flex-1 md:grid md:grid-cols-2 md:gap-14 px-2 max-w-5xl">
             {articles.map(
-              ({
-                frontmatter: { title, thumbnail, description, date, slug },
-                fields
-              }) => (
-                <li className="-mx-2 md:mx-auto min-w-[250px]" key={slug}>
-                  <ArticleHeadline
-                    title={title}
-                    description={description}
-                    to={slug}
-                    img={thumbnail.childImageSharp.gatsbyImageData}
-                    readingTime={fields.readingTime.text}
-                    lastUpdated={date}
-                    tags={fields.lowerCaseTags}
-                    alt="thumbnail"
-                    MMM={fields.dateByMMM}
-                  />
-                </li>
-              )
+              (
+                {
+                  frontmatter: { title, thumbnail, description, date, slug },
+                  fields
+                },
+                i
+              ) => {
+                const index = inc(i)
+                return (
+                  <li className="-mx-2 md:mx-auto min-w-[250px]" key={slug}>
+                    <ArticleHeadline
+                      title={title}
+                      description={description}
+                      to={slug}
+                      img={thumbnail.childImageSharp.gatsbyImageData}
+                      readingTime={fields.readingTime.text}
+                      lastUpdated={date}
+                      tags={fields.lowerCaseTags}
+                      alt="thumbnail"
+                      no={index <= 10 ? index : undefined}
+                      MMM={fields.dateByMMM}
+                    />
+                  </li>
+                )
+              }
             )}
           </ul>
 
