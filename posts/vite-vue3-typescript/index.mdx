@@ -347,7 +347,7 @@ I want to apply automatic formatting before committing, so add the setting to `l
 {
  "lint-staged": {
     "*.{ts,vue}": "eslint --fix",
-    "*": "prettier -w -u" // prettierは一番最後にします
+    "*": "prettier -w -u" // Set prettier to last
   }
 }
 ```
@@ -458,19 +458,23 @@ You can statically check your template tags with `vue-tsc`.
 It is installed when the template is generated.
 However, as of `@vue/runtime-dom@3.1.4`, it does not work unless `skipLibCheck` in `tsconfig.json` is set to `true`.
 
-````json:tsconfig.json
+```json:tsconfig.json
 {
   "compilerOptions": {
     //...
     "skipLibCheck": true
   },
 }
+```
 
 ```json:package.json
-"scripts": {
-  "lint:markup": "vue-tsc --noEmit",
+{
+  "scripts": {
+    //...
+    "lint:markup": "vue-tsc --noEmit",
+  }
 }
-````
+```
 
 I recommend running static checks in CI rather than before committing,
 as static checks can take quite a bit of time as the number of Vue files increases.

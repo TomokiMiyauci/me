@@ -452,19 +452,23 @@ export default defineConfig({
 テンプレート生成時にインストールされていますが、`@vue/runtime-dom@3.1.4` の時点では、
 `tsconfig.json`の `skipLibCheck` が `true` になっていないと動作しません。
 
-````json:tsconfig.json
+```json:tsconfig.json
 {
   "compilerOptions": {
     //...
     "skipLibCheck": true
   },
 }
+```
 
 ```json:package.json
-"scripts": {
-  "lint:markup": "vue-tsc --noEmit",
+{
+  "scripts": {
+    //...
+    "lint:markup": "vue-tsc --noEmit",
+  }
 }
-````
+```
 
 これは `@vue/runtime-dom` の型定義にエラーがあるのでそれを回避する目的で行います。
 
