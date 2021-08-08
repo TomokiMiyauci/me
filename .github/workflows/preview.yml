@@ -34,6 +34,7 @@ jobs:
           GATSBY_ALGOLIA_SEARCH_KEY: ${{ secrets.GATSBY_ALGOLIA_SEARCH_KEY }}
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
           GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
+          RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

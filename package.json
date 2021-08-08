@@ -100,6 +100,7 @@
     "@iconify/react": "^3.0.0-beta.1",
     "@isamrish/gatsby-plugin-google-adsense": "^1.2.0",
     "@mdx-js/preact": "^1.6.22",
+    "@relative-ci/agent": "^2.0.0",
     "@storybook/addon-a11y": "^6.3.2",
     "@storybook/addon-actions": "^6.3.2",
     "@storybook/addon-essentials": "^6.3.2",

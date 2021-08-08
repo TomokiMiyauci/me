@@ -125,6 +125,7 @@ jobs:
           STAGE: main
           CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
 
       - uses: actions/upload-artifact@v2
         with:
