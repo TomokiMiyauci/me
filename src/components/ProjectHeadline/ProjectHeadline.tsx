@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import type { Project } from '@/components/ProjectHeadline/types'
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify/react/dist/offline'
 import typescript from '@iconify-icons/logos/typescript-icon'
 import deno from '@iconify-icons/logos/deno'
 import node from '@iconify-icons/logos/nodejs-icon'

@@ -46,7 +46,7 @@ justify-between flex"
         </span>
 
         <div className="flex space-x-5 lg:space-x-8 items-center">
-          <SearchButton className="md:hidden" onClick={toggleSearch} />
+          {/* <SearchButton className="md:hidden" onClick={toggleSearch} /> */}
 
           <LangSwitcher originalPath={originalPath} />
 
