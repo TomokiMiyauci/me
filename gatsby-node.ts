@@ -9,6 +9,7 @@ import { setupAccessCount } from './scripts/access_counter'
 import { props } from 'fonction'
 import { Mdx } from '@/../graphql-types'
 import { useMetaPoster, isPosts } from './scripts/register_post_list'
+import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
 
 const { getAccessCount } = setupAccessCount()
 
@@ -171,6 +172,17 @@ const onPostBuild: GatsbyNode['onPostBuild'] = (buildArgs) => {
   useMetaPoster(buildArgs)
 }
 
+const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
+  stage,
+  actions
+}) => {
+  if (stage === 'build-javascript') {
+    actions.setWebpackConfig({
+      plugins: [new RelativeCiAgentWebpackPlugin()]
+    })
+  }
+}
+
 const makeFullPath = (
   {
     base,
@@ -185,4 +197,4 @@ const makeFullPath = (
   return new URL(_path, base).toString()
 }
 
-export { createPages, onCreateNode, onPostBuild }
+export { createPages, onCreateNode, onPostBuild, onCreateWebpackConfig }
