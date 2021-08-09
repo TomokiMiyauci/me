@@ -31,19 +31,8 @@ const useFirebaseProvider = () => {
         connectAuthEmulator(auth, 'http://localhost:9099')
       }
 
-      const { initializePerformance } = await import('firebase/performance')
-      initializePerformance(app)
-
-      if (process.env.NODE_ENV === 'production') {
-        const { isSupported, initializeAnalytics } = await import(
-          'firebase/analytics'
-        )
-        const result = await isSupported()
-        if (result) {
-          console.info('Initialize: analytics')
-          initializeAnalytics(app)
-        }
-      }
+      const { initializeFirebase } = await import('@/utils/firebase')
+      initializeFirebase(app)
 
       setFirebase({ app, firestore, auth })
     })
