@@ -2,7 +2,9 @@ import React from 'react'
 
 import type { GatsbySSR } from 'gatsby'
 import Context from '@/contexts'
-import Layout from '@/components/Layout'
+
+import loadable from '@loadable/component'
+const Layout = loadable(() => import('@/components/Layout'))
 
 const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
