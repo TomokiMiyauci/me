@@ -3,8 +3,6 @@ import commentEditOutline from '@iconify-icons/mdi/comment-edit-outline'
 import { Icon } from '@iconify/react/dist/offline'
 import Placeholder from '../../Placeholder'
 
-import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
-import Loader from 'react-loader-spinner'
 const IconWithLoading: FC<{
   loading: boolean
   className?: string
@@ -16,17 +14,7 @@ const IconWithLoading: FC<{
         className="w-6 h-6 md:w-7 md:h-7 text-accent"
         icon={commentEditOutline}
       />
-      <Placeholder
-        placeholding={!loading}
-        placeholder={
-          <Loader
-            type="Circles"
-            color="var(--accent-color)"
-            height={20}
-            width={20}
-          />
-        }
-      >
+      <Placeholder placeholding={!loading} placeholder={<span>..</span>}>
         {children}
       </Placeholder>
     </div>
