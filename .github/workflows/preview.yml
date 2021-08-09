@@ -83,10 +83,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Debug
-        run: echo ${{ needs.deploy.outputs.details_url }}
-
       - name: Run Lighthouse
         uses: foo-software/lighthouse-check-action@master
         with:
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
           urls: ${{ needs.deploy.outputs.details_url }}
+          locale: ja
+          outputDirectory: lighthouse
+          prCommentEnabled: true
