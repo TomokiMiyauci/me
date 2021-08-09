@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Make dir
-      - run: mkdir lighthouse
+        run: mkdir lighthouse
 
       - name: Run Lighthouse
         uses: foo-software/lighthouse-check-action@master
