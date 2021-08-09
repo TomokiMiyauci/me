@@ -13,6 +13,7 @@ import {
 import { firebaseOptions } from '@/../config/constants'
 
 import type { FirebaseState } from '@/types/firebase'
+import { isProd } from '@/utils/environment'
 
 const initializeFirebase = (): FirebaseState => {
   const app = initializeApp(firebaseOptions)
@@ -26,7 +27,7 @@ const initializeFirebase = (): FirebaseState => {
     connectAuthEmulator(auth, 'http://localhost:9099')
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (isProd) {
     initializePerformance(app)
 
     isSupported().then((e) => {
