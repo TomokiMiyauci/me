@@ -1,7 +1,6 @@
 import React, { FC, MouseEventHandler, useState, useMemo } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
-import Loader from 'react-loader-spinner'
 
 import isEmail from 'is-email'
 
@@ -74,9 +73,7 @@ const Newsletter: FC<{
             className="bg-accent hover:opacity-70 disabled:delay-300 disabled:opacity-40 transition duration-300 disabled:cursor-not-allowed  font-bold text-xl p-3"
           >
             {pending || isLoading ? (
-              <span className="inline-block min-w-[112px]">
-                <Loader type="ThreeDots" color="white" height={26} width={26} />
-              </span>
+              <span className="inline-block min-w-[112px]">...Loading</span>
             ) : (
               <span>SUBSCRIBE</span>
             )}
