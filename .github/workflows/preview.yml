@@ -81,5 +81,12 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Debug
         run: echo ${{ needs.deploy.outputs.details_url }}
+
+      - name: Run Lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          urls: ${{ needs.deploy.outputs.details_url }}
