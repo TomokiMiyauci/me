@@ -58,6 +58,8 @@ jobs:
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
+    outputs:
+      details_url: ${{ steps.firebase.outputs.details_url }}
     steps:
       - uses: actions/checkout@v2
 
@@ -67,6 +69,7 @@ jobs:
           path: public
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        id: firebase
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLOROGUE }}'
