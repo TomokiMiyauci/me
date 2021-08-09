@@ -44,4 +44,5 @@ jobs:
           projectId: blorogue
           target: blog
 
-      - run: echo ${{ build_and_deploy.outputs.urls }} ${{ build_and_deploy.outputs.details_url }}
+      - name: Debug
+        run: echo ${{ build_and_deploy.outputs.urls }} ${{ build_and_deploy.outputs.details_url }}
