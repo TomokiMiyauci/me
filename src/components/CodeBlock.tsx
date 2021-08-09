@@ -4,8 +4,7 @@ import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'
 import contentCopy from '@iconify-icons/mdi/content-copy'
 import { Icon } from '@iconify/react/dist/offline'
-import confetti from 'canvas-confetti'
-import { languageMap, parseCodeBlockHeader } from '../utils/code_block'
+import { languageMap, parseCodeBlockHeader } from '@/utils/code_block'
 
 const CodeBlock: FC<{ children: string; className: string }> = ({
   children,
@@ -14,7 +13,7 @@ const CodeBlock: FC<{ children: string; className: string }> = ({
   const { ext, filePath, highlights } = parseCodeBlockHeader(className)
   const copy2Clipboard = (): void => {
     navigator.clipboard.writeText(children)
-    confetti()
+    import('canvas-confetti').then(({ default: _default }) => _default())
   }
 
   return (
