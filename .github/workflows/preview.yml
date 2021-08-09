@@ -37,6 +37,7 @@ jobs:
           RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        id: firebase
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLOROGUE }}'
@@ -45,4 +46,4 @@ jobs:
           target: blog
 
       - name: Debug
-        run: echo ${{ build_and_deploy.outputs.urls }} ${{ build_and_deploy.outputs.details_url }}
+        run: echo ${{ steps.firebase.outputs.urls }} ${{ steps.firebase.outputs.details_url }}
