@@ -12,6 +12,7 @@ const AccentColor: FC = () => {
     <div className="relative flex">
       <button
         title="Accent color"
+        aria-label="Show accent color palette"
         className="flex"
         onClick={() => changeShow(!isShow)}
       >
@@ -36,6 +37,7 @@ const AccentColor: FC = () => {
                 changeShow(false)
               }}
               key={label}
+              aria-label={`Switch accent color to ${label}`}
               className="w-6 h-6 hover:scale-[1.2] transform duration-200  transition-transform rounded-full"
               style={{ backgroundColor: color }}
             />

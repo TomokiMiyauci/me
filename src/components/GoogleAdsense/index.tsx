@@ -1,4 +1,5 @@
 import React, { FC, useEffect, CSSProperties } from 'react'
+import { isProd } from '@/utils/environment'
 
 const Index: FC<{
   className?: string
@@ -17,7 +18,7 @@ const Index: FC<{
   dataFullWidthResponsive
 }) => {
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production' && window.adsbygoogle) {
+    if (isProd && window.adsbygoogle) {
       window.adsbygoogle.push({})
     }
   }, [])

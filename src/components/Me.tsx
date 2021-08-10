@@ -27,6 +27,7 @@ const Me: FC = () => {
             Tomoki Miyauci
             <a
               href="https://twitter.com/tomoki_miyauci"
+              rel="noopener"
               target="_blank"
               className="hidden md:inline hover:underline ml-2 text-2xl text-accent"
             >
@@ -46,6 +47,7 @@ const Me: FC = () => {
               title="GitHub"
               className="hover:text-accent transition-colors duration-300"
               href="https://github.com/TomokiMiyauci"
+              rel="noopener"
               target="_blank"
             >
               <Icon className="w-8 h-8" icon={github}></Icon>
@@ -54,6 +56,7 @@ const Me: FC = () => {
               title="Twitter"
               className="hover:text-accent transition-colors duration-300"
               href="https://twitter.com/tomoki_miyauci"
+              rel="noopener"
               target="_blank"
             >
               <Icon className="w-8 h-8" icon={twitter}></Icon>
