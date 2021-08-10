@@ -4,6 +4,7 @@ import type { GatsbySSR } from 'gatsby'
 import Context from '@/contexts'
 
 import loadable from '@loadable/component'
+import { isProd } from '@/utils/environment'
 const Layout = loadable(() => import('@/components/Layout'))
 
 const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
@@ -11,7 +12,7 @@ const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
 }
 
 const onRenderBody: GatsbySSR['onRenderBody'] = ({ setHeadComponents }) => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProd) {
     return
   }
   setHeadComponents([
