@@ -92,6 +92,7 @@ jobs:
         with:
           accessToken: ${{ secrets.GITHUB_TOKEN }}
           locale: ja
+          urls: ${{ needs.deploy.outputs.details_url }}
           outputDirectory: lighthouse
           prCommentEnabled: true
           prCommentSaveOld: true
