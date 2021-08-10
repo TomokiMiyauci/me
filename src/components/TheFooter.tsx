@@ -21,6 +21,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
           </span>
           <a
             href="https://miyauchi-storybook.web.app/"
+            rel="noopener"
             target="_blank"
             className="space-x-2 underline py-1 md:p-0 md:no-underline md:hover:underline flex self-end sm:self-auto flex-row-reverse sm:flex-row "
           >
@@ -102,6 +103,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
         <div className="flex  flex-nowrap items-center my-4 text-gray-500 space-x-8 md:space-x-4 lg:space-x-6">
           <a
             href="https://www.npmjs.com/~miyauci"
+            rel="noopener"
             target="_blank"
             className="transition duration-200 hover:text-accent"
           >
@@ -110,6 +112,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
 
           <a
             href="https://twitter.com/tomoki_miyauci"
+            rel="noopener"
             target="_blank"
             className="transition duration-200 hover:text-accent"
           >
@@ -118,6 +121,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
 
           <a
             href="https://github.com/TomokiMiyauci/me"
+            rel="noopener"
             target="_blank"
             className="transition duration-200 hover:text-accent"
           >
