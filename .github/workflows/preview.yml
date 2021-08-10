@@ -77,29 +77,6 @@ jobs:
           projectId: blorogue
           target: blog
 
-  deploy-fixed:
-    needs: [build]
-    runs-on: ubuntu-latest
-    outputs:
-      details_url: ${{ steps.firebase.outputs.details_url }}
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: public
-
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        id: firebase
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BLOROGUE }}'
-          expires: 1d
-          projectId: blorogue
-          target: blog
-          channelId: preview
-
   performance:
     needs: deploy
     runs-on: ubuntu-latest
@@ -132,4 +109,3 @@ jobs:
           minAccessibilityScore: '85'
           minBestPracticesScore: '90'
           minProgressiveWebAppScore: '90'
-          minSeoScore: '90'
