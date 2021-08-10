@@ -91,16 +91,10 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         with:
           accessToken: ${{ secrets.GITHUB_TOKEN }}
-          urls: ${{ needs.deploy.outputs.details_url }}
+          apiToken: ${{ secrets.FOO_API_TOKEN }}
           locale: ja
-          outputDirectory: lighthouse
           prCommentEnabled: true
           prCommentSaveOld: true
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: lighthouse
-          path: lighthouse
 
       - name: Lighthouse Result check
         uses: foo-software/lighthouse-check-status-action@master
