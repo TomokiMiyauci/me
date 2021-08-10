@@ -180,3 +180,18 @@ jobs:
           CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           BITLY_ACCESS_TOKEN: ${{ secrets.BITLY_ACCESS_TOKEN }}
+
+  performance:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Lighthouse
+        id: lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        with:
+          accessToken: ${{ secrets.GITHUB_TOKEN }}
+          apiToken: ${{ secrets.FOO_API_TOKEN }}
+          prCommentEnabled: true
+          prCommentSaveOld: true
