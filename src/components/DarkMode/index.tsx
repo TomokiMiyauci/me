@@ -31,7 +31,7 @@ const DarkMode: FC = () => {
   return (
     <OnlyClient placeholder={<span className="w-[32px] h-[32px]" />}>
       <button
-        area-label="Switch dark mode"
+        aria-label="Switch dark mode"
         className="text-accent"
         onClick={toggle}
       >
