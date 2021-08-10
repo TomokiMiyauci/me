@@ -220,7 +220,10 @@ const plugins: GatsbyConfig['plugins'] = [
       background_color: '#06b6d4',
       theme_color: `#e11d48`,
       display: `standalone`,
-      icon: resolve(__dirname, '..', 'static', 'favicon.svg')
+      icon: resolve(__dirname, '..', 'static', 'favicon.svg'),
+      icon_options: {
+        purpose: `any maskable`
+      }
     }
   },
   {
