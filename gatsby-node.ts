@@ -174,12 +174,23 @@ const onPostBuild: GatsbyNode['onPostBuild'] = (buildArgs) => {
 
 const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
   stage,
+  getConfig,
   actions
 }) => {
   if (stage === 'build-javascript') {
     actions.setWebpackConfig({
       plugins: [new RelativeCiAgentWebpackPlugin()]
     })
+  }
+
+  // for axe ignore warning
+  if (process.env.NODE_ENV !== 'production') {
+    const config = getConfig()
+
+    config.resolve.fallback = {
+      crypto: false
+    }
+    actions.replaceWebpackConfig(config)
   }
 }
 
