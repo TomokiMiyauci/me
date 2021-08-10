@@ -105,6 +105,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
             href="https://www.npmjs.com/~miyauci"
             rel="noopener"
             target="_blank"
+            aria-label="My npm packages"
             className="transition duration-200 hover:text-accent"
           >
             <Icon icon={npmOutline} className="w-8 h-8" />
@@ -114,6 +115,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
             href="https://twitter.com/tomoki_miyauci"
             rel="noopener"
             target="_blank"
+            aria-label="My twitter account"
             className="transition duration-200 hover:text-accent"
           >
             <Icon icon={twitter} className="w-8 h-8" />
@@ -123,6 +125,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
             href="https://github.com/TomokiMiyauci/me"
             rel="noopener"
             target="_blank"
+            aria-label="My GitHub account"
             className="transition duration-200 hover:text-accent"
           >
             <Icon icon={github} className="w-8 h-8" />
