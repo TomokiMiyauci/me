@@ -157,7 +157,7 @@ const useMetaPoster = async ({
   reporter,
   getNodesByType
 }: BuildArgs): Promise<void> => {
-  if (process.env.STAGE !== 'main') return
+  if (process.env.GATSBY_STAGE !== 'main') return
   const allMdx = getNodesByType('Mdx') as unknown as Mdx[]
 
   const postMdxs: PostMeta[] = allMdx
