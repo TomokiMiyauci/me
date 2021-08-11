@@ -17,7 +17,7 @@ const detectType = ({
 const typeClass = (type: Exclude<CardType, 'none'>) => {
   switch (type) {
     case 'MMM': {
-      return 'transform rotate-180 px-2 text-6xl md:text-7xl writing-mode-vertical'
+      return 'transform rotate-180 px-2 pt-3 text-6xl md:text-7xl writing-mode-vertical'
     }
 
     case 'no': {
