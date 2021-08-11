@@ -89,13 +89,13 @@ const plugins: GatsbyConfig['plugins'] = [
       path: resolve(__dirname, '..', 'media')
     }
   },
-  {
-    resolve: `gatsby-plugin-clarity`,
-    options: {
-      clarity_project_id: '5ipdtj3l7s',
-      enable_on_dev_env: false
-    }
-  },
+  // {
+  //   resolve: `gatsby-plugin-clarity`,
+  //   options: {
+  //     clarity_project_id: '5ipdtj3l7s',
+  //     enable_on_dev_env: false
+  //   }
+  // },
   {
     resolve: `gatsby-alias-imports`,
     options: {
