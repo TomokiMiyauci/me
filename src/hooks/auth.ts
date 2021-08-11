@@ -8,25 +8,23 @@ const useAuthProvider = (): UserContext => {
   const [user, changeUser] = useState<MaybeUser>(null)
   const isLoggedIn = useMemo<boolean>(() => !!user, [user])
 
-  const [{ auth }] = useFirebase()
-
   useEffect(() => {
-    if (auth) {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          changeUser(user)
-        } else {
-          console.info('Sign in as Anonymous')
-          unsubscribe()
-          signInAnonymously(auth)
-            .then(({ user }) => changeUser(user))
-            .catch((e) => {
-              console.warn(e)
-            })
-        }
-      })
-    }
-  }, [auth])
+    // if (auth) {
+    //   const unsubscribe = auth.onAuthStateChanged((user) => {
+    //     if (user) {
+    //       changeUser(user)
+    //     } else {
+    //       console.info('Sign in as Anonymous')
+    //       unsubscribe()
+    //       signInAnonymously(auth)
+    //         .then(({ user }) => changeUser(user))
+    //         .catch((e) => {
+    //           console.warn(e)
+    //         })
+    //     }
+    //   })
+    // }
+  }, [])
 
   return [
     {

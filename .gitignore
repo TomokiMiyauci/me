@@ -10,3 +10,5 @@ tmp
 graphql-types.ts
 .env
 storybook-static
+static/*worker.js
+static/*worker.js.map

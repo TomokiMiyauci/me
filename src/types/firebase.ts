@@ -4,8 +4,6 @@ import type { Firestore } from 'firebase/firestore/lite'
 
 type FirebaseState = Partial<{
   app: FirebaseApp
-  firestore: Firestore
-  auth: Auth
 }>
 
 export type { FirebaseState }
