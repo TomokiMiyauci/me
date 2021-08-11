@@ -10,18 +10,6 @@ const useAccessCounter = (slug: string) => {
         slug
       }
     })
-
-    // const document = doc(firestore, slug) as DocumentReference<PostsField>
-    // setDoc(
-    //   document,
-    //   {
-    //     slug,
-    //     view: increment(1)
-    //   },
-    //   {
-    //     merge: true
-    //   }
-    // )
   }, [])
 }
 
