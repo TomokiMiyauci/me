@@ -1,16 +1,12 @@
 import React, { FC } from 'react'
-import { isLength0 } from '@miyauci/is-valid'
+import { isLength0, isString } from '@miyauci/is-valid'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 
-const ArticleHeadline: FC<Omit<ArticleHeadlineProps, 'img' | 'to' | 'alt'>> = ({
-  title,
-  description,
-  lastUpdated,
-  readingTime,
-  tags
-}) => {
+const ArticleHeadlineBody: FC<
+  Omit<ArticleHeadlineProps, 'img' | 'to' | 'alt'>
+> = ({ title, description, lastUpdated, readingTime, tags }) => {
   return (
     <>
       <div className="p-1 sm:p-2 flex flex-1 space-y-2 flex-col justify-between">
@@ -36,13 +32,17 @@ const ArticleHeadline: FC<Omit<ArticleHeadlineProps, 'img' | 'to' | 'alt'>> = ({
         {!isLength0(tags) && (
           <ul className="space-x-2">
             {tags.map((tag) => {
-              const { tagIcon, wellKnown } = iconMeta(tag)
+              const name = isString(tag) ? tag : tag.name
+              const className = isString(tag) ? '' : tag.className
+              const { tagIcon, wellKnown } = iconMeta(name)
               return (
-                <li className="inline" key={tag}>
+                <li className="inline" key={name}>
                   <Tag
-                    className={wellKnown ? '' : 'hidden md:inline-flex'}
+                    className={`transition duration-300  ${
+                      wellKnown ? '' : 'hidden md:inline-flex'
+                    } ${className}`}
                     tag={tagIcon}
-                    label={tag}
+                    label={name}
                   />
                 </li>
               )
@@ -63,4 +63,4 @@ const ArticleHeadline: FC<Omit<ArticleHeadlineProps, 'img' | 'to' | 'alt'>> = ({
   )
 }
 
-export default ArticleHeadline
+export default ArticleHeadlineBody

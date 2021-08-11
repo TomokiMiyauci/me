@@ -6,7 +6,7 @@ type ArticleHeadlineProps = {
   img: IGatsbyImageData
   to: string
   alt: string
-  tags: string[]
+  tags: (string | { name: string; className: string })[]
   MMM?: string
   no?: number
   lastUpdated?: string

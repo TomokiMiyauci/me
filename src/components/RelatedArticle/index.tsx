@@ -2,6 +2,7 @@ import React, { FC, useMemo } from 'react'
 import RelatedArticle from '@/components/RelatedArticle/RelatedArticle'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import type { BlogPostBySlugQuery } from '@/../graphql-types'
+import { isString } from '@miyauci/is-valid'
 
 type ArticlesMetaInfo = BlogPostBySlugQuery['allMdx']['nodes']
 
@@ -41,7 +42,26 @@ const Index: FC<{
   )
 
   const _sameTagArticles = useMemo<ArticleHeadlineProps[]>(
-    () => sameTagArticles.map(flatArticleMetaInfo('same tag article image')),
+    () =>
+      sameTagArticles
+        .map(flatArticleMetaInfo('same tag article image'))
+        .map((tagArticles) => {
+          if (!tagArticles) return tagArticles
+
+          const _t = tagArticles.tags.map((_tag) => {
+            const __tag =
+              isString(_tag) && tags.includes(_tag)
+                ? {
+                    name: _tag,
+                    className: 'ring-1 ring-accent'
+                  }
+                : _tag
+
+            return __tag
+          })
+
+          return { ...tagArticles, tags: _t }
+        }),
     [sameTagArticles]
   )
 
