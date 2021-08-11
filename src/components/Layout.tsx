@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import AppFrame from './AppFrame'
-import MDXProvider from '../components/MdxProvider'
 import Snackbar from '../components/Snackbar'
 import { useAuthProvider } from '../hooks/auth'
 import AuthContext from '../contexts/auth'
@@ -15,9 +14,7 @@ const Layout: FC<{
   const auth = useAuthProvider()
   return (
     <AuthContext.Provider value={auth}>
-      <main className="p-4 min-h-[90vh] mt-14 md:mt-[5.5rem]">
-        <MDXProvider>{children}</MDXProvider>
-      </main>
+      <main className="p-4 min-h-[90vh] mt-14 md:mt-[5.5rem]">{children}</main>
 
       <AppFrame
         locale={locale}
