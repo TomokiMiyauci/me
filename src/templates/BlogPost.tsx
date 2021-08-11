@@ -23,6 +23,7 @@ import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
 import VerificationEnv from '@/components/VerificationEnv'
 import GoogleAdsense from '@/components/GoogleAdsense'
+import MDXProvider from '@/components/MdxProvider'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -49,7 +50,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   useAccessCounter(slug)
 
   return (
-    <>
+    <MDXProvider>
       <Seo
         title={title}
         description={description}
@@ -237,7 +238,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
-    </>
+    </MDXProvider>
   )
 }
 
