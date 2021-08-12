@@ -8,15 +8,6 @@
       "trailingSlash": true,
       "headers": [
         {
-          "source": "*worker.js",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "max-age=300"
-            }
-          ]
-        },
-        {
           "source": "**/*.@(js|css)",
           "headers": [
             {
@@ -48,7 +39,7 @@
       "port": 5001
     },
     "firestore": {
-      "port": 8082
+      "port": 8081
     }
   }
 }

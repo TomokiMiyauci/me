@@ -13,3 +13,5 @@ build({
   platform: 'browser',
   legalComments: 'linked'
 })
+
+console.log(process.env.NODE_ENV)
