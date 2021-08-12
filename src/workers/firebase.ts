@@ -42,10 +42,9 @@ const initializeFirebase = (): FirebaseState => {
     persistence: indexedDBLocalPersistence
   })
 
-  if (process.env.NODE_ENV !== 'production') {
-    connectFirestoreEmulator(firestore, 'localhost', 8082)
-    connectAuthEmulator(auth, 'http://localhost:9099')
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  connectFirestoreEmulator(firestore, 'localhost', 8082)
+  connectAuthEmulator(auth, 'http://localhost:9099')
 
   // }
 
