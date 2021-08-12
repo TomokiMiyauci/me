@@ -10,22 +10,17 @@ import {
   DocumentReference,
   increment,
   Firestore,
-  getDoc,
-  arrayUnion,
-  arrayRemove
+  getDoc
 } from 'firebase/firestore/lite'
 import {
   initializeAuth,
   signInAnonymously,
-  onAuthStateChanged,
+  browserLocalPersistence,
   connectAuthEmulator,
-  indexedDBLocalPersistence,
-  User,
   Auth
 } from 'firebase/auth'
 import { firebaseOptions } from '@/../config/constants'
 import type { Post } from '@/types/firestore'
-import type { AnyFn } from 'fonction'
 
 import { isProd } from '@/utils/environment'
 
@@ -38,9 +33,7 @@ type FirebaseState = {
 const initializeFirebase = (): FirebaseState => {
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
-  const auth = initializeAuth(app, {
-    persistence: indexedDBLocalPersistence
-  })
+  const auth = initializeAuth(app)
 
   // if (process.env.NODE_ENV === 'development') {
   connectFirestoreEmulator(firestore, 'localhost', 8082)
@@ -66,36 +59,9 @@ const initializeFirebase = (): FirebaseState => {
   }
 }
 
-const signIn = (auth: Auth): Promise<User> =>
-  new Promise<User>((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, async (_user) => {
-      unsubscribe()
-      if (_user) {
-        resolve(_user)
-        return
-      }
-      const { user } = await signInAnonymously(auth)
-      console.log('Sign in as Anonymous')
-      resolve(user)
-    })
-  })
-
-const callOnSingIn = (fn: AnyFn) => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-    if (user) {
-      unsubscribe()
-      fn(user.uid)
-    }
-  })
-}
-
 const { firestore, auth } = initializeFirebase()
 
-type Message = InitMessage | CountMessage | LikeMessage | GetLikeMessage
-
-type InitMessage = {
-  type: 'init'
-}
+type Message = CountMessage | LikeMessage | GetLikeMessage
 
 type CountMessage = {
   type: 'count'
@@ -120,70 +86,45 @@ type GetLikeMessage = {
 
 onmessage = async ({ data }: MessageEvent<Message>) => {
   if (data.type === 'count') {
-    callOnSingIn(() => {
-      const { slug } = data.body
+    console.log(123)
+    const { slug } = data.body
 
-      const document = doc(firestore, slug) as DocumentReference<PostsField>
-      setDoc(
-        document,
-        {
-          slug,
-          view: increment(1)
-        },
-        {
-          merge: true
-        }
-      ).then(() => {
-        console.log('great')
-      })
+    const document = doc(firestore, slug) as DocumentReference<PostsField>
+    setDoc(
+      document,
+      {
+        slug,
+        view: increment(1)
+      },
+      {
+        merge: true
+      }
+    ).then(() => {
+      console.log('great')
     })
-  } else if (data.type === 'init') {
-    const user = await signIn(auth)
-    self.postMessage(user.uid)
   } else if (data.type === 'like') {
-    const user = await signIn(auth)
     const { slug } = data.body
+    console.log('increment', slug)
     const document = doc(firestore, slug) as DocumentReference<PostsField>
 
-    await setDoc(
+    console.log(auth!.currentUser!.uid)
+
+    setDoc(
       document,
       {
-        clap: increment(1),
-        clapBy: arrayUnion(user.uid)
+        clap: increment(1)
       },
       {
         merge: true
       }
     )
-    self.postMessage('')
-  } else if (data.type === 'unlike') {
-    const user = await signIn(auth)
-    const { slug } = data.body
-    const document = doc(firestore, slug) as DocumentReference<PostsField>
-
-    await setDoc(
-      document,
-      {
-        clap: increment(-1),
-        clapBy: arrayRemove(user.uid)
-      },
-      {
-        merge: true
-      }
-    )
-    self.postMessage('')
   } else if (data.type === 'getLike') {
     const { slug } = data.body
     const document = doc(firestore, slug) as DocumentReference<Post>
 
     getDoc(document).then((e) => {
-      const clap = e.data()?.clap ?? 0
-      const clapBy = e.data()?.clapBy
-
-      self.postMessage({
-        clap,
-        clapBy
-      })
+      const r = e.data()?.clap ?? 0
+      const by = e.data()?.clapBy
     })
   }
 }

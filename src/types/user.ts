@@ -1,11 +1,13 @@
+import type { User } from 'firebase/auth'
 import type { Dispatch, SetStateAction } from 'react'
 
+type MaybeUser = User | null
 type UserContext = [
   {
-    uid: string
+    user?: MaybeUser
     isLoggedIn: boolean
   },
-  Dispatch<SetStateAction<string>>
+  Dispatch<SetStateAction<MaybeUser>>
 ]
 
-export type { UserContext }
+export type { MaybeUser, UserContext }

@@ -1,28 +1,37 @@
 import { useState, useMemo, useContext, useEffect } from 'react'
-import type { UserContext } from '@/types/user'
-import AuthContext from '@/contexts/auth'
+import type { MaybeUser, UserContext } from '../types/user'
+import AuthContext from '../contexts/auth'
+import { useFirebase } from './firebase'
+import { signInAnonymously } from 'firebase/auth'
 
 const useAuthProvider = (): UserContext => {
-  const [uid, changeUid] = useState<string>('')
-  const isLoggedIn = useMemo<boolean>(() => !!uid, [uid])
+  const [user, changeUser] = useState<MaybeUser>(null)
+  const isLoggedIn = useMemo<boolean>(() => !!user, [user])
 
   useEffect(() => {
-    const worker = new Worker('/worker.js')
-    worker.addEventListener('message', (ev) => {
-      changeUid(ev.data)
-    })
-
-    worker.postMessage({
-      type: 'init'
-    })
+    // if (auth) {
+    //   const unsubscribe = auth.onAuthStateChanged((user) => {
+    //     if (user) {
+    //       changeUser(user)
+    //     } else {
+    //       console.info('Sign in as Anonymous')
+    //       unsubscribe()
+    //       signInAnonymously(auth)
+    //         .then(({ user }) => changeUser(user))
+    //         .catch((e) => {
+    //           console.warn(e)
+    //         })
+    //     }
+    //   })
+    // }
   }, [])
 
   return [
     {
-      isLoggedIn,
-      uid
+      user,
+      isLoggedIn
     },
-    changeUid
+    changeUser
   ]
 }
 

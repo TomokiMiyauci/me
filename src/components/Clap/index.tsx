@@ -1,16 +1,17 @@
 import React, { FC, useEffect, useState, useMemo } from 'react'
 
-import type { Post } from '@/types/firestore'
-import { useAuth } from '@/hooks/auth'
-import Clap from '@/components/Clap'
+import type { PostsField, Post } from '@/types/firestore'
+import { useAuth } from '../../hooks/auth'
+import Clap from './Clap'
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
-  const [{ uid, isLoggedIn }] = useAuth()
+  const [{ user, isLoggedIn }] = useAuth()
   const liked = useMemo<boolean>(() => {
-    if (!postMeta.clapBy || !isLoggedIn) return false
-    return postMeta.clapBy.includes(uid)
-  }, [postMeta, uid])
+    if (!postMeta.clapBy || !user) return false
+
+    return postMeta.clapBy.includes(user.uid)
+  }, [postMeta, user])
 
   const On = () => {
     if (liked) {
@@ -22,34 +23,16 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
 
   const decrement = async () => {
     const worker = new Worker('/worker.js')
-    worker.addEventListener('message', () => {
-      const clap = (postMeta.clap ?? 0) - 1
-      const meta = {
-        ...postMeta,
-        clap,
-        clapBy: (postMeta.clapBy ?? []).filter((id) => id !== uid)
-      }
-      changePostMeta(meta)
-    })
 
     worker.postMessage({
-      type: 'unlike',
+      type: 'like',
       body: {
         slug
       }
     })
   }
-  const increment = async () => {
+  const increment = () => {
     const worker = new Worker('/worker.js')
-    worker.addEventListener('message', () => {
-      const clap = (postMeta.clap ?? 0) + 1
-      const meta = {
-        ...postMeta,
-        clap,
-        clapBy: [...(postMeta.clapBy ?? []), uid]
-      }
-      changePostMeta(meta)
-    })
 
     worker.postMessage({
       type: 'like',
@@ -60,11 +43,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   }
 
   useEffect(() => {
-    const worker = new Worker('/worker.js')
-    worker.addEventListener('message', ({ data }: MessageEvent<Post>) => {
-      changePostMeta(data)
-    })
-    worker.postMessage({
+    new Worker('/worker.js').postMessage({
       type: 'getLike',
       body: {
         slug
