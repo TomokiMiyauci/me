@@ -1,5 +1,4 @@
 import React, { FC, ReactNode, useState } from 'react'
-import { isArray } from '@miyauci/is-valid'
 const CodeGroup: FC<{
   children: ReactNode & {
     props: {
@@ -9,7 +8,7 @@ const CodeGroup: FC<{
 }> = ({ children }) => {
   const [state, changeState] = useState(0)
 
-  const _children = isArray(children) ? children : [children]
+  const _children = Array.isArray(children) ? children : [children]
   const filtered = _children.filter((_, index) => index === state)
   const labels = _children.map((child) => child.props.label)
 

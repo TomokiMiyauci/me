@@ -1,7 +1,7 @@
 import { replace, exec } from 'core-fn'
 import { pipe, first, last } from 'fonction'
 import { Language } from 'prism-react-renderer'
-import { isEmpty } from '@miyauci/is-valid'
+import { isEmpty } from '@/utils/is'
 
 const parseLanguage = replace(/^language-/, '')
 const parseBlockName = pipe(

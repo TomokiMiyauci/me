@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isEmpty } from '@miyauci/is-valid'
+import { isEmpty } from '@/utils/is'
 
 const getQueryString = (key: string, search: string): string =>
   new URLSearchParams(search).get(key) ?? ''
