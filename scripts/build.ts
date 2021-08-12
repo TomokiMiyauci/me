@@ -11,7 +11,7 @@ build({
     'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
   },
   platform: 'browser',
-  legalComments: 'none'
+  legalComments: 'linked'
 })
 
 console.log(process.env.NODE_ENV)
