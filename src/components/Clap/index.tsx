@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, useMemo } from 'react'
 
 import type { Post } from '@/types/firestore'
 import { useAuth } from '@/hooks/auth'
-import Clap from '@/components/Clap/Clap'
+import Clap from '@/components/Clap'
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
