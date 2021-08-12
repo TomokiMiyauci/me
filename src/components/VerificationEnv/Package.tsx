@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { Package, Packages, Runtime } from '@/components/VerificationEnv/types'
-import { isUndefined } from '@miyauci/is-valid'
+import { isUndefined } from '@/utils/is'
 import deno from '@iconify-icons/logos/deno'
 import node from '@iconify-icons/logos/nodejs-icon'
 import type { IconifyIcon } from '@iconify/react'

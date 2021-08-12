@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { getApps } from 'firebase/app'
-import { isLength0 } from '@miyauci/is-valid'
+import { isLength0 } from '@/utils/is'
 import { pipe } from 'fonction'
 import FirebaseContext from '@/contexts/firebase'
 import { FirebaseState } from '@/types/firebase'

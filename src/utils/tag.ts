@@ -17,7 +17,7 @@ import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/logos/twitter'
 import firebase from '@iconify-icons/logos/firebase'
 import bitly from '@iconify/icons-simple-icons/bitly'
-import { isUndefined } from '@miyauci/is-valid'
+import { isUndefined } from '@/utils/is'
 
 const iconMeta = (tag: string) => {
   const icon = props(tag, ICON_MAP) as IconifyIcon

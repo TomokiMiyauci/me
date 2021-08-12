@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { isLength0, isString } from '@miyauci/is-valid'
+import { isLength0, isString } from '@/utils/is'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
