@@ -7,6 +7,11 @@ build({
   sourcemap: true,
   watch: process.env.NODE_ENV === 'development',
   outfile: 'static/worker.js',
+  define: {
+    'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
+  },
   platform: 'browser',
   legalComments: 'none'
 })
+
+console.log(process.env.NODE_ENV)
