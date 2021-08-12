@@ -11,7 +11,7 @@
     "commit": "cz",
     "prepare": "husky install",
     "dev": "gatsby develop",
-    "build": "esno scripts/build.ts && gatsby build",
+    "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "script": "esno scripts",
