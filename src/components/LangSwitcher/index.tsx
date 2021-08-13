@@ -1,6 +1,5 @@
 import React, { FC, useState, useRef } from 'react'
 import { Transition } from '@headlessui/react'
-import { ifElseFn } from 'fonction'
 import translateIcon from '@iconify-icons/mdi/translate'
 import { Icon } from '@iconify/react/dist/offline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
@@ -11,11 +10,7 @@ const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
   const ref = useRef<HTMLUListElement>(null)
   const hide = () => changeShow(false)
 
-  const toggleShow = ifElseFn(
-    () => isShow,
-    hide,
-    () => changeShow(true)
-  )
+  const toggleShow = isShow ? hide : () => changeShow(true)
   useClickOutside(ref, hide, 'mousedown' as any)
 
   return (
