@@ -1,8 +1,7 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import firebaseIcon from '@iconify-icons/logos/firebase'
 import storybookIcon from '@iconify-icons/logos/storybook-icon'
-import Logo from './Logo'
 import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'
@@ -10,6 +9,10 @@ import npmOutline from '@iconify-icons/eva/npm-outline'
 import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import type { Locale } from '@/../config/types'
+
+import loadable from '@loadable/component'
+const Logo = loadable(() => import('@/components/Logo'))
+
 const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
@@ -136,4 +139,4 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   )
 }
 
-export default TheFooter
+export default memo(TheFooter)
