@@ -22,7 +22,7 @@ const initializeFirebase = (): FirebaseState => {
     persistence: browserLocalPersistence
   })
 
-  if (process.env.NODE_ENV === 'development') {
+  if (!isProd) {
     connectFirestoreEmulator(firestore, 'localhost', 8082)
     connectAuthEmulator(auth, 'http://localhost:9099')
   }
