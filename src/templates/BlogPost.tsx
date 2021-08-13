@@ -114,6 +114,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   className="text-accent space-x-1 underline md:no-underline hover:underline"
                   href={editOnGitHub}
                   target="_blank"
+                  rel="noopener"
                 >
                   <span>Edit this page on GitHub</span>
                   <Icon icon={icon} className="w-5 h-5" />
