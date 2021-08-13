@@ -1,9 +1,17 @@
 import React, { FC, useState, useRef } from 'react'
-import { Transition } from '@headlessui/react'
+import type { Transition as T } from '@headlessui/react'
 import translateIcon from '@iconify-icons/mdi/translate'
 import { Icon } from '@iconify/react/dist/offline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useClickOutside } from '@miyauci/react-click-outside'
+import loadable from '@loadable/component'
+
+const Transition = loadable<Parameters<typeof T>[number]>(
+  () => import('@/utils/headless_ui').then(({ Transition }) => Transition),
+  {
+    ssr: false
+  }
+)
 
 const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
   const [isShow, changeShow] = useState(false)

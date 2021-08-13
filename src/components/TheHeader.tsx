@@ -1,15 +1,19 @@
 import React, { FC, memo, useContext } from 'react'
-import Logo from './Logo'
-import AccentColor from './AccentColor'
-import DarkMode from './DarkMode'
-import LangSwitcher from './LangSwitcher'
-import Navigation from './BottomNavigation/Navigation'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
-import IconWith from '@/components/IconWith'
 import type { Locale } from '@/../config/types'
 import SearchButton from '@/components/Search/SearchButton'
 import { useSearchShow } from '@/components/Search/hooks'
+
+import loadable from '@loadable/component'
+const Logo = loadable(() => import('@/components/Logo'))
+const AccentColor = loadable(() => import('@/components/AccentColor'))
+const LangSwitcher = loadable(() => import('@/components/LangSwitcher'))
+const Navigation = loadable(
+  () => import('@/components/BottomNavigation/Navigation')
+)
+const DarkMode = loadable(() => import('@/components/DarkMode'))
+const IconWith = loadable(() => import('@/components/IconWith'))
 
 const Inner: FC<{
   originalPath: string

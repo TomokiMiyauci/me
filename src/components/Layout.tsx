@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
-import AppFrame from './AppFrame'
-import Snackbar from '../components/Snackbar'
-import { useAuthProvider } from '../hooks/auth'
-import AuthContext from '../contexts/auth'
+import { useAuthProvider } from '@/hooks/auth'
+import AuthContext from '@/contexts/auth'
 import type { Locale } from '@/../config/types'
 import Search from '@/components/Search'
 
+import loadable from '@loadable/component'
+const Snackbar = loadable(() => import('@/components/Snackbar'))
+const AppFrame = loadable(() => import('@/components/AppFrame'))
 const Layout: FC<{
   originalPath: string
   currentPath: string

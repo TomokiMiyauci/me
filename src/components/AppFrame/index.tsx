@@ -1,11 +1,11 @@
-import React, { FC, useState, useEffect, memo } from 'react'
-import { scrollInfoEvent } from '../../utils/scroll'
-import BottomNavigation from '../BottomNavigation'
-import TheHeader from '../TheHeader'
-import TheFooter from '../TheFooter'
+import React, { FC, useState, useEffect } from 'react'
+import { scrollInfoEvent } from '@/utils/scroll'
 import type { Locale } from '@/../config/types'
 
-const MemoedTheFooter = memo(TheFooter)
+import loadable from '@loadable/component'
+const TheFooter = loadable(() => import('@/components/TheFooter'))
+const TheHeader = loadable(() => import('@/components/TheHeader'))
+const BottomNavigation = loadable(() => import('@/components/BottomNavigation'))
 
 const useScrollShower = (init?: boolean) => {
   const [isShow, changeShow] = useState(init ?? false)
@@ -44,7 +44,7 @@ const AppFrame: FC<{
         }`}
       />
 
-      <MemoedTheFooter locale={locale} />
+      <TheFooter locale={locale} />
 
       <BottomNavigation
         currentPath={currentPath}

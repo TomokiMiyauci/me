@@ -2,7 +2,10 @@ import React, { FC, memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
 import type { Locale } from '@/../config/types'
 
-import Navigation from './Navigation'
+import loadable from '@loadable/component'
+const Navigation = loadable(
+  () => import('@/components/BottomNavigation/Navigation')
+)
 
 const BottomNavigation: FC<{
   className?: string
