@@ -9,7 +9,6 @@ import { isLength0 } from '@/utils/is'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
-import { inc } from 'fonction'
 import { classNames } from '@/utils/class_name'
 
 const RelatedArticle: FC<{
@@ -109,7 +108,7 @@ const RelatedArticle: FC<{
               {hotArticles.map((articleHeadlineProps, i) => {
                 return (
                   <li key={articleHeadlineProps.to}>
-                    <ArticleHeadline no={inc(i)} {...articleHeadlineProps} />
+                    <ArticleHeadline no={i + 1} {...articleHeadlineProps} />
                   </li>
                 )
               })}

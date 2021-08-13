@@ -1,24 +1,26 @@
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import { PageProps, graphql } from 'gatsby'
-import { BlogPostsQuery } from '../../graphql-types'
-import ArticleHeadline from '@/components/ArticleHeadline'
-import Seo from '../components/seo'
+import type { BlogPostsQuery } from '@/../graphql-types'
 import { Helmet } from 'react-helmet'
-import Newsletter from '@/components/Newsletter'
-import { useMemo } from 'react'
-import Tag from '@/components/Tag'
 import { includes, toLowerCase } from 'core-fn'
 import { isEmpty } from '@/utils/is'
 import { pipe } from 'fonction'
-import NotFoundQueryString from '@/components/NotFoundQueryString'
 import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
-import { inc } from 'fonction'
 import GoogleAdsense from '@/components/GoogleAdsense'
+
+import loadable from '@loadable/component'
+const Seo = loadable(() => import('@/components/seo'))
+const NotFoundQueryString = loadable(
+  () => import('@/components/NotFoundQueryString')
+)
+const Newsletter = loadable(() => import('@/components/Newsletter'))
+const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
+const Tag = loadable(() => import('@/components/Tag'))
 
 type Order = 'recent' | 'hot'
 
@@ -181,7 +183,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
                 },
                 i
               ) => {
-                const index = inc(i)
+                const index = i + 1
                 return (
                   <li className="-mx-2 md:mx-auto min-w-[250px]" key={slug}>
                     <ArticleHeadline
