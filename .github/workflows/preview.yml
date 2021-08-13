@@ -92,7 +92,7 @@ jobs:
         with:
           accessToken: ${{ secrets.GITHUB_TOKEN }}
           locale: ja
-          urls: '${{ needs.deploy.outputs.details_url }},${{ needs.deploy.outputs.details_url }}/posts/'
+          urls: '${{ needs.deploy.outputs.details_url }},${{ needs.deploy.outputs.details_url }}/posts/,${{ needs.deploy.outputs.details_url }}/posts/vite-vue3-typescript/'
           outputDirectory: lighthouse
           prCommentEnabled: true
           prCommentSaveOld: true

@@ -1,29 +1,39 @@
 import React, { FC, Fragment, useRef } from 'react'
 import { graphql, PageProps } from 'gatsby'
-import Article from '../components/Article'
 import { BlogPostBySlugQuery } from '@/../graphql-types'
-import ArticleHeadline from '@/components/ArticleHeadline'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
-import Seo from '../components/seo'
 import { Helmet } from 'react-helmet'
 import { useLocalization } from 'gatsby-theme-i18n'
-import Toc from '../components/Toc'
-import { Popover, Transition } from '@headlessui/react'
+import { Popover } from '@headlessui/react'
 import { Icon } from '@iconify/react/dist/offline'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
-import ReadingProgress from '../components/ReadingProgress'
-import { makeRepoPostPath } from '../utils/parser'
+import { makeRepoPostPath } from '@/utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
-import SnsShare from '@/components/SnsShare'
-import Comment from '@/components/Comment'
-import Newsletter from '@/components/Newsletter'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
-import RelatedArticle from '@/components/RelatedArticle'
 import { useAccessCounter } from '@/hooks/access_counter'
-import VerificationEnv from '@/components/VerificationEnv'
 import GoogleAdsense from '@/components/GoogleAdsense'
+import type { Transition as T } from '@headlessui/react'
+
+import loadable from '@loadable/component'
+import Article from '@/components/Article'
 import MDXProvider from '@/components/MdxProvider'
+const SnsShare = loadable(() => import('@/components/SnsShare'))
+const Comment = loadable(() => import('@/components/Comment'))
+const Newsletter = loadable(() => import('@/components/Newsletter'))
+const RelatedArticle = loadable(() => import('@/components/RelatedArticle'))
+const VerificationEnv = loadable(() => import('@/components/VerificationEnv'))
+const Toc = loadable(() => import('@/components/Toc'))
+const ReadingProgress = loadable(() => import('@/components/ReadingProgress'))
+const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
+
+const Seo = loadable(() => import('@/components/seo'))
+const Transition = loadable<Parameters<typeof T>[number]>(
+  () => import('@/utils/headless_ui').then(({ Transition }) => Transition),
+  {
+    ssr: false
+  }
+)
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
@@ -104,6 +114,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                   className="text-accent space-x-1 underline md:no-underline hover:underline"
                   href={editOnGitHub}
                   target="_blank"
+                  rel="noopener"
                 >
                   <span>Edit this page on GitHub</span>
                   <Icon icon={icon} className="w-5 h-5" />

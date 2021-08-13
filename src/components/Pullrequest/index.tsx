@@ -19,6 +19,7 @@ const Index: FC<{ href: string; className?: string }> = ({
           href={href}
           className="float-right border-accent border space-x-1 hover:no-underline no-underline bg-white dark:bg-blue-gray-900 rounded text-gray-700 dark:text-gray-50 px-2 py-1 shadow"
           target="_blank"
+          rel="noopener"
         >
           <Icon icon={sourcePull} className="w-5 h-5" />
           <span>pull request</span>

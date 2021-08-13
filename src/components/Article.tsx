@@ -1,18 +1,22 @@
 import React, { FC, ReactChild } from 'react'
-import Breadcrumb from './Breadcrumb'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import timerSand from '@iconify-icons/mdi/timer-sand'
-import Tag from './Tag'
-import IconWith from '../components/IconWith'
 import { useCommentCount } from './Comment/CommentCount/hooks'
-import CommentCounter from './Comment/CommentCount/CommentCounter'
 import { handleClick } from './Comment/CommentCount/_util'
-import ArticleDate from '../components/ArticleDate'
-import SnsShare from '../components/SnsShare'
-import Clap from '../components/Clap'
-import Pullrequest from '@/components/Pullrequest'
 import { useLocalization } from 'gatsby-theme-i18n'
 import { iconMeta } from '@/utils/tag'
+
+import loadable from '@loadable/component'
+const SnsShare = loadable(() => import('@/components/SnsShare'))
+const Clap = loadable(() => import('@/components/Clap'))
+const Tag = loadable(() => import('@/components/Tag'))
+const Breadcrumb = loadable(() => import('@/components/Breadcrumb'))
+const Pullrequest = loadable(() => import('@/components/Pullrequest'))
+const ArticleDate = loadable(() => import('@/components/ArticleDate'))
+const IconWith = loadable(() => import('@/components/IconWith'))
+const CommentCounter = loadable(
+  () => import('@/components/Comment/CommentCount/CommentCounter')
+)
 
 interface ArticleProps {
   children: ReactChild
