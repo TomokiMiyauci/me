@@ -9,23 +9,20 @@ import { Icon } from '@iconify/react/dist/offline'
 import book from '@iconify-icons/mdi/book-open-page-variant-outline'
 import { makeRepoPostPath } from '@/utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
-import chevronRight from '@iconify-icons/mdi/chevron-right'
-import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import { useAccessCounter } from '@/hooks/access_counter'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import type { Transition as T } from '@headlessui/react'
 
 import loadable from '@loadable/component'
-import Article from '@/components/Article'
-import MDXProvider from '@/components/MdxProvider'
 const SnsShare = loadable(() => import('@/components/SnsShare'))
 const Comment = loadable(() => import('@/components/Comment'))
 const Newsletter = loadable(() => import('@/components/Newsletter'))
-const RelatedArticle = loadable(() => import('@/components/RelatedArticle'))
 const VerificationEnv = loadable(() => import('@/components/VerificationEnv'))
 const Toc = loadable(() => import('@/components/Toc'))
 const ReadingProgress = loadable(() => import('@/components/ReadingProgress'))
-const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
+const Article = loadable(() => import('@/components/Article'))
+const MdxProvider = loadable(() => import('@/components/MdxProvider'))
+const OtherArticles = loadable(() => import('@/components/OtherArticles'))
 
 const Seo = loadable(() => import('@/components/seo'))
 const Transition = loadable<Parameters<typeof T>[number]>(
@@ -60,7 +57,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   useAccessCounter(slug)
 
   return (
-    <MDXProvider>
+    <MdxProvider>
       <Seo
         title={title}
         description={description}
@@ -143,73 +140,19 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
           </div>
 
           <div className=" max-w-prose mx-auto my-10">
-            <h3 className="text-3xl mb-6">Other Article</h3>
-
-            <nav>
-              <ul className="space-y-2 -mx-2">
-                {previous && (
-                  <li className="relative">
-                    <span className="absolute opacity-80 bottom-0 left-0 ">
-                      <Icon
-                        icon={chevronLeft}
-                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
-                      />
-                    </span>
-
-                    <ArticleHeadline
-                      title={previous.frontmatter.title}
-                      description={previous.frontmatter.description}
-                      img={
-                        previous.frontmatter.thumbnail.childImageSharp
-                          .gatsbyImageData
-                      }
-                      to={previous.frontmatter.slug}
-                      readingTime={previous.fields.readingTime.text}
-                      lastUpdated={previous.frontmatter.date}
-                      tags={previous.fields.lowerCaseTags}
-                      alt="previous article thumbnail"
-                    />
-                  </li>
-                )}
-                {next && (
-                  <li className="relative">
-                    <span className="absolute opacity-80 bottom-0 right-0 ">
-                      <Icon
-                        icon={chevronRight}
-                        className="w-20 h-20 md:w-40 md:h-40 text-accent"
-                      />
-                    </span>
-                    <ArticleHeadline
-                      title={next.frontmatter.title}
-                      description={next.frontmatter.description}
-                      img={
-                        next.frontmatter.thumbnail.childImageSharp
-                          .gatsbyImageData
-                      }
-                      to={next.frontmatter.slug}
-                      tags={next.fields.lowerCaseTags}
-                      readingTime={next.fields.readingTime.text}
-                      lastUpdated={next.frontmatter.date}
-                      alt="next article thumbnail"
-                    />
-                  </li>
-                )}
-              </ul>
-
-              <RelatedArticle
-                recentArticles={recentArticles.nodes}
-                hotArticles={hotArticles.nodes}
-                sameTagArticles={sameTagArticles.nodes}
-                tags={lowerCaseTags}
-              />
-            </nav>
+            <OtherArticles
+              previous={previous}
+              next={next}
+              className="mb-6"
+              recentArticles={recentArticles}
+              hotArticles={hotArticles}
+              sameTagArticles={sameTagArticles}
+              tags={lowerCaseTags}
+            />
           </div>
 
           <section className="max-w-prose -mx-4 md:mx-auto">
-            <h3 id="comment" className="p-4 text-3xl md:p-0 md:mb-2">
-              Comments
-            </h3>
-            <Comment />
+            <Comment className="md:mb-2" />
           </section>
 
           <Popover className="relative">
@@ -249,7 +192,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
-    </MDXProvider>
+    </MdxProvider>
   )
 }
 

@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
-import ArticleHeadline from '@/components/ArticleHeadline'
 import { Icon } from '@iconify/react/dist/offline'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
@@ -10,6 +9,9 @@ import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
 import { classNames } from '@/utils/class_name'
+
+import loadable from '@loadable/component'
+const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
 
 const RelatedArticle: FC<{
   recentArticles: ArticleHeadlineProps[]
