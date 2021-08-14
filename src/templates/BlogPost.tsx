@@ -21,7 +21,7 @@ const VerificationEnv = loadable(() => import('@/components/VerificationEnv'))
 const Toc = loadable(() => import('@/components/Toc'))
 const ReadingProgress = loadable(() => import('@/components/ReadingProgress'))
 const Article = loadable(() => import('@/components/Article'))
-const MDXProvider = loadable(() => import('@/components/MDXProvider'))
+const MdxProvider = loadable(() => import('@/components/MdxProvider'))
 const OtherArticles = loadable(() => import('@/components/OtherArticles'))
 
 const Seo = loadable(() => import('@/components/seo'))
@@ -57,7 +57,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   useAccessCounter(slug)
 
   return (
-    <MDXProvider>
+    <MdxProvider>
       <Seo
         title={title}
         description={description}
