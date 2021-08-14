@@ -192,7 +192,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
       ) : (
         <div className="container mx-auto">This page is not yet complete.</div>
       )}
-    </MDXProvider>
+    </MdxProvider>
   )
 }
 
