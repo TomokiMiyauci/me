@@ -4,10 +4,8 @@ import { Icon } from '@iconify/react/dist/offline'
 import github from '@iconify-icons/uil/github-alt'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import atSign from '@iconify-icons/feather/at-sign'
-
-import loadable from '@loadable/component'
-const GitHubCalendar = loadable(() => import('react-github-calendar'))
-const ReactTooltip = loadable(() => import('react-tooltip'))
+import GitHubCalendar from 'react-github-calendar'
+import ReactTooltip from 'react-tooltip'
 
 const Me: FC = () => {
   return (
