@@ -9,9 +9,10 @@ type ClickEventHandler = (email: string) => Promise<void>
 const Newsletter: FC<{
   pending?: boolean
   onClick: ClickEventHandler
+  className?: string
   onSuccess: () => void
   onError: () => void
-}> = ({ pending, onClick, onError, onSuccess }) => {
+}> = ({ pending, onClick, onError, onSuccess, className }) => {
   const [email, changeEmail] = useState('')
   const [isLoading, changeLoading] = useState(false)
 
@@ -34,7 +35,9 @@ const Newsletter: FC<{
     [pending, isValid]
   )
   return (
-    <div className="px-4 py-6 -mx-4 heropattern-bubbles-gray-200 dark:heropattern-bubbles-gray-700">
+    <div
+      className={`px-4 py-6 -mx-4 heropattern-bubbles-gray-200 dark:heropattern-bubbles-gray-700 ${className}`}
+    >
       <h2 className="text-5xl p-4 mb-4 text-accent text-center">
         Join my Newsletter
       </h2>

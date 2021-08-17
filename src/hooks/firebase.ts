@@ -13,8 +13,8 @@ const useFirebaseProvider = () => {
 
   if (isBrowser && notInitialized()) {
     import('@/utils/firebase').then(({ initializeFirebase }) => {
-      const { firestore, auth, app } = initializeFirebase()
-      setFirebase({ app, firestore, auth })
+      const { firestore, auth, app, messaging } = initializeFirebase()
+      setFirebase({ app, firestore, auth, messaging })
     })
   }
 

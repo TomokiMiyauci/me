@@ -3026,6 +3026,21 @@
   resolved "https://registry.yarnpkg.com/@iconify/icons-bx/-/icons-bx-1.1.2.tgz#fbc5785c5a1c128abbacdeb19662d2f657f230eb"
   integrity sha512-lXOnYmAODBraAvt1WIKcrfsXupgqU+Gv+tVh9GkKkyrwX5DsR0O6GMwfjPO5wTZGHzYpH7t57dXMlV3opz4Nlg==
 
+"@iconify/icons-emojione-monotone@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-emojione-monotone/-/icons-emojione-monotone-1.1.0.tgz#0feaf8568cac57c67dadefbfb08f3335a973fd67"
+  integrity sha512-fz2NZ40hq3Ud0QryD9Q0CalEsrrdbay5lBSoP1HuBdu2GMh4SBwibxFMSxy2qqbom69BeitiHl/GHAvW6ybbsg==
+
+"@iconify/icons-emojione@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-emojione/-/icons-emojione-1.1.0.tgz#ab0a37e7e18ec27cc8211f3d09d4dedbda469adf"
+  integrity sha512-WpAThOcdYdcXkuBoIvvdS4S0vHE9Yb5RCq5Y23UZ5RXfYUmh8pRG2GqT1tDTiSL+9khjr+tMafkBG9TaQD+gVw==
+
+"@iconify/icons-fe@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-fe/-/icons-fe-1.1.0.tgz#51a395d5f0d6d7f4b2d38538facf451c75279454"
+  integrity sha512-CnoY6x3DTFI9P22oY+qL1bcmTws1kxIxr7wqzNsdEoSawmrbDry0yRxD3ovBGJi7vGISbfFKyt4M7gaWUhybbg==
+
 "@iconify/icons-heroicons-outline@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@iconify/icons-heroicons-outline/-/icons-heroicons-outline-1.1.3.tgz#a14a19092baab99a0e72f0c248c2cb14755b40f5"
@@ -9483,6 +9498,11 @@ detab@2.0.4:
   integrity sha512-8zdsQA5bIkoRECvCrNKPla84lyoR7DSAyf7p0YgXzBO9PDJx8KntPUay7NS6yp+KdxdVtiE5SpHKtbp2ZQyA9g==
   dependencies:
     repeat-string "^1.5.4"
+
+detect-browser@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.2.0.tgz#c9cd5afa96a6a19fda0bbe9e9be48a6b6e1e9c97"
+  integrity sha512-tr7XntDAu50BVENgQfajMLzacmSe34D+qZc4zjnniz0ZVuw/TZcLcyxHQjYpJTM36sGEkZZlYLnIM1hH7alTMA==
 
 detect-file@^1.0.0:
   version "1.0.0"
