@@ -22,7 +22,7 @@ const buttons: ButtonProps[] = [
     condition: 'newsletter'
   },
   {
-    title: 'webpush',
+    title: 'web push',
     icon: noticePush,
     condition: 'webpush'
   }

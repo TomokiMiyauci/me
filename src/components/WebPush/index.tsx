@@ -1,44 +1,32 @@
-import React, {
-  FC,
-  useEffect,
-  useState,
-  MouseEventHandler,
-  useMemo
-} from 'react'
+import React, { FC, MouseEventHandler, useMemo } from 'react'
 import { useFirebase } from '@/hooks/firebase'
-
 import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'
 import { useSequence } from '@/hooks/state'
 import { useNotice } from '@/hooks/notice'
 import alert from '@iconify-icons/mdi/alert'
 import check from '@iconify-icons/mdi/check-circle'
-
-const useDisabled = () => {
-  const [state, changeState] = useState(true)
-
-  useEffect(() => {
-    import('firebase/messaging').then(async ({ isSupported }) => {
-      const result = await isSupported()
-      if (result) {
-        changeState(false)
-      }
-    })
-  }, [])
-
-  return [state, changeState] as const
-}
+import cancel from '@iconify-icons/mdi/cancel'
+import { useIsSupported } from '@/components/WebPush/hooks'
+import { Icon } from '@iconify/react/dist/offline'
 
 const WebPush: FC = () => {
-  const [disabled] = useDisabled()
+  const { isPending: isPendingSupported, isRejected } = useIsSupported()
   const [{ messaging, firestore }] = useFirebase()
-  const [isPending, sequence] = useSequence()
+  const [isPendingSequence, sequence] = useSequence()
   const [_, notice] = useNotice()
+
+  const isPending = useMemo<boolean>(
+    () => isPendingSupported || isPendingSequence,
+    [isPendingSupported, isPendingSequence]
+  )
 
   const placeholder = useMemo(() => {
     if (isPending) return '...Loading'
+    if (isRejected) return <Icon className="w-6 h-6" icon={cancel} />
+
     return 'Subscribe'
-  }, [isPending])
+  }, [isPending, isRejected])
 
   const [locale, enabled, setEnabled] = useToggleLang()
 
@@ -56,6 +44,16 @@ const WebPush: FC = () => {
 
     const token = await requestFcmToken(messaging, sw)
     if (!token) {
+      notice({
+        icon: alert,
+        iconClass: 'text-red-500',
+        field: (
+          <>
+            <div>The notification permission was not granted.</div>
+            <div>Please check browser settings</div>
+          </>
+        )
+      })
       return
     }
 
@@ -72,9 +70,9 @@ const WebPush: FC = () => {
       })
     } else {
       notice({
-        icon: alert,
-        iconClass: 'text-red-500',
-        field: <span>Something error has occurred</span>
+        icon: check,
+        iconClass: 'text-teal-500',
+        field: <span>Already subscribed</span>
       })
     }
   }
@@ -102,7 +100,7 @@ const WebPush: FC = () => {
         </div>
 
         <button
-          disabled={disabled || isPending}
+          disabled={isPending}
           onClick={() => sequence(handleClick)}
           className="bg-accent w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
         >
