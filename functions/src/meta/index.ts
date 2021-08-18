@@ -1,1 +1,4 @@
-export { onCreateLocalesJa as onCreateMetaLocalesJa } from '@/meta/locales'
+export {
+  onCreateLocalesJa as onCreateMetaLocalesJa,
+  onCreateLocalesEn as onCreateMetaLocalesEn
+} from '@/meta/locales'

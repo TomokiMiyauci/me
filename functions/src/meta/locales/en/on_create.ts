@@ -6,7 +6,7 @@ import type { MetaLocales } from '@/meta/locales/types'
 import admin from 'firebase-admin'
 
 const onCreate = createFunctions()
-  .firestore.document('meta/{slug}/locales/ja')
+  .firestore.document('meta/{slug}/locales/en')
   .onCreate(async (snapShot: QueryDocumentSnapshot<Partial<MetaLocales>>) => {
     const { title, description, thumbnailUrl, url } = snapShot.data()
 
@@ -24,13 +24,13 @@ const onCreate = createFunctions()
 
       data: {
         url,
-        locale: 'ja'
+        locale: 'en'
       }
     }
 
     await admin
       .messaging()
-      .sendToCondition("'article' in topics && 'ja' in topics", content)
+      .sendToCondition("'article' in topics && 'en' in topics", content)
 
     logger.log('Success sendToTopic', {
       content
