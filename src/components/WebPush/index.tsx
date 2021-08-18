@@ -100,7 +100,7 @@ const WebPush: FC = () => {
         </div>
 
         <button
-          disabled={isPending}
+          disabled={isPending || isRejected}
           onClick={() => sequence(handleClick)}
           className="bg-accent w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
         >
