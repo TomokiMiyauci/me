@@ -9,6 +9,8 @@ type MetaLocales = {
   url: string
   shortUrl: string
   createdAt: Timestamp
+  thumbnailUrl: string
+  heroUrl: string
 }
 
 export type { MetaLocales }
