@@ -1,8 +1,18 @@
-import React, { FC, useEffect, useState, MouseEventHandler } from 'react'
+import React, {
+  FC,
+  useEffect,
+  useState,
+  MouseEventHandler,
+  useMemo
+} from 'react'
 import { useFirebase } from '@/hooks/firebase'
 
 import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'
+import { useSequence } from '@/hooks/state'
+import { useNotice } from '@/hooks/notice'
+import alert from '@iconify-icons/mdi/alert'
+import check from '@iconify-icons/mdi/check-circle'
 
 const useDisabled = () => {
   const [state, changeState] = useState(true)
@@ -22,6 +32,13 @@ const useDisabled = () => {
 const WebPush: FC = () => {
   const [disabled] = useDisabled()
   const [{ messaging, firestore }] = useFirebase()
+  const [isPending, sequence] = useSequence()
+  const [_, notice] = useNotice()
+
+  const placeholder = useMemo(() => {
+    if (isPending) return '...Loading'
+    return 'Subscribe'
+  }, [isPending])
 
   const [locale, enabled, setEnabled] = useToggleLang()
 
@@ -48,9 +65,17 @@ const WebPush: FC = () => {
     })
 
     if (result) {
-      console.log('success')
+      notice({
+        icon: check,
+        iconClass: 'text-teal-500',
+        field: <div>Success subscription Web Push</div>
+      })
     } else {
-      console.log('error')
+      notice({
+        icon: alert,
+        iconClass: 'text-red-500',
+        field: <span>Something error has occurred</span>
+      })
     }
   }
   return (
@@ -77,11 +102,11 @@ const WebPush: FC = () => {
         </div>
 
         <button
-          disabled={disabled}
-          onClick={handleClick}
+          disabled={disabled || isPending}
+          onClick={() => sequence(handleClick)}
           className="bg-accent w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
         >
-          Subscribe
+          {placeholder}
         </button>
 
         <p className="text-gray-400 text-center">
