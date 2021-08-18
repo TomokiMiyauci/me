@@ -68,7 +68,7 @@ const Index: FC = () => {
         })}
       </div>
 
-      <div className="min-h-[500px]">
+      <div className="min-h-[430px]">
         <Transition
           show={state === 'newsletter'}
           enter="transform transition duration-500"
