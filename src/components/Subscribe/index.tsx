@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import loveLetter from '@iconify/icons-emojione-monotone/love-letter'
 import noticePush from '@iconify/icons-fe/notice-push'
+import { Transition } from '@headlessui/react'
 
 import loadable from '@loadable/component'
 const WebPush = loadable(() => import('@/components/WebPush'))
@@ -57,8 +58,23 @@ const Index: FC = () => {
         </button>
       </div>
 
-      {state === 'newsletter' && <Newsletter />}
-      {state === 'webpush' && <WebPush />}
+      <Transition
+        show={state === 'newsletter'}
+        enter="transform transition duration-500"
+        enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
+        enterTo="opacity-100"
+      >
+        <Newsletter />
+      </Transition>
+
+      <Transition
+        show={state === 'webpush'}
+        enter="transform transition duration-500"
+        enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
+        enterTo="opacity-100"
+      >
+        <WebPush />
+      </Transition>
     </>
   )
 }
