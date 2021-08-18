@@ -12,15 +12,15 @@ import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
 import GoogleAdsense from '@/components/GoogleAdsense'
+import Subscribe from '@/components/Subscribe'
 
 import loadable from '@loadable/component'
-const Seo = loadable(() => import('@/components/seo'))
+import Seo from '@/components/seo'
 const NotFoundQueryString = loadable(
   () => import('@/components/NotFoundQueryString')
 )
-const Newsletter = loadable(() => import('@/components/Newsletter'))
-const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
-const Tag = loadable(() => import('@/components/Tag'))
+import ArticleHeadline from '@/components/ArticleHeadline'
+import Tag from '@/components/Tag'
 
 type Order = 'recent' | 'hot'
 
@@ -253,7 +253,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
           </div>
         </div>
       )}
-      <Newsletter />
+      <Subscribe />
     </>
   )
 }

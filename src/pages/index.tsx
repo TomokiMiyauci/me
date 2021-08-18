@@ -1,11 +1,9 @@
 import React, { FC } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
-
-import loadable from '@loadable/component'
-const Me = loadable(() => import('@/components/Me'))
-const Seo = loadable(() => import('@/components/seo'))
-const MainMenu = loadable(() => import('@/components/MainMenu'))
+import Me from '@/components/Me'
+import Seo from '@/components/seo'
+import MainMenu from '@/components/MainMenu'
 
 const IndexPage: FC<PageProps> = ({ data, location }) => {
   const {

@@ -8,5 +8,9 @@ public
 .DS_Store
 tmp
 graphql-types.ts
-.env
+.env*
 storybook-static
+src/workers/*
+!src/workers/*.ts
+static/sw.js
+static/append_script*

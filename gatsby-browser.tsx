@@ -11,6 +11,13 @@ const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
 }
 
+const onClientEntry: GatsbyBrowser['onClientEntry'] = () => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('register service worker')
+    window.navigator.serviceWorker.register('/sw.js')
+  }
+}
+
 type PageContext = {
   previousPostSlug: string
   nextPostSlug: string
@@ -35,4 +42,4 @@ const wrapPageElement: GatsbyBrowser<
     </Layout>
   )
 }
-export { wrapRootElement, wrapPageElement }
+export { wrapRootElement, wrapPageElement, onClientEntry }

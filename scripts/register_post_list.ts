@@ -5,10 +5,11 @@ import { BuildArgs } from 'gatsby'
 import type { Locale } from '@/../config/types'
 import { isUndefined, isLength0 } from '@miyauci/is-valid'
 import { replace, test, length } from 'core-fn'
-import type { Mdx, MdxFrontmatter } from '@/../graphql-types'
+import type { MdxFrontmatter } from '@/../graphql-types'
 import { config } from 'dotenv'
 import { BitlyClient } from 'bitly'
 import { not } from 'fonction'
+import type { Query } from '@/../graphql-types'
 
 const pretty = replace(/\\n/g, '\n')
 const isPosts = test(/\/posts\//)
@@ -56,22 +57,31 @@ const postPostList = async (posts: PostMeta[]): Promise<void> => {
   if (isLength0(targetPostMeta)) return
   const client = new BitlyClient(bitlyAccessToken)
 
-  targetPostMeta.forEach(({ locale, url, title, description, slug }) => {
-    if (!url || !description) return
+  targetPostMeta.forEach(
+    ({ locale, url, title, description, slug, thumbnailUrl, heroUrl }) => {
+      if (!url || !description) return
 
-    client
-      .shorten(url)
-      .then(({ link, long_url }) =>
-        postMeta(
-          { slug, locale },
-          { url: long_url, shortUrl: link, title, description }
+      client
+        .shorten(url)
+        .then(({ link, long_url }) =>
+          postMeta(
+            { slug, locale },
+            {
+              url: long_url,
+              shortUrl: link,
+              title,
+              description,
+              thumbnailUrl,
+              heroUrl
+            }
+          )
         )
-      )
-      .catch((e) => {
-        console.error(e)
-        console.error({ locale, url, title, description, slug })
-      })
-  })
+        .catch((e) => {
+          console.error(e)
+          console.error({ locale, url, title, description, slug })
+        })
+    }
+  )
 }
 
 const initializeApp = (clientEmail: string, privateKey: string) =>
@@ -130,6 +140,8 @@ const postMeta = (
     shortUrl: string
     title: string
     description: string
+    thumbnailUrl: string
+    heroUrl: string
   }
 ) => {
   return admin
@@ -151,24 +163,67 @@ type PostMeta = {
   url?: string
   slug: string
   locale: Locale
+  thumbnailUrl: string
+  heroUrl: string
 } & Pick<MdxFrontmatter, 'title' | 'description'>
 
 const useMetaPoster = async ({
   reporter,
-  getNodesByType
+  graphql
 }: BuildArgs): Promise<void> => {
   if (process.env.GATSBY_STAGE !== 'main') return
-  const allMdx = getNodesByType('Mdx') as unknown as Mdx[]
 
-  const postMdxs: PostMeta[] = allMdx
-    .filter((node) => isPosts(node.fileAbsolutePath))
-    .map(({ fields, frontmatter }) => ({
+  const { data } = await graphql<Pick<Query, 'allMdx' | 'site'>>(`
+    query BlogMeta {
+      site {
+        siteMetadata {
+          siteUrl
+        }
+      }
+      allMdx(
+        filter: { fileAbsolutePath: { regex: "//posts//" } }
+        sort: { order: DESC, fields: [frontmatter___date] }
+      ) {
+        nodes {
+          fields {
+            dirName
+            fullPath
+            locale
+          }
+          frontmatter {
+            title
+            description
+            thumbnail {
+              publicURL
+            }
+            hero {
+              publicURL
+            }
+          }
+        }
+      }
+    }
+  `)
+
+  if (!data) return
+
+  const nodes = data.allMdx.nodes
+  const siteUrl = data.site?.siteMetadata?.siteUrl!
+
+  const postMdxs: PostMeta[] = nodes.map(({ fields, frontmatter }) => {
+    return {
       title: frontmatter?.title as string,
       description: frontmatter?.description as string | undefined,
-      slug: fields?.dirName,
+      slug: fields?.dirName!,
       url: fields?.fullPath as string | undefined,
-      locale: fields?.locale as Locale
-    }))
+      locale: fields?.locale as Locale,
+      thumbnailUrl: new URL(
+        frontmatter?.thumbnail?.publicURL!,
+        siteUrl
+      ).toString(),
+      heroUrl: new URL(frontmatter?.hero?.publicURL!, siteUrl).toString()
+    }
+  })
 
   await writePostList(postJson, {
     posts: postMdxs

@@ -12,19 +12,18 @@ import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import { useAccessCounter } from '@/hooks/access_counter'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import type { Transition as T } from '@headlessui/react'
-
 import loadable from '@loadable/component'
-const SnsShare = loadable(() => import('@/components/SnsShare'))
-const Comment = loadable(() => import('@/components/Comment'))
-const Newsletter = loadable(() => import('@/components/Newsletter'))
-const VerificationEnv = loadable(() => import('@/components/VerificationEnv'))
-const Toc = loadable(() => import('@/components/Toc'))
-const ReadingProgress = loadable(() => import('@/components/ReadingProgress'))
-const Article = loadable(() => import('@/components/Article'))
-const MdxProvider = loadable(() => import('@/components/MdxProvider'))
-const OtherArticles = loadable(() => import('@/components/OtherArticles'))
+import SnsShare from '@/components/SnsShare'
+import Comment from '@/components/Comment'
+import Newsletter from '@/components/Newsletter'
+import VerificationEnv from '@/components/VerificationEnv'
+import Toc from '@/components/Toc'
+import ReadingProgress from '@/components/ReadingProgress'
+import Article from '@/components/Article'
+import MdxProvider from '@/components/MdxProvider'
+import OtherArticles from '@/components/OtherArticles'
+import Seo from '@/components/seo'
 
-const Seo = loadable(() => import('@/components/seo'))
 const Transition = loadable<Parameters<typeof T>[number]>(
   () => import('@/utils/headless_ui').then(({ Transition }) => Transition),
   {

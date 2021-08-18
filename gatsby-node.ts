@@ -168,8 +168,8 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
   }
 }
 
-const onPostBuild: GatsbyNode['onPostBuild'] = (buildArgs) => {
-  useMetaPoster(buildArgs)
+const onPostBuild: GatsbyNode['onPostBuild'] = async (buildArgs) => {
+  await useMetaPoster(buildArgs)
 }
 
 const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({

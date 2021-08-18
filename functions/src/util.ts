@@ -1,12 +1,30 @@
 import admin from 'firebase-admin'
 import { configure } from 'eta'
+import functions, { RuntimeOptions, FunctionBuilder } from 'firebase-functions'
+import { DEFAULT_RUNTIME_OPTIONS } from '@/constants'
 
 const setup = (): void => {
-  admin.initializeApp()
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+  })
 
   configure({
     views: 'views'
   })
 }
 
-export { setup }
+/**
+ * Create firebase-function function with default parameters.
+ * @param runtimeOptions - firebase-functions runtime options
+ * @param regions - firebase-functions region
+ * @returns `FunctionBuilder`
+ *
+ * @public
+ */
+const createFunctions = (
+  runtimeOptions: RuntimeOptions = DEFAULT_RUNTIME_OPTIONS,
+  ...regions: string[]
+): FunctionBuilder =>
+  functions.region('asia-northeast1').runWith(runtimeOptions)
+
+export { setup, createFunctions }
