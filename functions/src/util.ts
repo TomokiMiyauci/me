@@ -1,8 +1,12 @@
 import admin from 'firebase-admin'
 import { configure } from 'eta'
-import functions, { RuntimeOptions, FunctionBuilder } from 'firebase-functions'
+import * as functions from 'firebase-functions'
+import type { RuntimeOptions, FunctionBuilder } from 'firebase-functions'
 import { DEFAULT_RUNTIME_OPTIONS } from '@/constants'
 
+/**
+ * Setup global environment
+ */
 const setup = (): void => {
   admin.initializeApp({
     credential: admin.credential.applicationDefault()
