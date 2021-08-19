@@ -10,5 +10,6 @@
   "transform": {
     "^.+\\.(t|j)sx?$": "@swc/jest"
   },
+  "testPathIgnorePatterns": ["<rootDir>/functions/"],
   "testMatch": ["**/*_test.ts?(x)"]
 }
