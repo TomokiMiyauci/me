@@ -3,7 +3,7 @@
   "scripts": {
     "cz": "yarn --cwd .. cz",
     "lint": "eslint --ext .ts .",
-    "build": "esno build.ts",
+    "build": "node -r esbuild-register build.ts",
     "serve": "yarn build && firebase emulators:start --only functions",
     "shell": "yarn build && firebase functions:shell",
     "start": "yarn shell",
@@ -30,8 +30,8 @@
     "@typescript-eslint/parser": "^4.29.0",
     "core-fn": "^1.0.0-beta.15",
     "esbuild": "^0.12.15",
+    "esbuild-register": "^3.0.0",
     "eslint": "^7.6.0",
-    "esno": "^0.7.3",
     "eta": "^1.12.3",
     "firebase-functions-test": "^0.2.0",
     "fonction": "^2.1.0-beta.2",
