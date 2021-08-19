@@ -3,6 +3,7 @@
   "scripts": {
     "cz": "yarn --cwd .. cz",
     "lint": "eslint --ext .ts .",
+    "test": "jest",
     "build": "node -r esbuild-register build.ts",
     "serve": "yarn build && firebase emulators:start --only functions",
     "shell": "yarn build && firebase functions:shell",
