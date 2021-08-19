@@ -1,4 +1,4 @@
-name: release-functions
+name: functions
 
 on: [push, pull_request]
   paths:
