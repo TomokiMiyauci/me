@@ -1,6 +1,8 @@
 name: functions
 
-on: [push, pull_request]:
+on:
+  push:
+  pull_request:
   paths:
     - 'functions/**'
 
@@ -82,7 +84,7 @@ jobs:
           echo $ENV_FILE > .env.dev.json
           ls -a
         env:
-          ENV_FILE : ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+          ENV_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
 
       - name: Test
         run: yarn test
