@@ -2,12 +2,18 @@ name: functions
 
 on:
   push:
-  pull_request:
-  paths:
-    - 'functions/**'
+    paths:
+      - 'functions/**'
 
-  branches:
-    - main
+    branches:
+      - main
+
+  pull_request:
+    paths:
+      - 'functions/**'
+
+    branches:
+      - main
 
 defaults:
   run:
