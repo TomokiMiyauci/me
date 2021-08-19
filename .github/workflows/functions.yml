@@ -86,9 +86,7 @@ jobs:
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
       - name: Generate env
-        run: |
-          echo $ENV_FILE > .env.dev.json
-          ls -a
+        run: echo $ENV_FILE > .env.dev.json
         env:
           ENV_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
 
