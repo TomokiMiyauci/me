@@ -784,7 +784,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@swc/jest@^0.1.4":
+"@swc/jest@0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.1.5.tgz#102e0cd5e82aee8af2df633fcd3b4bcedb42ec1a"
   integrity sha512-PKKaJ5wqjkpmqQjGVbZxsXn5bIFCToqS1RHg5RbZzLnBL0eOIg8cD3SsnW9d5+im8L6QAWl6pETLZE2QFYSrFA==
@@ -2157,10 +2157,10 @@ firebase-admin@^9.8.0:
     "@google-cloud/firestore" "^4.5.0"
     "@google-cloud/storage" "^5.3.0"
 
-firebase-functions-test@^0.2.0:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/firebase-functions-test/-/firebase-functions-test-0.2.3.tgz#90d6da662d604ed013a3735c6cdba5984e0d57ea"
-  integrity sha512-zYX0QTm53wCazuej7O0xqbHl90r/v1PTXt/hwa0jo1YF8nDM+iBKnLDlkIoW66MDd0R6aGg4BvKzTTdJpvigUA==
+firebase-functions-test@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/firebase-functions-test/-/firebase-functions-test-0.3.2.tgz#e0c58a2a100294066240d6906181a930cfae7e17"
+  integrity sha512-d5pGq3ljNaQU689wB5jZngmshBfnMNtDtGObENGKsMosrvvAMgj8r307XW+oFppxqiXU0bEjR6B6tos8XD5tIA==
   dependencies:
     "@types/lodash" "^4.14.104"
     lodash "^4.17.5"
