@@ -851,7 +851,7 @@
   resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.2.80.tgz#961d4c07da33da70f102aa5926f1018532a02349"
   integrity sha512-xtisiMbVBoP6tOb1euTnvRwlBHr81iRnVOo+h1tWBdHAuZddAR/9gKo6TMcZ94jqFLQimbDcaghJ48Tp4R31dw==
 
-"@swc/core@^1.2.80":
+"@swc/core@^1.2.30", "@swc/core@^1.2.80":
   version "1.2.80"
   resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.2.80.tgz#d6754200e4f1b4815e7cbbe7da26583354ec6a30"
   integrity sha512-Giu6t8UrQG/1vwKZkYXLFiOmKB9+OC65AoR8g8O0m47oNtPIOWa3zBTcnP236/+edFS6VYPLBTzYj2yjLpUgwg==
@@ -871,10 +871,12 @@
     "@swc/core-win32-ia32-msvc" "^1.2.80"
     "@swc/core-win32-x64-msvc" "^1.2.80"
 
-"@swc/jest@0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.1.5.tgz#102e0cd5e82aee8af2df633fcd3b4bcedb42ec1a"
-  integrity sha512-PKKaJ5wqjkpmqQjGVbZxsXn5bIFCToqS1RHg5RbZzLnBL0eOIg8cD3SsnW9d5+im8L6QAWl6pETLZE2QFYSrFA==
+"@swc/jest@0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.1.4.tgz#1ae41e23b99efe80fcf92897cc803d979b2d8e4a"
+  integrity sha512-QOPGFrkCvg290V7VLpi8gEfEjNL/vo0RANFBa6kEKGtvRDzqyW1oNJqYYu4Pr5FnrO/qmMIt8LODz4SR63BPWA==
+  dependencies:
+    "@swc/core" "^1.2.30"
 
 "@tokenizer/token@^0.1.1":
   version "0.1.1"
