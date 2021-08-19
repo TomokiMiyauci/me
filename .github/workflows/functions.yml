@@ -1,7 +1,14 @@
-name: release-functions
+name: functions
 
 on:
   push:
+    paths:
+      - 'functions/**'
+
+    branches:
+      - main
+
+  pull_request:
     paths:
       - 'functions/**'
 
@@ -29,8 +36,8 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: functions/node_modules
+          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Install
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
@@ -52,13 +59,14 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: functions/node_modules
+          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Lint
         run: yarn lint
 
-  build:
+  test:
+    if: github.event_name == 'pull_request'
     needs: setup
     runs-on: ubuntu-latest
 
@@ -74,8 +82,36 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: functions/node_modules
+          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+
+      - name: Generate env
+        run: echo $ENV_FILE > .env.dev.json
+        env:
+          ENV_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+
+      - name: Test
+        run: yarn test --no-cache
+
+  build:
+    if: github.event_name == 'push'
+    needs: setup
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: functions/node_modules
+          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Build
         run: yarn build
@@ -86,6 +122,7 @@ jobs:
           path: functions/lib
 
   deploy:
+    if: github.event_name == 'push'
     needs: [lint, build]
     runs-on: ubuntu-latest
     steps:
@@ -95,8 +132,8 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
-          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+          path: functions/node_modules
+          key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - uses: actions/download-artifact@v2
         with:
