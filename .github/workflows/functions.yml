@@ -91,7 +91,7 @@ jobs:
           ENV_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
 
       - name: Test
-        run: yarn test
+        run: yarn test --no-cache
 
   build:
     if: github.event_name == 'push'
