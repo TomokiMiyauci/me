@@ -66,7 +66,7 @@ jobs:
         run: yarn lint
 
   test:
-    if: ${{ github.event_name == pull_request }}
+    if: ${{ github.event_name == 'pull_request' }}
     needs: setup
     runs-on: ubuntu-latest
 
@@ -96,7 +96,7 @@ jobs:
         run: yarn test
 
   build:
-    if: ${{ github.event_name == push }}
+    if: ${{ github.event_name == 'push' }}
     needs: setup
     runs-on: ubuntu-latest
 
@@ -124,7 +124,7 @@ jobs:
           path: functions/lib
 
   deploy:
-    if: ${{ github.event_name == push }}
+    if: ${{ github.event_name == 'push' }}
     needs: [lint, build]
     runs-on: ubuntu-latest
     steps:
