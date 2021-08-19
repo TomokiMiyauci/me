@@ -36,7 +36,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: functions/node_modules
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Install
@@ -59,7 +59,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: functions/node_modules
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Lint
@@ -82,7 +82,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: functions/node_modules
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Generate env
@@ -110,7 +110,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: functions/node_modules
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Build
@@ -132,7 +132,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: functions/node_modules
           key: ${{ matrix.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - uses: actions/download-artifact@v2
