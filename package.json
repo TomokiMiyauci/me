@@ -112,7 +112,7 @@
     "@storybook/addon-essentials": "^6.3.2",
     "@storybook/addon-links": "^6.3.2",
     "@storybook/react": "^6.3.2",
-    "@swc/jest": "^0.1.2",
+    "@swc/jest": "0.1.4",
     "@types/canvas-confetti": "^1.4.0",
     "@types/fs-extra": "^9.0.12",
     "@types/jest": "^26.0.23",
