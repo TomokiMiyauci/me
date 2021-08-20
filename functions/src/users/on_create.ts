@@ -4,10 +4,10 @@ import { logger } from 'firebase-functions'
 
 const onCreate = createFunctions()
   .auth.user()
-  .onCreate(async ({ uid }) => {
+  .onCreate(async ({ uid }, { timestamp }) => {
     const data: firestore.DocumentData = {
       uid,
-      createdAt: firestore.FieldValue.serverTimestamp()
+      createdAt: new Date(Date.parse(timestamp))
     }
     return firestore()
       .collection('users')

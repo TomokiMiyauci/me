@@ -40,23 +40,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
-
-      - name: Debug
-        run: |
-          pwd
-          echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
+          key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Install
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
-        run: yarn --check-files --frozen-lockfile --non-interactive
-
-      - name: Debug
-        run: |
-          ls -a
-          echo node_modules
-          ls node_modules
-          echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
+        run: yarn --check-files --frozen-lockfile --non-interactive --production=false
 
   lint:
     needs: setup
@@ -75,7 +63,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Lint
         run: yarn lint
@@ -98,7 +86,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Generate env
         run: echo $ENV_FILE > .env.dev.json
@@ -126,7 +114,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Build
         run: yarn build
@@ -148,7 +136,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - uses: actions/download-artifact@v2
         with:

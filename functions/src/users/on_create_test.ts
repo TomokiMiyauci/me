@@ -14,7 +14,10 @@ describe('onCreate', () => {
   it('save user info to firestore /document/users/{uid}', async () => {
     const user = test.auth.exampleUserRecord()
     user.uid = UID
-    await onCreate(user)
+    const timestamp = new Date('2021/1/1 00:01:02')
+    await onCreate(user, {
+      timestamp: timestamp.toISOString()
+    })
 
     const snapshot = (await firestore()
       .collection('users')
@@ -23,7 +26,10 @@ describe('onCreate', () => {
     expect(snapshot.exists).toBeTruthy()
     expect(snapshot.id).toBe(UID)
     const uid = snapshot.data()?.uid
+    const createdAt = snapshot.data()?.createdAt
     expect(uid).toBe(UID)
-    expect(snapshot.data()?.createdAt).toBeDefined()
+    expect(
+      createdAt?.isEqual(firestore.Timestamp.fromDate(timestamp))
+    ).toBeTruthy()
   })
 })
