@@ -1,11 +1,15 @@
-import { logger } from 'firebase-functions'
-
+import { logger, config } from 'firebase-functions'
 import { createFunctions, switchable } from '@/util'
 import type { QueryDocumentSnapshot } from '@google-cloud/firestore'
 import type { MetaLocales } from '@/meta/locales/types'
 import admin from 'firebase-admin'
 import { includes } from 'core-fn'
 import type { Locale } from '@/../../config/types'
+import type { Post } from '@/types'
+import type { Config } from '@/types'
+import Twitter from 'twitter-api-v2'
+import { renderTemplate, TemplateData, ellipsis } from '@/twitter/util'
+import { templateName } from '@/twitter/util'
 
 type Params = {
   slug: string
@@ -68,8 +72,50 @@ const pushFCM = createFunctions()
     }
   )
 
+const tweet = createFunctions()
+  .firestore.document('meta/{slug}/locales/{locale}')
+  .onCreate(async (snapshot, { params }) => {
+    const { locale } = params as Params
+    const { url, shortUrl, title, description } =
+      snapshot.data() as Partial<Post>
+
+    if (!url || !title || !description) {
+      logger.error('Something data is undefined')
+      return
+    }
+
+    const _url = shortUrl ?? url
+    const template = templateName(locale)
+    const content = await renderTemplate<TemplateData>(template, {
+      url: _url,
+      title,
+      description
+    })
+
+    if (!content) return
+    const ellipsisContent = ellipsis(content)
+
+    const {
+      app_key: appKey,
+      app_secret: appSecret,
+      access_token: accessToken,
+      access_secret: accessSecret
+    } = (config() as Config).twitter
+    const client = new Twitter({
+      appKey,
+      appSecret,
+      accessToken,
+      accessSecret
+    })
+
+    return client.v1.tweet(ellipsisContent).catch((e) => {
+      logger.error(e)
+    })
+  })
+
 const onCreate = {
-  pushFCM
+  pushFCM,
+  tweet
 }
 
 export { onCreate, pushFCM }
