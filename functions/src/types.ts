@@ -10,6 +10,10 @@ type Config = {
   line: {
     channel_access_token: string
   }
+
+  slack: {
+    subscription_fcm_url: string
+  }
 }
 
 type Post = {
