@@ -45,7 +45,7 @@ jobs:
       - name: Debug
         run: |
           pwd
-          echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
 
       - name: Install
         # if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
