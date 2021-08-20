@@ -13,6 +13,7 @@ type Config = {
 
   slack: {
     subscription_fcm_url: string
+    firebase_functions_log_url: string
   }
 }
 
