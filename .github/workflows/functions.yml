@@ -39,7 +39,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: functions/node_modules
+          path: '**/node_modules'
           key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Install
@@ -69,8 +69,11 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: functions/node_modules
+          path: '**/node_modules'
           key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Lint
         run: yarn lint
@@ -92,7 +95,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: functions/node_modules
+          path: '**/node_modules'
           key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Generate env
@@ -120,7 +123,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: functions/node_modules
+          path: '**/node_modules'
           key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Build
@@ -142,7 +145,7 @@ jobs:
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
-          path: functions/node_modules
+          path: '**/node_modules'
           key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - uses: actions/download-artifact@v2
