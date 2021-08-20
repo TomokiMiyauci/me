@@ -21,7 +21,7 @@ defaults:
     working-directory: functions
 
 env:
-  NODE_ENV: (github.event_name == 'push' && 'production') || 'development'
+  NODE_ENV: ${{ (github.event_name == 'push' && 'production') || 'development' }}
 
 jobs:
   setup:
