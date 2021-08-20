@@ -1,19 +1,9 @@
 import { onCreate } from '@/users/on_create'
-import _test from 'firebase-functions-test'
 import { firestore } from 'firebase-admin'
-import { setup } from '@/util'
-import { resolve } from 'path'
 import { DocumentSnapshot, Timestamp } from '@google-cloud/firestore'
-
-setup()
+import { test } from '@test/util'
 
 const UID = 'anonymous'
-const test = _test(
-  {
-    projectId: 'blorogue-dev'
-  },
-  resolve(__dirname, '..', '..', '.env.dev.json')
-)
 const wrapped = test.wrap(onCreate)
 
 describe('onCreate', () => {
