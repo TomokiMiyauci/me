@@ -2,6 +2,8 @@
 
 ## env
 
+- NODE_ENV - build environment
+
 Required firebase functions env.
 
 - twitter
