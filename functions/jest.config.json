@@ -4,11 +4,14 @@
   "coverageProvider": "v8",
   "moduleFileExtensions": ["js", "ts"],
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/src/$1"
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@test/(.*)$": "<rootDir>/test/$1"
   },
   "testEnvironment": "node",
   "transform": {
     "^.+\\.(t|j)sx?$": "@swc/jest"
   },
-  "testMatch": ["**/*_test.ts"]
+  "testMatch": ["**/*_test.ts"],
+  "setupFiles": ["<rootDir>/test/setup_env.ts"],
+  "setupFilesAfterEnv": ["<rootDir>/test/setup.ts"]
 }
