@@ -49,6 +49,7 @@ jobs:
       - name: Debug
         run: |
           ls -a
+          echo node_modules
           ls node_modules
           echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
 
