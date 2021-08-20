@@ -4,15 +4,31 @@ import { createFunctions, switchable } from '@/util'
 import type { QueryDocumentSnapshot } from '@google-cloud/firestore'
 import type { MetaLocales } from '@/meta/locales/types'
 import admin from 'firebase-admin'
+import { includes } from 'core-fn'
+import type { Locale } from '@/../../config/types'
 
-const onCreate = createFunctions()
-  .firestore.document('meta/{slug}/locales/ja')
+type Params = {
+  slug: string
+  locale: Locale
+}
+
+const pushFCM = createFunctions()
+  .firestore.document('meta/{slug}/locales/{locale}')
   .onCreate(
     async (
-      snapShot: QueryDocumentSnapshot<Partial<MetaLocales>>
+      snapShot: QueryDocumentSnapshot<Partial<MetaLocales>>,
+      { params }
     ): Promise<boolean> => {
       const { title, description, thumbnailUrl, url } = snapShot.data()
+      const { locale } = params as Params
 
+      if (!includes(locale, ['en', 'ja'])) {
+        logger.error('Unknown locale is detected', {
+          locale
+        })
+
+        return false
+      }
       if (!title || !description || !url) {
         logger.error('title or description or url is not exists')
 
@@ -28,15 +44,17 @@ const onCreate = createFunctions()
 
         data: {
           url,
-          locale: 'ja'
+          locale
         }
       }
+
+      const condition = `'article' in topics && '${locale}' in topics`
 
       const fn = switchable(
         async () =>
           admin
             .messaging()
-            .sendToCondition("'article' in topics && 'ja' in topics", content)
+            .sendToCondition(condition, content)
             .then(() => {
               logger.log('Success sendToTopic', {
                 content
@@ -50,4 +68,9 @@ const onCreate = createFunctions()
     }
   )
 
-export { onCreate }
+const onCreate = {
+  pushFCM
+}
+
+export { onCreate, pushFCM }
+export type { Params }

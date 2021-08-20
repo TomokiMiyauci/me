@@ -20,6 +20,9 @@ defaults:
     shell: bash
     working-directory: functions
 
+env:
+  NODE_ENV: ${{ (github.event_name == 'push' && 'production') || 'development' }}
+
 jobs:
   setup:
     runs-on: ubuntu-latest
