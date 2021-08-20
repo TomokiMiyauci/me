@@ -35,12 +35,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Cache node_modules
-      #   id: node_modules_cache_id
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: '**/node_modules'
-      #     key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Debug
         run: |
@@ -48,7 +48,7 @@ jobs:
           echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
 
       - name: Install
-        # if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Debug
@@ -67,24 +67,15 @@ jobs:
         node-version: [14.x]
 
     steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
       - name: Cache node_modules
         id: node_modules_cache_id
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Lint
         run: yarn lint
@@ -107,7 +98,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Generate env
         run: echo $ENV_FILE > .env.dev.json
@@ -135,7 +126,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Build
         run: yarn build
@@ -157,7 +148,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+          key: ${{ runner.os }}-xfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - uses: actions/download-artifact@v2
         with:
