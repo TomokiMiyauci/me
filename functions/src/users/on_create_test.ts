@@ -1,10 +1,10 @@
-import { onCreate } from '@/users/on_create'
+import { onCreate as _onCreate } from '@/users/on_create'
 import { firestore } from 'firebase-admin'
 import { DocumentSnapshot, Timestamp } from '@google-cloud/firestore'
 import { test } from '@test/util'
 
 const UID = 'anonymous'
-const wrapped = test.wrap(onCreate)
+const onCreate = test.wrap(_onCreate)
 
 describe('onCreate', () => {
   afterAll(async () => {
@@ -14,7 +14,7 @@ describe('onCreate', () => {
   it('save user info to firestore /document/users/{uid}', async () => {
     const user = test.auth.exampleUserRecord()
     user.uid = UID
-    await wrapped(user)
+    await onCreate(user)
 
     const snapshot = (await firestore()
       .collection('users')
