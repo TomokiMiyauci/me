@@ -3,7 +3,6 @@ import { configure } from 'eta'
 import * as functions from 'firebase-functions'
 import type { RuntimeOptions, FunctionBuilder } from 'firebase-functions'
 import { DEFAULT_RUNTIME_OPTIONS } from '@/constants'
-
 /**
  * Setup global environment
  */
@@ -31,4 +30,16 @@ const createFunctions = (
 ): FunctionBuilder =>
   functions.region('asia-northeast1').runWith(runtimeOptions)
 
-export { setup, createFunctions }
+const switchable = <T>(production: T, development: T): T => {
+  switch (process.env.NODE_ENV) {
+    case 'production': {
+      return production
+    }
+
+    default: {
+      return development
+    }
+  }
+}
+
+export { setup, createFunctions, switchable }
