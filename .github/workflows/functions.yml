@@ -47,7 +47,9 @@ jobs:
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Debug
-        run: ls -a
+        run: |
+          ls -a
+          ls node_modules
 
   lint:
     needs: setup
