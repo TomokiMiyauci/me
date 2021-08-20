@@ -35,15 +35,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v2
-        with:
-          path: functions/node_modules
-          key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+      # - name: Cache node_modules
+      #   id: node_modules_cache_id
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: functions/node_modules
+      #     key: ${{ runner.os }}-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
 
       - name: Install
-        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        # if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn --check-files --frozen-lockfile --non-interactive
 
       - name: Setup tmate session
