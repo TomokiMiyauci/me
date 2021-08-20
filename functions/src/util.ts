@@ -31,14 +31,10 @@ const createFunctions = (
   functions.region('asia-northeast1').runWith(runtimeOptions)
 
 const switchable = <T>(production: T, development: T): T => {
-  switch (process.env.NODE_ENV) {
-    case 'production': {
-      return production
-    }
-
-    default: {
-      return development
-    }
+  if (process.env.NODE_ENV === 'production') {
+    return production
+  } else {
+    return development
   }
 }
 
