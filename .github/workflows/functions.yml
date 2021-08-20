@@ -50,6 +50,7 @@ jobs:
         run: |
           ls -a
           ls node_modules
+          echo ${{ format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock') }}
 
   lint:
     needs: setup
