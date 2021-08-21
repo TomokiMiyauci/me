@@ -90,7 +90,7 @@ jobs:
       - name: Test
         uses: w9jds/firebase-action@master
         with:
-          args: emulators:exec --only firestore 'yarn test'
+          args: emulators:exec --only firestore 'cat package.json'
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
