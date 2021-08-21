@@ -1,0 +1,104 @@
+name: firebase
+
+on:
+  push:
+    paths:
+      - 'firebase/**'
+
+    branches:
+      - main
+
+  pull_request:
+    paths:
+      - 'firebase/**'
+
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+    working-directory: firebase/firestore
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+
+      - name: Install
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        run: yarn --check-files --frozen-lockfile --non-interactive --production=false
+
+  # lint:
+  #   needs: setup
+  #   runs-on: ubuntu-latest
+
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x]
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: Cache node_modules
+  #       id: node_modules_cache_id
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: '**/node_modules'
+  #         key: ${{ runner.os }}-xxfunctions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/functions', '/yarn.lock')) }}
+
+  #     - name: Lint
+  #       run: yarn lint
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+
+      - name: Test
+        uses: w9jds/firebase-action@master
+        with:
+          args: emulators:exec --only firestore 'yarn test'
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy to Cloud Firestore rules
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only firestore:rules
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
