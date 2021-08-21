@@ -84,13 +84,10 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
 
-      - name: Debug
-        run: cat package.json
-
       - name: Test
         uses: w9jds/firebase-action@master
         with:
-          args: emulators:exec --only firestore 'cat package.json'
+          args: emulators:exec --only firestore 'yarn --cwd firebase/firestore test'
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
