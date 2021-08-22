@@ -1,13 +1,16 @@
-import { useState, useRef, useEffect, useContext } from 'react'
-import { Notice } from '../types/notice'
+import { useState, useRef, useEffect, useContext, ReactElement } from 'react'
 import NoticeContext from '../contexts/notice'
+import type { Notice, NoticeType } from '@/types/notice'
 
 const useNoticeProvider = () => {
-  const [state, changeState] = useState<Notice>({})
+  const [state, changeState] = useState<Notice>({
+    type: 'success',
+    field: undefined
+  })
   const [isShow, changeShow] = useState(false)
   const timeoutId = useRef<NodeJS.Timeout | null>(null)
 
-  const notice = (payload: Notice) => {
+  const notice = (payload: NoticeType & { field: ReactElement }) => {
     changeState(payload)
     changeShow(true)
   }

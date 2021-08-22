@@ -42,7 +42,6 @@ const useUnsubscribe = () => {
     const col = collection(firestore!, 'users', uid, 'fcm')
     const docs = await getDocs(col)
     changeHasSubscribed(!docs.empty)
-    console.log(docs)
   }
 
   useEffect(() => {
