@@ -1,9 +1,34 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUserAuthenticated(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    function isValidFcm(fcm, token) {
+      return fcm.size() == 3
+      && 'token' in fcm && fcm.token is string && fcm.token == token
+      && 'topics' in fcm && fcm.topics is list
+      && 'createdAt' in fcm && fcm.createdAt is timestamp;
+    }
+
     match /posts/{post} {
       allow read;
       allow create, update: if request.auth != null;
+    }
+
+    match /fcm/{token} {
+      allow create;
+    }
+
+    match /users/{userId} {
+      match /fcm/{token} {
+        allow create, delete: if isUserAuthenticated(userId) && isValidFcm(request.resource.data, token);
+      }
     }
   }
 }
