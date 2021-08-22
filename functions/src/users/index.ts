@@ -1,7 +1,7 @@
 import { onCreate } from '@/users/on_create'
+import { fcm } from '@/users/fcm'
 
-const user = {
+export const user = {
+  fcm,
   onCreate
 }
-
-export { user }
