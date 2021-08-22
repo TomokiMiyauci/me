@@ -611,7 +611,7 @@
     retry-request "^4.2.2"
     teeny-request "^7.0.0"
 
-"@google-cloud/firestore@^4.5.0":
+"@google-cloud/firestore@^4.14.2", "@google-cloud/firestore@^4.5.0":
   version "4.14.2"
   resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-4.14.2.tgz#2890e81f68269ba8d153992a630798096a70019a"
   integrity sha512-5KmcmBqtgD/cC3Rx7HkTju9OepIaBP54ZtWviU28cuJK9OA4O8eBbzr3x54/h/DTHGjfr/i7h8X2sU6QryRCkg==
