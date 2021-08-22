@@ -30,8 +30,10 @@ const initializeFirebase = (): FirebaseState => {
   })
 
   if (!isProd) {
-    connectFirestoreEmulator(firestore, 'localhost', 8081)
-    connectAuthEmulator(auth, 'http://localhost:9099')
+    connectFirestoreEmulator(firestore, 'localhost', 8080)
+    connectAuthEmulator(auth, 'http://localhost:9099', {
+      disableWarnings: true
+    })
   }
 
   if (isProd) {
@@ -88,13 +90,14 @@ type FCMData = {
 
 const postFCMToken = async (
   firestore: Firestore,
-  { token, topics }: FCMData
+  { token, topics }: FCMData,
+  userId: string
 ): Promise<boolean> => {
   const { doc, setDoc, arrayUnion, serverTimestamp } = await import(
     'firebase/firestore/lite'
   )
 
-  const _doc = doc(firestore, 'fcm', token)
+  const _doc = doc(firestore, 'users', userId, 'fcm', token)
   return setDoc(_doc, {
     token,
     topics: arrayUnion(...topics),

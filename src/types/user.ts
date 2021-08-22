@@ -5,6 +5,7 @@ type MaybeUser = User | null
 type UserContext = [
   {
     user?: MaybeUser
+    uid: string
     isLoggedIn: boolean
   },
   Dispatch<SetStateAction<MaybeUser>>

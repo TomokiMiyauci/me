@@ -7,6 +7,7 @@ import { signInAnonymously } from 'firebase/auth'
 const useAuthProvider = (): UserContext => {
   const [user, changeUser] = useState<MaybeUser>(null)
   const isLoggedIn = useMemo<boolean>(() => !!user, [user])
+  const uid = useMemo<string>(() => user?.uid ?? '', [user])
 
   const [{ auth }] = useFirebase()
 
@@ -31,6 +32,7 @@ const useAuthProvider = (): UserContext => {
   return [
     {
       user,
+      uid,
       isLoggedIn
     },
     changeUser
