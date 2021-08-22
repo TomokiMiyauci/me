@@ -1,10 +1,11 @@
-import { ReactNode } from 'react'
-import type { IconifyIcon } from '@iconify/react'
+import { ReactElement } from 'react'
 
-type Notice = {
-  icon?: IconifyIcon
-  iconClass?: string
-  field?: ReactNode
+type Notice = NoticeType & {
+  field?: ReactElement
 }
 
-export type { Notice }
+type NoticeType = {
+  type: 'success' | 'alert'
+}
+
+export type { Notice, NoticeType }

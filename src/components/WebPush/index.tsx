@@ -4,8 +4,6 @@ import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'
 import { useSequence } from '@/hooks/state'
 import { useNotice } from '@/hooks/notice'
-import alert from '@iconify-icons/mdi/alert'
-import check from '@iconify-icons/mdi/check-circle'
 import cancel from '@iconify-icons/mdi/cancel'
 import { useUnsubscribe, useIsSupported } from '@/components/WebPush/hooks'
 import { Icon } from '@iconify/react/dist/offline'
@@ -54,8 +52,7 @@ const WebPush: FC = () => {
     const token = await requestFcmToken(messaging, sw)
     if (!token) {
       notice({
-        icon: alert,
-        iconClass: 'text-red-500',
+        type: 'alert',
         field: (
           <>
             <div>The notification permission was not granted.</div>
@@ -78,14 +75,12 @@ const WebPush: FC = () => {
 
     if (result) {
       notice({
-        icon: check,
-        iconClass: 'text-teal-500',
+        type: 'success',
         field: <div>Success subscription Web Push</div>
       })
     } else {
       notice({
-        icon: check,
-        iconClass: 'text-teal-500',
+        type: 'alert',
         field: <span>Already subscribed</span>
       })
     }
@@ -105,6 +100,10 @@ const WebPush: FC = () => {
       })
     )
     await deleteToken(messaging!)
+    notice({
+      type: 'success',
+      field: <div>Unsubscribed from push message</div>
+    })
     changeHasSubscribed()
   }
   return (
