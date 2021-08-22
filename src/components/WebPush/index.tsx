@@ -7,7 +7,7 @@ import { useNotice } from '@/hooks/notice'
 import alert from '@iconify-icons/mdi/alert'
 import check from '@iconify-icons/mdi/check-circle'
 import cancel from '@iconify-icons/mdi/cancel'
-import { useIsSupported } from '@/components/WebPush/hooks'
+import { useUnsubscribe, useIsSupported } from '@/components/WebPush/hooks'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAuth } from '@/hooks/auth'
 
@@ -16,11 +16,12 @@ const WebPush: FC = () => {
   const [{ messaging, firestore }] = useFirebase()
   const [isPendingSequence, sequence] = useSequence()
   const [_, notice] = useNotice()
-  const [{ uid }] = useAuth()
+  const [{ uid, isLoggedIn }] = useAuth()
+  const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()
 
   const isPending = useMemo<boolean>(
-    () => isPendingSupported || isPendingSequence,
-    [isPendingSupported, isPendingSequence]
+    () => isPendingSupported || isPendingSequence || !isLoggedIn,
+    [isPendingSupported, isPendingSequence, isLoggedIn]
   )
 
   const placeholder = useMemo(() => {
@@ -29,6 +30,12 @@ const WebPush: FC = () => {
 
     return 'Subscribe'
   }, [isPending, isRejected])
+
+  const placeholderUnsubscribe = useMemo<string>(() => {
+    if (isPendingSequence) return '...Loading'
+
+    return 'unsubscribe'
+  }, [isPendingSequence])
 
   const [locale, enabled, setEnabled] = useToggleLang()
 
@@ -67,6 +74,7 @@ const WebPush: FC = () => {
       },
       uid
     )
+    await changeHasSubscribed()
 
     if (result) {
       notice({
@@ -81,6 +89,23 @@ const WebPush: FC = () => {
         field: <span>Already subscribed</span>
       })
     }
+  }
+
+  const handleUnsubscribe: MouseEventHandler = async () => {
+    const { collection, getDocs, deleteDoc } = await import(
+      'firebase/firestore/lite'
+    )
+    const { deleteToken } = await import('firebase/messaging')
+    const col = collection(firestore!, 'users', uid, 'fcm')
+    const { docs } = await getDocs(col)
+
+    await Promise.all(
+      Array.from(docs).map(async (doc) => {
+        await deleteDoc(doc.ref)
+      })
+    )
+    await deleteToken(messaging!)
+    changeHasSubscribed()
   }
   return (
     <div className="px-4 py-6 -mx-4 heropattern-architect-gray-200 dark:heropattern-architect-blue-gray-700">
@@ -105,13 +130,23 @@ const WebPush: FC = () => {
           </label>
         </div>
 
-        <button
-          disabled={isPending || isRejected}
-          onClick={() => sequence(handleClick)}
-          className="bg-accent w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
-        >
-          {placeholder}
-        </button>
+        {hasSubscribed ? (
+          <button
+            onClick={() => sequence(handleUnsubscribe)}
+            disabled={isPendingSequence}
+            className="bg-red-500 w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
+          >
+            {placeholderUnsubscribe}
+          </button>
+        ) : (
+          <button
+            disabled={isPending || isRejected}
+            onClick={() => sequence(handleClick)}
+            className="bg-accent w-full text-xl font-bold mt-4 mb-2 p-3 uppercase rounded-md disabled:opacity-70 active:opacity-90 focus:ring ring-gray-400 dark:ring-white transition duration-300 disabled:cursor-not-allowed"
+          >
+            {placeholder}
+          </button>
+        )}
 
         <p className="text-gray-400 text-center">
           Due to the implementation status of the browser, Safari and iOS safari
