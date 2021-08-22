@@ -21,13 +21,10 @@ service cloud.firestore {
       allow create, update: if request.auth != null;
     }
 
-    match /fcm/{token} {
-      allow create;
-    }
-
     match /users/{userId} {
       match /fcm/{token} {
-        allow create, delete: if isUserAuthenticated(userId) && isValidFcm(request.resource.data, token);
+        allow create: if isUserAuthenticated(userId) && isValidFcm(request.resource.data, token);
+        allow list, delete: if isUserAuthenticated(userId);
       }
     }
   }
