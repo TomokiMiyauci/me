@@ -9,12 +9,14 @@ import check from '@iconify-icons/mdi/check-circle'
 import cancel from '@iconify-icons/mdi/cancel'
 import { useIsSupported } from '@/components/WebPush/hooks'
 import { Icon } from '@iconify/react/dist/offline'
+import { useAuth } from '@/hooks/auth'
 
 const WebPush: FC = () => {
   const { isPending: isPendingSupported, isRejected } = useIsSupported()
   const [{ messaging, firestore }] = useFirebase()
   const [isPendingSequence, sequence] = useSequence()
   const [_, notice] = useNotice()
+  const [{ uid }] = useAuth()
 
   const isPending = useMemo<boolean>(
     () => isPendingSupported || isPendingSequence,
@@ -57,10 +59,14 @@ const WebPush: FC = () => {
       return
     }
 
-    const result = await postFCMToken(firestore, {
-      token,
-      topics: ['article', locale]
-    })
+    const result = await postFCMToken(
+      firestore,
+      {
+        token,
+        topics: ['article', locale]
+      },
+      uid
+    )
 
     if (result) {
       notice({
