@@ -12,7 +12,7 @@ const onCreate = createFunctions()
     return firestore()
       .collection('users')
       .doc(uid)
-      .create(data)
+      .set(data)
       .then(() => {
         logger.log(`Save user info to firestore document/users/${uid}`, data)
       })
