@@ -1,8 +1,8 @@
-import { onCreate as _onCreate } from '@/users/on_create'
+import { onCreate } from '@/auth/user/on_create'
 import { firestore } from 'firebase-admin'
 import { test } from '@test/util'
 
-const onCreate = test.wrap(_onCreate)
+const saveUser = test.wrap(onCreate.saveUser)
 const user = test.auth.exampleUserRecord()
 
 describe('onCreate', () => {
@@ -11,7 +11,7 @@ describe('onCreate', () => {
   })
   it('save user info to firestore /document/users/{uid}', async () => {
     const timestamp = new Date('2021/1/1 00:01:02')
-    await onCreate(user, {
+    await saveUser(user, {
       timestamp: timestamp.toISOString()
     })
 

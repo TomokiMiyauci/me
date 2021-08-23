@@ -2,13 +2,14 @@ import { createFunctions } from '@/util'
 import { firestore } from 'firebase-admin'
 import { logger } from 'firebase-functions'
 
-const onCreate = createFunctions()
+const saveUser = createFunctions()
   .auth.user()
   .onCreate(async ({ uid }, { timestamp }) => {
     const data: firestore.DocumentData = {
       uid,
       createdAt: new Date(Date.parse(timestamp))
     }
+
     return firestore()
       .collection('users')
       .doc(uid)
@@ -25,4 +26,4 @@ const onCreate = createFunctions()
       })
   })
 
-export { onCreate }
+export const onCreate = { saveUser }
