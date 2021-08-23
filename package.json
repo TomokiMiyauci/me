@@ -135,6 +135,7 @@
     "gatsby-plugin-graphql-codegen": "^3.0.0",
     "gatsby-plugin-loadable-components-ssr": "^3.2.0",
     "gatsby-plugin-postcss": "^4.7.1",
+    "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "gatsby-plugin-robots-txt": "^1.6.8",
     "gatsby-plugin-sharp": "^3.7.1",
     "gatsby-plugin-twitter": "^3.11.0",

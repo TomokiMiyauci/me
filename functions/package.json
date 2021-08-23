@@ -38,7 +38,6 @@
     "eta": "^1.12.3",
     "firebase-functions-test": "^0.3.2",
     "fonction": "^2.1.0-beta.2",
-    "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "jest": "^27.0.6",
     "typescript": "^4.3.5"
   },
