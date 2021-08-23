@@ -4,14 +4,14 @@ import admin from 'firebase-admin'
 import { BuildArgs } from 'gatsby'
 import type { Locale } from '@/../config/types'
 import { isUndefined, isLength0 } from '@miyauci/is-valid'
-import { replace, test, length } from 'core-fn'
+import { test, length } from 'core-fn'
 import type { MdxFrontmatter } from '@/../graphql-types'
 import { config } from 'dotenv'
 import { BitlyClient } from 'bitly'
 import { not } from 'fonction'
+import { initializeApp, pretty } from './util'
 import type { Query } from '@/../graphql-types'
 
-const pretty = replace(/\\n/g, '\n')
 const isPosts = test(/\/posts\//)
 const postJson = resolve(__dirname, '..', 'tmp', 'posts.json')
 
@@ -83,15 +83,6 @@ const postPostList = async (posts: PostMeta[]): Promise<void> => {
     }
   )
 }
-
-const initializeApp = (clientEmail: string, privateKey: string) =>
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      clientEmail,
-      privateKey,
-      projectId: 'blorogue'
-    })
-  })
 
 const notExistsPostMeta = async (postMeta: PostMeta[]): Promise<PostMeta[]> => {
   const result = await Promise.all(

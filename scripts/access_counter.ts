@@ -1,15 +1,5 @@
-import { initializeApp } from 'firebase/app'
-import { firebaseOptions } from '../config/constants'
-import {
-  initializeFirestore,
-  collection,
-  getDocs,
-  CollectionReference,
-  limit,
-  orderBy,
-  query
-} from 'firebase/firestore/lite'
-import type { Post } from '../src/types/firestore'
+import { initializeApp, pretty } from './util'
+import { isUndefined } from '@miyauci/is-valid'
 
 const wait = (milliseconds: number) =>
   new Promise<void>((resolve) => {
@@ -28,14 +18,27 @@ const setupAccessCount = () => {
   > => {
     if (!called) {
       called = true
-      const app = initializeApp(firebaseOptions)
-      const firestore = initializeFirestore(app, {})
-      const col = collection(firestore, 'posts') as CollectionReference<Post>
+      const clientEmail = process.env.CLIENT_EMAIL
+      const privateKey = process.env.PRIVATE_KEY
+
+      if (isUndefined(clientEmail) || isUndefined(privateKey)) {
+        done = true
+        return data
+      }
+
+      const app = initializeApp(clientEmail, pretty(privateKey))
 
       try {
-        const docs = await getDocs(
-          query(col, orderBy('view', 'desc'), limit(10))
-        )
+        const docs = await app
+          .firestore()
+          .collection('posts')
+          .orderBy('view', 'desc')
+          .limit(10)
+          .get()
+          .catch((e) => {
+            console.error(e)
+            return []
+          })
 
         docs.forEach((doc) => {
           const { slug, view } = doc.data()
