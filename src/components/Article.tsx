@@ -8,7 +8,7 @@ import { iconMeta } from '@/utils/tag'
 
 import loadable from '@loadable/component'
 const SnsShare = loadable(() => import('@/components/SnsShare'))
-const Clap = loadable(() => import('@/components/Clap'))
+// const Clap = loadable(() => import('@/components/Clap'))
 const Tag = loadable(() => import('@/components/Tag'))
 const Breadcrumb = loadable(() => import('@/components/Breadcrumb'))
 const Pullrequest = loadable(() => import('@/components/Pullrequest'))
@@ -133,7 +133,7 @@ space-x-2 sm:space-x-4 md:space-x-8 my-6"
             <CommentCounter value={commentCount} loading={loading} />
           </a>
 
-          <Clap slug={slug} />
+          {/* <Clap slug={slug} /> */}
         </div>
 
         <GatsbyImage
