@@ -12,7 +12,7 @@ import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
 import GoogleAdsense from '@/components/GoogleAdsense'
-import Subscribe from '@/components/Subscribe'
+import Subscribe from '@/components/Newsletter'
 
 import loadable from '@loadable/component'
 import Seo from '@/components/seo'
