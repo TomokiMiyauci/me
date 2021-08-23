@@ -22,6 +22,7 @@ const setupAccessCount = () => {
       const privateKey = process.env.PRIVATE_KEY
 
       if (isUndefined(clientEmail) || isUndefined(privateKey)) {
+        done = true
         return data
       }
 
