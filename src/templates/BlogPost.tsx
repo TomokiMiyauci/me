@@ -53,7 +53,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
 
   const editOnGitHub = makeRepoPostPath(slug, locale as 'en' | 'ja')
 
-  useAccessCounter(slug)
+  // useAccessCounter(slug)
 
   return (
     <MdxProvider>
