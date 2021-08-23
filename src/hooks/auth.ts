@@ -1,8 +1,8 @@
 import { useState, useMemo, useContext, useEffect } from 'react'
-import type { MaybeUser, UserContext } from '../types/user'
-import AuthContext from '../contexts/auth'
-import { useFirebase } from './firebase'
+import AuthContext from '@/contexts/auth'
+import { useFirebase } from '@/hooks/firebase'
 import { signInAnonymously } from 'firebase/auth'
+import type { MaybeUser, UserContext } from '@/types/user'
 
 const useAuthProvider = (): UserContext => {
   const [user, changeUser] = useState<MaybeUser>(null)
@@ -15,15 +15,15 @@ const useAuthProvider = (): UserContext => {
     if (auth) {
       const unsubscribe = auth.onAuthStateChanged((user) => {
         if (user) {
+          unsubscribe()
+          console.info('Already signed in')
           changeUser(user)
         } else {
-          console.info('Sign in as Anonymous')
           unsubscribe()
+          console.info('Sign in as Anonymous')
           signInAnonymously(auth)
             .then(({ user }) => changeUser(user))
-            .catch((e) => {
-              console.warn(e)
-            })
+            .catch(console.warn)
         }
       })
     }
