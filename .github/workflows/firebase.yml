@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'firebase/**'
+      - '.github/workflows/firebase.yml'
 
     branches:
       - main
@@ -11,6 +12,7 @@ on:
   pull_request:
     paths:
       - 'firebase/**'
+      - '.github/workflows/firebase.yml'
 
     branches:
       - main
