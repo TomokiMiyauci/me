@@ -17,8 +17,8 @@ service cloud.firestore {
     }
 
     match /posts/{post} {
-      allow read;
-      allow create, update: if request.auth != null;
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
     }
 
     match /users/{userId} {

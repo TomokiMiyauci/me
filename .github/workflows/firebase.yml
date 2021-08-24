@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'firebase/**'
+      - '.github/workflows/firebase.yml'
 
     branches:
       - main
@@ -11,19 +12,21 @@ on:
   pull_request:
     paths:
       - 'firebase/**'
+      - '.github/workflows/firebase.yml'
 
     branches:
       - main
 
-defaults:
-  run:
-    shell: bash
-    working-directory: firebase/firestore
+env:
+  NODE_ENV: ${{ (github.event_name == 'push' && 'production') || 'development' }}
 
 jobs:
-  setup:
+  setup-firestore:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/firestore
     strategy:
       matrix:
         node-version: [16.x]
@@ -37,10 +40,35 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+          key: ${{ runner.os }}-firebase-firestore-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
 
       - name: Install
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        run: yarn --check-files --frozen-lockfile --non-interactive --production=false
+
+  setup-functions:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/functions
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_functions
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/functions', '/yarn.lock')) }}
+
+      - name: Install
+        if: steps.node_modules_functions.outputs.cache-hit != 'true'
         run: yarn --check-files --frozen-lockfile --non-interactive --production=false
 
   # lint:
@@ -64,11 +92,38 @@ jobs:
 
   #     - name: Lint
   #       run: yarn lint
-
-  test:
-    needs: setup
+  lint-functions:
+    needs: setup-functions
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/functions
+    strategy:
+      matrix:
+        node-version: [14.x]
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_functions
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/functions', '/yarn.lock')) }}
+
+      - name: Lint
+        run: yarn lint
+
+  test-firestore:
+    needs: setup-firestore
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/firestore
     strategy:
       matrix:
         node-version: [16.x]
@@ -82,7 +137,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+          key: ${{ runner.os }}-firebase-firestore-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
 
       - name: Test
         uses: w9jds/firebase-action@master
@@ -91,9 +146,71 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
-  deploy:
+  test-functions:
+    if: github.event_name == 'pull_request'
+    needs: setup-functions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/functions
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_functions
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/functions', '/yarn.lock')) }}
+
+      - name: Generate env
+        run: echo $ENV_FILE > .env.dev.json
+        env:
+          ENV_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+
+      - name: Test
+        run: yarn test --no-cache
+
+  build-functions:
     if: github.event_name == 'push'
-    needs: [test]
+    needs: setup-functions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: firebase/functions
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache node_modules
+        id: node_modules_functions
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/functions', '/yarn.lock')) }}
+
+      - name: Build
+        run: yarn build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: lib
+          path: firebase/functions/lib
+
+  deploy-firestore:
+    if: github.event_name == 'push'
+    needs: [test-firestore]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -102,5 +219,24 @@ jobs:
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only firestore:rules
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+  deploy-functions:
+    if: github.event_name == 'push'
+    needs: [lint-functions, build-functions]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: lib
+          path: firebase/functions/lib
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

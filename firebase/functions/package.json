@@ -1,0 +1,45 @@
+{
+  "name": "functions",
+  "scripts": {
+    "cz": "yarn --cwd ../.. cz",
+    "lint": "eslint --ext .ts .",
+    "test": "jest",
+    "build": "node -r esbuild-register build.ts",
+    "serve": "yarn build && firebase emulators:start --only functions",
+    "shell": "yarn build && firebase functions:shell",
+    "start": "yarn shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": "14"
+  },
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "dependencies": {
+    "@line/bot-sdk": "^7.3.0",
+    "@slack/webhook": "^6.0.0",
+    "core-fn": "^1.0.0-beta.15",
+    "firebase-admin": "^9.8.0",
+    "firebase-functions": "^3.14.1",
+    "node-fetch": "^2.6.1",
+    "twitter-api-v2": "^1.1.1",
+    "twitter-text": "^3.1.0"
+  },
+  "devDependencies": {
+    "@swc/jest": "0.1.4",
+    "@types/twitter-text": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "esbuild": "^0.12.15",
+    "esbuild-register": "^3.0.0",
+    "eslint": "^7.6.0",
+    "eta": "^1.12.3",
+    "firebase-functions-test": "^0.3.2",
+    "fonction": "^2.1.0-beta.2",
+    "jest": "^27.0.6",
+    "typescript": "^4.3.5"
+  },
+  "private": true
+}
