@@ -1,18 +1,19 @@
-import type { Timestamp, FieldValue } from 'firebase/firestore/lite'
+import type {
+  Timestamp,
+  FieldValue,
+  DocumentReference
+} from 'firebase/firestore/lite'
 
 type PostsField = {
-  createdAt?: Timestamp
-  slug: string
-  clap: FieldValue
-  clapBy: FieldValue
-  view: FieldValue
+  postRef: DocumentReference
+  createdAt?: FieldValue
 }
 
 type Post = {
   createdAt?: Timestamp
   slug: string
-  clap?: number
-  clapBy?: string[]
+  like?: number
+  likeBy?: DocumentReference[]
   view: number
 }
 

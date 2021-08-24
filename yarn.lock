@@ -12086,11 +12086,6 @@ gatsby-plugin-react-svg@^3.0.1:
   dependencies:
     svg-react-loader "^0.4.4"
 
-gatsby-plugin-remove-serviceworker@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-remove-serviceworker/-/gatsby-plugin-remove-serviceworker-1.0.0.tgz#9fb433bc8bd766e14e1d3711c4ac6f051e1dff7c"
-  integrity sha1-n7QzvIvXZuFOHTcRxKxvBR4d/3w=
-
 gatsby-plugin-robots-txt@^1.6.8:
   version "1.6.9"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-robots-txt/-/gatsby-plugin-robots-txt-1.6.9.tgz#579d18550de1672098aeeb3e6dd8b8f951f3c7a2"

@@ -44,8 +44,14 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
     items: []
   }
 
-  const { isModified, gitAuthorTime, readingTime, lowerCaseTags, fullPath } =
-    fields
+  const {
+    isModified,
+    gitAuthorTime,
+    readingTime,
+    lowerCaseTags,
+    fullPath,
+    dirName
+  } = fields
   const { title, description, hero, date, slug, verification } = frontmatter
   const { publicURL, childImageSharp } = hero
   const { locale } = useLocalization()
@@ -78,7 +84,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             readingTime={readingTime.text}
             relativePath={location.pathname}
             url={fullPath}
-            slug={slug}
+            dirName={dirName}
             tags={lowerCaseTags}
             date={new Date(date).toLocaleDateString(locale)}
             modifiedDate={new Date(gitAuthorTime).toLocaleDateString(locale)}
@@ -219,6 +225,7 @@ export const pageQuery = graphql`
         gitAuthorTime
         isModified
         fullPath
+        dirName
       }
       tableOfContents
       frontmatter {
