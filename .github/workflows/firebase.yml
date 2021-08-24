@@ -18,12 +18,15 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: firebase/firestore
+    working-directory: firebase
 
 jobs:
   setup:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: firestore
     strategy:
       matrix:
         node-version: [16.x]
@@ -37,7 +40,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+          key: ${{ runner.os }}-firebase-firestore-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
 
       - name: Install
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
@@ -68,7 +71,10 @@ jobs:
   test:
     needs: setup
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: firestore
     strategy:
       matrix:
         node-version: [16.x]
@@ -82,7 +88,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-firebase-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
+          key: ${{ runner.os }}-firebase-firestore-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/firestore', '/yarn.lock')) }}
 
       - name: Test
         uses: w9jds/firebase-action@master

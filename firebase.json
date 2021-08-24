@@ -27,7 +27,9 @@
   "firestore": {
     "rules": "firebase/firestore.rules"
   },
-  "functions": {},
+  "functions": {
+    "source": "firebase/functions"
+  },
   "emulators": {
     "auth": {
       "port": 9099
@@ -39,7 +41,7 @@
       "port": 5001
     },
     "firestore": {
-      "port": 8081
+      "port": 8080
     }
   }
 }
