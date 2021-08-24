@@ -177,7 +177,7 @@ jobs:
       - name: Test
         run: yarn test --no-cache
 
-  build:
+  build-functions:
     if: github.event_name == 'push'
     needs: setup-functions
     runs-on: ubuntu-latest
