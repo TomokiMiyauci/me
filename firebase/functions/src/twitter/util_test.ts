@@ -1,8 +1,4 @@
-import {
-  renderTemplate,
-  TemplateData,
-  ellipsis
-} from '@/firestore/twitter/util'
+import { renderTemplate, TemplateData, ellipsis } from '@/twitter/util'
 import { configure } from 'eta'
 import { parseTweet } from 'twitter-text'
 

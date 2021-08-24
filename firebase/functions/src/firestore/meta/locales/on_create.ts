@@ -11,9 +11,9 @@ import Twitter from 'twitter-api-v2'
 import {
   renderTemplate,
   TemplateData,
-  ellipsis
-} from '@/firestore/twitter/util'
-import { templateName } from '@/firestore/twitter/util'
+  ellipsis,
+  templateName
+} from '@/twitter/util'
 
 type Params = {
   slug: string

@@ -5,9 +5,9 @@ import {
   replay,
   subscribe,
   getKeyValue
-} from '@/firestore/line/bot/util'
+} from '@/line/util'
 import type { WebhookRequestBody } from '@line/bot-sdk'
-import { SUBSCRIBE } from '@/firestore/line/constants'
+import { SUBSCRIBE } from '@/line/constants'
 
 const line = functions
   .region('asia-northeast1')

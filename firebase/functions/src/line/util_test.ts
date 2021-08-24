@@ -1,4 +1,4 @@
-import { parseCommand, ParseResult } from '@/firestore/line/bot/util'
+import { parseCommand, ParseResult } from '@/line/util'
 
 describe('parseCommand', () => {
   const table: [string, ParseResult][] = [

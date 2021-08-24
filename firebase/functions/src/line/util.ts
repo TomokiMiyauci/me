@@ -1,16 +1,11 @@
 import { toLowerCase, includes } from 'core-fn'
-import type {
-  Commands,
-  ParseResult,
-  Type,
-  CommandFn
-} from '@/firestore/line/types'
+import type { Commands, ParseResult, Type, CommandFn } from '@/line/types'
 import { firestore } from 'firebase-admin'
 import { Client } from '@line/bot-sdk'
 import type { Config } from '@/types'
 import functions from 'firebase-functions'
 import type { EventSource } from '@line/bot-sdk'
-import { SUBSCRIBE } from '@/firestore/line/constants'
+import { SUBSCRIBE } from '@/line/constants'
 
 const commands = ['help', 'subscribe', 'unsubscribe'] as const
 

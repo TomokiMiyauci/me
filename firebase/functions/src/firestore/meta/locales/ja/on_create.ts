@@ -2,8 +2,12 @@ import fetch from 'node-fetch'
 import { createFunctions } from '@/util'
 import { SITEMAP_URL, BASE_URL } from '@/firestore/meta/locales/ja/constants'
 import { IncomingWebhook } from '@slack/webhook'
-import type { Config } from '@/types'
 import { config, logger } from 'firebase-functions'
+import functions from 'firebase-functions'
+import { renderFile } from 'eta'
+import { firestore } from 'firebase-admin'
+import { Client } from '@line/bot-sdk'
+import type { Post, Config } from '@/types'
 
 const ping = createFunctions()
   .firestore.document('meta/{slug}/locales/ja')
@@ -30,6 +34,42 @@ const ping = createFunctions()
     }
   })
 
+const lineMessage = createFunctions()
+  .firestore.document('meta/{slug}/locales/ja')
+  .onCreate(async (snapshot) => {
+    const { url, shortUrl } = snapshot.data() as Partial<Post>
+
+    if (!url) {
+      functions.logger.error('Something data is undefined')
+      return
+    }
+    const content = await renderFile('line_newsletter_ja', {
+      url: shortUrl ?? url
+    })
+
+    if (!content) return
+
+    const { docs } = await firestore().collection('line').get()
+
+    const { channel_access_token: channelAccessToken } = (
+      functions.config() as Config
+    ).line
+
+    const client = new Client({
+      channelAccessToken
+    })
+
+    return Promise.all(
+      docs.map(({ id }) =>
+        client.pushMessage(id, {
+          type: 'text',
+          text: content
+        })
+      )
+    )
+  })
+
 export const onCreate = {
-  ping
+  ping,
+  lineMessage
 }
