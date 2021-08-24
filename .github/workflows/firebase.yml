@@ -21,7 +21,7 @@ env:
   NODE_ENV: ${{ (github.event_name == 'push' && 'production') || 'development' }}
 
 jobs:
-  setup:
+  setup-firestore:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -118,7 +118,7 @@ jobs:
         run: yarn lint
 
   test-firestore:
-    needs: setup
+    needs: setup-firestore
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -208,7 +208,7 @@ jobs:
           name: lib
           path: firebase/functions/lib
 
-  deploy:
+  deploy-firestore:
     if: github.event_name == 'push'
     needs: [test-firestore]
     runs-on: ubuntu-latest
