@@ -5,7 +5,7 @@ name: release-storybook
 on:
   push:
     paths-ignore:
-      - 'functions/**'
+      - 'firebase/**'
 
     branches:
       - main

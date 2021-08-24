@@ -229,6 +229,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache node_modules
+        id: node_modules_functions
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-firebase-functions-${{ hashFiles(format('{0}{1}{2}', github.workspace, '/firebase/functions', '/yarn.lock')) }}
+
       - uses: actions/download-artifact@v2
         with:
           name: lib

@@ -3,7 +3,7 @@ name: Deploy blog
 on:
   push:
     paths-ignore:
-      - 'functions/**'
+      - 'firebase/**'
 
     branches:
       - main
