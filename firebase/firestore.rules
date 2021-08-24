@@ -16,15 +16,25 @@ service cloud.firestore {
       && 'createdAt' in fcm && fcm.createdAt is timestamp;
     }
 
-    match /posts/{post} {
-      allow read: if isAuthenticated();
-      allow create, update: if isAuthenticated();
+    function isValidLikePost(likePost) {
+      return likePost.size() == 2
+      && 'postRef' in likePost && likePost.postRef is path
+      && 'createdAt' in likePost && likePost.createdAt is timestamp;
+    }
+
+    match /posts/{slug} {
+      allow get: if isAuthenticated();
     }
 
     match /users/{userId} {
       match /fcm/{token} {
         allow create: if isUserAuthenticated(userId) && isValidFcm(request.resource.data, token);
         allow list, delete: if isUserAuthenticated(userId);
+      }
+
+      match /likePosts/{slug} {
+        allow create: if isUserAuthenticated(userId) && isValidLikePost(request.resource.data);
+        allow delete: if isUserAuthenticated(userId);
       }
     }
   }
