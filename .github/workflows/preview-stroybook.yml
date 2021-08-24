@@ -2,7 +2,7 @@ name: preview-storybook
 on:
   pull_request:
     paths-ignore:
-      - 'functions/**'
+      - 'firebase/**'
 
     branches:
       - 'main'
