@@ -220,7 +220,7 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
-  deploy:
+  deploy-functions:
     if: github.event_name == 'push'
     needs: [lint-functions, build-functions]
     runs-on: ubuntu-latest
