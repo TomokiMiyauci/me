@@ -226,19 +226,18 @@ const plugins: GatsbyConfig['plugins'] = [
       }
     }
   },
-  // {
-  //   resolve: 'gatsby-plugin-offline',
-  //   options: {
-  //     appendScript: resolve(
-  //       __dirname,
-  //       '..',
-  //       'src',
-  //       'workers',
-  //       'append_script.js'
-  //     )
-  //   }
-  // },
-  `gatsby-plugin-remove-serviceworker`,
+  {
+    resolve: 'gatsby-plugin-offline',
+    options: {
+      appendScript: resolve(
+        __dirname,
+        '..',
+        'src',
+        'workers',
+        'append_script.js'
+      )
+    }
+  },
   'gatsby-plugin-twitter',
   'gatsby-plugin-loadable-components-ssr'
 
