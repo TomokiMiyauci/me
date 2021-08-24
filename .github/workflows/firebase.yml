@@ -208,7 +208,7 @@ jobs:
 
   deploy:
     if: github.event_name == 'push'
-    needs: [test]
+    needs: [test-firestore]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
