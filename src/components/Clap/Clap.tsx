@@ -2,6 +2,7 @@ import React, { FC, ButtonHTMLAttributes } from 'react'
 import heartOutline from '@iconify-icons/mdi/heart-outline'
 import heart from '@iconify-icons/mdi/heart'
 import { Icon } from '@iconify/react/dist/offline'
+import { classNames } from '@/utils/class_name'
 
 type EventHandler<T = undefined> = {
   on: T extends undefined ? () => Promise<any> : (val: T) => Promise<boolean>
@@ -18,7 +19,11 @@ const Clap: FC<
   const handleClick = async () => on().then(success).catch(error)
 
   return (
-    <button {...props} className="space-x-1 group" onClick={handleClick}>
+    <button
+      {...props}
+      className={classNames('space-x-1 group', props.className ?? '')}
+      onClick={handleClick}
+    >
       <Icon
         icon={fill ? heart : heartOutline}
         className={`w-9 h-9 md:w-10 md:h-10 rounded-full p-1 group-hover:text-accent group-hover:bg-gray-200 dark:group-hover:bg-gray-700 group-hover:bg-opacity-50 transition duration-300 ${
