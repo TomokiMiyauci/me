@@ -4,7 +4,7 @@ import { logger } from 'firebase-functions'
 import { join } from 'path'
 
 const likePost = createFunctions()
-  .firestore.document('users/{userId}/likePost/{slug}')
+  .firestore.document('users/{userId}/likePosts/{slug}')
   .onDelete((_, { params }) => {
     const { slug, userId } = params
 

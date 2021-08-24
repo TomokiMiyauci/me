@@ -1,7 +1,7 @@
 import { fcm } from '@/firestore/users/fcm'
-import { likePost } from '@/firestore/users/like_post'
+import { likePosts } from '@/firestore/users/like_posts'
 
 export const users = {
   fcm,
-  likePost
+  likePosts
 }

@@ -7,7 +7,7 @@ import { join } from 'path'
 import type { Config } from '@/types'
 
 const likePost = createFunctions()
-  .firestore.document('users/{userId}/likePost/{slug}')
+  .firestore.document('users/{userId}/likePosts/{slug}')
   .onCreate((_, { params }) => {
     const { slug, userId } = params
 

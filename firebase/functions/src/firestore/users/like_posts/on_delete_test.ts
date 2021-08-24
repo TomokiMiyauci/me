@@ -1,4 +1,4 @@
-import { onDelete } from '@/firestore/users/like_post/on_delete'
+import { onDelete } from '@/firestore/users/like_posts/on_delete'
 import { firestore } from 'firebase-admin'
 import { test } from '@test/util'
 
@@ -18,7 +18,7 @@ describe('likePost', () => {
 
     const mock = test.firestore.makeDocumentSnapshot(
       {},
-      `usres/${user.uid}/likePost/${slug}`
+      `usres/${user.uid}/likePosts/${slug}`
     )
     await likePost(mock, {
       params: {
@@ -45,7 +45,7 @@ describe('likePost', () => {
 
     const mock = test.firestore.makeDocumentSnapshot(
       {},
-      `usres/${user.uid}/likePost/${slug1}`
+      `usres/${user.uid}/likePosts/${slug1}`
     )
     await likePost(mock, {
       params: {

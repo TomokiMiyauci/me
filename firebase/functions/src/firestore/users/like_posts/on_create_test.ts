@@ -1,4 +1,4 @@
-import { onCreate } from '@/firestore/users/like_post/on_create'
+import { onCreate } from '@/firestore/users/like_posts/on_create'
 import { firestore } from 'firebase-admin'
 import { test } from '@test/util'
 
@@ -22,7 +22,7 @@ describe('likePost', () => {
       const user = test.auth.exampleUserRecord()
       const mock = test.firestore.makeDocumentSnapshot(
         {},
-        `usres/${user.uid}/likePost/${slug}`
+        `usres/${user.uid}/likePosts/${slug}`
       )
       await likePost(mock, {
         params: {
@@ -56,7 +56,7 @@ describe('likePost', () => {
       user.uid = userId
       const mock = test.firestore.makeDocumentSnapshot(
         {},
-        `usres/${userId}/likePost/${slug1}`
+        `usres/${userId}/likePosts/${slug1}`
       )
       await likePost(mock, {
         params: {
@@ -84,7 +84,7 @@ describe('likePost', () => {
       const user = test.auth.exampleUserRecord()
       const mock = test.firestore.makeDocumentSnapshot(
         {},
-        `usres/${user.uid}/likePost/${slug}`
+        `usres/${user.uid}/likePosts/${slug}`
       )
       await likePost(mock, {
         params: {
