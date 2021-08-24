@@ -4,8 +4,7 @@ import { initializeAnalytics, isSupported } from 'firebase/analytics'
 import {
   initializeFirestore,
   connectFirestoreEmulator,
-  Firestore,
-  setLogLevel
+  Firestore
 } from 'firebase/firestore/lite'
 import {
   initializeAuth,
@@ -25,8 +24,6 @@ const initializeFirebase = (): FirebaseState => {
     persistence: browserLocalPersistence
   })
   const messaging = getMessaging(app)
-
-  setLogLevel('debug')
 
   onMessage(messaging, (payload) => {
     console.log(payload)
