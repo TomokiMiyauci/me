@@ -16,7 +16,8 @@ describe('likePost', () => {
         likeBy: firestore.FieldValue.arrayUnion(
           usersCol.doc('user-1'),
           usersCol.doc('user-2')
-        )
+        ),
+        slug
       })
 
       const user = test.auth.exampleUserRecord()
@@ -38,7 +39,8 @@ describe('likePost', () => {
           usersCol.doc('user-1'),
           usersCol.doc('user-2'),
           usersCol.doc(user.uid)
-        ]
+        ],
+        slug
       })
     })
 
@@ -49,7 +51,8 @@ describe('likePost', () => {
         likeBy: firestore.FieldValue.arrayUnion(
           usersCol.doc('user-1'),
           usersCol.doc(userId)
-        )
+        ),
+        slug: slug1
       })
 
       const user = test.auth.exampleUserRecord()
@@ -68,7 +71,8 @@ describe('likePost', () => {
       const snapshot = await postsCol.doc(slug1).get()
       expect(snapshot.data()).toEqual({
         like: 3,
-        likeBy: [usersCol.doc('user-1'), usersCol.doc('user-2')]
+        likeBy: [usersCol.doc('user-1'), usersCol.doc('user-2')],
+        slug: slug1
       })
     })
 
@@ -98,7 +102,8 @@ describe('likePost', () => {
       expect(snapshot.id).toBe(slug)
       expect(snapshot.data()).toEqual({
         like: 1,
-        likeBy: [usersCol.doc(user.uid)]
+        likeBy: [usersCol.doc(user.uid)],
+        slug
       })
     })
 

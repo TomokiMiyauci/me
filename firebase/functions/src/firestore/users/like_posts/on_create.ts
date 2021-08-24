@@ -37,7 +37,8 @@ const likePost = createFunctions()
           like: firestore.FieldValue.increment(1),
           likeBy: firestore.FieldValue.arrayUnion(
             firestore().collection('users').doc(userId)
-          )
+          ),
+          slug
         },
         {
           merge: true
