@@ -81,7 +81,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
       type: 'success',
       field: <div>Canceled liking this article</div>
     })
-    waitUntil(10000)
+    waitUntil(3000)
   }
   const increment = async () => {
     const clapCount = (postMeta.like ?? 0) + 1
@@ -105,7 +105,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
       type: 'success',
       field: <div>Liked this article</div>
     })
-    waitUntil(10000)
+    waitUntil(3000)
   }
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
       <Circle
         isStart={!isWaiting}
         circleClass="text-accent"
-        className={`w-5 h-5 ease-in ${isWaiting ? 'visible' : 'invisible'}`}
+        className={`w-5 h-5 ease-out ${isWaiting ? 'visible' : 'invisible'}`}
       />
 
       <Clap

@@ -18,6 +18,7 @@ import type { FirebaseState } from '@/types/firebase'
 import { isProd } from '@/utils/environment'
 
 const initializeFirebase = (): FirebaseState => {
+  console.log('init')
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
   const auth = initializeAuth(app, {
