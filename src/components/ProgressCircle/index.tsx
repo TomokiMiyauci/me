@@ -11,7 +11,7 @@ const Index: FC<{ isStart: boolean } & CircleProps> = ({
 }) => {
   const _circleClass = useMemo<string>(() => {
     return classNames(
-      isStart ? 'duration-500' : 'duration-[10000ms]',
+      isStart ? 'duration-500' : 'duration-[3000ms]',
       circleClass
     )
   }, [circleClass, isStart])
