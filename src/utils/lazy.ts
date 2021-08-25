@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { AnyFn } from 'fonction'
 import { isBrowser } from '@/utils/environment'
 
@@ -10,26 +11,41 @@ const types = [
   'scroll'
 ] as const
 
-const lazy = (fn: AnyFn): void => {
-  const _fn = (): void => {
-    fn()
-    removeListeners()
-  }
-  const removeListeners = (): void => {
-    types.forEach((type) => {
-      removeEventListener(type, _fn)
+const useLazy = (fn: AnyFn) => {
+  useEffect(() => {
+    addListeners(fn).then((_fn) => {
+      removeListeners(_fn)
     })
-  }
+  }, [])
+}
 
-  const addListeners = (): void => {
+const removeListeners = (fn: AnyFn): void => {
+  types.forEach((type) => {
+    removeEventListener(type, fn)
+  })
+}
+
+const addListeners = (fn: AnyFn): Promise<AnyFn> => {
+  return new Promise((resolve) => {
+    const _fn = () => {
+      fn()
+      resolve(_fn)
+    }
     types.forEach((type) => {
       addEventListener(type, _fn)
     })
+  })
+}
+
+const lazy = (fn: AnyFn): void => {
+  const _fn = (): void => {
+    fn()
+    removeListeners(_fn)
   }
 
   if (isBrowser) {
-    addListeners()
+    addListeners(_fn)
   }
 }
 
-export { lazy }
+export { lazy, useLazy }
