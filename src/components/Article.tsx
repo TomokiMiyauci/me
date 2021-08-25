@@ -5,18 +5,14 @@ import { useCommentCount } from './Comment/CommentCount/hooks'
 import { handleClick } from './Comment/CommentCount/_util'
 import { useLocalization } from 'gatsby-theme-i18n'
 import { iconMeta } from '@/utils/tag'
-
-import loadable from '@loadable/component'
-const SnsShare = loadable(() => import('@/components/SnsShare'))
-const Clap = loadable(() => import('@/components/Clap'))
-const Tag = loadable(() => import('@/components/Tag'))
-const Breadcrumb = loadable(() => import('@/components/Breadcrumb'))
-const Pullrequest = loadable(() => import('@/components/Pullrequest'))
-const ArticleDate = loadable(() => import('@/components/ArticleDate'))
-const IconWith = loadable(() => import('@/components/IconWith'))
-const CommentCounter = loadable(
-  () => import('@/components/Comment/CommentCount/CommentCounter')
-)
+import SnsShare from '@/components/SnsShare'
+import Clap from '@/components/Clap'
+import Tag from '@/components/Tag'
+import Breadcrumb from '@/components/Breadcrumb'
+import Pullrequest from '@/components/Pullrequest'
+import ArticleDate from '@/components/ArticleDate'
+import IconWith from '@/components/IconWith'
+import CommentCounter from '@/components/Comment/CommentCount/CommentCounter'
 
 interface ArticleProps {
   children: ReactChild
