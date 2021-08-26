@@ -41,6 +41,9 @@ jobs:
           path: '**/node_modules'
           key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Build
         run: yarn build
         env:
