@@ -5,7 +5,7 @@ const useAuth = () => {
   const isLoggedIn = useMemo<boolean>(() => !!uid, [uid])
 
   useEffect(() => {
-    if ('navigator' in window) {
+    if ('serviceWorker' in window.navigator) {
       const sw = window.navigator.serviceWorker
 
       sw.ready.then((registration) => {
