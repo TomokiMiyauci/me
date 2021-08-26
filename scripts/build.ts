@@ -9,6 +9,8 @@ const LEGAL_SUFFIX = '.LEGAL.txt'
 const JS_SUFFIX = '.js'
 const MAP_SUFFIX = '.map'
 
+console.log('Build for ', process.env.NODE_ENV)
+
 const run = async () => {
   await build({
     entryPoints: [resolve(srcDir, `${fileName}.ts`)],
