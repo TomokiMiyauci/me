@@ -226,23 +226,25 @@ const plugins: GatsbyConfig['plugins'] = [
       }
     }
   },
-  {
-    resolve: 'gatsby-plugin-offline',
-    options: {
-      appendScript: resolve(
-        __dirname,
-        '..',
-        'src',
-        'workers',
-        'append_script.js'
-      )
-    }
-  },
+  process.env.NODE_ENV === 'development'
+    ? ''
+    : {
+        resolve: 'gatsby-plugin-offline',
+        options: {
+          appendScript: resolve(
+            __dirname,
+            '..',
+            'src',
+            'workers',
+            'append_script.js'
+          )
+        }
+      },
   'gatsby-plugin-twitter',
-  'gatsby-plugin-loadable-components-ssr'
+  'gatsby-plugin-loadable-components-ssr',
 
   // 'gatsby-plugin-preact'
-  // 'gatsby-plugin-webpack-bundle-analyser-v2'
-]
+  'gatsby-plugin-webpack-bundle-analyser-v2'
+].filter((plugin) => !!plugin)
 
 export default plugins
