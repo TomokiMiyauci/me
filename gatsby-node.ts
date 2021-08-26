@@ -10,6 +10,7 @@ import { props } from 'fonction'
 import { Mdx } from '@/../graphql-types'
 import { useMetaPoster, isPosts } from './scripts/register_post_list'
 import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
+import WorkerPlugin from 'worker-plugin'
 
 const { getAccessCount } = setupAccessCount()
 
@@ -180,6 +181,14 @@ const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
   if (stage === 'build-javascript') {
     actions.setWebpackConfig({
       plugins: [new RelativeCiAgentWebpackPlugin()]
+    })
+
+    actions.setWebpackConfig({
+      plugins: [
+        new WorkerPlugin({
+          preserveTypeModule: true
+        })
+      ]
     })
   }
 
