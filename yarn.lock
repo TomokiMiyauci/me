@@ -5546,7 +5546,7 @@
     "@types/source-list-map" "*"
     source-map "^0.7.3"
 
-"@types/webpack@^4.41.26", "@types/webpack@^4.41.8":
+"@types/webpack@^4", "@types/webpack@^4.41.26", "@types/webpack@^4.41.8":
   version "4.41.30"
   resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.41.30.tgz#fd3db6d0d41e145a8eeeafcd3c4a7ccde9068ddc"
   integrity sha512-GUHyY+pfuQ6haAfzu4S14F+R5iGRwN6b2FRNJY7U0NilmFAqbsOfK6j1HwuLBAqwRIT+pVdNDJGJ6e8rpp0KHA==
@@ -5564,6 +5564,13 @@
   integrity sha512-B5m9aq7cbbD/5/jThEr33nUY8WEfVi6A2YKCTOvw5Ldy7mtsOkqRvGjnzy6g7iMMDsgu7xREuCzqATLDLQVKcQ==
   dependencies:
     "@types/node" "*"
+
+"@types/worker-plugin@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/worker-plugin/-/worker-plugin-5.0.1.tgz#32283d528061c373a6aeef4902f7d00d7179dc16"
+  integrity sha512-MzMx8VsgL8y3ge0EE5MoRFv/L4dfPcAvlYMOFInJ41qHXvx4abF6ZtAGTPsDHkn3VGjJo3ytlriRSuyN2gn/cw==
+  dependencies:
+    "@types/webpack" "^4"
 
 "@types/yargs-parser@*":
   version "20.2.1"
@@ -16067,7 +16074,7 @@ loader-utils@2.0.0, loader-utils@^2.0.0:
     emojis-list "^3.0.0"
     json5 "^2.1.2"
 
-loader-utils@^1.2.3, loader-utils@^1.4.0:
+loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.0.tgz#c579b5e34cb34b1a74edc6c1fb36bfa371d5a613"
   integrity sha512-qH0WSMBtn/oHuwjy/NucEgbx5dbxxnxup9s4PVXJUDHZBQY+s0NWA9rJf53RBnQZxfch7euUui7hpoAPvALZdA==
@@ -24704,6 +24711,13 @@ worker-farm@^1.7.0:
   integrity sha512-rvw3QTZc8lAxyVrqcSGVm5yP/IJ2UcB3U0graE3LCFoZ0Yn2x4EoVSqJKdB/T5M+FLcRPjz4TDacRf3OCfNUzw==
   dependencies:
     errno "~0.1.7"
+
+worker-plugin@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/worker-plugin/-/worker-plugin-5.0.1.tgz#bd76d66216a637a893c6a2f6a530f6bbb2bb8016"
+  integrity sha512-Pn7+19jIiANcGuTSGdy+vrzyF+SGH03A5wV8iu4jRTMAOfAC9bNeiHo4+l5tPS7F0uvICMBv+h8UCvL7lunxcA==
+  dependencies:
+    loader-utils "^1.1.0"
 
 worker-rpc@^0.1.0:
   version "0.1.1"

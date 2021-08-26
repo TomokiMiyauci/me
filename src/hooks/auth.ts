@@ -1,44 +1,30 @@
-import { useState, useMemo, useContext, useEffect } from 'react'
-import AuthContext from '@/contexts/auth'
-import { useFirebase } from '@/hooks/firebase'
-import { signInAnonymously } from 'firebase/auth'
-import type { MaybeUser, UserContext } from '@/types/user'
+import { useState, useMemo, useEffect } from 'react'
 
-const useAuthProvider = (): UserContext => {
-  const [user, changeUser] = useState<MaybeUser>(null)
-  const isLoggedIn = useMemo<boolean>(() => !!user, [user])
-  const uid = useMemo<string>(() => user?.uid ?? '', [user])
-
-  const [{ auth }] = useFirebase()
+const useAuth = () => {
+  const [uid, changeUid] = useState<string | undefined>(undefined)
+  const isLoggedIn = useMemo<boolean>(() => !!uid, [uid])
 
   useEffect(() => {
-    if (auth) {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          unsubscribe()
-          console.info('Already signed in')
-          changeUser(user)
-        } else {
-          unsubscribe()
-          console.info('Sign in as Anonymous')
-          signInAnonymously(auth)
-            .then(({ user }) => changeUser(user))
-            .catch(console.warn)
-        }
+    if ('navigator' in window) {
+      const sw = window.navigator.serviceWorker
+
+      sw.ready.then((registration) => {
+        registration.active?.postMessage('')
       })
+
+      sw.onmessage = ({ data }) => {
+        changeUid(data)
+      }
     }
-  }, [auth])
+  }, [])
 
   return [
     {
-      user,
       uid,
       isLoggedIn
     },
-    changeUser
-  ]
+    changeUid
+  ] as const
 }
 
-const useAuth = () => useContext(AuthContext)
-
-export { useAuthProvider, useAuth }
+export { useAuth }

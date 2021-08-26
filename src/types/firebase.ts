@@ -8,6 +8,10 @@ type FirebaseState = Partial<{
   firestore: Firestore
   auth: Auth
   messaging: Messaging
+  uid: string | undefined
+  isLoggedIn: boolean
+  isInitialized: boolean
+  isReady: boolean
 }>
 
 export type { FirebaseState }

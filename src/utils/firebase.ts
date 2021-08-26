@@ -6,11 +6,6 @@ import {
   connectFirestoreEmulator,
   Firestore
 } from 'firebase/firestore/lite'
-import {
-  initializeAuth,
-  browserLocalPersistence,
-  connectAuthEmulator
-} from 'firebase/auth'
 import { getMessaging, onMessage, Messaging } from 'firebase/messaging'
 import { firebaseOptions } from '@/../config/constants'
 
@@ -18,12 +13,9 @@ import type { FirebaseState } from '@/types/firebase'
 import { isProd } from '@/utils/environment'
 
 const initializeFirebase = (): FirebaseState => {
-  console.log('init')
+  console.log('Initialize firebase')
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
-  const auth = initializeAuth(app, {
-    persistence: browserLocalPersistence
-  })
   const messaging = getMessaging(app)
 
   onMessage(messaging, (payload) => {
@@ -32,9 +24,6 @@ const initializeFirebase = (): FirebaseState => {
 
   if (!isProd) {
     connectFirestoreEmulator(firestore, 'localhost', 8080)
-    connectAuthEmulator(auth, 'http://localhost:9099', {
-      disableWarnings: true
-    })
   }
 
   if (isProd) {
@@ -51,7 +40,6 @@ const initializeFirebase = (): FirebaseState => {
   return {
     app,
     firestore,
-    auth,
     messaging
   }
 }

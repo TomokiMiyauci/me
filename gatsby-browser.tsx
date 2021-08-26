@@ -14,7 +14,7 @@ const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) => {
 const onClientEntry: GatsbyBrowser['onClientEntry'] = () => {
   if (process.env.NODE_ENV === 'development') {
     console.log('register service worker')
-    window.navigator.serviceWorker.register('/sw.js')
+    window.navigator.serviceWorker.register('/append_script.js')
   }
 }
 
