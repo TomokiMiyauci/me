@@ -9,7 +9,9 @@ const LEGAL_SUFFIX = '.LEGAL.txt'
 const JS_SUFFIX = '.js'
 const MAP_SUFFIX = '.map'
 
-console.log('Build for ', process.env.NODE_ENV)
+const NODE_ENV = process.env.NODE_ENV ?? 'development'
+
+console.log('Build for', NODE_ENV)
 
 const run = async () => {
   await build({
@@ -19,14 +21,14 @@ const run = async () => {
     minify: true,
     sourcemap: true,
     define: {
-      'process.env.NODE_ENV': `'${process.env.NODE_ENV ?? 'development'}'`,
+      'process.env.NODE_ENV': `'${NODE_ENV}'`,
       'process.env.GATSBY_STAGE': `'${process.env.GATSBY_STAGE ?? 'dev'}'`
     },
     outfile: resolve(srcDir, `${fileName}${JS_SUFFIX}`),
     legalComments: 'external'
   })
 
-  if (process.env.NODE_ENV === 'development') {
+  if (NODE_ENV === 'development') {
     move(
       resolve(srcDir, `${fileName}${JS_SUFFIX}`),
       resolve(rootDir, 'static', `${fileName}${JS_SUFFIX}`),
