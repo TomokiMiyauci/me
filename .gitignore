@@ -10,7 +10,6 @@ tmp
 graphql-types.ts
 .env*
 storybook-static
-src/workers/*
-!src/workers/*.ts
+src/workers/**/*.js
 static/sw.js
 static/append_script*
