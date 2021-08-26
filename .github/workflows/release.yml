@@ -125,6 +125,7 @@ jobs:
           GATSBY_STAGE: main
           CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          NODE_ENV: production
 
       - uses: actions/upload-artifact@v2
         with:
