@@ -1,10 +1,9 @@
 import React, { FC } from 'react'
+import Snackbar from '@/components/Notice'
+import AppFrame from '@/components/AppFrame'
 import type { Locale } from '@/../config/types'
 import Search from '@/components/Search'
 
-import loadable from '@loadable/component'
-const Snackbar = loadable(() => import('@/components/Notice'))
-const AppFrame = loadable(() => import('@/components/AppFrame'))
 const Layout: FC<{
   originalPath: string
   currentPath: string

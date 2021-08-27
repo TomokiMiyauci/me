@@ -3,9 +3,7 @@ import { BlogPostBySlugQuery } from '@/../graphql-types'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
 import { Icon } from '@iconify/react/dist/offline'
-
-import loadable from '@loadable/component'
-const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
+import ArticleHeadline from '@/components/ArticleHeadline'
 
 const Index: FC<{
   previous: BlogPostBySlugQuery['previous']

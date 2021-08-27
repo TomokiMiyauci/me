@@ -1,11 +1,9 @@
 import React, { FC } from 'react'
-import loadable from '@loadable/component'
 import { BlogPostBySlugQuery } from '@/../graphql-types'
+import PrevNext from '@/components/PrevNext'
+import RelatedArticle from '@/components/RelatedArticle'
 
 type ArticlesMetaInfo = BlogPostBySlugQuery['allMdx']['nodes']
-
-const PrevNext = loadable(() => import('@/components/PrevNext'))
-const RelatedArticle = loadable(() => import('@/components/RelatedArticle'))
 
 const Index: FC<{
   className?: string

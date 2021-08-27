@@ -5,9 +5,7 @@ import { Icon, IconifyIcon } from '@iconify/react/dist/offline'
 import loveLetter from '@iconify/icons-emojione-monotone/love-letter'
 import noticePush from '@iconify/icons-fe/notice-push'
 import { Transition } from '@headlessui/react'
-
-import loadable from '@loadable/component'
-const WebPush = loadable(() => import('@/components/WebPush'))
+import WebPush from '@/components/WebPush'
 
 type ButtonProps = {
   title: string
