@@ -2,7 +2,6 @@ import React, { FC, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import Seo from '../components/seo'
-import Carousel from 'react-gallery-carousel'
 import 'react-gallery-carousel/dist/index.css'
 import closeIcon from '@iconify-icons/mdi/close'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'
@@ -46,26 +45,6 @@ const Photos: FC<PageProps> = ({ data, location }) => {
             >
               <Icon className="w-8 h-8" icon={closeIcon} />
             </button>
-            <Carousel
-              hasMediaButton={false}
-              hasIndexBoard={false}
-              index={currentIndex}
-              hasSizeButton={false}
-              leftIcon={
-                <Icon
-                  className="hidden md:inline ml-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon={chevronLeft}
-                />
-              }
-              rightIcon={
-                <Icon
-                  className="hidden md:inline mr-2 w-16 h-16 bg-gray-200 bg-opacity-75 rounded-full"
-                  icon={chevronRight}
-                />
-              }
-              images={images}
-              className="overflow-hidden"
-            ></Carousel>
           </div>
         </div>
       )}

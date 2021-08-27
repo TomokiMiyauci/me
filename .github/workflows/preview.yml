@@ -49,6 +49,7 @@ jobs:
           ALGOLIA_ADMIN_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
           GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
           RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
+          NODE_ENV: production
 
       - uses: actions/upload-artifact@v2
         with:
