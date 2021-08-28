@@ -3060,9 +3060,9 @@
   integrity sha512-pS5Zt2GNoVPCL5t2Aiv2PvB6iuEoU+Z0KIByCdOeoiiGOze7M1qYNIxd/dThclqd3IGTrtIlXVbgkntBFKi9xQ==
 
 "@iconify-icons/mdi@^1.1.15":
-  version "1.1.20"
-  resolved "https://registry.yarnpkg.com/@iconify-icons/mdi/-/mdi-1.1.20.tgz#d13567351c982c61a680b988ca9f8d16c9439be4"
-  integrity sha512-ns+bBfAB1fnFb2Mn+itWTGP6wL+hr6fpzsgcoTo1n4ZJERva7GVR1nM7+nm0VLx8T9Z94jvNpSGRj3GRu+uN6w==
+  version "1.1.22"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/mdi/-/mdi-1.1.22.tgz#43d1e6e9becbd1e677263d3c30589291688ac660"
+  integrity sha512-MpgFaJvwTvYv974bGVUN5FrCRM9LfYv0AujZVtqSn3KOxnTUcnLD4Pm8utfaENgfkUvcp/wjpOiOj8Pt95neCA==
 
 "@iconify-icons/uil@^1.1.1":
   version "1.1.1"
