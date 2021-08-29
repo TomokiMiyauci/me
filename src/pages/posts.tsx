@@ -13,12 +13,8 @@ import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import Subscribe from '@/components/Newsletter'
-
-import loadable from '@loadable/component'
+import NotFoundQueryString from '@/components/NotFoundQueryString'
 import Seo from '@/components/seo'
-const NotFoundQueryString = loadable(
-  () => import('@/components/NotFoundQueryString')
-)
 import ArticleHeadline from '@/components/ArticleHeadline'
 import Tag from '@/components/Tag'
 

@@ -2,8 +2,7 @@ import React, { FC, memo, useMemo } from 'react'
 import { test } from 'core-fn'
 import { Navi } from './constants'
 
-import loadable from '@loadable/component'
-const IconTextLink = loadable(() => import('@/components/IconTextLink'))
+import IconTextLink from '@/components/IconTextLink'
 
 const endsWithPosts = test(/\/posts\/.*$/)
 

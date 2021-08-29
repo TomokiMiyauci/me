@@ -8,10 +8,8 @@ import github from '@iconify-icons/uil/github-alt'
 import npmOutline from '@iconify-icons/eva/npm-outline'
 import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
+import Logo from '@/components/Logo'
 import type { Locale } from '@/../config/types'
-
-import loadable from '@loadable/component'
-const Logo = loadable(() => import('@/components/Logo'))
 
 const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   return (

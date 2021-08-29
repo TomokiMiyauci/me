@@ -9,9 +9,7 @@ import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
 import { classNames } from '@/utils/class_name'
-
-import loadable from '@loadable/component'
-const ArticleHeadline = loadable(() => import('@/components/ArticleHeadline'))
+import ArticleHeadline from '@/components/ArticleHeadline'
 
 const RelatedArticle: FC<{
   recentArticles: ArticleHeadlineProps[]

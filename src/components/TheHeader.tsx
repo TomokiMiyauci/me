@@ -4,16 +4,12 @@ import rss from '@iconify-icons/bi/rss'
 import type { Locale } from '@/../config/types'
 import SearchButton from '@/components/Search/SearchButton'
 import { useSearchShow } from '@/components/Search/hooks'
-
-import loadable from '@loadable/component'
-const Logo = loadable(() => import('@/components/Logo'))
-const AccentColor = loadable(() => import('@/components/AccentColor'))
-const LangSwitcher = loadable(() => import('@/components/LangSwitcher'))
-const Navigation = loadable(
-  () => import('@/components/BottomNavigation/Navigation')
-)
-const DarkMode = loadable(() => import('@/components/DarkMode'))
-const IconWith = loadable(() => import('@/components/IconWith'))
+import Logo from '@/components/Logo'
+import AccentColor from '@/components/AccentColor'
+import LangSwitcher from '@/components/LangSwitcher'
+import Navigation from '@/components/BottomNavigation/Navigation'
+import DarkMode from '@/components/DarkMode'
+import IconWith from '@/components/IconWith'
 
 const Inner: FC<{
   originalPath: string

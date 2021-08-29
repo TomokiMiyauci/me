@@ -2,12 +2,11 @@ import React, { FC } from 'react'
 import { MDXProvider, MDXProviderComponentsProp } from '@mdx-js/react'
 import { MdxLink } from 'gatsby-theme-i18n'
 
-import loadable from '@loadable/component'
-const CodeGroup = loadable(() => import('@/components/CodeGroup'))
-const CodeBlock = loadable(() => import('@/components/CodeBlock'))
-const CodeGroups = loadable(() => import('@/components/CodeGroups'))
-const Alert = loadable(() => import('@/components/Alert'))
-const MdxH2 = loadable(() => import('@/components/MdxH2'))
+import CodeGroup from '@/components/CodeGroup'
+import CodeBlock from '@/components/CodeBlock'
+import CodeGroups from '@/components/CodeGroups'
+import Alert from '@/components/Alert'
+import MdxH2 from '@/components/MdxH2'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,

@@ -1,11 +1,9 @@
 import React, { FC, useState, useEffect } from 'react'
 import { scrollInfoEvent } from '@/utils/scroll'
+import TheFooter from '@/components/TheFooter'
+import TheHeader from '@/components/TheHeader'
+import BottomNavigation from '@/components/BottomNavigation'
 import type { Locale } from '@/../config/types'
-
-import loadable from '@loadable/component'
-const TheFooter = loadable(() => import('@/components/TheFooter'))
-const TheHeader = loadable(() => import('@/components/TheHeader'))
-const BottomNavigation = loadable(() => import('@/components/BottomNavigation'))
 
 const useScrollShower = (init?: boolean) => {
   const [isShow, changeShow] = useState(init ?? false)

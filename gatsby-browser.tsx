@@ -4,9 +4,8 @@ import '@/assets/global.scss'
 import '@/assets/prose.scss'
 import type { GatsbyBrowser } from 'gatsby'
 import Context from '@/contexts'
+import Layout from '@/components/Layout'
 
-import loadable from '@loadable/component'
-const Layout = loadable(() => import('@/components/Layout'))
 const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
 }

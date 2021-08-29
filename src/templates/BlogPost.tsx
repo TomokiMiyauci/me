@@ -11,8 +11,6 @@ import { makeRepoPostPath } from '@/utils/parser'
 import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import { useAccessCounter } from '@/hooks/access_counter'
 import GoogleAdsense from '@/components/GoogleAdsense'
-import type { Transition as T } from '@headlessui/react'
-import loadable from '@loadable/component'
 import SnsShare from '@/components/SnsShare'
 import Comment from '@/components/Comment'
 import Newsletter from '@/components/Newsletter'
@@ -23,13 +21,7 @@ import Article from '@/components/Article'
 import MdxProvider from '@/components/MdxProvider'
 import OtherArticles from '@/components/OtherArticles'
 import Seo from '@/components/seo'
-
-const Transition = loadable<Parameters<typeof T>[number]>(
-  () => import('@/utils/headless_ui').then(({ Transition }) => Transition),
-  {
-    ssr: false
-  }
-)
+import { Transition } from '@headlessui/react'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
   data,
