@@ -3,6 +3,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "cz": "yarn --cwd ../.. cz",
     "test": "jest",
     "test:emulator": "firebase emulators:exec --only firestore 'yarn test'"
   },
