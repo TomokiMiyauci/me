@@ -1,12 +1,12 @@
-import { signIn } from '@/workers/util/auth'
+import { getUser } from '@/workers/util/auth'
 import { auth } from '@/workers/util/firebase_init'
 import { getIdToken } from 'firebase/auth'
-import { includes } from 'core-fn'
+
 declare var self: ServiceWorkerGlobalScope & typeof globalThis
 
-const authedRequest = (req: Request, idToken: string): Request => {
+const makeAuthRequest = (req: Request, idToken: string): Request => {
   const headers = new Headers(req.headers)
-  headers.append('Authorization', `Bearer ${idToken}`)
+  headers.set('Authorization', `Bearer ${idToken}`)
   const request = new Request(req, {
     headers
   })
@@ -15,22 +15,24 @@ const authedRequest = (req: Request, idToken: string): Request => {
 
 const whitelist = ['https://firestore.googleapis.com']
 
-self.addEventListener('fetch', async (evt) => {
-  const requestProcessor = async () => {
-    const url = new URL(evt.request.url)
-
-    let request: Request = evt.request
+self.addEventListener('fetch', async (ev) => {
+  const requestProcessor = async (): Promise<Response> => {
+    const url = new URL(ev.request.url)
     if (
-      includes(url.origin, whitelist) ||
+      whitelist.includes(url.origin) ||
       url.origin === 'http://localhost:8080'
     ) {
-      const user = await signIn(auth)
-      const idToken = await getIdToken(user)
-      request = authedRequest(evt.request, idToken)
+      const user = await getUser(auth)
+
+      if (user) {
+        const idToken = await getIdToken(user)
+        const request = makeAuthRequest(ev.request, idToken)
+        return fetch(request)
+      }
     }
 
-    return fetch(request)
+    return fetch(ev.request)
   }
 
-  evt.respondWith(requestProcessor())
+  ev.respondWith(requestProcessor())
 })
