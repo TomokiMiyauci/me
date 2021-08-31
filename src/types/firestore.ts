@@ -4,6 +4,13 @@ import type {
   DocumentReference
 } from 'firebase/firestore/lite'
 
+type Override<T extends Record<PropertyKey, unknown>, U extends keyof T, X> = {
+  [k in keyof Omit<T, U>]: T[k]
+} &
+  {
+    [x in U]: X
+  }
+
 type PostsField = {
   postRef: DocumentReference
   createdAt?: FieldValue
@@ -17,4 +24,6 @@ type Post = {
   view: number
 }
 
-export type { PostsField, Post }
+type ActualPost = Partial<Override<Post, 'likeBy', string[]>>
+
+export type { PostsField, Post, ActualPost }
