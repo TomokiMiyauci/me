@@ -24,8 +24,8 @@ const useFirebaseProvider = () => {
   useLazy(() => {
     if (notInitialized()) {
       import('@/utils/firebase').then(({ initializeFirebase }) => {
-        const { app, messaging, auth } = initializeFirebase()
-        setFirebase({ app, messaging, auth })
+        const { firestore, app, messaging, auth } = initializeFirebase()
+        setFirebase({ app, firestore, messaging, auth })
       })
     }
   })

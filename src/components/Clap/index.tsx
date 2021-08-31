@@ -1,12 +1,19 @@
 import React, { FC, useEffect, useState, useMemo } from 'react'
-import type { ActualPost } from '@/types/firestore'
+import {
+  getDoc,
+  doc,
+  setDoc,
+  increment as _inc,
+  DocumentReference,
+  serverTimestamp,
+  deleteDoc
+} from 'firebase/firestore/lite'
+import type { PostsField, Post } from '@/types/firestore'
+import { useFirebase } from '@/hooks/firebase'
 import Clap from './Clap'
 import Circle from '@/components/ProgressCircle'
 import { useSequence } from '@/hooks/state'
 import { useNotice } from '@/hooks/notice'
-import { isBrowser } from '@/utils/environment'
-import { useLinkedWorker } from '@/hooks/worker'
-import type { PostSlugWorker } from '@/workers/firestore/firestore.worker'
 
 const useWait = (initState?: boolean) => {
   const [isWaiting, changeWaiting] = useState(initState ?? false)
@@ -35,25 +42,15 @@ const useWait = (initState?: boolean) => {
 }
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
-  const [_worker] = useState(() => {
-    if (isBrowser) {
-      return new Worker(
-        new URL('@/workers/firestore/firestore.worker', import.meta.url)
-      )
-    }
-  })
-
-  const worker = useLinkedWorker<PostSlugWorker>(_worker)
-
-  const [postMeta, changePostMeta] = useState<ActualPost>({})
+  const [{ firestore, uid, isReady }] = useFirebase()
+  const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
-  const [uid, setUid] = useState<string | undefined>(undefined)
   const [_, sequence] = useSequence()
   const [__, notice] = useNotice()
   const liked = useMemo<boolean>(() => {
-    if (!postMeta.likeBy || !uid) return false
+    if (!postMeta.likeBy || !isReady) return false
 
-    return postMeta.likeBy.some(async (id) => {
+    return postMeta.likeBy.some(({ id }) => {
       return id === uid
     })
   }, [postMeta, uid])
@@ -64,9 +61,20 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   }
 
   const decrement = async () => {
-    const data = await worker!.decrement(slug)
+    const clapCount = (postMeta.like ?? 0) - 1
+    changePostMeta({
+      like: clapCount,
+      likeBy: postMeta.likeBy?.filter((by) => by.id !== uid)
+    })
+    const document = doc(
+      firestore!,
+      'users',
+      uid!,
+      'likePosts',
+      slug
+    ) as DocumentReference<PostsField>
 
-    changePostMeta(data)
+    await deleteDoc(document)
     notice({
       type: 'success',
       field: <div>Canceled liking this article</div>
@@ -74,9 +82,23 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
     waitUntil(3000)
   }
   const increment = async () => {
-    const data = await worker!.increment(slug)
-    changePostMeta(data)
+    const clapCount = (postMeta.like ?? 0) + 1
+    changePostMeta({
+      like: clapCount,
+      likeBy: [doc(firestore!, 'users', uid!), ...(postMeta.likeBy ?? [])]
+    })
+    const document = doc(
+      firestore!,
+      'users',
+      uid!,
+      'likePosts',
+      slug
+    ) as DocumentReference<PostsField>
 
+    await setDoc(document, {
+      postRef: doc(firestore!, 'posts', slug),
+      createdAt: serverTimestamp()
+    })
     notice({
       type: 'success',
       field: <div>Liked this article</div>
@@ -85,21 +107,26 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   }
 
   useEffect(() => {
-    if (!worker) return
-
-    worker.getPostSlug(slug).then((data) => {
-      changePostMeta(data)
-      setUid(data.uid)
-    })
-  }, [])
+    if (!isReady) return
+    const document = doc(firestore!, 'posts', slug) as DocumentReference<Post>
+    getDoc(document)
+      .then((e) => {
+        changePostMeta({ like: e.data()?.like ?? 0, likeBy: e.data()?.likeBy })
+      })
+      .catch(() => {
+        changePostMeta({ like: 0, likeBy: [] })
+      })
+  }, [isReady])
 
   const disabledClass = useMemo<string>(() => {
     if (isWaiting) {
       return 'disabled:cursor-wait'
     }
-
+    if (!isReady) {
+      return 'disabled:cursor-not-allowed'
+    }
     return ''
-  }, [isWaiting])
+  }, [isReady, isWaiting])
 
   return (
     <span>
@@ -111,7 +138,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
 
       <Clap
         fill={liked}
-        disabled={isWaiting}
+        disabled={!isReady || isWaiting}
         on={On}
         success={() => {}}
         error={() => {}}

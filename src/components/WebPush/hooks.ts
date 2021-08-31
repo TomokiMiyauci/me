@@ -32,23 +32,23 @@ const useIsSupported = () => {
   }
 }
 
-// const useUnsubscribe = () => {
-//   const [hasSubscribed, changeHasSubscribed] = useState(false)
-//   const [{ uid }] = useAuth()
-//   const [{ firestore }] = useFirebase()
+const useUnsubscribe = () => {
+  const [hasSubscribed, changeHasSubscribed] = useState(false)
+  const [{ uid }] = useAuth()
+  const [{ firestore }] = useFirebase()
 
-//   const retrieveStatus = async (): Promise<void> => {
-//     const { getDocs, collection } = await import('firebase/firestore/lite')
-//     const col = collection(firestore!, 'users', uid, 'fcm')
-//     const docs = await getDocs(col)
-//     changeHasSubscribed(!docs.empty)
-//   }
+  const retrieveStatus = async (): Promise<void> => {
+    const { getDocs, collection } = await import('firebase/firestore/lite')
+    const col = collection(firestore!, 'users', uid, 'fcm')
+    const docs = await getDocs(col)
+    changeHasSubscribed(!docs.empty)
+  }
 
-//   useEffect(() => {
-//     retrieveStatus()
-//   }, [])
+  useEffect(() => {
+    retrieveStatus()
+  }, [])
 
-//   return [hasSubscribed, retrieveStatus] as const
-// }
+  return [hasSubscribed, retrieveStatus] as const
+}
 
-export { useIsSupported }
+export { useIsSupported, useUnsubscribe }

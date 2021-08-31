@@ -1,6 +1,11 @@
 import { initializeApp } from 'firebase/app'
 import { initializePerformance } from 'firebase/performance'
 import { initializeAnalytics, isSupported } from 'firebase/analytics'
+import {
+  initializeFirestore,
+  connectFirestoreEmulator,
+  Firestore
+} from 'firebase/firestore/lite'
 import { getMessaging, onMessage, Messaging } from 'firebase/messaging'
 import { firebaseOptions } from '@/../config/constants'
 
@@ -10,11 +15,16 @@ import { isProd } from '@/utils/environment'
 const initializeFirebase = (): FirebaseState => {
   console.log('Initialize firebase')
   const app = initializeApp(firebaseOptions)
+  const firestore = initializeFirestore(app, {})
   const messaging = getMessaging(app)
 
   onMessage(messaging, (payload) => {
     console.log(payload)
   })
+
+  if (!isProd) {
+    connectFirestoreEmulator(firestore, 'localhost', 8080)
+  }
 
   if (isProd) {
     initializePerformance(app)
@@ -29,6 +39,7 @@ const initializeFirebase = (): FirebaseState => {
 
   return {
     app,
+    firestore,
     messaging
   }
 }
@@ -66,26 +77,26 @@ type FCMData = {
   topics: ('article' | 'en' | 'ja')[]
 }
 
-// const postFCMToken = async (
-//   firestore: Firestore,
-//   { token, topics }: FCMData,
-//   userId: string
-// ): Promise<boolean> => {
-//   const { doc, setDoc, arrayUnion, serverTimestamp } = await import(
-//     'firebase/firestore/lite'
-//   )
+const postFCMToken = async (
+  firestore: Firestore,
+  { token, topics }: FCMData,
+  userId: string
+): Promise<boolean> => {
+  const { doc, setDoc, arrayUnion, serverTimestamp } = await import(
+    'firebase/firestore/lite'
+  )
 
-//   const _doc = doc(firestore, 'users', userId, 'fcm', token)
-//   return setDoc(_doc, {
-//     token,
-//     topics: arrayUnion(...topics),
-//     createdAt: serverTimestamp()
-//   })
-//     .then(() => true)
-//     .catch((e) => {
-//       console.error(e)
-//       return false
-//     })
-// }
+  const _doc = doc(firestore, 'users', userId, 'fcm', token)
+  return setDoc(_doc, {
+    token,
+    topics: arrayUnion(...topics),
+    createdAt: serverTimestamp()
+  })
+    .then(() => true)
+    .catch((e) => {
+      console.error(e)
+      return false
+    })
+}
 
-export { initializeFirebase, requestFcmToken, getServiceWorker }
+export { initializeFirebase, requestFcmToken, postFCMToken, getServiceWorker }
