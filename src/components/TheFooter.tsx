@@ -9,12 +9,13 @@ import npmOutline from '@iconify-icons/eva/npm-outline'
 import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import Logo from '@/components/Logo'
+import PartialHydrate from '@/components/PartialHydrate'
 import type { Locale } from '@/../config/types'
 
 const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
-      <div className="md:py-4">
+      <PartialHydrate isStatic className="md:py-4">
         <span className="flex flex-col sm:flex-row sm:space-x-6 items-start font-bold text-xl ">
           <span className="space-x-2 flex items-center">
             <span className="align-middle py-1 md:p-0">BUILD BY</span>
@@ -34,13 +35,16 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
             <Icon icon={firebaseIcon} className="w-7 h-7" />
           </span>
         </span>
-      </div>
+      </PartialHydrate>
 
       <div className="flex-col items-center md:flex-row flex md:justify-between">
         <span className="flex flex-col md:flex-row items-center space-x-4">
           <Logo locale={locale} />
 
-          <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
+          <PartialHydrate
+            as="span"
+            className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500"
+          >
             <span>
               <span className="font-semibold text-accent">Made by</span>
               <Icon icon={heart} className="text-accent w-6 h-6 mx-2" />
@@ -49,7 +53,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
             <span className="text-sm">
               ©{new Date().getFullYear()} miyauci.me
             </span>
-          </span>
+          </PartialHydrate>
         </span>
 
         <nav className="flex justify-around flex-row lg:space-x-12 lg:flex-wrap gap-2 w-full md:w-auto">
@@ -101,7 +105,10 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
           </ul>
         </nav>
 
-        <div className="flex  flex-nowrap items-center my-4 text-gray-500 space-x-8 md:space-x-4 lg:space-x-6">
+        <PartialHydrate
+          isStatic
+          className="flex  flex-nowrap items-center my-4 text-gray-500 space-x-8 md:space-x-4 lg:space-x-6"
+        >
           <a
             href="https://www.npmjs.com/~miyauci"
             rel="noopener"
@@ -131,7 +138,7 @@ const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
           >
             <Icon icon={github} className="w-8 h-8" />
           </a>
-        </div>
+        </PartialHydrate>
       </div>
     </footer>
   )
