@@ -6,6 +6,7 @@ import twitter from '@iconify-icons/uil/twitter-alt'
 import atSign from '@iconify-icons/feather/at-sign'
 import GitHubCalendar from 'react-github-calendar'
 import ReactTooltip from 'react-tooltip'
+import PartialHydrate from '@/components/PartialHydrate'
 
 const Me: FC = () => {
   return (
@@ -23,7 +24,7 @@ const Me: FC = () => {
           />
         </div>
 
-        <div className="flex-1">
+        <PartialHydrate className="flex-1">
           <h1 className="text-4xl my-4 md:mb-6">
             Tomoki Miyauci
             <a
@@ -71,7 +72,7 @@ const Me: FC = () => {
               <Icon className="w-8 h-8" icon={atSign} />
             </a>
           </div>
-        </div>
+        </PartialHydrate>
       </div>
       <GitHubCalendar username="tomokimiyauci">
         <ReactTooltip delayShow={50} html textColor="var(--accent-color)" />

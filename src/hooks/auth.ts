@@ -12,9 +12,15 @@ const useAuth = () => {
         registration.active?.postMessage('')
       })
 
-      sw.onmessage = ({ data }) => {
-        changeUid(data)
-      }
+      sw.addEventListener(
+        'message',
+        ({ data }) => {
+          changeUid(data)
+        },
+        {
+          once: true
+        }
+      )
     }
   }, [])
 

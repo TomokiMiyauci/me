@@ -1,13 +1,9 @@
-import {
-  onAuthStateChanged,
-  signInAnonymously,
-  User,
-  Auth
-} from 'firebase/auth'
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth'
+import type { User, Auth } from 'firebase/auth'
 
 let hasTrySignedIn = false
-const signIn = (auth: Auth): Promise<User> => {
-  return new Promise<User>((resolve) => {
+const getUser = (auth: Auth): Promise<User | undefined> =>
+  new Promise<User | undefined>((resolve) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       unsubscribe()
       if (user) {
@@ -15,13 +11,13 @@ const signIn = (auth: Auth): Promise<User> => {
       } else {
         if (hasTrySignedIn) return
         hasTrySignedIn = true
-        const { user } = await signInAnonymously(auth)
+        const { user } = await signInAnonymously(auth).catch(() => ({
+          user: undefined
+        }))
         resolve(user)
-
         console.log('Sing in as Anonymous')
       }
     })
   })
-}
 
-export { signIn }
+export { getUser }
