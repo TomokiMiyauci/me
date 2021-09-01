@@ -13,3 +13,4 @@ storybook-static
 src/workers/**/*.js
 static/sw.js
 static/append_script*
+.analytics.json
