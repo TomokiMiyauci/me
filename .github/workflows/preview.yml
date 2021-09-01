@@ -46,6 +46,9 @@ jobs:
         env:
           ENV_FILE: ${{ secrets.GOOGLE_ANALYTICS_API_CREDENTIAL }}
 
+      - name: Set env
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f .analytics.credential.json)" >> $GITHUB_ENV
+
       - name: Build
         run: yarn build
         env:
@@ -55,7 +58,6 @@ jobs:
           GATSBY_GITHUB_API: ${{ secrets.GATSBY_GITHUB_API }}
           RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
           NODE_ENV: production
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ readlink -f .analytics.credential.json }}
 
       - uses: actions/upload-artifact@v2
         with:
