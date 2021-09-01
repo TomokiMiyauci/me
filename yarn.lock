@@ -2598,6 +2598,13 @@
   resolved "https://registry.yarnpkg.com/@gitmoji/parser-opts/-/parser-opts-1.3.0.tgz#7118a512342afd89c895cb2fd95454fa73f377bb"
   integrity sha512-NqfoW12eXMdDJz3g3NHnopEgDoqdY1YshO6XxIVPOqotGTDcjD1sL28AVKskbYveGmHBPdHieRRv6M9Iq7dt4w==
 
+"@google-analytics/data@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@google-analytics/data/-/data-2.6.0.tgz#ebbd17345dd20c1d6a5a2c73cd7413c3691e28b8"
+  integrity sha512-keDZfQM1jhQYYAUhHIsQOoHsv/qmR7C7iSH2yrA2xiiFQb3dCIC+cBNUzTqHN5WvH5fZ4JCKC8H8h/0idCj86A==
+  dependencies:
+    google-gax "^2.24.1"
+
 "@google-cloud/common@^3.7.0":
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/@google-cloud/common/-/common-3.7.1.tgz#e6a4b512ea0c72435b853831565bfba6a8dff2ac"
@@ -12604,6 +12611,25 @@ google-gax@^2.17.1:
   version "2.24.2"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-2.24.2.tgz#b2f1b5a0edb4673c00ddb79514a6643152456c98"
   integrity sha512-4OtyEIt/KAXRX5o2W/6DGf8MnMs1lMXwcGoPHR4PwXfTUVKjK7ywRe2/yRIMkYEDzAwu/kppPgfpX+kCG2rWfw==
+  dependencies:
+    "@grpc/grpc-js" "~1.3.0"
+    "@grpc/proto-loader" "^0.6.1"
+    "@types/long" "^4.0.0"
+    abort-controller "^3.0.0"
+    duplexify "^4.0.0"
+    fast-text-encoding "^1.0.3"
+    google-auth-library "^7.6.1"
+    is-stream-ended "^0.1.4"
+    node-fetch "^2.6.1"
+    object-hash "^2.1.1"
+    proto3-json-serializer "^0.1.1"
+    protobufjs "6.11.2"
+    retry-request "^4.0.0"
+
+google-gax@^2.24.1:
+  version "2.24.3"
+  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-2.24.3.tgz#a0b16113b7e8ea6c097515291f94c469d9dd1aa1"
+  integrity sha512-0Rb2i2GWCEEYi1/EjQt1QsFW2Jwzm1ob21kYc7UpOmkfsmTXuyhzK7Aeyxxpo7QT/Qh+50vqER1b2ruq6WGDXg==
   dependencies:
     "@grpc/grpc-js" "~1.3.0"
     "@grpc/proto-loader" "^0.6.1"
