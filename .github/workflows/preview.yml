@@ -41,6 +41,14 @@ jobs:
           path: '**/node_modules'
           key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
 
+      - name: Generate credential
+        run: echo $ENV_FILE > .analytics.credential.json
+        env:
+          ENV_FILE: ${{ secrets.GOOGLE_ANALYTICS_API_CREDENTIAL }}
+
+      - name: Set env
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f .analytics.credential.json)" >> $GITHUB_ENV
+
       - name: Build
         run: yarn build
         env:

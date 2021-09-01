@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Snackbar from '@/components/Notice'
 import AppFrame from '@/components/AppFrame'
 import type { Locale } from '@/../config/types'

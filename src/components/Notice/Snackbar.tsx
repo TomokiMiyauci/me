@@ -1,4 +1,4 @@
-import React, { FC, useMemo, ReactElement } from 'react'
+import { FC, useMemo, ReactElement } from 'react'
 import SnackbarFrame from '@/components/Notice/SnackbarFrame'
 import { Icon } from '@iconify/react/dist/offline'
 import info from '@iconify-icons/mdi/info-circle'

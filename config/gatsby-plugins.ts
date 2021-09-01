@@ -241,10 +241,11 @@ const plugins: GatsbyConfig['plugins'] = [
         }
       },
   'gatsby-plugin-twitter',
+  'gatsby-plugin-provide-react'
   // 'gatsby-plugin-loadable-components-ssr',
 
   // 'gatsby-plugin-preact'
-  'gatsby-plugin-webpack-bundle-analyser-v2'
+  // 'gatsby-plugin-webpack-bundle-analyser-v2'
 ].filter((plugin) => !!plugin)
 
 export default plugins

@@ -1,4 +1,4 @@
-import React, { FC, memo, useContext } from 'react'
+import { FC, memo, useContext } from 'react'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
 import type { Locale } from '@/../config/types'

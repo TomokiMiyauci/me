@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { graphql, PageProps } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 

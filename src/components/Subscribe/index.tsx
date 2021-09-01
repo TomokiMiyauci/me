@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Newsletter from '@/components/Newsletter'
 import { useState } from 'react'
 import { Icon, IconifyIcon } from '@iconify/react/dist/offline'

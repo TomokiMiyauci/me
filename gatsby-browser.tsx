@@ -1,5 +1,3 @@
-import React from 'react'
-
 import '@/assets/global.scss'
 import '@/assets/prose.scss'
 import type { GatsbyBrowser } from 'gatsby'

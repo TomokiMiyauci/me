@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import { FC, MouseEventHandler, useEffect, useRef, useState } from 'react'
 import { AnyFn } from 'fonction'
 import { replace } from 'core-fn'
 import bookmarkMinusOutline from '@iconify-icons/mdi/bookmark-minus-outline'

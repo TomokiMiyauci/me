@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { BlogPostBySlugQuery } from '@/../graphql-types'
 import chevronRight from '@iconify-icons/mdi/chevron-right'
 import chevronLeft from '@iconify-icons/mdi/chevron-left'

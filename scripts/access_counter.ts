@@ -1,5 +1,6 @@
-import { initializeApp, pretty } from './util'
-import { isUndefined } from '@miyauci/is-valid'
+import { BetaAnalyticsDataClient } from '@google-analytics/data'
+
+type Awaited<T extends Promise<any>> = T extends Promise<infer R> ? R : never
 
 const wait = (milliseconds: number) =>
   new Promise<void>((resolve) => {
@@ -8,60 +9,98 @@ const wait = (milliseconds: number) =>
     }, milliseconds)
   })
 
-const setupAccessCount = () => {
-  let data: Record<string, number | undefined> = {}
-  let called: boolean = false
-  let done: boolean = false
+const getAccessNumbers = async (): Promise<Record<string, number>> => {
+  const analytics = new BetaAnalyticsDataClient()
 
-  const getAccessCount = async (): Promise<
-    Record<string, number | undefined>
-  > => {
-    if (!called) {
-      called = true
-      const clientEmail = process.env.CLIENT_EMAIL
-      const privateKey = process.env.PRIVATE_KEY
-
-      if (isUndefined(clientEmail) || isUndefined(privateKey)) {
-        done = true
-        return data
-      }
-
-      const app = initializeApp(clientEmail, pretty(privateKey))
-
-      try {
-        const docs = await app
-          .firestore()
-          .collection('posts')
-          .orderBy('view', 'desc')
-          .limit(10)
-          .get()
-          .catch((e) => {
-            console.error(e)
-            return []
-          })
-
-        docs.forEach((doc) => {
-          const { slug, view } = doc.data()
-          data = { ...data, [slug]: view }
-        })
-      } finally {
-        console.info('fetch post data')
-        done = true
-      }
-      return data
-    } else {
-      return new Promise(async (resolve) => {
-        while (!done) {
-          await wait(1000)
+  return analytics
+    .runReport({
+      property: 'properties/260620839',
+      dateRanges: [
+        {
+          startDate: '7daysAgo',
+          endDate: 'today'
         }
+      ],
+      metrics: [
+        {
+          name: 'session',
+          expression: 'sessions'
+        }
+      ],
+      dimensionFilter: {
+        orGroup: {
+          expressions: [
+            {
+              filter: {
+                fieldName: 'pagePath',
+                stringFilter: {
+                  matchType: 'PARTIAL_REGEXP',
+                  value: '^/ja/posts/.+'
+                }
+              }
+            },
+            {
+              filter: {
+                fieldName: 'pagePath',
+                stringFilter: {
+                  matchType: 'PARTIAL_REGEXP',
+                  value: '^/posts/.+'
+                }
+              }
+            }
+          ]
+        }
+      },
+      dimensions: [
+        {
+          name: 'pagePath'
+        }
+      ]
+    })
+    .then((e) => {
+      return (
+        e[0].rows?.reduce((acc, cur) => {
+          const key = cur.dimensionValues![0].value
+          const value = cur.metricValues![0].value
+          if (key && value) {
+            acc = { ...acc, [key]: Number(value) }
+          }
 
-        resolve(data)
-      })
-    }
-  }
-  return {
-    getAccessCount
-  }
+          return acc
+        }, {} as Record<string, number>) ?? {}
+      )
+    })
+    .catch(() => {
+      console.error('Something wrong at getting analytics')
+      return {} as Record<string, number>
+    })
 }
 
-export { setupAccessCount }
+let hasCalled = false
+let done = false
+let result: any = undefined
+
+const sequential =
+  <T extends () => Promise<unknown>>(fn: T) =>
+  (): Promise<Awaited<ReturnType<T>>> => {
+    return new Promise<Awaited<ReturnType<T>>>(async (resolve) => {
+      if (hasCalled) {
+        while (!done) {
+          await wait(500)
+        }
+        return resolve(result)
+      } else {
+        hasCalled = true
+
+        const data = await fn()
+        result = data
+        done = true
+
+        resolve(data as Awaited<ReturnType<T>>)
+      }
+    })
+  }
+
+const safeGetAccessNumbers = sequential(getAccessNumbers)
+
+export { safeGetAccessNumbers }

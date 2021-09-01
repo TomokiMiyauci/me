@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, createElement } from 'react'
+import { useEffect, useRef, createElement } from 'react'
 import { hydrate } from 'react-dom'
 import type {
   FC,

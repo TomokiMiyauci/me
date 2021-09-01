@@ -1,4 +1,4 @@
-import React, { FC, CSSProperties } from 'react'
+import { FC, CSSProperties } from 'react'
 import commentEditOutline from '@iconify-icons/mdi/comment-edit-outline'
 import { Icon } from '@iconify/react/dist/offline'
 import Placeholder from '../../Placeholder'

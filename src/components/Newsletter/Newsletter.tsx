@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, useState, useMemo } from 'react'
+import { FC, MouseEventHandler, useState, useMemo } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
 

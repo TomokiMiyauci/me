@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import ArticleHeadline from '@/components/ArticleHeadline/ArticleHeadline'
 import { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'

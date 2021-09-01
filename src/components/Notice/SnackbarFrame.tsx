@@ -1,4 +1,4 @@
-import React, { FC, cloneElement } from 'react'
+import { FC, cloneElement } from 'react'
 import { classNames } from '@/utils/class_name'
 
 const SnackbarFrame: FC<{

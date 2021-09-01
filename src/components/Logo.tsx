@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import LogoSvg from '@/assets/logo.svg'
 import type { Locale } from '@/../config/types'

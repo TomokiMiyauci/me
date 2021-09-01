@@ -1,4 +1,4 @@
-import React, { FC, ReactChild } from 'react'
+import { FC, ReactChild } from 'react'
 import SearchField from '@/components/Search/SearchField'
 
 const SearchSection: FC<{

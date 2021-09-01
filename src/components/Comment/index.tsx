@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { Utterances, Theme } from 'utterances-react-component'
 import { useDarkMode } from '@/hooks/dark_mode'
 

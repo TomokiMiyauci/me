@@ -1,4 +1,4 @@
-import React, { FC, ReactChild } from 'react'
+import { FC, ReactChild } from 'react'
 import ArticleHeadlineBody from '@/components/ArticleHeadline/ArticleHeadlineBody'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 

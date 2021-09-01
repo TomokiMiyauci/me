@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import type { Project } from '@/components/ProjectHeadline/types'
 import { Icon } from '@iconify/react/dist/offline'
 import typescript from '@iconify-icons/logos/typescript-icon'

@@ -1,4 +1,4 @@
-import React, { FC, SVGProps } from 'react'
+import { FC, SVGProps } from 'react'
 import { classNames } from '@/utils/class_name'
 
 type CircleProps = {

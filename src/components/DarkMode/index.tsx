@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState, useEffect, ReactNode } from 'react'
+import { FC, useMemo, useState, useEffect, ReactNode } from 'react'
 import { useDarkMode } from '@/hooks/dark_mode'
 import sun from '@iconify/icons-jam/sun'
 import { Icon } from '@iconify/react/dist/offline'

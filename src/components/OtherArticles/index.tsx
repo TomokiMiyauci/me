@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { BlogPostBySlugQuery } from '@/../graphql-types'
 import PrevNext from '@/components/PrevNext'
 import RelatedArticle from '@/components/RelatedArticle'

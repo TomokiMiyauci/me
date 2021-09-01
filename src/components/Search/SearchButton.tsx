@@ -1,4 +1,4 @@
-import React, { FC, ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
+import { FC, ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import magnify from '@iconify-icons/mdi/magnify'
 

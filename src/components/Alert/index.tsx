@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import alert from '@iconify-icons/mdi/alert'
 import { Icon } from '@iconify/react/dist/offline'
 

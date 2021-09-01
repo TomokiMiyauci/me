@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 
 const IconWith: FC<{ icon: object; className?: string }> = ({

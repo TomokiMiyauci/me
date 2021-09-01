@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import { Icon } from '@iconify/react/dist/offline'
 import burstNew from '@iconify-icons/foundation/burst-new'

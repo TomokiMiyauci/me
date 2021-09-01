@@ -1,5 +1,3 @@
-import React from 'react'
-
 import type { GatsbySSR } from 'gatsby'
 import Context from '@/contexts'
 import { isProd } from '@/utils/environment'

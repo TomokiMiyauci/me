@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import { Icon } from '@iconify/react/dist/offline'
 import blogicon from '@iconify-icons/carbon/blog'

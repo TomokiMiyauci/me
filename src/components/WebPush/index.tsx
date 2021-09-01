@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, useMemo } from 'react'
+import { FC, MouseEventHandler, useMemo } from 'react'
 import { useFirebase } from '@/hooks/firebase'
 import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'

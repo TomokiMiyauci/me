@@ -1,4 +1,4 @@
-import React, { FC, ReactChild } from 'react'
+import { FC, ReactChild } from 'react'
 import { GatsbyImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import timerSand from '@iconify-icons/mdi/timer-sand'
 import { useCommentCount } from './Comment/CommentCount/hooks'

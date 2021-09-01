@@ -5,14 +5,12 @@ import moment from 'moment'
 import { toLowerCase } from 'core-fn'
 import type { SiteMetaData, Locale } from './config/types'
 import { exec } from 'core-fn'
-import { setupAccessCount } from './scripts/access_counter'
 import { props } from 'fonction'
 import { Mdx } from '@/../graphql-types'
 import { useMetaPoster, isPosts } from './scripts/register_post_list'
 import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
 import WorkerPlugin from 'worker-plugin'
-
-const { getAccessCount } = setupAccessCount()
+import { safeGetAccessNumbers } from './scripts/access_counter'
 
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 
@@ -102,7 +100,7 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
   const { siteUrl } = site.siteMetadata as SiteMetaData
 
   if (node.internal.type === 'Mdx' && isPosts(node.fileAbsolutePath)) {
-    const slugViewMap = await getAccessCount()
+    const slugViewMap = await safeGetAccessNumbers()
     const { date, tags, slug } = node.frontmatter!
     const { locale } = node.fields!
 
@@ -139,13 +137,8 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
       value: moment(date).format('MMM')
     })
 
-    const fullPath = makeFullPath(
-      {
-        base: siteUrl,
-        path: slug!
-      },
-      locale as Locale
-    )
+    const fullPath = makeFullPath(slug!, locale as Locale)
+    const url = new URL(fullPath, siteUrl).toString()
 
     const { slug: _slug } = parseSlug(slug!)?.groups ?? { slug: '' }
 
@@ -156,10 +149,12 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
     actions.createNodeField({
       node,
       name: 'fullPath',
-      value: fullPath
+      value: url
     })
 
-    const view = props(slug!, slugViewMap)
+    const view = props(fullPath!, slugViewMap)
+
+    console.log(fullPath, view)
 
     actions.createNodeField({
       node,
@@ -182,39 +177,24 @@ const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
     actions.setWebpackConfig({
       plugins: [new RelativeCiAgentWebpackPlugin()]
     })
-
-    actions.setWebpackConfig({
-      plugins: [
-        new WorkerPlugin({
-          preserveTypeModule: true
-        })
-      ]
-    })
   }
+  actions.setWebpackConfig({
+    plugins: [new WorkerPlugin()]
+  })
 
-  // for axe ignore warning
-  if (process.env.NODE_ENV !== 'production') {
-    const config = getConfig()
+  // // for axe ignore warning
+  // if (process.env.NODE_ENV !== 'production') {
+  //   const config = getConfig()
 
-    config.resolve.fallback = {
-      crypto: false
-    }
-    actions.replaceWebpackConfig(config)
-  }
+  //   config.resolve.fallback = {
+  //     crypto: false
+  //   }
+  //   actions.replaceWebpackConfig(config)
+  // }
 }
 
-const makeFullPath = (
-  {
-    base,
-    path
-  }: {
-    base: string
-    path: string
-  },
-  locale: Locale
-): string => {
-  const _path = locale === 'en' ? path : join(locale, path)
-  return new URL(_path, base).toString()
+const makeFullPath = (path: string, locale: Locale): string => {
+  return locale === 'en' ? path : join('/', locale, path)
 }
 
 export { createPages, onCreateNode, onPostBuild, onCreateWebpackConfig }

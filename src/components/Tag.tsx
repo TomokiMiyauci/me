@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler } from 'react'
+import { FC, MouseEventHandler } from 'react'
 import { Icon, IconifyIcon } from '@iconify/react/dist/offline'
 
 const Tag: FC<{

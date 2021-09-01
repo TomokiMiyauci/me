@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import type { ClickEventHandler } from '@/components/Newsletter/Newsletter'
 import bxMailSend from '@iconify-icons/bx/bx-mail-send'
 import { useNotice } from '@/hooks/notice'

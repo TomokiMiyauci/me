@@ -1,4 +1,4 @@
-import React, { FC, Dispatch, SetStateAction } from 'react'
+import { FC, Dispatch, SetStateAction } from 'react'
 import { Switch } from '@headlessui/react'
 import { Icon } from '@iconify/react/dist/offline'
 import globalOutlined from '@iconify/icons-ant-design/global-outlined'

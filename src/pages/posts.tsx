@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import type { BlogPostsQuery } from '@/../graphql-types'
 import { Helmet } from 'react-helmet'

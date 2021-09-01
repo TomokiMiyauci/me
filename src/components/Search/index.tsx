@@ -1,6 +1,6 @@
 import algoliasearch from 'algoliasearch/lite'
 import { InstantSearch } from 'react-instantsearch-dom'
-import React, { FC, useState, useMemo, Fragment } from 'react'
+import { FC, useState, useMemo, Fragment } from 'react'
 import SearchResult from '@/components/Search/SearchResult'
 import { useSearchShow } from '@/components/Search/hooks'
 import SearchSection from '@/components/Search/SearchSection'
