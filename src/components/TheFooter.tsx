@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import { FC, memo } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import firebaseIcon from '@iconify-icons/logos/firebase'
 import storybookIcon from '@iconify-icons/logos/storybook-icon'

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Snackbar from '@/components/Notice/Snackbar'
 import { useNotice } from '@/hooks/notice'
 import { Transition } from '@headlessui/react'

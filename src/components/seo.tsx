@@ -1,4 +1,4 @@
-import React, { FC, ReactChild } from 'react'
+import { FC, ReactChild } from 'react'
 import { Helmet } from 'react-helmet'
 import { useStaticQuery, graphql } from 'gatsby'
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import SearchBox from '@/components/Search/SearchBox'
 import close from '@iconify-icons/mdi/arrow-back'
 import { Icon } from '@iconify/react/dist/offline'

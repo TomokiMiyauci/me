@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import FirebaseContext from './firebase'
 import { useFirebaseProvider } from '../hooks/firebase'
 import NoticeContext from './notice'

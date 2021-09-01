@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import VerificationEnv from '@/components/VerificationEnv/VerificationEnv'
 import type { Verification } from '@/components/VerificationEnv/types'
 

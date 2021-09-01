@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Package, Packages, Runtime } from '@/components/VerificationEnv/types'
 import { isUndefined } from '@/utils/is'
 import deno from '@iconify-icons/logos/deno'

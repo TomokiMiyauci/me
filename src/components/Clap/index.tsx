@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useMemo } from 'react'
+import { FC, useEffect, useState, useMemo } from 'react'
 import {
   getDoc,
   doc,

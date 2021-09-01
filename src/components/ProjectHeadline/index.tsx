@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import ProjectHeadline from '@/components/ProjectHeadline/ProjectHeadline'
 import { projects } from '@/components/ProjectHeadline/constants'
 

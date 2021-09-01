@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Verification } from '@/components/VerificationEnv/types'
 import { DEFAULT_OS } from '@/components/VerificationEnv/constants'
 import OS from '@/components/VerificationEnv/OS'

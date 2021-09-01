@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { GatsbyImage } from 'gatsby-plugin-image'
 import Seo from '../components/seo'

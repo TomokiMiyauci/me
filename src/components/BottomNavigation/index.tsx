@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import { FC, memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
 import Navigation from '@/components/BottomNavigation/Navigation'
 import type { Locale } from '@/../config/types'

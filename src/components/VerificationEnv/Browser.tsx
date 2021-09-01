@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Browser } from '@/components/VerificationEnv/types'
 import { Icon } from '@iconify/react/dist/offline'
 import chromeOutline from '@iconify/icons-teenyicons/chrome-outline'

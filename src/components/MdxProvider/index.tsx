@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { MDXProvider, MDXProviderComponentsProp } from '@mdx-js/react'
 import { MdxLink } from 'gatsby-theme-i18n'
 

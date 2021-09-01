@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { OS } from '@/components/VerificationEnv/types'
 import { Icon } from '@iconify/react/dist/offline'
 import appleOutlined from '@iconify/icons-ant-design/apple-outlined'

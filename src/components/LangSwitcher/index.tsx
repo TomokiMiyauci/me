@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from 'react'
+import { FC, useState, useRef } from 'react'
 import translateIcon from '@iconify-icons/mdi/translate'
 import { Icon } from '@iconify/react/dist/offline'
 import { LocalizedLink } from 'gatsby-theme-i18n'

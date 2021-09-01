@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 const ProgressBar: FC<{ max: number; val: number; className?: string }> = ({
   max,

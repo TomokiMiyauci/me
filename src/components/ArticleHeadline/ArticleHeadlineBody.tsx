@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { isLength0, isString } from '@/utils/is'
 import Tag from '@/components/Tag'
 import { iconMeta } from '@/utils/tag'

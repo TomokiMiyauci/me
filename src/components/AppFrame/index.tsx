@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { scrollInfoEvent } from '@/utils/scroll'
 import TheFooter from '@/components/TheFooter'
 import TheHeader from '@/components/TheHeader'

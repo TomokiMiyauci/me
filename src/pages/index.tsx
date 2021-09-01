@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import Me from '@/components/Me'

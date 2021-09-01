@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import robotIcon from '@iconify-icons/mdi/robot'
 import sourcePull from '@iconify-icons/mdi/source-pull'
 import { Icon } from '@iconify/react/dist/offline'

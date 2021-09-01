@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Circle from '@/components/ProgressCircle/ProgressCircle'
 import type { CircleProps } from '@/components/ProgressCircle/ProgressCircle'
 import { useMemo } from 'react'

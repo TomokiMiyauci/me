@@ -1,4 +1,4 @@
-import React, { FC, DetailedHTMLProps, InputHTMLAttributes } from 'react'
+import { FC, DetailedHTMLProps, InputHTMLAttributes } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import magnify from '@iconify-icons/mdi/magnify'
 import close from '@iconify-icons/mdi/close'

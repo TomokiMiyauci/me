@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import oceanicNext from 'prism-react-renderer/themes/oceanicNext'
 import { head } from 'fonction'

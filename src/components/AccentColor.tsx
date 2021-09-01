@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import invertColors from '@iconify-icons/mdi/invert-colors'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAccentColor } from '../utils/use_accent_color'

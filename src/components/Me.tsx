@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { StaticImage } from 'gatsby-plugin-image'
 import { Icon } from '@iconify/react/dist/offline'
 import github from '@iconify-icons/uil/github-alt'

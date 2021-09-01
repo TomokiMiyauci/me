@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { optimizer } from '@/utils/optimizer'
 import ProgressBar from '@/components/ReadingProgress/ProgressBar'
 import { useStateIfMounted } from 'use-state-if-mounted'

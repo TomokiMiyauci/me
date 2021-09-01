@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import linkVariant from '@iconify-icons/mdi/link-variant'
 

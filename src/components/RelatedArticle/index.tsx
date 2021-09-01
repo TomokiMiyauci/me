@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import RelatedArticle from '@/components/RelatedArticle/RelatedArticle'
 import type { ArticleHeadlineProps } from '@/components/ArticleHeadline/types'
 import type { BlogPostBySlugQuery } from '@/../graphql-types'

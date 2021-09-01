@@ -1,4 +1,4 @@
-import React, { FC, useEffect, CSSProperties } from 'react'
+import { FC, useEffect, CSSProperties } from 'react'
 import { isProd } from '@/utils/environment'
 
 const Index: FC<{

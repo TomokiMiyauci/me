@@ -11668,6 +11668,11 @@ gatsby-plugin-preact@^5.7.1:
     "@prefresh/babel-plugin" "^0.4.1"
     "@prefresh/webpack" "^3.3.2"
 
+gatsby-plugin-provide-react@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-provide-react/-/gatsby-plugin-provide-react-1.0.2.tgz#e50bb311cd8ef5855c6d94f708266ab117c77a15"
+  integrity sha512-Zkbs0uiniXDvtGT86+bTCdj0cuT9REpGJxJTIKLQJW3AvmAdh/MAMwWzMdyMrX1cwjqDPZBFC7bw7A49iP/fyw==
+
 gatsby-plugin-react-helmet@^4.7.1:
   version "4.13.0"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-react-helmet/-/gatsby-plugin-react-helmet-4.13.0.tgz#58f50bc9afb0f04a0726453c0827a59d7a159c7a"
