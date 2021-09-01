@@ -1,4 +1,3 @@
-import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import ArticleHeadline from '@/components/ArticleHeadline/ArticleHeadline'

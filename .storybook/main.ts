@@ -25,6 +25,10 @@ const config: CustomizedStorybookConfig = {
     if (process.env.NODE_ENV === 'production') {
       config.build.chunkSizeWarningLimit = 1700
     }
+    config.esbuild = {
+      ...config.esbuild,
+      jsxInject: `import React from 'react'`
+    }
 
     config.resolve.alias = {
       '@': resolve(__dirname, '..', 'src')

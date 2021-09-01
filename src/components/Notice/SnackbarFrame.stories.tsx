@@ -1,4 +1,3 @@
-import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import SnackbarFrame from '@/components/Notice/SnackbarFrame'
 import info from '@iconify-icons/mdi/info-circle'
