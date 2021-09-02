@@ -3,6 +3,7 @@ import { Switch } from '@headlessui/react'
 import { Icon } from '@iconify/react/dist/offline'
 import globalOutlined from '@iconify/icons-ant-design/global-outlined'
 import flagForJapan from '@iconify/icons-emojione/flag-for-japan'
+import { classNames } from '@/utils/class_name'
 
 const Index: FC<{
   enabled: boolean
@@ -11,7 +12,7 @@ const Index: FC<{
 }> = ({ enabled, setEnabled, className }) => {
   return (
     <>
-      <span className={`inline-flex ${className}`}>
+      <span className={classNames('inline-flex', className)}>
         <span className="self-end select-none">EN</span>
         <Icon icon={globalOutlined} className="w-9 h-9" />
         <Switch
