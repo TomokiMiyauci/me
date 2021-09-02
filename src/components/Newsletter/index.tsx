@@ -4,15 +4,16 @@ import { useNotice } from '@/hooks/notice'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import Newsletter from '@/components/Newsletter/Newsletter'
 import type { HTTPError } from 'ky'
+import type { Locale } from 'config/types'
 
 const Index: FC = () => {
   const [_, notice] = useNotice()
   const { locale } = useLocalization()
 
-  const onClick: ClickEventHandler = async (email) => {
+  const onClick: ClickEventHandler = async (email, lang) => {
     const { subscribe } = await import('@/utils/convertkit')
 
-    return subscribe(email, 'en')
+    return subscribe(email, lang)
   }
 
   const onSuccess = () => {
@@ -35,6 +36,7 @@ const Index: FC = () => {
       onClick={onClick}
       onSuccess={onSuccess}
       onError={onError}
+      locale={locale as Locale}
       PrivacyPolicy={
         <div className="m-1">
           <LocalizedLink
