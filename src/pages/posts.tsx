@@ -20,7 +20,7 @@ import ArticleHeadline from '@/components/ArticleHeadline'
 import Tag from '@/components/Tag'
 import type { Order } from '@/components/ArticleHeadline/types'
 import { makeAreaComponent } from '@/components/ArticleHeadline/util'
-import { useFirebase } from '@/hooks/firebase'
+import { useSafeLogEvent } from '@/hooks/analytics'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
@@ -116,11 +116,13 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
     changeTag(tagQuery)
   }
 
-  const [{ analytics }] = useFirebase()
+  const { safeLogEvent } = useSafeLogEvent()
 
   useEffect(() => {
-    if (!analytics || !search) return
-    import('firebase/analytics').then(({ logEvent }) => {
+    if (!search) return
+
+    safeLogEvent(async (analytics) => {
+      const { logEvent } = await import('firebase/analytics')
       logEvent(analytics, 'search', {
         search_term: search
       })
@@ -128,8 +130,10 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   }, [search])
 
   useEffect(() => {
-    if (!analytics || !selectedTag) return
-    import('firebase/analytics').then(({ logEvent }) => {
+    if (!selectedTag) return
+
+    safeLogEvent(async (analytics) => {
+      const { logEvent } = await import('firebase/analytics')
       logEvent(analytics, 'select_content', {
         content_type: 'article_search_tag',
         tag: selectedTag
@@ -138,9 +142,10 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   }, [selectedTag])
 
   useEffect(() => {
-    if (!analytics || !order) return
-    console.log(order)
-    import('firebase/analytics').then(({ logEvent }) => {
+    if (!order) return
+
+    safeLogEvent(async (analytics) => {
+      const { logEvent } = await import('firebase/analytics')
       logEvent(analytics, 'select_content', {
         content_type: 'article_order',
         order
