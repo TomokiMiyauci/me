@@ -2,31 +2,33 @@ import { FC, MouseEventHandler, useState, useMemo, ReactElement } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
+import { useSequence } from '@/hooks/state'
+import type { HTTPError } from 'ky'
 
-type ClickEventHandler = (email: string) => Promise<void>
+type ClickEventHandler = (email: string) => Promise<Response>
 
 const Newsletter: FC<{
   pending?: boolean
   onClick: ClickEventHandler
   className?: string
   onSuccess: () => void
-  onError: () => void
+  onError: (e: HTTPError) => void
   PrivacyPolicy?: ReactElement
 }> = ({ pending, onClick, onError, onSuccess, className, PrivacyPolicy }) => {
   const [email, changeEmail] = useState('')
-  const [isLoading, changeLoading] = useState(false)
+  const [isLoading, sequence] = useSequence()
 
   const handleClick: MouseEventHandler = () => emitEvent()
 
   const emitEvent = (): void => {
-    if (!isValid || isLoading) return
-    changeLoading(true)
+    if (!isValid) return
 
-    onClick(email)
-      .then(onSuccess)
-      .then(() => changeEmail(''))
-      .catch(onError)
-      .finally(() => changeLoading(false))
+    sequence(async () => {
+      await onClick(email)
+        .then(onSuccess)
+        .then(() => changeEmail(''))
+        .catch(onError)
+    })
   }
 
   const isValid = useAsyncMemo(async () => {
