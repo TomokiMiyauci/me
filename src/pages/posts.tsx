@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useEffect } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import type { BlogPostsQuery } from '@/../graphql-types'
 import { Helmet } from 'react-helmet'
@@ -20,6 +20,7 @@ import ArticleHeadline from '@/components/ArticleHeadline'
 import Tag from '@/components/Tag'
 import type { Order } from '@/components/ArticleHeadline/types'
 import { makeAreaComponent } from '@/components/ArticleHeadline/util'
+import { useFirebase } from '@/hooks/firebase'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
@@ -114,6 +115,39 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
 
     changeTag(tagQuery)
   }
+
+  const [{ analytics }] = useFirebase()
+
+  useEffect(() => {
+    if (!analytics || !search) return
+    import('firebase/analytics').then(({ logEvent }) => {
+      logEvent(analytics, 'search', {
+        search_term: search
+      })
+    })
+  }, [search])
+
+  useEffect(() => {
+    if (!analytics || !selectedTag) return
+    import('firebase/analytics').then(({ logEvent }) => {
+      logEvent(analytics, 'select_content', {
+        content_type: 'article_search_tag',
+        tag: selectedTag
+      })
+    })
+  }, [selectedTag])
+
+  useEffect(() => {
+    if (!analytics || !order) return
+    console.log(order)
+    import('firebase/analytics').then(({ logEvent }) => {
+      logEvent(analytics, 'select_content', {
+        content_type: 'article_order',
+        order
+      })
+    })
+  }, [order])
+
   return (
     <>
       <Seo

@@ -12,11 +12,14 @@ import { firebaseOptions } from '@/../config/constants'
 import type { FirebaseState } from '@/types/firebase'
 import { isProd } from '@/utils/environment'
 
-const initializeFirebase = (): FirebaseState => {
+const initializeFirebase = async (): Promise<FirebaseState> => {
   console.log('Initialize firebase')
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
   const messaging = getMessaging(app)
+
+  const result = await isSupported()
+  const analytics = result ? initializeAnalytics(app) : undefined
 
   onMessage(messaging, (payload) => {
     console.log(payload)
@@ -28,19 +31,13 @@ const initializeFirebase = (): FirebaseState => {
 
   if (isProd) {
     initializePerformance(app)
-
-    isSupported().then((e) => {
-      if (e) {
-        console.info('Initialize: analytics')
-        initializeAnalytics(app)
-      }
-    })
   }
 
   return {
     app,
     firestore,
-    messaging
+    messaging,
+    analytics
   }
 }
 
