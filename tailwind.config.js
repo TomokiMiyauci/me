@@ -8,6 +8,10 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      animation: {
+        'ping-bit-slow': 'ping 2s linear infinite',
+        'ping-slow': 'ping 3s linear infinite'
+      },
       colors: {
         rose: colors.rose,
         pink: colors.pink,

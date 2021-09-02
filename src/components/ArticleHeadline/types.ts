@@ -1,4 +1,5 @@
 import { IGatsbyImageData } from 'gatsby-plugin-image'
+import type { ReactElement } from 'react'
 
 type ArticleHeadlineProps = {
   title: string
@@ -7,10 +8,11 @@ type ArticleHeadlineProps = {
   to: string
   alt: string
   tags: (string | { name: string; className: string })[]
-  MMM?: string
-  no?: number
   lastUpdated?: string
   readingTime?: string
+  Area?: ReactElement
 }
 
-export type { ArticleHeadlineProps }
+type Order = 'recent' | 'hot' | 'like'
+
+export type { ArticleHeadlineProps, Order }
