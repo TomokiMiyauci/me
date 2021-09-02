@@ -161,6 +161,7 @@
     "tailwindcss": "^2.2.2",
     "tailwindcss-hero-patterns": "^0.0.1",
     "tailwindcss-textshadow": "^2.1.3",
+    "use-async-memo": "^1.2.3",
     "use-state-if-mounted": "^1.0.4",
     "utilitypes": "^1.0.0-beta.4",
     "vite": "^2.3.8",

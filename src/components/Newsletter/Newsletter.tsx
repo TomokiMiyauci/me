@@ -1,8 +1,7 @@
-import { FC, MouseEventHandler, useState, useMemo } from 'react'
+import { FC, MouseEventHandler, useState, useMemo, ReactElement } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
-
-import isEmail from 'is-email'
+import { useAsyncMemo } from 'use-async-memo'
 
 type ClickEventHandler = (email: string) => Promise<void>
 
@@ -12,7 +11,8 @@ const Newsletter: FC<{
   className?: string
   onSuccess: () => void
   onError: () => void
-}> = ({ pending, onClick, onError, onSuccess, className }) => {
+  PrivacyPolicy?: ReactElement
+}> = ({ pending, onClick, onError, onSuccess, className, PrivacyPolicy }) => {
   const [email, changeEmail] = useState('')
   const [isLoading, changeLoading] = useState(false)
 
@@ -29,7 +29,12 @@ const Newsletter: FC<{
       .finally(() => changeLoading(false))
   }
 
-  const isValid = useMemo(() => isEmail(email) as boolean, [email])
+  const isValid = useAsyncMemo(async () => {
+    if (!email) return false
+    const { default: isEmail } = await import('is-email')
+    return isEmail(email) as boolean
+  }, [email])
+
   const disabled = useMemo(
     () => pending ?? (!isValid || isLoading),
     [pending, isValid]
@@ -55,7 +60,7 @@ const Newsletter: FC<{
           <span className="py-3 md:py-2 p-2 inline-flex text-accent">
             <Icon icon={emailIcon} className="w-8 h-8 md:w-12 md:h-12" />
             <input
-              className="bg-transparent ml-2 text-2xl md:w-auto md:text-3xl"
+              className="bg-transparent ml-2 text-2xl md:w-auto md:text-3xl flex-1"
               spellCheck="false"
               type="email"
               placeholder="Enter email"
@@ -86,6 +91,7 @@ const Newsletter: FC<{
 
       <div className="text-center text-gray-400">
         I won't send you spam and you can unsubscribe at any time
+        {PrivacyPolicy}
       </div>
     </div>
   )
