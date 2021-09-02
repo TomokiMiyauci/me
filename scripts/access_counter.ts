@@ -1,13 +1,5 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data'
-
-type Awaited<T extends Promise<any>> = T extends Promise<infer R> ? R : never
-
-const wait = (milliseconds: number) =>
-  new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, milliseconds)
-  })
+import { sequence } from './util'
 
 const getAccessNumbers = async (): Promise<Record<string, number>> => {
   const analytics = new BetaAnalyticsDataClient()
@@ -76,31 +68,6 @@ const getAccessNumbers = async (): Promise<Record<string, number>> => {
     })
 }
 
-let hasCalled = false
-let done = false
-let result: any = undefined
-
-const sequential =
-  <T extends () => Promise<unknown>>(fn: T) =>
-  (): Promise<Awaited<ReturnType<T>>> => {
-    return new Promise<Awaited<ReturnType<T>>>(async (resolve) => {
-      if (hasCalled) {
-        while (!done) {
-          await wait(500)
-        }
-        return resolve(result)
-      } else {
-        hasCalled = true
-
-        const data = await fn()
-        result = data
-        done = true
-
-        resolve(data as Awaited<ReturnType<T>>)
-      }
-    })
-  }
-
-const safeGetAccessNumbers = sequential(getAccessNumbers)
+const safeGetAccessNumbers = sequence(getAccessNumbers)
 
 export { safeGetAccessNumbers }
