@@ -11,6 +11,7 @@ import { useMetaPoster, isPosts } from './scripts/register_post_list'
 import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
 import WorkerPlugin from 'worker-plugin'
 import { safeGetAccessNumbers } from './scripts/access_counter'
+import { safeGetLike } from './scripts/like_counter'
 
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 
@@ -94,13 +95,15 @@ const createPages: GatsbyNode['createPages'] = async ({
 const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
   node,
   actions,
-  getNode
+  getNode,
+  reporter
 }) => {
   const site = getNode('Site')
   const { siteUrl } = site.siteMetadata as SiteMetaData
 
   if (node.internal.type === 'Mdx' && isPosts(node.fileAbsolutePath)) {
     const slugViewMap = await safeGetAccessNumbers()
+    const slugLikeMap = await safeGetLike()
     const { date, tags, slug } = node.frontmatter!
     const { locale } = node.fields!
 
@@ -153,6 +156,7 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
     })
 
     const view = props(fullPath!, slugViewMap)
+    const like = props(_slug, slugLikeMap)
 
     console.log(fullPath, view)
 
@@ -160,6 +164,12 @@ const onCreateNode: GatsbyNode<Mdx>['onCreateNode'] = async ({
       node,
       name: 'view',
       value: view ?? 0
+    })
+
+    actions.createNodeField({
+      node,
+      name: 'like',
+      value: like ?? 0
     })
   }
 }

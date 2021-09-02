@@ -11,14 +11,15 @@ import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
 import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
+import heart from '@iconify-icons/mdi/heart'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import Subscribe from '@/components/Newsletter'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
 import Seo from '@/components/seo'
 import ArticleHeadline from '@/components/ArticleHeadline'
 import Tag from '@/components/Tag'
-
-type Order = 'recent' | 'hot'
+import type { Order } from '@/components/ArticleHeadline/types'
+import { makeAreaComponent } from '@/components/ArticleHeadline/util'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
@@ -29,6 +30,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
     recent,
     hot,
+    like,
     site: { siteMetadata }
   } = data
   const { siteUrl } = siteMetadata
@@ -46,6 +48,10 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
 
       case 'hot': {
         return hot.nodes
+      }
+
+      case 'like': {
+        return like.nodes
       }
 
       default: {
@@ -108,7 +114,6 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
 
     changeTag(tagQuery)
   }
-
   return (
     <>
       <Seo
@@ -191,8 +196,11 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
                       lastUpdated={date}
                       tags={fields.lowerCaseTags}
                       alt="thumbnail"
-                      no={index <= 10 ? index : undefined}
-                      MMM={fields.dateByMMM}
+                      Area={makeAreaComponent({
+                        type: order,
+                        value: fields.dateByMMM,
+                        index
+                      })}
                     />
                   </li>
                 )
@@ -232,6 +240,20 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
                   <Icon icon={fire} className="w-7 h-7" />
 
                   <span className="align-middle">Hot</span>
+                </button>
+
+                <button
+                  onClick={() => changeOrder('like')}
+                  className={`w-full p-1 space-x-2 whitespace-nowrap font-medium rounded-lg transition duration-300 focus:outline-none focus:ring-2 ring-offset-2 ring-offset-accent ring-white dark:ring-blue-gray-900 hover:bg-opacity-50 ${
+                    ['like'].includes(order)
+                      ? 'bg-white dark:bg-blue-gray-900 shadow text-accent'
+                      : 'hover:bg-white/80 dark:hover:bg-blue-gray-900/80 hover:text-accent'
+                  }`}
+                  role="tab"
+                >
+                  <Icon icon={heart} className="w-7 h-7" />
+
+                  <span className="align-middle">Like</span>
                 </button>
               </div>
             </div>
@@ -296,6 +318,34 @@ export const query = graphql`
         fields: { locale: { eq: $locale } }
       }
       sort: { fields: fields___view, order: DESC }
+    ) {
+      nodes {
+        fields {
+          readingTime {
+            text
+          }
+          lowerCaseTags
+          view
+        }
+        frontmatter {
+          title
+          description
+          date(formatString: $dateFormat)
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(aspectRatio: 1, layout: FIXED, width: 80)
+            }
+          }
+          slug
+        }
+      }
+    }
+    like: allMdx(
+      filter: {
+        fileAbsolutePath: { regex: "//posts//" }
+        fields: { locale: { eq: $locale } }
+      }
+      sort: { fields: fields___like, order: DESC }
     ) {
       nodes {
         fields {

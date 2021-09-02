@@ -10,6 +10,7 @@ import { iconMeta } from '@/utils/tag'
 import { Tab } from '@headlessui/react'
 import { classNames } from '@/utils/class_name'
 import ArticleHeadline from '@/components/ArticleHeadline'
+import { makeAreaComponent } from '@/components/ArticleHeadline/util'
 
 const RelatedArticle: FC<{
   recentArticles: ArticleHeadlineProps[]
@@ -92,7 +93,13 @@ const RelatedArticle: FC<{
               {recentArticles.map((articleHeadlineProps) => {
                 return (
                   <li key={articleHeadlineProps.to}>
-                    <ArticleHeadline {...articleHeadlineProps} />
+                    <ArticleHeadline
+                      Area={makeAreaComponent({
+                        type: 'recent',
+                        value: articleHeadlineProps.MMM
+                      })}
+                      {...articleHeadlineProps}
+                    />
                   </li>
                 )
               })}
@@ -108,7 +115,13 @@ const RelatedArticle: FC<{
               {hotArticles.map((articleHeadlineProps, i) => {
                 return (
                   <li key={articleHeadlineProps.to}>
-                    <ArticleHeadline no={i + 1} {...articleHeadlineProps} />
+                    <ArticleHeadline
+                      Area={makeAreaComponent({
+                        type: 'hot',
+                        index: i + 1
+                      })}
+                      {...articleHeadlineProps}
+                    />
                   </li>
                 )
               })}
