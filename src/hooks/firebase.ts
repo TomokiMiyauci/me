@@ -14,8 +14,9 @@ const useFirebaseProvider = () => {
   const [{ uid, isLoggedIn }] = useAuth()
 
   const isInitialized = useMemo<boolean>(() => {
-    return !!firebase.app
-  }, [firebase.app])
+    return !!firebase.app && !!firebase.firestore
+  }, [firebase.app, firebase.firestore])
+
   const isReady = useMemo<boolean>(
     () => isLoggedIn && isInitialized,
     [isLoggedIn, isInitialized]
@@ -23,9 +24,10 @@ const useFirebaseProvider = () => {
 
   useLazy(() => {
     if (notInitialized()) {
-      import('@/utils/firebase').then(({ initializeFirebase }) => {
-        const { firestore, app, messaging, auth } = initializeFirebase()
-        setFirebase({ app, firestore, messaging, auth })
+      import('@/utils/firebase').then(async ({ initializeFirebase }) => {
+        const { firestore, app, messaging, auth, analytics } =
+          await initializeFirebase()
+        setFirebase({ app, firestore, messaging, auth, analytics })
       })
     }
   })
