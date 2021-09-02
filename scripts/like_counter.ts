@@ -36,8 +36,4 @@ const getLike = async (): Promise<Record<string, number>> => {
 
 const safeGetLike = sequence(getLike)
 
-safeGetLike().then((e) => {
-  console.log(e)
-})
-
 export { safeGetLike }
