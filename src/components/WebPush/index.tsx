@@ -59,6 +59,11 @@ const Index = defineComponent(({ className }) => {
         type: 'success',
         field: <div>Success subscription Web Push</div>
       })
+      safeLogEvent((analytics, logEvent) => {
+        logEvent(analytics, 'subscription', {
+          type: 'webpush'
+        })
+      })
     } else {
       notice({
         type: 'alert',
@@ -98,6 +103,11 @@ const Index = defineComponent(({ className }) => {
     notice({
       type: 'success',
       field: <div>Unsubscribed push message</div>
+    })
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'unsubscription', {
+        type: 'webpush'
+      })
     })
     changeHasSubscribed()
   }
