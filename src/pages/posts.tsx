@@ -121,8 +121,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   useEffect(() => {
     if (!search) return
 
-    safeLogEvent(async (analytics) => {
-      const { logEvent } = await import('firebase/analytics')
+    safeLogEvent((analytics, logEvent) => {
       logEvent(analytics, 'search', {
         search_term: search
       })
@@ -132,8 +131,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   useEffect(() => {
     if (!selectedTag) return
 
-    safeLogEvent(async (analytics) => {
-      const { logEvent } = await import('firebase/analytics')
+    safeLogEvent((analytics, logEvent) => {
       logEvent(analytics, 'select_content', {
         content_type: 'article_search_tag',
         tag: selectedTag
@@ -144,8 +142,7 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   useEffect(() => {
     if (!order) return
 
-    safeLogEvent(async (analytics) => {
-      const { logEvent } = await import('firebase/analytics')
+    safeLogEvent((analytics, logEvent) => {
       logEvent(analytics, 'select_content', {
         content_type: 'article_order',
         order
