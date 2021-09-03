@@ -12,10 +12,14 @@ type Override<
   U extends Record<PropertyKey, unknown>
 > = keyof T extends keyof U ? Omit<U, keyof T> : U
 
+const defineComponent = <T extends Record<PropertyKey, unknown>>(
+  fn: (props: T & BasicProps) => JSX.Element
+) => fn
+
 const definePromise = <T extends Record<PropertyKey, unknown>>(
   fn: (
     onPromise: T & Override<T, BasicProps> & Override<T, PromiseProps>
   ) => JSX.Element
 ) => fn
 
-export { definePromise }
+export { defineComponent, definePromise }

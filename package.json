@@ -64,6 +64,7 @@
     "gatsby-theme-i18n": "^2.0.0",
     "gatsby-transformer-sharp": "^3.7.1",
     "ky": "^0.28.5",
+    "p-min-delay": "^4.0.1",
     "preact": "^10.5.13",
     "preact-render-to-string": "^5.1.19",
     "prism-react-renderer": "^1.2.1",

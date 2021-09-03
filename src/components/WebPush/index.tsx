@@ -5,11 +5,11 @@ import { useUnsubscribe } from '@/components/WebPush/hooks'
 import { useAuth } from '@/hooks/auth'
 import { useLocalization } from 'gatsby-theme-i18n'
 import { useSafeLogEvent } from '@/hooks/analytics'
+import { defineComponent } from '@/utils/component'
 
-import type { FC } from 'react'
 import type { Locale } from 'config/types'
 
-const Index: FC = () => {
+const Index = defineComponent(({ className }) => {
   const [{ messaging, firestore }] = useFirebase()
   const [_, notice] = useNotice()
   const [{ uid, isLoggedIn }] = useAuth()
@@ -68,19 +68,33 @@ const Index: FC = () => {
   }
 
   const handleUnsubscribe = async () => {
+    if (!messaging) return
     const { collection, getDocs, deleteDoc } = await import(
       'firebase/firestore/lite'
     )
+
+    const { requestFcmToken, getServiceWorker } = await import(
+      '@/utils/firebase'
+    )
+    const sw = await getServiceWorker('/sw.js')
+
+    if (!sw) {
+      return
+    }
+
     const { deleteToken } = await import('firebase/messaging')
     const col = collection(firestore!, 'users', uid!, 'fcm')
     const { docs } = await getDocs(col)
+
+    await requestFcmToken(messaging, sw)
 
     await Promise.all(
       Array.from(docs).map(async (doc) => {
         await deleteDoc(doc.ref)
       })
     )
-    await deleteToken(messaging!)
+
+    await deleteToken(messaging)
     notice({
       type: 'success',
       field: <div>Unsubscribed push message</div>
@@ -104,6 +118,7 @@ const Index: FC = () => {
 
   return (
     <WebPush
+      className={className}
       isLoggedIn={isLoggedIn}
       locale={locale as Locale}
       hasSubscribed={hasSubscribed}
@@ -113,6 +128,6 @@ const Index: FC = () => {
       onError={handleError}
     />
   )
-}
+})
 
 export default Index

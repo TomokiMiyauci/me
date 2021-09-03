@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react/dist/offline'
 import { useSequence } from '@/hooks/state'
 import { useIsSupported } from '@/components/WebPush/hooks'
 import { useToggleLang } from '@/components/LangToggle/hooks'
+import { classNames } from '@/utils/class_name'
 
 import type { MouseEventHandler } from 'react'
 import type { Locale } from 'config/types'
@@ -23,6 +24,7 @@ const WebPush = definePromise<{
     isLoggedIn,
     locale,
     hasSubscribed,
+    className,
     onSuccess,
     onError
   }) => {
@@ -57,7 +59,12 @@ const WebPush = definePromise<{
     }, [isPendingSequence])
 
     return (
-      <div className="px-4 py-6 -mx-4 heropattern-architect-gray-200 dark:heropattern-architect-blue-gray-700">
+      <div
+        className={classNames(
+          'px-4 py-6 -mx-4 heropattern-architect-gray-200 dark:heropattern-architect-blue-gray-700',
+          className
+        )}
+      >
         <h2 className="text-accent text-center text-5xl">
           Receive push notifications
         </h2>

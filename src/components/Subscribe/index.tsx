@@ -1,10 +1,24 @@
-import Newsletter from '@/components/Newsletter'
 import { useState } from 'react'
 import { Icon, IconifyIcon } from '@iconify/react/dist/offline'
 import loveLetter from '@iconify/icons-emojione-monotone/love-letter'
 import noticePush from '@iconify/icons-fe/notice-push'
 import { Transition } from '@headlessui/react'
-import WebPush from '@/components/WebPush'
+import loadable from '@loadable/component'
+import pMinDelay from 'p-min-delay'
+import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
+
+const Newsletter = loadable(
+  () => pMinDelay(import('@/components/Newsletter'), 200),
+  {
+    fallback: <ProgressCircle />
+  }
+)
+const WebPush = loadable(
+  () => pMinDelay(import('@/components/WebPush'), 1000),
+  {
+    fallback: <ProgressCircle />
+  }
+)
 import type { FC } from 'react'
 
 type ButtonProps = {
@@ -30,10 +44,11 @@ type State = 'newsletter' | 'webpush'
 
 const Index: FC = () => {
   const [state, changeState] = useState<State>('newsletter')
+
   return (
     <>
       <div className="container mx-auto">
-        <h3 className="text-3xl md:text-5xl z-[1] md:z-0 -mx-4 sticky md:static px-4 py-3 top-0 bg-gray-50 dark:bg-blue-gray-900 flex items-center space-x-2 md:space-x-4">
+        <h3 className="text-3xl md:text-5xl -mx-4 px-4 py-3 flex items-center space-x-2 md:space-x-4">
           <span className="inline-flex relative h-3 w-3 md:h-5 md:w-5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-80" />
             <span className="inline-flex rounded-full h-3 w-3 md:h-5 md:w-5 bg-accent" />
@@ -69,25 +84,25 @@ const Index: FC = () => {
         })}
       </div>
 
-      <div className="min-h-[430px]">
-        <Transition
-          show={state === 'newsletter'}
-          enter="transform transition duration-500"
-          enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
-          enterTo="opacity-100"
-        >
-          <Newsletter />
-        </Transition>
+      <Transition
+        show={state === 'newsletter'}
+        enter="transform transition duration-500"
+        enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
+        enterTo="opacity-100"
+        className="min-h-[430px] -mx-4 flex items-center justify-center"
+      >
+        <Newsletter className="w-full" />
+      </Transition>
 
-        <Transition
-          show={state === 'webpush'}
-          enter="transform transition duration-500"
-          enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
-          enterTo="opacity-100"
-        >
-          <WebPush />
-        </Transition>
-      </div>
+      <Transition
+        show={state === 'webpush'}
+        enter="transform transition duration-500"
+        enterFrom="-translate-x-full md:translate-x-0 opacity-0 md:scale-y-0"
+        enterTo="opacity-100"
+        className="min-h-[430px] -mx-4 flex items-center justify-center"
+      >
+        <WebPush className="w-full" />
+      </Transition>
     </>
   )
 }
