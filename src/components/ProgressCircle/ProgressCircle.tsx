@@ -17,7 +17,7 @@ const Circle: FC<CircleProps> = ({
     <svg
       width="1em"
       height="1em"
-      className={classNames('transform -rotate-90', className ?? '')}
+      className={classNames('transform -rotate-90', className)}
       viewBox="0 0 130 130"
     >
       <circle
@@ -31,10 +31,7 @@ const Circle: FC<CircleProps> = ({
         r="57.3"
         cx="65"
         cy="65"
-        className={classNames(
-          'transition-all stroke-current',
-          circleClass ?? ''
-        )}
+        className={classNames('transition-all stroke-current', circleClass)}
         fill="transparent"
         strokeWidth={props.strokeWidth ?? '1em'}
         strokeDasharray="360"
@@ -44,5 +41,18 @@ const Circle: FC<CircleProps> = ({
   )
 }
 
+const ProgressCircle: FC = () => {
+  return (
+    <span className="animate-spin">
+      <Circle
+        strokeDashoffset={240}
+        className="w-20 h-20 animate-pulse"
+        circleClass="text-accent"
+      />
+    </span>
+  )
+}
+
 export default Circle
+export { ProgressCircle }
 export type { CircleProps }

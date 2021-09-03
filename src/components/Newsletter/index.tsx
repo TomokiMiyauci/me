@@ -1,13 +1,13 @@
-import { FC } from 'react'
-import type { ClickEventHandler } from '@/components/Newsletter/Newsletter'
 import { useNotice } from '@/hooks/notice'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import Newsletter from '@/components/Newsletter/Newsletter'
 import { useSafeLogEvent } from '@/hooks/analytics'
+import { defineComponent } from '@/utils/component'
 import type { HTTPError, TimeoutError } from 'ky'
 import type { Locale } from 'config/types'
+import type { ClickEventHandler } from '@/components/Newsletter/Newsletter'
 
-const Index: FC = () => {
+const Index = defineComponent(({ className }) => {
   const [_, notice] = useNotice()
   const { locale } = useLocalization()
   const { safeLogEvent } = useSafeLogEvent()
@@ -51,6 +51,7 @@ const Index: FC = () => {
       onSuccess={onSuccess}
       onError={onError}
       locale={locale as Locale}
+      className={className}
       PrivacyPolicy={
         <div className="m-1">
           <LocalizedLink
@@ -66,6 +67,6 @@ const Index: FC = () => {
       }
     />
   )
-}
+})
 
 export default Index

@@ -9325,11 +9325,6 @@ detab@2.0.4:
   dependencies:
     repeat-string "^1.5.4"
 
-detect-browser@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.2.0.tgz#c9cd5afa96a6a19fda0bbe9e9be48a6b6e1e9c97"
-  integrity sha512-tr7XntDAu50BVENgQfajMLzacmSe34D+qZc4zjnniz0ZVuw/TZcLcyxHQjYpJTM36sGEkZZlYLnIM1hH7alTMA==
-
 detect-file@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/detect-file/-/detect-file-1.0.0.tgz#f0d66d03672a825cb1b73bdb3fe62310c8e552b7"
@@ -17459,6 +17454,13 @@ p-map@^4.0.0:
   dependencies:
     aggregate-error "^3.0.0"
 
+p-min-delay@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/p-min-delay/-/p-min-delay-4.0.1.tgz#dc9d5a497f3193c42ec064c4716b2a3b3c3ba2da"
+  integrity sha512-Tgkn+fy2VYNWw9bLy4BwiF+1ZMIgTDBIpaIChi1HC3N4nwRpandJnG1jAEXiYCcrTZKYQJdBWzLJauAeYDXsBg==
+  dependencies:
+    yoctodelay "^1.2.0"
+
 p-queue@^6.6.2:
   version "6.6.2"
   resolved "https://registry.yarnpkg.com/p-queue/-/p-queue-6.6.2.tgz#2068a9dcf8e67dd0ec3e7a2bcb76810faa85e426"
@@ -22723,6 +22725,11 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
+use-async-effect@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/use-async-effect/-/use-async-effect-2.2.3.tgz#752cc065b7d002c177e754cd0624a166018341bc"
+  integrity sha512-l/FSqFyqPwhpDJseKyJ9/FZi3PBat2LOcspAqFJznm6H8pgWs67WIjMDr1s3WFBd6cS9zvQrySX0HyHfZi/Upg==
+
 use-async-memo@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/use-async-memo/-/use-async-memo-1.2.3.tgz#fe49d7ae1cd850199cf9e4a8ee483e31ed85659f"
@@ -23815,6 +23822,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+yoctodelay@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/yoctodelay/-/yoctodelay-1.2.0.tgz#0d020c8bcec22989369db31e5d352acc6a13eda8"
+  integrity sha512-12y/P9MSig9/5BEhBgylss+fkHiCRZCvYR81eH35NW9uw801cvJt31EAV+WOLcwZRZbLiIQl/hxcdXXXFmGvXg==
 
 yoga-layout-prebuilt@^1.9.6:
   version "1.10.0"

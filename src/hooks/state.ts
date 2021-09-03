@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { AnyFn } from 'fonction'
 
 const useToggle = (initialState: boolean): [boolean, () => void] => {
@@ -28,4 +28,20 @@ const useSequence = () => {
   return [state, sequence] as const
 }
 
-export { useToggle, useSequence }
+type State = 'pending' | 'rejected' | 'fulfilled'
+const usePromiseState = () => {
+  const [state, changeState] = useState<State>('pending')
+
+  const isPending = useMemo<boolean>(() => state === 'pending', [state])
+  const isRejected = useMemo<boolean>(() => state === 'rejected', [state])
+  const isFulfilled = useMemo<boolean>(() => state === 'fulfilled', [state])
+
+  return {
+    isPending,
+    isRejected,
+    isFulfilled,
+    changeState
+  }
+}
+
+export { useToggle, useSequence, usePromiseState }
