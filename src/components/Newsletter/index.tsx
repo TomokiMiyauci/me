@@ -3,12 +3,14 @@ import type { ClickEventHandler } from '@/components/Newsletter/Newsletter'
 import { useNotice } from '@/hooks/notice'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import Newsletter from '@/components/Newsletter/Newsletter'
-import type { HTTPError } from 'ky'
+import { useSafeLogEvent } from '@/hooks/analytics'
+import type { HTTPError, TimeoutError } from 'ky'
 import type { Locale } from 'config/types'
 
 const Index: FC = () => {
   const [_, notice] = useNotice()
   const { locale } = useLocalization()
+  const { safeLogEvent } = useSafeLogEvent()
 
   const onClick: ClickEventHandler = async (email, lang) => {
     const { subscribe } = await import('@/utils/convertkit')
@@ -16,18 +18,30 @@ const Index: FC = () => {
     return subscribe(email, lang)
   }
 
-  const onSuccess = () => {
+  const onSuccess = (): void => {
     import('canvas-confetti').then(({ default: _default }) => _default())
     notice({
       type: 'success',
       field: <span>Send you a email. please check it.</span>
     })
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'subscription', {
+        type: 'newsletter'
+      })
+    })
   }
 
-  const onError = (_: HTTPError): void => {
+  const onError = ({ name, message }: HTTPError | TimeoutError): void => {
     notice({
       type: 'alert',
       field: <span>Fail to subscribe</span>
+    })
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'exception', {
+        description: message,
+        fatal: true,
+        name
+      })
     })
   }
 

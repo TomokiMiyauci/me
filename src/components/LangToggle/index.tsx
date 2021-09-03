@@ -4,12 +4,26 @@ import { Icon } from '@iconify/react/dist/offline'
 import globalOutlined from '@iconify/icons-ant-design/global-outlined'
 import flagForJapan from '@iconify/icons-emojione/flag-for-japan'
 import { classNames } from '@/utils/class_name'
+import { useSafeLogEvent } from '@/hooks/analytics'
 
 const Index: FC<{
   enabled: boolean
   setEnabled: Dispatch<SetStateAction<boolean>>
   className?: string
 }> = ({ enabled, setEnabled, className }) => {
+  const { safeLogEvent } = useSafeLogEvent()
+
+  const handleChange = async (checked: boolean): Promise<void> => {
+    setEnabled(checked)
+    const { logEvent } = await import('firebase/analytics')
+
+    safeLogEvent((analytics) => {
+      logEvent(analytics, 'select_content', {
+        content_type: 'button_locale_switch',
+        checked
+      })
+    })
+  }
   return (
     <>
       <span className={classNames('inline-flex', className)}>
@@ -17,7 +31,7 @@ const Index: FC<{
         <Icon icon={globalOutlined} className="w-9 h-9" />
         <Switch
           checked={enabled}
-          onChange={setEnabled}
+          onChange={handleChange}
           className={`mx-3 ${enabled ? 'bg-accent' : 'bg-accent opacity-80'}
   relative inline-flex flex-shrink-0 h-[38px] w-[74px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
         >
