@@ -1,43 +1,40 @@
 import { useAuth } from '@/hooks/auth'
 import { useFirebase } from '@/hooks/firebase'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
+import { useAsyncEffect } from 'use-async-effect'
+import { usePromiseState } from '@/hooks/state'
 
-type State = 'pending' | 'rejected' | 'fulfilled'
 const useIsSupported = () => {
-  const [state, changeState] = useState<State>('pending')
-  const isPending = useMemo(() => state === 'pending', [state])
-  const isRejected = useMemo(() => state === 'rejected', [state])
-  const isFulfilled = useMemo(() => state === 'fulfilled', [state])
+  const { changeState, ...rest } = usePromiseState()
 
-  useEffect(() => {
-    import('firebase/messaging').then(({ isSupported }) => {
-      isSupported()
-        .then((result) => {
-          if (result) {
-            changeState('fulfilled')
-          } else {
-            changeState('rejected')
-          }
-        })
-        .catch(() => {
-          changeState('rejected')
-        })
-    })
+  useAsyncEffect(async () => {
+    const { isSupported } = await import('firebase/messaging')
+
+    try {
+      const supported = await isSupported()
+
+      if (supported) {
+        changeState('fulfilled')
+      } else {
+        changeState('rejected')
+      }
+    } catch {
+      changeState('rejected')
+    }
   }, [])
 
   return {
-    isPending,
-    isRejected,
-    isFulfilled
+    ...rest
   }
 }
 
 const useUnsubscribe = () => {
   const [hasSubscribed, changeHasSubscribed] = useState(false)
   const [{ uid }] = useAuth()
-  const [{ firestore }] = useFirebase()
+  const [{ firestore, isReady }] = useFirebase()
 
   const retrieveStatus = async (): Promise<void> => {
+    if (!firestore || !uid) return
     const { getDocs, collection } = await import('firebase/firestore/lite')
     const col = collection(firestore!, 'users', uid, 'fcm')
     const docs = await getDocs(col)
@@ -46,7 +43,7 @@ const useUnsubscribe = () => {
 
   useEffect(() => {
     retrieveStatus()
-  }, [])
+  }, [isReady, uid])
 
   return [hasSubscribed, retrieveStatus] as const
 }

@@ -7,9 +7,14 @@ type PromiseProps = {
   onError: (e: Error) => void
 }
 
-const definePromise = <T extends Record<string, unknown>>(
+type Override<
+  T extends Record<PropertyKey, unknown>,
+  U extends Record<PropertyKey, unknown>
+> = keyof T extends keyof U ? Omit<U, keyof T> : U
+
+const definePromise = <T extends Record<PropertyKey, unknown>>(
   fn: (
-    onPromise: Omit<PromiseProps, keyof T> & Omit<BasicProps, keyof T> & T
+    onPromise: T & Override<T, BasicProps> & Override<T, PromiseProps>
   ) => JSX.Element
 ) => fn
 

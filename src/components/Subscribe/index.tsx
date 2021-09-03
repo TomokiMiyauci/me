@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import Newsletter from '@/components/Newsletter'
 import { useState } from 'react'
 import { Icon, IconifyIcon } from '@iconify/react/dist/offline'
@@ -6,6 +5,7 @@ import loveLetter from '@iconify/icons-emojione-monotone/love-letter'
 import noticePush from '@iconify/icons-fe/notice-push'
 import { Transition } from '@headlessui/react'
 import WebPush from '@/components/WebPush'
+import type { FC } from 'react'
 
 type ButtonProps = {
   title: string
@@ -32,16 +32,19 @@ const Index: FC = () => {
   const [state, changeState] = useState<State>('newsletter')
   return (
     <>
-      <h3 className="text-3xl md:text-5xl z-[1] md:z-0 -mx-4 sticky md:static px-4 py-3 top-0 bg-gray-50 dark:bg-blue-gray-900 flex items-center space-x-2 md:space-x-4">
-        <span className="inline-flex relative h-3 w-3 md:h-5 md:w-5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-80" />
-          <span className="inline-flex rounded-full h-3 w-3 md:h-5 md:w-5 bg-accent" />
-        </span>
-        <span>Notification</span>
-      </h3>
-      <p className="text-gray-500 md:text-xl">
-        There are various ways to notify you the publication of an article.
-      </p>
+      <div className="container mx-auto">
+        <h3 className="text-3xl md:text-5xl z-[1] md:z-0 -mx-4 sticky md:static px-4 py-3 top-0 bg-gray-50 dark:bg-blue-gray-900 flex items-center space-x-2 md:space-x-4">
+          <span className="inline-flex relative h-3 w-3 md:h-5 md:w-5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-80" />
+            <span className="inline-flex rounded-full h-3 w-3 md:h-5 md:w-5 bg-accent" />
+          </span>
+          <span>Notification</span>
+        </h3>
+        <p className="text-gray-500 md:text-xl">
+          There are various ways to notify you the publication of an article.
+        </p>
+      </div>
+
       <div className="flex my-4 justify-center space-x-12">
         {buttons.map(({ title, icon, condition }) => {
           return (

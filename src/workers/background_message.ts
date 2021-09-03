@@ -1,40 +1,14 @@
-import { messaging } from '@/workers/firebase_init'
+import { messaging } from '@/workers/util/firebase_init'
+import { isSupported } from 'firebase/messaging/sw'
 import { onBackgroundMessage } from 'firebase/messaging/sw'
 import { isUndefined } from '@miyauci/is-valid'
-import { includes } from 'core-fn'
-import { detect } from 'detect-browser'
 import type { Locale } from '@/../config/types'
 const NOT_SUPPORT = 'This browser is not support Push API'
 
-self.addEventListener('notificationclick', (event) => {
-  const _event = event as NotificationEvent
-  const _clients = self.clients as Clients
+const subscribeBackgroundMessage = async () => {
+  const supported = await isSupported()
 
-  _event.notification.close()
-  _event.waitUntil(
-    _clients
-      .matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientsArr) => {
-        const hadWindowToFocus = clientsArr.some((windowClient) =>
-          windowClient.url === _event.notification.data.url
-            ? (windowClient.focus(), true)
-            : false
-        )
-
-        if (!hadWindowToFocus)
-          _clients
-            .openWindow(_event.notification.data.url)
-            .then((windowClient) =>
-              windowClient ? windowClient.focus() : null
-            )
-      })
-  )
-})
-
-const main = async () => {
-  const detected = detect()
-
-  if (!detected || includes(detected.name, ['safari', 'ios'])) {
+  if (!supported) {
     console.warn(NOT_SUPPORT)
     return
   }
@@ -68,4 +42,4 @@ const main = async () => {
   })
 }
 
-export { main }
+export { subscribeBackgroundMessage }
