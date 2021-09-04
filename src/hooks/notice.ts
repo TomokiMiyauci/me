@@ -15,12 +15,21 @@ const useNoticeProvider = () => {
     changeShow(true)
   }
 
+  const clear = () => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current)
+    }
+  }
+
   useEffect(() => {
     if (!isShow) return
+    clear()
     timeoutId.current = setTimeout(() => {
       changeShow(false)
     }, 6000)
-  }, [isShow])
+
+    return clear
+  }, [isShow, state.field])
 
   return [{ ...state, isShow }, notice] as [
     Notice & {
