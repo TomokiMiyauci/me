@@ -32,6 +32,7 @@ const TestWebPush = defineComponent<{
         {Buttons.map(({ onClick, title, colorClass }) => {
           return (
             <button
+              key={title}
               className={classNames(
                 colorClass,
                 'rounded-md p-2 flex-1 hover:bg-opacity-80 font-bold uppercase focus:ring transition duration-300 ring-gray-50'
