@@ -171,7 +171,10 @@ const Index = defineComponent(({ className }) => {
                 case 'granted': {
                   return sw.showNotification('Hello Test', {
                     body: 'This is test message from service worker',
-                    icon: 'http://placehold.jp/150x150.png'
+                    icon: '/logo_square.png',
+                    data: {
+                      url: window.location.href
+                    }
                   })
                 }
 
