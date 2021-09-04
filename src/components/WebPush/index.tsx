@@ -1,4 +1,5 @@
 import WebPush from '@/components/WebPush/WebPush'
+import TestWebPush from '@/components/WebPush/TestWebPush'
 import { useFirebase } from '@/hooks/firebase'
 import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
@@ -8,6 +9,10 @@ import { useSafeLogEvent } from '@/hooks/analytics'
 import { defineComponent } from '@/utils/component'
 
 import type { Locale } from 'config/types'
+import { getServiceWorker } from '@/utils/firebase'
+
+const NOT_GRANTED =
+  'The notification permission was not granted. Please check browser settings'
 
 const Index = defineComponent(({ className }) => {
   const [{ messaging, firestore }] = useFirebase()
@@ -34,12 +39,7 @@ const Index = defineComponent(({ className }) => {
     if (!token) {
       notice({
         type: 'alert',
-        field: (
-          <div>
-            The notification permission was not granted. Please check browser
-            settings
-          </div>
-        )
+        field: <div>{NOT_GRANTED}</div>
       })
       return
     }
@@ -136,6 +136,44 @@ const Index = defineComponent(({ className }) => {
       onUnsubscribe={handleUnsubscribe}
       onSuccess={() => {}}
       onError={handleError}
+      Test={
+        <TestWebPush
+          className="mb-8"
+          onForeground={() => {
+            notice({
+              type: 'success',
+              field: <div>This is test message</div>
+            })
+          }}
+          onBackground={async () => {
+            const sw = await getServiceWorker('/sw')
+            if (!sw || !('Notification' in window)) {
+              return notice({
+                type: 'alert',
+                field: <div>This browser is not available</div>
+              })
+            }
+
+            window.Notification.requestPermission((permission) => {
+              switch (permission) {
+                case 'granted': {
+                  return sw.showNotification('Hello Test', {
+                    body: 'This is test message from service worker',
+                    icon: 'http://placehold.jp/150x150.png'
+                  })
+                }
+
+                case 'denied': {
+                  return notice({
+                    type: 'alert',
+                    field: <div>{NOT_GRANTED}</div>
+                  })
+                }
+              }
+            })
+          }}
+        />
+      }
     />
   )
 })
