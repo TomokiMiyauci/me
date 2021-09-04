@@ -6,7 +6,7 @@ import type { Locale } from '@/../config/types'
 const NOT_SUPPORT = 'This browser is not support Push API'
 
 const subscribeBackgroundMessage = async () => {
-  const supported = await isSupported()
+  const supported = await isSupported().catch(() => false)
 
   if (!supported) {
     console.warn(NOT_SUPPORT)

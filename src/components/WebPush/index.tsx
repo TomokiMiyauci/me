@@ -169,13 +169,15 @@ const Index = defineComponent(({ className }) => {
             window.Notification.requestPermission((permission) => {
               switch (permission) {
                 case 'granted': {
-                  return sw.showNotification('Hello Test', {
-                    body: 'This is test message from service worker',
-                    icon: '/logo_square.png',
-                    data: {
-                      url: window.location.href
-                    }
-                  })
+                  if ('showNotification' in sw) {
+                    return sw.showNotification('Hello Test', {
+                      body: 'This is test message from service worker',
+                      icon: '/logo_square.png',
+                      data: {
+                        url: window.location.href
+                      }
+                    })
+                  }
                 }
 
                 case 'denied': {

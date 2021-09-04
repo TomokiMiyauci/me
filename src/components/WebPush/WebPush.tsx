@@ -49,7 +49,13 @@ const WebPush = definePromise<{
 
     const placeholder = useMemo(() => {
       if (isPending) return '...Loading'
-      if (isRejected) return <Icon className="w-6 h-6" icon={cancel} />
+      if (isRejected)
+        return (
+          <span className="space-x-2">
+            <Icon className="w-6 h-6" icon={cancel} />
+            <span className="align-middle">Subscribe</span>
+          </span>
+        )
 
       return 'Subscribe'
     }, [isPending, isRejected])
