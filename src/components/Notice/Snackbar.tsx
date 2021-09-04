@@ -65,7 +65,11 @@ const Snackbar: FC<{
       )}
       icon={icon}
       close={
-        <button title="Close" onClick={onClose}>
+        <button
+          className="m-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300"
+          title="Close"
+          onClick={onClose}
+        >
           <Icon className="w-6 h-6" icon={close} />
         </button>
       }

@@ -9,19 +9,20 @@ const SnackbarFrame: FC<{
 }> = ({ className, icon, children, close }) => {
   return (
     <span
-      className={`inline-flex space-x-4 md:rounded-md px-2 py-3 ${className}`}
+      className={classNames('flex md:rounded-md justify-between', className)}
     >
-      {icon &&
-        cloneElement(icon, {
-          className: classNames(icon.props.className, 'w-8 h-8')
+      <span className={classNames('inline-flex px-2 space-x-3 py-3')}>
+        {icon &&
+          cloneElement(icon, {
+            className: classNames(icon.props.className, 'w-8 h-8')
+          })}
+        {cloneElement(children, {
+          className: classNames(
+            children.props.className,
+            'flex-1 items-center flex'
+          )
         })}
-      {cloneElement(children, {
-        className: classNames(
-          children.props.className,
-          'flex-1 items-center flex'
-        )
-      })}
-
+      </span>
       {close && close}
     </span>
   )
