@@ -1,5 +1,6 @@
-import { FC, useMemo, ReactElement } from 'react'
 import SnackbarFrame from '@/components/Notice/SnackbarFrame'
+
+import { useMemo } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import info from '@iconify-icons/mdi/info-circle'
 import check from '@iconify-icons/mdi/check-circle'
@@ -8,13 +9,16 @@ import error from '@iconify-icons/bx/bxs-error-circle'
 import close from '@iconify-icons/mdi/close-circle'
 import { classNames } from '@/utils/class_name'
 
+import type { FC, ReactElement, MouseEventHandler } from 'react'
+
 type NoticeType = 'success' | 'info' | 'warn' | 'alert'
 
 const Snackbar: FC<{
   type: NoticeType
   children: ReactElement
+  onClose?: MouseEventHandler
   className?: string
-}> = ({ type, children, className }) => {
+}> = ({ type, children, className, onClose }) => {
   const icon = useMemo<ReactElement>(() => {
     switch (type) {
       case 'success': {
@@ -56,10 +60,15 @@ const Snackbar: FC<{
     <SnackbarFrame
       className={classNames(
         colorClass,
-        className ?? '',
+        className,
         'backdrop-filter backdrop-blur-md bg-opacity-60'
       )}
       icon={icon}
+      close={
+        <button title="Close" onClick={onClose}>
+          <Icon className="w-6 h-6" icon={close} />
+        </button>
+      }
     >
       {children}
     </SnackbarFrame>

@@ -8,7 +8,7 @@ import type { Locale } from 'config/types'
 import type { ClickEventHandler } from '@/components/Newsletter/Newsletter'
 
 const Index = defineComponent(({ className }) => {
-  const [_, notice] = useNotice()
+  const notice = useNotice()
   const { locale } = useLocalization()
   const { safeLogEvent } = useSafeLogEvent()
 

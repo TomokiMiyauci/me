@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext, ReactElement } from 'react'
-import NoticeContext from '../contexts/notice'
+import NoticeContext from '@/contexts/notice'
 import type { Notice, NoticeType } from '@/types/notice'
 
 const useNoticeProvider = () => {
@@ -21,6 +21,11 @@ const useNoticeProvider = () => {
     }
   }
 
+  const close = (): void => {
+    clear()
+    changeShow(false)
+  }
+
   useEffect(() => {
     if (!isShow) return
     clear()
@@ -31,14 +36,21 @@ const useNoticeProvider = () => {
     return clear
   }, [isShow, state.field])
 
-  return [{ ...state, isShow }, notice] as [
+  return [
+    { ...state, isShow },
+    { notice, close }
+  ] as [
     Notice & {
       isShow: boolean
     },
-    (payload: Notice) => void
+    { notice: (args: Notice) => void; close: () => void }
   ]
 }
 
-const useNotice = () => useContext(NoticeContext)
+const useNotice = () => {
+  const [_, { notice }] = useContext(NoticeContext)
+
+  return notice
+}
 
 export { useNoticeProvider, useNotice }

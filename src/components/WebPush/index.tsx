@@ -15,7 +15,7 @@ const NOT_GRANTED =
 
 const Index = defineComponent(({ className }) => {
   const [{ messaging, firestore }] = useFirebase()
-  const [_, notice] = useNotice()
+  const notice = useNotice()
   const [{ uid, isLoggedIn }] = useAuth()
   const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()
   const { locale } = useLocalization()
