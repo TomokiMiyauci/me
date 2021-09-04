@@ -1,9 +1,11 @@
-import { FC } from 'react'
-import Snackbar from '@/components/Notice'
 import AppFrame from '@/components/AppFrame'
-import type { Locale } from '@/../config/types'
 import { useFirebase } from '@/hooks/firebase'
 import { useEffect } from 'react'
+import loadable from '@loadable/component'
+const Notice = loadable(() => import('@/components/Notice'))
+
+import type { FC } from 'react'
+import type { Locale } from 'config/types'
 
 const Layout: FC<{
   originalPath: string
@@ -29,7 +31,7 @@ const Layout: FC<{
       />
       {/* <Search /> */}
 
-      <Snackbar />
+      <Notice />
     </>
   )
 }

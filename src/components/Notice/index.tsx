@@ -1,7 +1,9 @@
-import { FC } from 'react'
-import Snackbar from '@/components/Notice/Snackbar'
 import { useNotice } from '@/hooks/notice'
 import { Transition } from '@headlessui/react'
+import loadable from '@loadable/component'
+const Snackbar = loadable(() => import('@/components/Notice/Snackbar'))
+
+import type { FC } from 'react'
 
 const Index: FC = () => {
   const [props] = useNotice()
