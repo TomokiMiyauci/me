@@ -52,23 +52,6 @@ const requestFcmToken = async (
   }).catch(console.error)
 }
 
-const getServiceWorker = async (
-  clientURL: Parameters<typeof navigator.serviceWorker.getRegistration>[number]
-): Promise<ServiceWorkerRegistration | void> => {
-  return window.navigator.serviceWorker
-    .getRegistration(clientURL)
-    .then((_sw) => {
-      if (_sw) {
-        return _sw
-      }
-
-      console.error(`Service worker[${clientURL}] is not exists$`)
-    })
-    .catch(() => {
-      console.error(`Service worker[${clientURL}] is not exists$`)
-    })
-}
-
 type FCMData = {
   token: string
   topics: ('article' | 'en' | 'ja')[]
@@ -96,4 +79,4 @@ const postFCMToken = async (
     })
 }
 
-export { initializeFirebase, requestFcmToken, postFCMToken, getServiceWorker }
+export { initializeFirebase, requestFcmToken, postFCMToken }

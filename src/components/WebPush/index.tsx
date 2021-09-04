@@ -9,7 +9,6 @@ import { useSafeLogEvent } from '@/hooks/analytics'
 import { defineComponent } from '@/utils/component'
 
 import type { Locale } from 'config/types'
-import { getServiceWorker } from '@/utils/firebase'
 
 const NOT_GRANTED =
   'The notification permission was not granted. Please check browser settings'
@@ -26,9 +25,8 @@ const Index = defineComponent(({ className }) => {
     if (!messaging || !firestore) {
       return
     }
-    const { requestFcmToken, getServiceWorker, postFCMToken } = await import(
-      '@/utils/firebase'
-    )
+    const { requestFcmToken, postFCMToken } = await import('@/utils/firebase')
+    const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 
     if (!sw) {
@@ -78,9 +76,8 @@ const Index = defineComponent(({ className }) => {
       'firebase/firestore/lite'
     )
 
-    const { requestFcmToken, getServiceWorker } = await import(
-      '@/utils/firebase'
-    )
+    const { requestFcmToken } = await import('@/utils/firebase')
+    const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 
     if (!sw) {
@@ -140,14 +137,29 @@ const Index = defineComponent(({ className }) => {
         <TestWebPush
           className="mb-8"
           onForeground={() => {
+            safeLogEvent((analytics, logEvent) =>
+              logEvent(analytics, 'select_content', {
+                content_type: 'foreground_message',
+                test: true
+              })
+            )
             notice({
               type: 'success',
               field: <div>This is test message</div>
             })
           }}
           onBackground={async () => {
+            safeLogEvent((analytics, logEvent) =>
+              logEvent(analytics, 'select_content', {
+                content_type: 'background_message',
+                test: true
+              })
+            )
+            const { getServiceWorker } = await import('@/utils/service_worker')
+            const { isSupported } = await import('@/utils/notification')
             const sw = await getServiceWorker('/sw')
-            if (!sw || !('Notification' in window)) {
+
+            if (!sw || !isSupported()) {
               return notice({
                 type: 'alert',
                 field: <div>This browser is not available</div>
