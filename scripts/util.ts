@@ -1,5 +1,6 @@
 import admin from 'firebase-admin'
 import { replace } from 'core-fn'
+import { wait } from '../src/utils/time'
 
 type Awaited<T extends Promise<any>> = T extends Promise<infer R> ? R : never
 
@@ -13,13 +14,6 @@ const initializeApp = (clientEmail: string, privateKey: string) =>
   })
 
 const pretty = replace(/\\n/g, '\n')
-
-const wait = (milliseconds: number) =>
-  new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, milliseconds)
-  })
 
 const sequence = <T extends () => Promise<unknown>>(fn: T) => {
   let hasCalled = false

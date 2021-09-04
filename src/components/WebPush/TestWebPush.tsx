@@ -32,7 +32,7 @@ const TestWebPush = defineComponent<{
     return 'background'
   }, [isPendingSupported, isPending, isRejected])
 
-  const handleClick: MouseEventHandler = () => sequence(onBackground)
+  const handleClick: MouseEventHandler = () => sequence(onBackground, 1000)
 
   const baseClassName =
     'rounded-md p-2 flex-1 hover:bg-opacity-80 font-bold uppercase focus:ring transition duration-300 ring-gray-50 disabled:opacity-70 disabled:cursor-not-allowed'
