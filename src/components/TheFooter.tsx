@@ -1,8 +1,5 @@
-import { FC, memo } from 'react'
+import { memo } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
-import firebaseIcon from '@iconify-icons/logos/firebase'
-import storybookIcon from '@iconify-icons/logos/storybook-icon'
-import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/uil/twitter-alt'
 import github from '@iconify-icons/uil/github-alt'
 import npmOutline from '@iconify-icons/eva/npm-outline'
@@ -10,32 +7,20 @@ import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import Logo from '@/components/Logo'
 import PartialHydrate from '@/components/PartialHydrate'
-import type { Locale } from '@/../config/types'
+import loadable from '@loadable/component'
+import Intersection from '@/components/Intersection'
+
+import type { Locale } from 'config/types'
+import type { FC } from 'react'
+
+const By = loadable(() => import('@/components/By/By'))
 
 const TheFooter: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <footer className="px-4 py-4 md:py-12 mb-16 space-y-4 container m-auto md:mb-auto">
-      <PartialHydrate isStatic className="md:py-4">
-        <span className="flex flex-col sm:flex-row sm:space-x-6 items-start font-bold text-xl ">
-          <span className="space-x-2 flex items-center">
-            <span className="align-middle py-1 md:p-0">BUILD BY</span>
-            <Icon icon={gatsby} className="w-7 h-7" />
-          </span>
-          <a
-            href="https://miyauchi-storybook.web.app/"
-            rel="noopener"
-            target="_blank"
-            className="space-x-2 underline py-1 md:p-0 md:no-underline md:hover:underline flex self-end sm:self-auto flex-row-reverse sm:flex-row "
-          >
-            <span className="align-middle ml-2 md:ml-0">DESIGNED BY</span>
-            <Icon icon={storybookIcon} className="w-7 h-7" />
-          </a>
-          <span className="space-x-2 flex items-center">
-            <span className="align-middle py-1 md:p-0">DEPLOYS BY</span>
-            <Icon icon={firebaseIcon} className="w-7 h-7" />
-          </span>
-        </span>
-      </PartialHydrate>
+      <Intersection rootMargin="100px">
+        <By />
+      </Intersection>
 
       <div className="flex-col items-center md:flex-row flex md:justify-between">
         <span className="flex flex-col md:flex-row items-center space-x-4">
