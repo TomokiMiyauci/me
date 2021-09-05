@@ -48,7 +48,7 @@ const WebPush = definePromise<{
     )
 
     const placeholder = useMemo(() => {
-      if (isPending) return '...Loading'
+      if (isPendingSupported || isPending) return '...Loading'
       if (isRejected)
         return (
           <span className="space-x-2">
@@ -58,7 +58,7 @@ const WebPush = definePromise<{
         )
 
       return 'Subscribe'
-    }, [isPending, isRejected])
+    }, [isPendingSupported, isPending, isRejected])
 
     const placeholderUnsubscribe = useMemo<string>(() => {
       if (isPendingSequence) return '...Loading'
