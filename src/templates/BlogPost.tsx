@@ -12,7 +12,6 @@ import icon from '@iconify-icons/mdi/pencil-box-multiple-outline'
 import GoogleAdsense from '@/components/GoogleAdsense'
 import SnsShare from '@/components/SnsShare'
 import Comment from '@/components/Comment'
-import Newsletter from '@/components/Newsletter'
 import VerificationEnv from '@/components/VerificationEnv'
 import Toc from '@/components/Toc'
 import ReadingProgress from '@/components/ReadingProgress'
@@ -20,6 +19,10 @@ import Article from '@/components/Article'
 import MdxProvider from '@/components/MdxProvider'
 import OtherArticles from '@/components/OtherArticles'
 import Seo from '@/components/seo'
+import loadable from '@loadable/component'
+import Intersection from '@/components/Intersection'
+
+const Subscribe = loadable(() => import('@/components/Subscribe'))
 import { Transition } from '@headlessui/react'
 
 const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
@@ -131,9 +134,11 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
             </div>
           </Article>
 
-          <div className="max-w-5xl my-8 mx-auto">
-            <Newsletter />
-          </div>
+          <Intersection rootMargin="200px" keepRender>
+            <div className="my-8">
+              <Subscribe />
+            </div>
+          </Intersection>
 
           <div className=" max-w-prose mx-auto my-10">
             <OtherArticles

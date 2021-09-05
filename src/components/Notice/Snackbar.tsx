@@ -14,12 +14,41 @@ import type { FC, ReactElement, MouseEventHandler } from 'react'
 type NoticeType = 'success' | 'info' | 'warn' | 'alert'
 
 const Snackbar: FC<{
-  type: NoticeType
+  type?: NoticeType
+  icon?: ReactElement
   children: ReactElement
   onClose?: MouseEventHandler
+  url?: string
   className?: string
-}> = ({ type, children, className, onClose }) => {
-  const icon = useMemo<ReactElement>(() => {
+  closeClassName?: string
+  closeable?: boolean
+}> = ({
+  type,
+  icon,
+  children,
+  className,
+  onClose,
+  url,
+  closeClassName,
+  closeable = true
+}) => {
+  const handleClose: MouseEventHandler = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (closeable && onClose) {
+      onClose(e)
+    }
+  }
+  const handleClick: MouseEventHandler = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (url) {
+      const { navigate } = await import('@reach/router')
+      navigate(url)
+    }
+  }
+  const headIcon = useMemo<ReactElement>(() => {
     switch (type) {
       case 'success': {
         return <Icon className="text-emerald-500" icon={check} />
@@ -33,10 +62,14 @@ const Snackbar: FC<{
       case 'alert': {
         return <Icon className="text-rose-500" icon={error} />
       }
+
+      default: {
+        return icon!
+      }
     }
   }, [type])
 
-  const colorClass = useMemo<string>(() => {
+  const colorClass = useMemo<string | undefined>(() => {
     switch (type) {
       case 'success': {
         return 'bg-emerald-500 ring-1 ring-emerald-500 text-emerald-900 dark:text-emerald-100'
@@ -53,6 +86,10 @@ const Snackbar: FC<{
       case 'alert': {
         return 'bg-rose-400 ring-1 ring-rose-500 text-rose-900 dark:text-rose-100'
       }
+
+      default: {
+        return className
+      }
     }
   }, [type])
 
@@ -61,17 +98,25 @@ const Snackbar: FC<{
       className={classNames(
         colorClass,
         className,
-        'backdrop-filter backdrop-blur-md bg-opacity-60'
+        'backdrop-filter backdrop-blur-md bg-opacity-60 shadow-md hover:shadow-xl transition duration-300'
       )}
-      icon={icon}
+      icon={headIcon}
+      as={url ? 'a' : 'span'}
+      href={url}
+      onClick={url ? handleClick : undefined}
       close={
-        <button
-          className="m-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300"
-          title="Close"
-          onClick={onClose}
-        >
-          <Icon className="w-6 h-6" icon={close} />
-        </button>
+        closeable ? (
+          <button
+            className={classNames(
+              'm-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300',
+              closeClassName
+            )}
+            title="Close"
+            onClick={handleClose}
+          >
+            <Icon className="w-6 h-6" icon={close} />
+          </button>
+        ) : undefined
       }
     >
       {children}

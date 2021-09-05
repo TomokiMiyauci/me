@@ -2,6 +2,7 @@ import NoticeContext from '@/contexts/notice'
 import { useContext } from 'react'
 import { Transition } from '@headlessui/react'
 import loadable from '@loadable/component'
+import { classNames } from '@/utils/class_name'
 const Snackbar = loadable(() => import('@/components/Notice/Snackbar'))
 
 import type { FC } from 'react'
@@ -20,9 +21,16 @@ const Index: FC = () => {
       leaveTo="opacity-0"
     >
       <Snackbar
-        className="fixed bottom-0 w-full z-50 md:bottom-auto md:right-6 md:top-20 md:max-w-sm"
+        className={classNames(
+          'fixed bottom-0 w-full z-50 md:bottom-auto md:right-6 md:top-20 md:max-w-sm',
+          props.className
+        )}
         type={props.type}
+        icon={props.icon}
         onClose={close}
+        closeable={props.closeable}
+        closeClassName={props.closeClassName}
+        url={props.url}
       >
         {props.field ?? <></>}
       </Snackbar>
