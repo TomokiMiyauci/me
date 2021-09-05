@@ -54,9 +54,9 @@ const TestWebPush = defineComponent<{
           foreground
         </button>
         <button
-          disabled={isPending}
+          disabled={isPending || isRejected}
           onClick={handleClick}
-          className={classNames(baseClassName, 'bg-fuchsia-500')}
+          className={classNames(baseClassName, 'bg-fuchsia-700')}
         >
           {placeholder}
         </button>
