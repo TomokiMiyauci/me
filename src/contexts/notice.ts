@@ -1,13 +1,16 @@
 import { createContext } from 'react'
-import { Notice } from '../types/notice'
+import type { Notice } from '@/types/notice'
 
 const NoticeContext = createContext<
   [
     Notice & {
       isShow: boolean
     },
-    (args: Notice) => void
+    { notice: (args: Notice) => void; close: () => void }
   ]
->([{ isShow: false }, () => {}])
+>([
+  { isShow: false, type: 'success' },
+  { notice: () => {}, close: () => {} }
+])
 
 export default NoticeContext

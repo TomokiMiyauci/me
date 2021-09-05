@@ -46,7 +46,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
   const [_, sequence] = useSequence()
-  const [__, notice] = useNotice()
+  const notice = useNotice()
   const liked = useMemo<boolean>(() => {
     if (!postMeta.likeBy || !isReady) return false
 

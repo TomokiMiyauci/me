@@ -8,7 +8,7 @@ import pMinDelay from 'p-min-delay'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 
 const Newsletter = loadable(
-  () => pMinDelay(import('@/components/Newsletter'), 200),
+  () => pMinDelay(import('@/components/Newsletter'), 1000),
   {
     fallback: <ProgressCircle />
   }

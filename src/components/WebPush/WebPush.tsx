@@ -8,7 +8,7 @@ import { useIsSupported } from '@/components/WebPush/hooks'
 import { useToggleLang } from '@/components/LangToggle/hooks'
 import { classNames } from '@/utils/class_name'
 
-import type { MouseEventHandler } from 'react'
+import type { MouseEventHandler, ReactElement } from 'react'
 import type { Locale } from 'config/types'
 
 const WebPush = definePromise<{
@@ -17,6 +17,7 @@ const WebPush = definePromise<{
   isLoggedIn: boolean
   locale: Locale
   hasSubscribed: boolean
+  Test?: ReactElement
 }>(
   ({
     onSubscribe,
@@ -26,7 +27,8 @@ const WebPush = definePromise<{
     hasSubscribed,
     className,
     onSuccess,
-    onError
+    onError,
+    Test
   }) => {
     const [isPendingSequence, sequence] = useSequence()
     const { isPending: isPendingSupported, isRejected } = useIsSupported()
@@ -47,7 +49,13 @@ const WebPush = definePromise<{
 
     const placeholder = useMemo(() => {
       if (isPending) return '...Loading'
-      if (isRejected) return <Icon className="w-6 h-6" icon={cancel} />
+      if (isRejected)
+        return (
+          <span className="space-x-2">
+            <Icon className="w-6 h-6" icon={cancel} />
+            <span className="align-middle">Subscribe</span>
+          </span>
+        )
 
       return 'Subscribe'
     }, [isPending, isRejected])
@@ -77,6 +85,8 @@ const WebPush = definePromise<{
           onSubmit={(ev) => ev.preventDefault()}
           className="max-w-xl mt-8 mx-auto"
         >
+          {Test}
+
           <h4 className="text-lg">Prefer language</h4>
           <p className="text-gray-500">
             Select language from push notification

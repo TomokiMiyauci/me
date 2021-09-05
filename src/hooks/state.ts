@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { wait } from '@/utils/time'
 import type { AnyFn } from 'fonction'
 
 const useToggle = (initialState: boolean): [boolean, () => void] => {
@@ -12,7 +13,8 @@ const useSequence = () => {
   const [state, changeState] = useState(false)
 
   const sequence = async <T>(
-    fn: AnyFn<any, Promise<T> | T>
+    fn: AnyFn<any, Promise<T> | T>,
+    delay?: number
   ): Promise<T | void> => {
     if (state) return
     changeState(true)
@@ -21,6 +23,9 @@ const useSequence = () => {
 
       return result
     } finally {
+      if (delay) {
+        await wait(delay)
+      }
       changeState(false)
     }
   }

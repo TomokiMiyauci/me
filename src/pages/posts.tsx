@@ -21,6 +21,7 @@ import Tag from '@/components/Tag'
 import type { Order } from '@/components/ArticleHeadline/types'
 import { makeAreaComponent } from '@/components/ArticleHeadline/util'
 import { useSafeLogEvent } from '@/hooks/analytics'
+import Intersection from '@/components/Intersection'
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
@@ -307,7 +308,9 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
           </div>
         </div>
       )}
-      <Subscribe />
+      <Intersection keepRender>
+        <Subscribe />
+      </Intersection>
     </>
   )
 }

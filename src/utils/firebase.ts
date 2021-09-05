@@ -6,7 +6,12 @@ import {
   connectFirestoreEmulator,
   Firestore
 } from 'firebase/firestore/lite'
-import { getMessaging, onMessage, Messaging } from 'firebase/messaging'
+import {
+  getMessaging,
+  onMessage,
+  Messaging,
+  isSupported as isSupportedMessaging
+} from 'firebase/messaging'
 import { firebaseOptions } from '@/../config/constants'
 
 import type { FirebaseState } from '@/types/firebase'
@@ -16,14 +21,18 @@ const initializeFirebase = async (): Promise<FirebaseState> => {
   console.log('Initialize firebase')
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
-  const messaging = getMessaging(app)
+
+  const isSupportedMsg = await isSupportedMessaging()
+  const messaging = isSupportedMsg ? getMessaging(app) : undefined
 
   const result = await isSupported()
   const analytics = result ? initializeAnalytics(app) : undefined
 
-  onMessage(messaging, (payload) => {
-    console.log(payload)
-  })
+  if (messaging) {
+    onMessage(messaging, (payload) => {
+      console.log(payload)
+    })
+  }
 
   if (!isProd) {
     connectFirestoreEmulator(firestore, 'localhost', 8080)
@@ -50,23 +59,6 @@ const requestFcmToken = async (
   return getToken(messaging, {
     serviceWorkerRegistration: sw
   }).catch(console.error)
-}
-
-const getServiceWorker = async (
-  clientURL: Parameters<typeof navigator.serviceWorker.getRegistration>[number]
-): Promise<ServiceWorkerRegistration | void> => {
-  return window.navigator.serviceWorker
-    .getRegistration(clientURL)
-    .then((_sw) => {
-      if (_sw) {
-        return _sw
-      }
-
-      console.error(`Service worker[${clientURL}] is not exists$`)
-    })
-    .catch(() => {
-      console.error(`Service worker[${clientURL}] is not exists$`)
-    })
 }
 
 type FCMData = {
@@ -96,4 +88,4 @@ const postFCMToken = async (
     })
 }
 
-export { initializeFirebase, requestFcmToken, postFCMToken, getServiceWorker }
+export { initializeFirebase, requestFcmToken, postFCMToken }

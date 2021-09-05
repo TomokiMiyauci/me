@@ -19,7 +19,7 @@ const meta: ComponentMeta<typeof SnackbarFrame> = {
     icon: <Icon className="text-sky-300" icon={info} />,
     close: (
       <button>
-        <Icon className="w-8 h-8" icon={closeIcon} />,
+        <Icon className="w-8 h-8" icon={closeIcon} />
       </button>
     ),
     className: 'max-w-xs'

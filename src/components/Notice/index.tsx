@@ -1,10 +1,13 @@
-import { FC } from 'react'
-import Snackbar from '@/components/Notice/Snackbar'
-import { useNotice } from '@/hooks/notice'
+import NoticeContext from '@/contexts/notice'
+import { useContext } from 'react'
 import { Transition } from '@headlessui/react'
+import loadable from '@loadable/component'
+const Snackbar = loadable(() => import('@/components/Notice/Snackbar'))
+
+import type { FC } from 'react'
 
 const Index: FC = () => {
-  const [props] = useNotice()
+  const [props, { close }] = useContext(NoticeContext)
 
   return (
     <Transition
@@ -19,6 +22,7 @@ const Index: FC = () => {
       <Snackbar
         className="fixed bottom-0 w-full z-50 md:bottom-auto md:right-6 md:top-20 md:max-w-sm"
         type={props.type}
+        onClose={close}
       >
         {props.field ?? <></>}
       </Snackbar>

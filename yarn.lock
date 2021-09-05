@@ -3101,6 +3101,11 @@
   resolved "https://registry.yarnpkg.com/@iconify/icons-fe/-/icons-fe-1.1.0.tgz#51a395d5f0d6d7f4b2d38538facf451c75279454"
   integrity sha512-CnoY6x3DTFI9P22oY+qL1bcmTws1kxIxr7wqzNsdEoSawmrbDry0yRxD3ovBGJi7vGISbfFKyt4M7gaWUhybbg==
 
+"@iconify/icons-grommet-icons@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-grommet-icons/-/icons-grommet-icons-1.1.3.tgz#0102ba8cd8761b9155429295b39dc58266ecfc40"
+  integrity sha512-a1btGC2KYr5UT2EM8mNXI94GlhSIGu3eKcvgDzHWjuFeumNTerbDt+ZQ3m39xsNoEUK9rNswOxXLfzxmM3cabg==
+
 "@iconify/icons-heroicons-outline@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@iconify/icons-heroicons-outline/-/icons-heroicons-outline-1.1.3.tgz#a14a19092baab99a0e72f0c248c2cb14755b40f5"

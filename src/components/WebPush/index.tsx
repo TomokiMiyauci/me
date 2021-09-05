@@ -1,4 +1,5 @@
 import WebPush from '@/components/WebPush/WebPush'
+import TestWebPush from '@/components/WebPush/TestWebPush'
 import { useFirebase } from '@/hooks/firebase'
 import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
@@ -9,9 +10,12 @@ import { defineComponent } from '@/utils/component'
 
 import type { Locale } from 'config/types'
 
+const NOT_GRANTED =
+  'The notification permission was not granted. Please check browser settings'
+
 const Index = defineComponent(({ className }) => {
   const [{ messaging, firestore }] = useFirebase()
-  const [_, notice] = useNotice()
+  const notice = useNotice()
   const [{ uid, isLoggedIn }] = useAuth()
   const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()
   const { locale } = useLocalization()
@@ -21,9 +25,8 @@ const Index = defineComponent(({ className }) => {
     if (!messaging || !firestore) {
       return
     }
-    const { requestFcmToken, getServiceWorker, postFCMToken } = await import(
-      '@/utils/firebase'
-    )
+    const { requestFcmToken, postFCMToken } = await import('@/utils/firebase')
+    const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 
     if (!sw) {
@@ -34,12 +37,7 @@ const Index = defineComponent(({ className }) => {
     if (!token) {
       notice({
         type: 'alert',
-        field: (
-          <div>
-            The notification permission was not granted. Please check browser
-            settings
-          </div>
-        )
+        field: <div>{NOT_GRANTED}</div>
       })
       return
     }
@@ -78,9 +76,8 @@ const Index = defineComponent(({ className }) => {
       'firebase/firestore/lite'
     )
 
-    const { requestFcmToken, getServiceWorker } = await import(
-      '@/utils/firebase'
-    )
+    const { requestFcmToken } = await import('@/utils/firebase')
+    const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 
     if (!sw) {
@@ -136,6 +133,64 @@ const Index = defineComponent(({ className }) => {
       onUnsubscribe={handleUnsubscribe}
       onSuccess={() => {}}
       onError={handleError}
+      Test={
+        <TestWebPush
+          className="mb-8"
+          onForeground={() => {
+            safeLogEvent((analytics, logEvent) =>
+              logEvent(analytics, 'select_content', {
+                content_type: 'foreground_message',
+                test: true
+              })
+            )
+            notice({
+              type: 'success',
+              field: <div>This is test message</div>
+            })
+          }}
+          onBackground={async () => {
+            safeLogEvent((analytics, logEvent) =>
+              logEvent(analytics, 'select_content', {
+                content_type: 'background_message',
+                test: true
+              })
+            )
+            const { getServiceWorker } = await import('@/utils/service_worker')
+            const { isSupported } = await import('@/utils/notification')
+            const sw = await getServiceWorker('/sw')
+
+            if (!sw || !isSupported()) {
+              return notice({
+                type: 'alert',
+                field: <div>This browser is not available</div>
+              })
+            }
+
+            window.Notification.requestPermission((permission) => {
+              switch (permission) {
+                case 'granted': {
+                  if ('showNotification' in sw) {
+                    return sw.showNotification('Hello Test', {
+                      body: 'This is test message from service worker',
+                      icon: '/logo_square.png',
+                      data: {
+                        url: window.location.href
+                      }
+                    })
+                  }
+                }
+
+                case 'denied': {
+                  return notice({
+                    type: 'alert',
+                    field: <div>{NOT_GRANTED}</div>
+                  })
+                }
+              }
+            })
+          }}
+        />
+      }
     />
   )
 })
