@@ -18,7 +18,9 @@ import type { FirebaseState } from '@/types/firebase'
 import { isProd } from '@/utils/environment'
 
 const initializeFirebase = async (): Promise<FirebaseState> => {
-  console.log('Initialize firebase')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Initialize firebase')
+  }
   const app = initializeApp(firebaseOptions)
   const firestore = initializeFirestore(app, {})
 

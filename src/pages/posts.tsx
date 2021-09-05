@@ -13,7 +13,6 @@ import burstNew from '@iconify-icons/foundation/burst-new'
 import fire from '@iconify-icons/mdi/fire'
 import heart from '@iconify-icons/mdi/heart'
 import GoogleAdsense from '@/components/GoogleAdsense'
-import Subscribe from '@/components/Subscribe'
 import NotFoundQueryString from '@/components/NotFoundQueryString'
 import Seo from '@/components/seo'
 import ArticleHeadline from '@/components/ArticleHeadline'
@@ -22,6 +21,8 @@ import type { Order } from '@/components/ArticleHeadline/types'
 import { makeAreaComponent } from '@/components/ArticleHeadline/util'
 import { useSafeLogEvent } from '@/hooks/analytics'
 import Intersection from '@/components/Intersection'
+import loadable from '@loadable/component'
+const Subscribe = loadable(() => import('@/components/Subscribe'))
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
