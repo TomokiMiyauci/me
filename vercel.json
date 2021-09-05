@@ -5,6 +5,6 @@
     "enabled": false
   },
   "builds": [{ "src": "./public/**", "use": "@now/static" }],
-  "routes": [{ "src": "/(.*)", "dest": "public/$1" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "public/$1" }],
   "trailingSlash": true
 }
