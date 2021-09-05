@@ -4,6 +4,8 @@ import type { Exclusive } from 'utilitypes'
 type Notice = Exclusive<NoticeType, CustomeProps> & {
   field?: ReactElement
   closeable?: boolean
+  closeClassName?: string
+  url?: string
 }
 
 type NoticeType = {

@@ -152,7 +152,9 @@ const Index = defineComponent(({ className }) => {
                   <div>Hello Test</div>
                   <div>This is test message</div>
                 </div>
-              )
+              ),
+              url: window.location.href,
+              closeClassName: 'hover:bg-gray-700 hover:bg-opacity-40'
             })
           }}
           onBackground={async () => {

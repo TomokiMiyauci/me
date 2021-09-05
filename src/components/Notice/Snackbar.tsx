@@ -18,12 +18,34 @@ const Snackbar: FC<{
   icon?: ReactElement
   children: ReactElement
   onClose?: MouseEventHandler
+  url?: string
   className?: string
+  closeClassName?: string
   closeable?: boolean
-}> = ({ type, icon, children, className, onClose, closeable = true }) => {
+}> = ({
+  type,
+  icon,
+  children,
+  className,
+  onClose,
+  url,
+  closeClassName,
+  closeable = true
+}) => {
   const handleClose: MouseEventHandler = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (closeable && onClose) {
       onClose(e)
+    }
+  }
+  const handleClick: MouseEventHandler = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (url) {
+      const { navigate } = await import('@reach/router')
+      navigate(url)
     }
   }
   const headIcon = useMemo<ReactElement>(() => {
@@ -76,13 +98,19 @@ const Snackbar: FC<{
       className={classNames(
         colorClass,
         className,
-        'backdrop-filter backdrop-blur-md bg-opacity-60'
+        'backdrop-filter backdrop-blur-md bg-opacity-60 shadow-md hover:shadow-xl transition duration-300'
       )}
       icon={headIcon}
+      as={url ? 'a' : 'span'}
+      href={url}
+      onClick={url ? handleClick : undefined}
       close={
         closeable ? (
           <button
-            className="m-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300"
+            className={classNames(
+              'm-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300',
+              closeClassName
+            )}
             title="Close"
             onClick={handleClose}
           >

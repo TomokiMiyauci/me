@@ -1,16 +1,24 @@
-import { FC, cloneElement } from 'react'
+import { createElement, cloneElement } from 'react'
 import { classNames } from '@/utils/class_name'
+import type { ReactHTML, ReactElement } from 'react'
 
-const SnackbarFrame: FC<{
-  icon?: JSX.Element
-  close?: JSX.Element
-  children: JSX.Element
-  className?: string
-}> = ({ className, icon, children, close }) => {
-  return (
-    <span
-      className={classNames('flex md:rounded-md justify-between', className)}
-    >
+type Props<T extends keyof ReactHTML = 'span'> = {
+  as?: T
+  children: ReactElement
+  icon?: ReactElement
+  close?: ReactElement
+} & JSX.IntrinsicElements[T]
+
+const SnackbarFrame = <T extends keyof ReactHTML>({
+  className,
+  icon,
+  children,
+  close,
+  as,
+  ...props
+}: Props<T>): ReactElement => {
+  const Child = (
+    <>
       <span className={classNames('inline-flex px-2 space-x-3 py-3')}>
         {icon &&
           cloneElement(icon, {
@@ -24,7 +32,15 @@ const SnackbarFrame: FC<{
         })}
       </span>
       {close && close}
-    </span>
+    </>
+  )
+  return createElement(
+    as ?? 'span',
+    {
+      className: classNames('flex md:rounded-md justify-between', className),
+      ...props
+    },
+    Child
   )
 }
 

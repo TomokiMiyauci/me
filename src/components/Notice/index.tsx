@@ -29,6 +29,8 @@ const Index: FC = () => {
         icon={props.icon}
         onClose={close}
         closeable={props.closeable}
+        closeClassName={props.closeClassName}
+        url={props.url}
       >
         {props.field ?? <></>}
       </Snackbar>
