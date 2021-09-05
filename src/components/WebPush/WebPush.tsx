@@ -35,11 +35,11 @@ const WebPush = definePromise<{
     const [lang, enabled, setEnabled] = useToggleLang(locale)
 
     const handleClickSubscribe: MouseEventHandler = () => {
-      sequence(() => onSubscribe(lang).then(onSuccess).catch(onError))
+      sequence(() => onSubscribe(lang).then(onSuccess).catch(onError), 200)
     }
 
     const handleClickUnSubscribe: MouseEventHandler = () => {
-      sequence(() => onUnsubscribe().then(onSuccess).catch(onError))
+      sequence(() => onUnsubscribe().then(onSuccess).catch(onError), 200)
     }
 
     const isPending = useMemo<boolean>(

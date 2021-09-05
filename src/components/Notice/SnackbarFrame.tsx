@@ -19,7 +19,7 @@ const SnackbarFrame: FC<{
         {cloneElement(children, {
           className: classNames(
             children.props.className,
-            'flex-1 items-center flex'
+            'flex-1 justify-center flex-col flex'
           )
         })}
       </span>

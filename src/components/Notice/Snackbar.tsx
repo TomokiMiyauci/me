@@ -14,18 +14,19 @@ import type { FC, ReactElement, MouseEventHandler } from 'react'
 type NoticeType = 'success' | 'info' | 'warn' | 'alert'
 
 const Snackbar: FC<{
-  type: NoticeType
+  type?: NoticeType
+  icon?: ReactElement
   children: ReactElement
   onClose?: MouseEventHandler
   className?: string
   closeable?: boolean
-}> = ({ type, children, className, onClose, closeable = true }) => {
+}> = ({ type, icon, children, className, onClose, closeable = true }) => {
   const handleClose: MouseEventHandler = (e) => {
     if (closeable && onClose) {
       onClose(e)
     }
   }
-  const icon = useMemo<ReactElement>(() => {
+  const headIcon = useMemo<ReactElement>(() => {
     switch (type) {
       case 'success': {
         return <Icon className="text-emerald-500" icon={check} />
@@ -39,10 +40,14 @@ const Snackbar: FC<{
       case 'alert': {
         return <Icon className="text-rose-500" icon={error} />
       }
+
+      default: {
+        return icon!
+      }
     }
   }, [type])
 
-  const colorClass = useMemo<string>(() => {
+  const colorClass = useMemo<string | undefined>(() => {
     switch (type) {
       case 'success': {
         return 'bg-emerald-500 ring-1 ring-emerald-500 text-emerald-900 dark:text-emerald-100'
@@ -59,6 +64,10 @@ const Snackbar: FC<{
       case 'alert': {
         return 'bg-rose-400 ring-1 ring-rose-500 text-rose-900 dark:text-rose-100'
       }
+
+      default: {
+        return className
+      }
     }
   }, [type])
 
@@ -69,7 +78,7 @@ const Snackbar: FC<{
         className,
         'backdrop-filter backdrop-blur-md bg-opacity-60'
       )}
-      icon={icon}
+      icon={headIcon}
       close={
         closeable ? (
           <button
