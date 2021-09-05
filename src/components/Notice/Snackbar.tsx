@@ -18,7 +18,13 @@ const Snackbar: FC<{
   children: ReactElement
   onClose?: MouseEventHandler
   className?: string
-}> = ({ type, children, className, onClose }) => {
+  closeable?: boolean
+}> = ({ type, children, className, onClose, closeable = true }) => {
+  const handleClose: MouseEventHandler = (e) => {
+    if (closeable && onClose) {
+      onClose(e)
+    }
+  }
   const icon = useMemo<ReactElement>(() => {
     switch (type) {
       case 'success': {
@@ -65,13 +71,15 @@ const Snackbar: FC<{
       )}
       icon={icon}
       close={
-        <button
-          className="m-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300"
-          title="Close"
-          onClick={onClose}
-        >
-          <Icon className="w-6 h-6" icon={close} />
-        </button>
+        closeable ? (
+          <button
+            className="m-1 p-1 hover:bg-inherit md:rounded-md transition-colors duration-300"
+            title="Close"
+            onClick={handleClose}
+          >
+            <Icon className="w-6 h-6" icon={close} />
+          </button>
+        ) : undefined
       }
     >
       {children}

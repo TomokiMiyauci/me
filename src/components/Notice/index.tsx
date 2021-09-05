@@ -23,6 +23,7 @@ const Index: FC = () => {
         className="fixed bottom-0 w-full z-50 md:bottom-auto md:right-6 md:top-20 md:max-w-sm"
         type={props.type}
         onClose={close}
+        closeable={props.closeable}
       >
         {props.field ?? <></>}
       </Snackbar>
