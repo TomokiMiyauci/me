@@ -143,17 +143,19 @@ const Index = defineComponent(({ className }) => {
                 test: true
               })
             )
+            const url = window.location.href
             notice({
               icon: <img className="w-12 h-12" src="/logo_square.png" />,
               className:
                 'bg-gradient-to-r text-white from-purple-500 shadow via-pink-500 to-amber-500 border-t dark:border-blue-gray-700 border-gray-100 md:border-none',
               field: (
                 <div>
-                  <div>Hello Test</div>
+                  <div className="font-bold">Hello Test</div>
                   <div>This is test message</div>
+                  <div className="text-xs text-gray-100">{url}</div>
                 </div>
               ),
-              url: window.location.href,
+              url,
               closeClassName: 'hover:bg-gray-700 hover:bg-opacity-40'
             })
           }}
