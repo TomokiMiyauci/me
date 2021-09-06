@@ -97,7 +97,11 @@ const Newsletter = definePromise<{
                 className="bg-transparent ml-2 text-2xl md:w-auto md:text-3xl flex-1"
                 spellCheck="false"
                 type="email"
+                name="email"
+                autoComplete="email"
                 placeholder="Enter email"
+                required
+                maxLength={254}
                 value={email}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
