@@ -1,7 +1,10 @@
-import { FC, memo } from 'react'
+import { memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
 import Navigation from '@/components/BottomNavigation/Navigation'
-import type { Locale } from '@/../config/types'
+import { classNames } from '@/utils/class_name'
+
+import type { FC } from 'react'
+import type { Locale } from 'config/types'
 
 const BottomNavigation: FC<{
   className?: string
@@ -10,12 +13,10 @@ const BottomNavigation: FC<{
 }> = ({ currentPath, className, locale }) => {
   return (
     <div
-      className={`bg-gray-50
-    dark:bg-blue-gray-900
-    backdrop-blur-md
-    dark:border-gray-800
-    fixed bottom-0 inset-x-0 w-full border-t ${className}
-  `}
+      className={classNames(
+        'bg-gray-50 dark:bg-blue-gray-900 backdrop-blur-md dark:border-gray-800 fixed bottom-0 inset-x-0 w-full border-t',
+        className
+      )}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
       <Memo locale={locale} currentPath={currentPath} />

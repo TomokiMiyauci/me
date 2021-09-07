@@ -1,16 +1,19 @@
-import { FC, useState, useEffect } from 'react'
-import { scrollInfoEvent } from '@/utils/scroll'
 import TheFooter from '@/components/TheFooter'
 import TheHeader from '@/components/TheHeader'
 import BottomNavigation from '@/components/BottomNavigation'
-import type { Locale } from '@/../config/types'
+import { useState, useEffect } from 'react'
+import { scrollInfoEvent } from '@/utils/scroll'
+import { classNames } from '@/utils/class_name'
+
+import type { FC } from 'react'
+import type { Locale } from 'config/types'
 
 const useScrollShower = (init?: boolean) => {
   const [isShow, changeShow] = useState(init ?? false)
   const fn = scrollInfoEvent(({ direction, diff }) => {
-    if (diff > 14 && direction === 'up') {
+    if (diff > 20 && direction === 'up') {
       changeShow(true)
-    } else if (diff > 14 && direction === 'down') {
+    } else if (diff > 20 && direction === 'down') {
       changeShow(false)
     }
   })
@@ -37,9 +40,10 @@ const AppFrame: FC<{
         originalPath={originalPath}
         currentPath={currentPath}
         locale={locale}
-        className={`transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500 ${
-          isShowHeader ? '' : '-translate-y-full'
-        }`}
+        className={classNames(
+          'transform md:transform-none md:translate-y-0 transition-transform duration-300 delay-500',
+          isShowHeader ? undefined : '-translate-y-full'
+        )}
       />
 
       <TheFooter locale={locale} />
@@ -47,9 +51,10 @@ const AppFrame: FC<{
       <BottomNavigation
         currentPath={currentPath}
         locale={locale}
-        className={`transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100 ${
-          isShowHeader ? '' : 'translate-y-full'
-        }`}
+        className={classNames(
+          'transform md:hidden md:transform-none md:translate-y-0 transition-transform duration-300 delay-100',
+          isShowHeader ? undefined : 'translate-y-full'
+        )}
       />
     </>
   )
