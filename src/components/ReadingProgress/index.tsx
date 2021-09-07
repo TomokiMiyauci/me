@@ -8,16 +8,18 @@ const useReading = () => {
     max: 0,
     val: 0
   })
-  useEffect(() => {
-    const fn = optimizer(() => {
-      changeReading({
-        max: document.body.clientHeight - innerHeight,
-        val: scrollY
-      })
+  const fn = optimizer(() => {
+    changeReading({
+      max: document.body.clientHeight - innerHeight,
+      val: scrollY
     })
+  })
 
-    addEventListener('scroll', fn, { once: true, passive: true })
-  }, [reading])
+  useEffect(() => {
+    addEventListener('scroll', fn, { passive: true })
+
+    return () => removeEventListener('scroll', fn)
+  }, [])
 
   return reading
 }
