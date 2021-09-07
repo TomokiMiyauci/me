@@ -181,7 +181,7 @@ const BlogPostTemplate: FC<PageProps<BlogPostBySlugQuery>> = ({
                 >
                   <Popover.Panel
                     as="aside"
-                    className={`fixed backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-3xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
+                    className={`fixed max-h-[90vh] overflow-y-scroll backdrop-filter shadow backdrop-blur bg-gray-50 dark:bg-blue-gray-900 z-[2] rounded-t-3xl dark:border-blue-gray-700 border-t bottom-0 inset-x-0`}
                   >
                     <Toc toc={tableOfContents.items} />
                   </Popover.Panel>
