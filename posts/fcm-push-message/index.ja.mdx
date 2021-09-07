@@ -1,0 +1,516 @@
+---
+title: Firebase Cloud Messaging でウェブプッシュ通知する
+description: Firebase Cloud Messaging(FCM) でウェブプッシュ通知の送受信をします。プッシュサービスを含むプッシュ通知を取り巻く全体像を広く浅く解説します。通知メッセージのクリック処理や、ユーザートークンの削除についても触れています。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-09-07
+slug: /posts/fcm-push-message/
+tags:
+  - firebase
+  - service-worker
+  - TypeScript
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    node:
+      - name: firebase
+        version: 9.0.0
+      - name: firebase-admin
+        version: 9.11.0
+      - name: firebase-functions
+        version: 3.15.4
+---
+
+## はじめに
+
+Firebase Cloud Messaging (通称 FCM) はクロスプラットフォームにメッセージ送信する仕組みです。
+これを使うことで、[Web プッシュプロトコル](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-protocol) を考えることなく、プッシュ通知を実装できます。
+
+FCM は無料で利用できるので、ユーザーエンゲージメントを高める手段として有効です。
+今回は、FCM をウェブアプリで使う方法を紹介します。
+
+## FCM と利用制限
+
+FCM は 多くの Web API を利用します。具体的には、`Window` スコープでは次のオブジェクトが実装されている必要があります。
+
+- `PushManager`
+- `Notification`
+- `indexedDB`
+- `fetch`
+
+加えて、Service worker も利用します。
+これらはブラウザによってサポートされていない場合があります。
+
+サポートされていない主なブラウザには、Safari、iOS Safari、IE などがあります。
+これらのブラウザでは FCM が利用できないため注意が必要です。
+
+実装上ではブラウザがサポートされているかを検証する `isSupported` 関数があるため、それを用いて適切なハンドリングをします。
+
+## プッシュ通知の仕組み
+
+プッシュ通知の仕組みを簡単に説明します。プッシュ通知は次の３つのステップで成り立っています。
+
+1. ユーザーのサブスクライブ
+2. プッシュメッセージの送信
+3. ユーザーデバイスでイベントをプッシュ
+
+### ユーザーのサブスクライブ
+
+最初のステップは、ユーザーをサブスクライブすることです。これはメッセージングのために、ユーザーの購読情報（デバイス情報）を取得することと言えます。
+購読情報はユーザーが通知を許可したあと取得できます。そして、メッセージングには購読情報を利用し、プッシュメッセージを送信します。
+
+メッセージは最終的に Service worker が受け取るため、Service worker の登録も必要になります。
+
+### プッシュメッセージの送信
+
+ユーザーへメッセージングするには、プッシュサービスへ API 呼び出しを行う必要があります。API の呼び出しは、[Web プッシュプロトコル](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-protocol) に準拠する必要があります。
+
+そして、プッシュサービスとはキューです。
+ユーザーのブラウザがオンラインになるか、メッセージの有効期限が切れるまで、メッセージはキューに入れられます。
+
+それが解決されると、メッセージはユーザーのデバイスへ配信されます。
+
+ちなみにプッシュサービスは、購読情報の `endpoint` からエンドポイントがわかります。
+また、プッシュメッセージで送信するデータは暗号化する必要があります。
+
+### ユーザーデバイスでイベントをプッシュ
+
+プッシュサービスがメッセージを配信すると、ブラウザはメッセージを受信し、データを復号化したあと、ServiceWorker で `push` イベントをディスパッチします。
+その後はアプリケーションの世界なので、メッセージを自由に扱えます。
+
+### FCM の利点
+
+上記から分かる通り、プッシュ通知を愚直に実装すると大変です。
+しかし、FCM を利用することで次の利点があります。
+
+- Web プッシュプロトコル に準拠した API
+- プッシュ通知分析
+- フォアグラウンドとバックグラウンドのイベント処理の簡素化
+
+Firebase Console や Firebase Admin SDK から、Web プッシュプロトコルを意識せずにメッセージを送ることができます。
+また、プッシュ通知の表示回数や開封数は Firebase Console の [Cloud Messaging](https://console.firebase.google.com/u/0/project/_/notification/reporting) から確認できます。
+
+フォアグラウンドとバックグラウンドのイベント処理の簡素化については後述します。
+
+## 通知の表示
+
+段階的な実装を目指します。まずは、通知の表示から行います。
+実際にテストが行える部分から行うことで、余計なエラーを避けます。
+
+まず、Firebase SDK をインストールします。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add firebase@9
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i firebase@9
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+### バックグラウンドイベントリスナー
+
+Service worker がないと始まらないため、この部分から実装します。
+
+Firebase V9 では、CDN はまだ [compat バージョン](https://firebase.google.com/docs/web/setup?hl=ja&sdk_version=v9#from-the-cdn) のモジュールしか利用できません。
+関数ベースの新しいモジュールを使いたいため、外部モジュールはバンドルする前提で行います。
+
+以前書いた記事に `esbuild` を使って 別プロセスで Web worker をビルドする例があるので、そちらを [Service worker をビルドする](/posts/firebase-authentication-service-worker/#service-worker-をビルドする) を参考にしてください。
+
+```ts:sw.ts{12,16,23}
+import { onBackgroundMessage } from 'firebase/messaging/sw'
+import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { getMessaging, isSupported } from 'firebase/messaging/sw'
+
+declare let self: ServiceWorkerGlobalScope
+const app = initializeApp(/* firebaseOptions */)
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim())
+})
+
+isSupported()
+  .then(() => {
+    const messaging = getMessaging(app)
+
+    onBackgroundMessage(messaging, ({ notification }) => {
+      const { title, body, image } = notification ?? {}
+
+      if (!title) {
+        return
+      }
+
+      self.registration.showNotification(title, {
+        body,
+        icon: image
+      })
+    })
+  })
+  .catch(/* error */)
+```
+
+`isSupported` は `Promise<boolean>` を返すユーティリティです。このチェックにより、安全に処理を続けられます。
+チェックのあとに、`Messaging` を初期化します。
+
+`onBackgroundMessage` は ブラウザがバックグラウンドの時にメッセージを受け取るとコールバックが発火します。
+コールバックのペイロードにメッセージが渡されます。
+
+通知を表示には `showNotification` メソッドを使います。
+ここでは説明のため、`titile` と `body` と `icon` のみを設定しています。
+
+実は、`showNotification` は アクションやタグを設定して色々なことができます。
+その他については [showNotification](https://developer.mozilla.org/ja/docs/Web/API/ServiceWorkerRegistration/showNotification) を確認ください。
+
+さて、Service worker の設定はこれで終わりです。
+
+## モジュールバンドリング vs importScripts
+
+余談ですが、Service worker での外部モジュールのバンドルと `importScripts` についてまとめます。
+
+Service worker はブラウザが実行できるよう、JavaScript かつ、外部モジュールはバンドルするか CDN から `importScripts` で利用する必要があります。
+２つの方法によって、外部モジュールを利用できますが、この使い分けはどうすべきでしょう。
+
+### モジュールバンドリング
+
+外部モジュールのバンドルでは、バンドラーのツリーシェイキングによって、多くの場合サイズを最適化できます。
+`importScripts` の場合は、不要なスクリプトも含め、まとめてダウンロードされます。
+
+一方で、バンドルツールが必要です。また、バンドルされたスクリプトは、セルフホスティングすることになるため帯域を食います。
+
+### importScripts
+
+`importScripts` はバンドルツール不要で利用できます。TypeScript を使う場合でも、型拡張により型を補完できます。
+
+参考までに、`importScripts` を使った場合は次のように型拡張すれば良いでしょう。
+
+```ts:sw.ts
+import type firebase from 'firebase/compat/app'
+
+declare let self: ServiceWorkerGlobalScope & {
+  firebase: typeof firebase
+}
+
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js')
+importScripts(
+  'https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js'
+)
+
+const app = self.firebase.initializeApp(/* config */)
+```
+
+一方で、バージョン管理が煩雑になる可能性があります。パッケージマネージャーでは扱えないため、２重管理が発生しやすいです。
+特に、Firebase SDK の場合は、`Window` スコープと `Worker` スコープで、パッケージのバージョンをあわせたほうが無難です[^1]。
+
+[^1]: Service worker に compat バージョン、メインスレッドに関数型バージョンを併用したところ、正常に動作しませんでした。
+
+メインを TypeScript で記述する場合、トランスパイルは避けれないので、バンドルはついでにできてしまいます。
+個人的には、バージョン管理が煩雑なのを避けるかつ、パフォーマンスの最適化のため、モジュールバンドリング方式をおすすめします。
+
+### 通知のテスト
+
+`showNotification` は実際に通知を呼び出すメソッドです。その他は、メッセージを届ける仕組みに過ぎません。
+そのため、単体で `showNotification` メソッドを呼び出し、表示内容をテストしたいことでしょう。
+
+実は、`showNotification` メソッドは `Window` スコープからも呼び出すことができます。
+手軽にテストできる方法として覚えておいて損はないでしょう。
+
+テストには、`Window` スコープから Service worker を登録し、`showNotification` メソッドを呼び出します。
+
+```ts
+const sw = await window.navigator.serviceWorker.register('/sw.js')
+window.Notification.requestPermission((permission) => {
+  if (permission === 'granted') {
+    sw.showNotification(title, /* NotificationOptions /*)
+  }
+})
+```
+
+これで表示内容のテストができます。
+
+## ユーザートークンを取得する
+
+通知が表示されるのが確認できたので、ユーザートークンを取得します。これは前述のユーザーの購読情報に相当します。
+`Window` スコープで行います。
+
+```ts{13-14}
+import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { isSupported, getMessaging, getToken } from 'firebase/messaging'
+
+const supported = await isSupported().catch(() => false)
+if (!supported) {
+  return
+}
+
+const sw = await window.navigator.serviceWorker.register('/sw.js')
+
+const app = initializeApp(firebaseOptions)
+const messaging = getMessaging(app)
+const token = await getToken(messaging, {
+  serviceWorkerRegistration: sw
+})
+```
+
+`isSupported` で Service worker の時と同じように、ブラウザがサポートされているかどうかチェックします。
+
+`getToken` でユーザートークンが取得できます。その際、`serviceWorkerRegistration` に Service worker を設定する必要があります。
+トークンはメッセージの送信に利用されるため、DB へ保存します。
+
+ユーザートークンが取得できたので、プッシュ通知は繋がりました。
+
+[Firebase Console](https://console.firebase.google.com/u/0/project/_/notification/compose) から実際にメッセージを送信できます。
+
+### パーミッションと UX
+
+`getToken` は [内部](https://github.com/firebase/firebase-js-sdk/blob/cdada6c68f9740d13dd6674bcb658e28e68253b6/packages/messaging/src/api/getToken.ts#L35) で `Notification` の `requestPermission` を呼び出します。
+[Permission UX](https://developers.google.com/web/fundamentals/push-notifications/permission-ux?hl=en) にあるように、ページが読み込み後すぐに許可を求めるのは、UX 上よくありません。
+
+また、一度通知を拒否にされると、ユーザーが通知を許可するためには、ユーザー自身が設定し直さなければなりません。
+
+昔ほど減ったとはいえ、まだまだ悪い UX のサイトは存在します。
+通知の許可を求める理由がわかるよう、基本的にはユーザーインタラクション後に許可を求めるようにしましょう。
+
+## サーバーからメッセージを送信する
+
+Firebase Console からメッセージを送信できますが、サーバーからも動的にメッセージを送信できます。
+
+`firebase-admin` を使うと簡単に送信できます。
+
+また、Google のサーバー環境から実行する場合、クレデンシャルはデフォルトのものを使えます。その他のサーバーから実行する場合は、[送信リクエストを承認する](https://firebase.google.com/docs/cloud-messaging/auth-server?hl=ja) を参考にしてください。
+
+Cloud Functions for Firebase を例に挙げます。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add firebase-admin firebase-functions
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i firebase-admin firebase-functions
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+```ts{26}
+import functions from 'firebase-functions'
+import admin, { initializeApp, messaging } from 'firebase-admin'
+
+initializeApp({
+  credential: admin.credential.applicationDefault()
+})
+
+export const sendMessage = functions.firestore
+  .document('posts/{slug}')
+  .onCreate((snapShot) => {
+    const { title, description, thumbnailUrl, path } = snapShot.data()
+
+    const tokens = ['<token>']
+    const content: messaging.MulticastMessage = {
+      notification: {
+        title,
+        body: description,
+        imageUrl: thumbnailUrl
+      },
+      data: {
+        pathname: path
+      },
+      tokens
+    }
+
+    return messaging().sendMulticast(content)
+  })
+```
+
+例では、Cloud Firestore の書き込みに合わせて、デバイスに対してメッセージを送信しています。また、`data` に `pathname` を指定しています。
+`data` 以下では好きなデータをメッセージに付与できます。これは後に利用します。
+
+メッセージの送信には `tokens` を指定しています。このトークンはまさに `getToken` で取得したトークンです。
+通常、メッセージを送信するにはトークンを指定する必要があります。また、単一トークンを指定して送信するには、`send` メソッドを使います。
+
+また、トークンを指定せずに送信する方法もあります。トークンをトピックに登録することで、
+トピックを購読している全てのトークン（デバイス）にメッセージングができます。
+
+詳細は、[複数のデバイスにメッセージを送信する](https://firebase.google.com/docs/cloud-messaging/js/send-multiple?hl=ja) を参考にしてください。
+
+## フォアグラウンドでメッセージを受け取る
+
+今までバックグラウンドの通知に焦点を当ててきました。
+実は、ページがフォーカスされている場合、バックグラウンドの通知は表示されません。
+
+フォアグラウンドの場合にメッセージを受け取る方法もあります。`onMessage` 関数を使い、バックグラウンドのようにペイロードを受け取れます。
+
+<Alert type="warning">Window スコープで行います。</Alert>
+
+```ts
+import { getMessaging, onMessage } from 'firebase/messaging'
+
+const messaging = getMessaging(/* app */)
+onMessage(messaging, (payload) => {})
+```
+
+アプリケーションのスナックバーの表示などに繋げて、ユーザーが閲覧中にメッセージを表示できます。
+
+これは Firebase SDK の便利な機能です。プッシュ通知の際、実際には Service worker がまずメッセージを受け取っています。
+Service worker は `push` イベントリスナーでメッセージを受け取ります。
+その際ページがフォアグラウンドかどうかを判定し、発火するイベントを切り分けてくれます。
+
+## 通知メッセージのクリック
+
+バックグラウンドの通知をクリックしても、今は何も起こりません。
+
+Service worker は、通知のクリックやクローズイベントをリッスンできます。通知のクリックで指定した URL を開くように変更してみましょう。
+
+メッセージとして次のデータを送ることとします。
+
+```ts{7-9}
+const message: messaging.MulticastMessage = {
+  notification: {
+    title,
+    body,
+    imageUrl
+  },
+  data: {
+    pathname: path
+  },
+  tokens
+}
+```
+
+先の例で、`data` にカスタムデータを付与しました。通知クリック時に開くページのパスを指定してみます。。
+
+Service worker で受け取るペイロードは次のデータ構造になります。
+
+```ts:sw.ts{5}
+const payload = {
+  notification: {
+    title,
+    body,
+    image
+  },
+  data: {
+    pathname
+  },
+  ...
+}
+```
+
+一見、同じようなデータ構造に見えます。`imageUrl` が `image` というキーに変わっていることに注意が必要です。
+これをさらに `showNotification` に受け渡します。
+
+```ts:sw.ts{11}
+onBackgroundMessage(messaging, ({ notification, data }) => {
+  const { title, body, image } = notification ?? {}
+
+  if (!title) {
+    return
+  }
+
+  self.registration.showNotification(title, {
+    body,
+    icon: image,
+    data
+  })
+})
+```
+
+通知のクリックは `notificationclick` イベントをリッスンします。
+
+```ts:sw.ts{2,10,18}
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+
+  if (!event.notification.data.pathname) return
+  const pathname = event.notification.data.pathname
+  const url = new URL(pathname, self.location.origin).href
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientsArr) => {
+        const hadWindowToFocus = clientsArr.some((windowClient) =>
+          windowClient.url === url ? (windowClient.focus(), true) : false
+        )
+
+        if (!hadWindowToFocus)
+          self.clients
+            .openWindow(url)
+            .then((windowClient) =>
+              windowClient ? windowClient.focus() : null
+            )
+      })
+  )
+})
+```
+
+ここでは、通知に渡した URL と同じ URL のウィンドウがあればそれにフォーカスし、無ければ新しいウィンドウを開きフォーカスしています。
+
+少し補足すると、`notification` の `close` メソッドで通知を閉じます。
+そして、`clients` の `matchAll` メソッドで、同じオリジンのサービスワーカークライアントを取得します。
+
+また、`clients` の `openWindow` メソッドで開けるウィンドウは、Service worker と同じオリジンの URL でなければなりません。
+さらに、ポップアップパーミッションがないとエラーを投げるため、実際にはエラー処理も必須でしょう。
+
+とはいえ、これで通知をクリックしたときの処理ができました。
+
+他にも、通知を閉じた時に `notificationclose` が発火するため、分析などの用途に用いることができます。
+
+## プッシュ通知の解除
+
+ユーザーが通知を解除したい場合があります。
+
+```ts
+import { getMessaging, deleteToken } from 'firebase/messaging'
+
+const messaging = getMessaging(app)
+deleteToken(messaging)
+```
+
+`deleteToken` で通知を解除できます。
+
+トークンがなくても[^2]エラーは発生しません。
+
+[^2]: 例えば `deleteToken` を何度も呼び出すなど
+
+### ユーザーがプッシュ通知を購読しているかどうか
+
+ユーザーがプッシュ通知を購読しているかどうかを Firebase SDK を使って知りたいと思うかもしれません。
+しかし、現状この方法はありません。
+
+例えば、トグルボタンで通知のオンオフを切り替えるような UI は、購読中かどうかのフラグをどこかに保持する必要があります。
+
+このブログでは匿名ユーザー認証をしているので、ユーザー情報とトークンを紐付けて実現しています。
+
+もしかしたら、`indexedDB` から購読ステータスが確認できるかもしれませんが、この点知っていればコメントいただけるとありがたいです。
+
+## おわりに
+
+今回は、一般的な FCM の実装について紹介しました。
+この記事では紹介しきれなかった部分として、
+
+- トピックの購読
+- デバイスグループの管理
+- `showNotification` の詳細
+- メッセージタイプ(通知メッセージとデータメッセージ)
+
+などがあります。
+もし興味があれば、これらのキーワードと共に調べていただければと思います。
+
+また、このブログでも FCM を用いた記事更新の通知を提供しているので、購読してもらえると嬉しいです。

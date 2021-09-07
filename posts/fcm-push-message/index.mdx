@@ -1,0 +1,517 @@
+---
+title: Web Push Notification with Firebase Cloud Messaging
+description: Send and receive web push notifications with Firebase Cloud Messaging (FCM). This is a broad and shallow overview of the whole picture surrounding push notifications, including push services. Click processing of notification messages and deleting user tokens will also be explained.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-09-07
+slug: /posts/fcm-push-message/
+tags:
+  - firebase
+  - service-worker
+  - TypeScript
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    node:
+      - name: firebase
+        version: 9.0.0
+      - name: firebase-admin
+        version: 9.11.0
+      - name: firebase-functions
+        version: 3.15.4
+---
+
+## Introduction
+
+Firebase Cloud Messaging (a.k.a. FCM) is a cross-platform messaging solution.
+It allows you to implement push notifications without having to think about the [Web push protocol](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-protocol).
+
+Since FCM is free to use, it is an effective way to increase user engagement.
+In this article, I will show you how to use FCM in a web app.
+
+## FCM and usage restrictions
+
+FCM uses a number of Web APIs. Specifically, the `Window` scope requires the following objects to be implemented:
+
+- `PushManager`
+- `Notification`
+- `indexedDB`
+- `fetch`
+
+In addition, we will also use service workers.
+These may or may not be supported by some browsers.
+
+The main browsers that are not supported include Safari, iOS Safari, and IE.
+Please note that FCM is not available in these browsers.
+
+In the implementation, there is an `isSupported` function that verifies if the browser is supported, so it can be used for proper handling.
+
+## Push Notification steps
+
+This section briefly explains how push notifications work. Push notifications consist of the following three steps:
+
+1. Subscribing to a user
+2. Send push message
+3. Push events on user devices
+
+### Subscribing a user
+
+The first step is to subscribe the user. This can be described as getting the user's subscription information (device information) for messaging purposes.
+
+The subscription information can be obtained after the user has allowed notifications. The subscription information is then used for messaging, and push messages are sent.
+
+Since the messages are ultimately received by the service worker, the service worker must also be registered.
+
+### Sending push messages
+
+To send messages to users, you need to make API calls to the push service. The API calls must conform to the [Web push protocol](https://datatracker.ietf.org/doc/html/draft-ietf-webpush-protocol).
+
+And a push service is a queue.
+The message is queued until the user's browser comes online or the message expires.
+
+Once that is resolved, the message is delivered to the user's device.
+
+By the way, the push service knows the endpoint from the `endpoint` in the subscription information.
+Also, the data sent in the push message needs to be encrypted.
+
+### Push events on user devices
+
+When a push service delivers a message, the browser receives the message, decrypts the data, and then dispatches a `push` event in the ServiceWorker.
+After that, it is the application's world, so it can handle the message freely.
+
+### Advantages of FCM
+
+As you can see from the above, implementing push notifications in a foolproof way is a lot of work.
+However, using FCM offers the following advantages:
+
+- API compliant with the Web push protocol
+- Push notification analysis
+- Simplified foreground and background event handling
+
+From the Firebase Console or Firebase Admin SDK, you can send messages without being aware of the web push protocol.
+You can also check the number of push notifications displayed and opened from [Cloud Messaging](https://console.firebase.google.com/u/0/project/_/notification/reporting) in the Firebase Console.
+
+Simplifying foreground and background event handling will be discussed later.
+
+## Show Notifications
+
+We will aim for a step-by-step implementation. The first step is to display notifications.
+By starting with the part that can actually be tested, we can avoid unnecessary errors.
+
+First, we will install the Firebase SDK.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add firebase@9
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i firebase@9
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+### Background event listeners
+
+Since we can't start without the service worker, we will implement it from this part.
+
+In Firebase V9, CDN is still only available for [compat version](https://firebase.google.com/docs/web/setup?hl=ja&sdk_version=v9#from-the-cdn) modules.
+Since we want to use the new function-based module, we will assume that the external module will be bundled.
+
+There is an example of building a web worker in a separate process using `esbuild` in my previous article, so please refer to that article [Building a Service worker](/posts/firebase-authentication-service-worker/#build-the-service-worker).
+
+```ts:sw.ts{12,16,23}
+import { onBackgroundMessage } from 'firebase/messaging/sw'
+import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { getMessaging, isSupported } from 'firebase/messaging/sw'
+
+declare let self: ServiceWorkerGlobalScope
+const app = initializeApp(/* firebaseOptions */)
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim())
+})
+
+isSupported()
+  .then(() => {
+    const messaging = getMessaging(app)
+
+    onBackgroundMessage(messaging, ({ notification }) => {
+      const { title, body, image } = notification ?? {}
+
+      if (!title) {
+        return
+      }
+
+      self.registration.showNotification(title, {
+        body,
+        icon: image
+      })
+    })
+  })
+  .catch(/* error */)
+```
+
+`isSupported` is a utility that returns a `Promise<boolean>`. This check allows us to safely continue processing.
+After the check, `Messaging` is initialized.
+
+`onBackgroundMessage` fires a callback when a message is received while the browser is in the background.
+The message will be passed to the payload of the callback.
+
+To show the notification, use the `showNotification` method.
+Here, only `titile`, `body`, and `icon` are set for the sake of explanation.
+
+Actually, you can do many things with `showNotification` by setting actions and tags.
+Check out [showNotification](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification) for more information.
+
+That's it for the service worker configuration.
+
+## Module Bundling vs importScripts
+
+As a side note, here is a summary of external module bundling and `importScripts` for service workers.
+
+Service worker requires JavaScript and external modules to be either bundled or available from CDNs via `importScripts` so that browsers can run them.
+There are two ways to use an external module, which is better?
+
+### Module Bundling
+
+Bundling of external modules can often be optimized for size by tree-shaking the bundler.
+In the case of `importScripts`, the bundle will be downloaded together, including the unwanted scripts.
+
+On the other hand, you need a bundling tool. And the bundled scripts are self-hosting, so they eat up bandwidth.
+
+### importScripts
+
+`importScripts` can be used without the need for bundling tools. Even when using TypeScript, you can use type extensions to complement types.
+
+For reference, if you use `importScripts`, you can extend the type as follows.
+
+```ts:sw.ts
+import type firebase from 'firebase/compat/app'
+
+declare let self: ServiceWorkerGlobalScope & {
+  firebase: typeof firebase
+}
+
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js')
+importScripts(
+  'https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js'
+)
+
+const app = self.firebase.initializeApp(/* config */)
+```
+
+On the other hand, it may complicate version control. Since it cannot be handled by the package manager, double management is likely to occur.
+Especially in the case of the Firebase SDK, it is safer to match the package versions of the `Window` and `Worker` scopes[^1].
+
+[^1]: When I used the compat version for the service worker and the functional version for the main thread together, it did not work properly.
+
+If you write the main part in TypeScript, you can't avoid transpiling, so bundling can be done incidentally.
+Personally, I recommend the module bundling method to avoid version control complexity and to optimize performance.
+
+### Testing Notifications
+
+The `showNotification` is the method that actually calls the notification. The rest is just a mechanism to deliver messages.
+Therefore, you may want to call the `showNotification` method by itself to test the display.
+
+Actually, the `showNotification` method can also be called from the `Window` scope.
+This is a good thing to keep in mind as a quick and easy way to test.
+
+To test, register a service worker from the `Window` scope and call the `showNotification` method.
+
+```ts
+const sw = await window.navigator.serviceWorker.register('/sw.js')
+window.Notification.requestPermission((permission) => {
+  if (permission === 'granted') {
+    sw.showNotification(title, /* NotificationOptions /*)
+  }
+})
+```
+
+You can now test the display content.
+
+## Get the user token
+
+Now that we have confirmed that the notifications are displayed, we need to get the user token. This is equivalent to the user's subscription information mentioned above.
+We will do this in the `Window` scope.
+
+```ts{13-14}
+import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { isSupported, getMessaging, getToken } from 'firebase/messaging'
+
+const supported = await isSupported().catch(() => false)
+if (!supported) {
+  return
+}
+
+const sw = await window.navigator.serviceWorker.register('/sw.js')
+
+const app = initializeApp(firebaseOptions)
+const messaging = getMessaging(app)
+const token = await getToken(messaging, {
+  serviceWorkerRegistration: sw
+})
+```
+
+As with the service worker, check if the browser is supported by `isSupported`.
+
+You can get the user token with `getToken`. You will need to set the `serviceWorkerRegistration` to the service worker.
+Store the token in the DB, as it will be used to send messages.
+
+Now that the user token has been obtained, the push notification is connected.
+
+You can actually send messages from [Firebase Console](https://console.firebase.google.com/u/0/project/_/notification/compose).
+
+### Permissions and UX
+
+The `getToken` calls `requestPermission` in `Notification`.
+As shown in [Permission UX](https://developers.google.com/web/fundamentals/push-notifications/permission-ux?hl=en), it is not good for UX to ask for permission immediately after the page loads.
+
+Also, once a notification is denied, the user has to reconfigure the settings themselves to allow notifications.
+
+Although less common than in the past, there are still sites with bad UX.
+Make sure to ask for permission after the user interaction so that you know why you are asking for permission to notify.
+
+## Send messages from the server
+
+You can send messages from the Firebase Console, but you can also send messages dynamically from the server.
+
+You can use `firebase-admin` to send them easily.
+
+Also, if you are running from Google's server environment, you can use the default credentials. If you want to run it from other servers, please refer to [Authorize send requests](https://firebase.google.com/docs/cloud-messaging/auth-server).
+
+Let's take Cloud Functions for Firebase as an example.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add firebase-admin firebase-functions
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i firebase-admin firebase-functions
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+```ts{26}
+import functions from 'firebase-functions'
+import admin, { initializeApp, messaging } from 'firebase-admin'
+
+initializeApp({
+  credential: admin.credential.applicationDefault()
+})
+
+export const sendMessage = functions.firestore
+  .document('posts/{slug}')
+  .onCreate((snapShot) => {
+    const { title, description, thumbnailUrl, path } = snapShot.data()
+
+    const tokens = ['<token>']
+    const content: messaging.MulticastMessage = {
+      notification: {
+        title,
+        body: description,
+        imageUrl: thumbnailUrl
+      },
+      data: {
+        pathname: path
+      },
+      tokens
+    }
+
+    return messaging().sendMulticast(content)
+  })
+```
+
+In the example, a message is sent to the device as the Cloud Firestore writes. Also, `pathname` is specified as `data`.
+You can add any data you want to the message under `data`. This will be used later.
+
+For sending messages, we specify `tokens`. This token is exactly the token you get with `getToken`.
+Normally, you need to specify a token to send a message. Also, to send a message with a single token, use the `send` method.
+
+There is also a way to send a message without specifying a token.
+By subscribing a token to a topic, you can message all tokens (devices) that are subscribed to the topic.
+
+For more information, see [Send messages to multiple devices](https://firebase.google.com/docs/cloud-messaging/js/send-multiple).
+
+## Receive messages in the foreground
+
+So far, we have focused on background notifications.
+Actually, background notifications are not displayed when the page is in focus.
+
+There is a way to receive messages in the foreground case. You can use the `onMessage` function to receive the payload as in the background.
+
+<Alert type="warning">This is done in the Window scope. </Alert>
+
+```ts
+import { getMessaging, onMessage } from 'firebase/messaging'
+
+const messaging = getMessaging(/* app */)
+onMessage(messaging, (payload) => {})
+```
+
+You can display messages while the user is browsing by connecting them to the application's snack bar display, for example.
+
+This is a useful feature of the Firebase SDK. When recieve push notifications, the Service worker actually receives the message first.
+The service worker receives the message in the `push` event listener.
+In this case, it determines whether the page is foreground or not and isolates the event to fire.
+
+## Click on the notification message
+
+If you click on a background notification, nothing will happen now.
+
+Service workers can listen for notification click and close events. Let's change it so that a click on the notification opens the specified URL.
+
+Let's say we want to send the following data as a message:
+
+```ts{7-9}
+const message: messaging.MulticastMessage = {
+  notification: {
+    title,
+    body,
+    imageUrl
+  },
+  data: {
+    pathname: path
+  },
+  tokens
+}
+```
+
+In the previous example, we gave `data` a custom data. Let's specify the path of the page that will be opened when the notification is clicked.
+
+The payload received by the service worker will have the following data structure.
+
+```ts:sw.ts{5}
+const payload = {
+  notification: {
+    title,
+    body,
+    image
+  },
+  data: {
+    pathname
+  },
+  ...
+}
+```
+
+At first glance, the data structure looks the same. Note that `imageUrl` has been replaced with the key `image`.
+This is then passed on to `showNotification`.
+
+```ts:sw.ts{11}
+onBackgroundMessage(messaging, ({ notification, data }) => {
+  const { title, body, image } = notification ?? {}
+
+  if (!title) {
+    return
+  }
+
+  self.registration.showNotification(title, {
+    body,
+    icon: image,
+    data
+  })
+})
+```
+
+The `notificationclick` event is fired when a notification is clicked.
+
+```ts:sw.ts{2,10,18}
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+
+  if (!event.notification.data.pathname) return
+  const pathname = event.notification.data.pathname
+  const url = new URL(pathname, self.location.origin).href
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientsArr) => {
+        const hadWindowToFocus = clientsArr.some((windowClient) =>
+          windowClient.url === url ? (windowClient.focus(), true) : false
+        )
+
+        if (!hadWindowToFocus)
+          self.clients
+            .openWindow(url)
+            .then((windowClient) =>
+              windowClient ? windowClient.focus() : null
+            )
+      })
+  )
+})
+```
+
+Here, if there is a window with the same URL as the one passed in the notification, it will focus on it, if not, it will open a new window and focus on it.
+
+To add a little more, the `close` method of `notification` closes the notification.
+Then, the `matchAll` method of `clients` will retrieve the service worker clients of the same origin.
+
+Also, the window opened by the `openWindow` method of `clients` must be a URL of the same origin as the service worker.
+In addition, it will throw an error if it doesn't have popup permissions, so error handling is probably mandatory in practice.
+
+Nevertheless, we are now ready to handle notifications when they are clicked.
+
+In addition, `notificationclose` fires when the notification is closed, which can be used for analysis and other purposes.
+
+## Dismissing a push notification
+
+There are times when a user wants to cancel a notification.
+
+```ts
+import { getMessaging, deleteToken } from 'firebase/messaging'
+
+const messaging = getMessaging(app)
+deleteToken(messaging)
+```
+
+You can cancel the notification with `deleteToken`.
+
+No error will occur without the token[^2].
+
+[^2]: For example, calling `deleteToken` multiple times.
+
+### Whether the user is subscribed to push notifications or not
+
+You may want to use the Firebase SDK to find out if a user is subscribed to push notifications.
+However, there is currently no way to do this.
+
+For example, a UI that toggles notifications on and off with a toggle button would need to keep a flag somewhere to indicate whether the user is subscribed or not.
+
+Since this blog has anonymous user authentication, this is achieved by tying the user information to a token.
+
+It may be possible to check the subscription status from `indexedDB`, but if you know about this, I would appreciate your comments.
+
+## Conclusion
+
+In this article, I have introduced a general FCM implementation.
+One part that I could not cover in this article is
+
+- Topic subscription
+- Device group management
+- Details of `showNotification`.
+- Message types (notification messages and data messages)
+
+and more.
+If you are interested, I hope you will look into it along with these keywords.
+
+I also provide notifications of article updates using FCM on this blog, so I hope you will subscribe to it.
