@@ -65,7 +65,7 @@ jobs:
           path: public
 
   unit-test:
-    needs: [setup]
+    needs: setup
     runs-on: ubuntu-latest
 
     steps:
@@ -83,7 +83,7 @@ jobs:
         run: yarn test
 
   deploy:
-    needs: [test, build]
+    needs: [unit-test, build]
     runs-on: ubuntu-latest
     outputs:
       details_url: ${{ steps.firebase.outputs.details_url }}
