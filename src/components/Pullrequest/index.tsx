@@ -1,7 +1,7 @@
-import { FC } from 'react'
 import robotIcon from '@iconify-icons/mdi/robot'
 import sourcePull from '@iconify-icons/mdi/source-pull'
 import { Icon } from '@iconify/react/dist/offline'
+import type { FC } from 'react'
 
 const Index: FC<{ href: string; className?: string }> = ({
   href,
@@ -17,7 +17,7 @@ const Index: FC<{ href: string; className?: string }> = ({
         there are any errors, please fix it.
         <a
           href={href}
-          className="float-right border-accent border space-x-1 hover:no-underline no-underline bg-white dark:bg-blue-gray-900 rounded text-gray-700 dark:text-gray-50 px-2 py-1 shadow"
+          className="float-right border border-green-600 border-opacity-40 space-x-1 hover:no-underline no-underline bg-green-700 hover:bg-green-600 transition-colors duration-300 rounded text-gray-50 px-2 py-1 shadow"
           target="_blank"
           rel="noopener"
         >
