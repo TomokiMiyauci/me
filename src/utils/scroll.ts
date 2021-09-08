@@ -1,4 +1,4 @@
-import { optimizer } from './optimizer'
+import { optimizer } from '@/utils/optimizer'
 
 interface ScrollInfo {
   direction: 'up' | 'down'

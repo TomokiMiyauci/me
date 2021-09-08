@@ -1,38 +1,38 @@
 import TheFooter from '@/components/TheFooter'
 import TheHeader from '@/components/TheHeader'
 import BottomNavigation from '@/components/BottomNavigation'
-import { useState, useEffect } from 'react'
-import { scrollInfoEvent } from '@/utils/scroll'
 import { classNames } from '@/utils/class_name'
+import { useScrollShower } from '@/components/AppFrame/hooks'
+import { useEffect } from 'react'
+import { useResize } from '@/hooks/resize'
+import { MOBILE_BREAK_POINT } from '@/../config/constants'
 
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
-
-const useScrollShower = (init?: boolean) => {
-  const [isShow, changeShow] = useState(init ?? false)
-  const fn = scrollInfoEvent(({ direction, diff }) => {
-    if (diff > 20 && direction === 'up') {
-      changeShow(true)
-    } else if (diff > 20 && direction === 'down') {
-      changeShow(false)
-    }
-  })
-
-  useEffect(() => {
-    addEventListener('scroll', fn)
-
-    return () => removeEventListener('scroll', fn)
-  }, [])
-
-  return isShow
-}
 
 const AppFrame: FC<{
   originalPath: string
   currentPath: string
   locale: Locale
 }> = ({ originalPath, currentPath, locale }) => {
-  const isShowHeader = useScrollShower(true)
+  const { isShow: isShowHeader, register, unregister } = useScrollShower(true)
+  const { onResize } = useResize()
+
+  useEffect(() => {
+    onResize(() => {
+      if (window.innerWidth < MOBILE_BREAK_POINT) {
+        register()
+      } else {
+        unregister()
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (window.innerWidth > MOBILE_BREAK_POINT) {
+      unregister()
+    }
+  }, [])
 
   return (
     <>
