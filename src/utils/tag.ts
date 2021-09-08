@@ -17,6 +17,7 @@ import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/logos/twitter'
 import firebase from '@iconify-icons/logos/firebase'
 import bitly from '@iconify/icons-simple-icons/bitly'
+import cog from '@iconify-icons/mdi/cog'
 import { isUndefined } from '@/utils/is'
 
 const iconMeta = (tag: string) => {
@@ -45,7 +46,8 @@ const ICON_MAP = {
   tailwindcss,
   gatsby,
   firebase,
-  bitly
+  bitly,
+  'service-worker': cog
 }
 
 export { iconMeta }
