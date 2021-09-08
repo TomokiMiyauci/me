@@ -14,7 +14,7 @@ const Index: FC<{ href: string; className?: string }> = ({
       <Icon icon={robotIcon} className="w-6 h-6 md:w-7 md:h-7" />
       <span className="align-middle dark:text-gray-200">
         This article has been translated on the basis of machine translation. If
-        there are any errors, please fix it.
+        there are any mistakes, please fix it.
         <a
           href={href}
           className="float-right border border-green-600 border-opacity-40 space-x-1 hover:no-underline no-underline bg-green-700 hover:bg-green-600 transition-colors duration-300 rounded text-gray-50 px-2 py-1 shadow"
