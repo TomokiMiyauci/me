@@ -11,6 +11,7 @@
     "commit": "cz",
     "prepare": "husky install",
     "dev": "gatsby develop",
+    "test": "jest",
     "build": "yarn build:sw && gatsby build",
     "build:sw": "node -r esbuild-register scripts/build.ts",
     "serve": "gatsby serve",
