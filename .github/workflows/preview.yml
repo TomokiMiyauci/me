@@ -64,8 +64,26 @@ jobs:
           name: dist
           path: public
 
+  unit-test:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ matrix.os }}-node-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+
+      - name: Unit test
+        run: yarn test
+
   deploy:
-    needs: [build]
+    needs: [unit-test, build]
     runs-on: ubuntu-latest
     outputs:
       details_url: ${{ steps.firebase.outputs.details_url }}
