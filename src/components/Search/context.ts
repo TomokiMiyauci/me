@@ -1,4 +1,6 @@
 import { createContext } from 'react'
-import { useToggle } from '@/hooks/state'
 
-export default createContext<ReturnType<typeof useToggle>>([false, () => {}])
+export default createContext<[boolean, (val: boolean) => void]>([
+  false,
+  (val: boolean) => {}
+])
