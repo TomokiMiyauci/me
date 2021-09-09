@@ -6,7 +6,7 @@ import type { Locale } from 'config/types'
 const Search = loadable(() => import('@/components/Search/Search'))
 
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
-  const [searchShow, toggleSearch] = useSearchShow()
+  const [searchShow, changeShow] = useSearchShow()
 
   return (
     <Overlay
@@ -15,13 +15,13 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       leave="transition transform duration-500"
       leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
       show={searchShow}
-      className="inset-0 p-4 md:p-40 fixed backdrop-blur backdrop-filter cursor-pointer"
+      className="inset-0 p-4 md:p-40 fixed backdrop-blur-md cursor-pointer"
       onClick={(e: Event) => {
         e.stopPropagation()
         if (e.target) {
           const result = (e.target as Element).getAttribute('data-fullscreen')
           if (result === 'true') {
-            toggleSearch()
+            changeShow(false)
           }
         }
       }}

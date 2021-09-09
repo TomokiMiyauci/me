@@ -3,7 +3,7 @@ import { useSearchShow } from '@/components/Search/hooks'
 import back from '@iconify-icons/mdi/arrow-back'
 import close from '@iconify-icons/mdi/close'
 import magnify from '@iconify-icons/mdi/magnify'
-
+import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
@@ -21,7 +21,7 @@ type SearchResult = {
 }
 
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
-  const [searchShow, toggleSearch] = useSearchShow()
+  const [searchShow, changeShow] = useSearchShow()
   const [query, setQuery] = useState<string>('')
   const ref = useRef<HTMLInputElement>(null)
 
@@ -40,9 +40,22 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
   )
 
   const handleClick: MouseEventHandler = () => {
-    toggleSearch()
+    changeShow(false)
     setQuery('')
   }
+
+  const fn = ({ code }: KeyboardEvent) => {
+    if (code === 'Escape') {
+      changeShow(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keydown', fn)
+    return () => {
+      document.removeEventListener('keydown', fn)
+    }
+  }, [])
 
   const result = useAsyncMemo<
     SearchResponse<SearchResult> | undefined
@@ -64,7 +77,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
         <div className="flex space-x-2  px-2">
           <button
             className="hover:text-accent transition-colors duration-300"
-            onClick={toggleSearch}
+            onClick={() => changeShow(false)}
           >
             <Icon className="w-7 h-7" icon={back} />
           </button>
@@ -91,6 +104,15 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
               <Icon className="w-7 h-7" icon={close} />
             </button>
           )}
+
+          <div className="hidden md:flex items-center">
+            <button
+              onClick={() => changeShow(false)}
+              className="border hover:shadow transition-shadow duration-300 rounded-md bg-gray-100 text-gray-500 px-1"
+            >
+              esc
+            </button>
+          </div>
         </div>
 
         <hr className="border-gray-200 dark:border-blue-gray-700" />
@@ -99,21 +121,21 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           {result && <span>{result.nbHits} Hits</span>}
         </div>
 
-        <div className="flex-1 overflow-y-scroll flex items-center justify-center p-2">
+        <div className="flex-1 flex overflow-y-scroll items-center justify-center">
           {!query && (
             <Icon
               icon={magnify}
               className="h-24 w-24 text-accent animate-pulse"
             />
           )}
-          <ul className="space-y-3">
+          <ul className="space-y-3 pb-2 h-full overflow-y-auto">
             {result &&
               result.hits.map(({ title, objectID, slug, excerpt }) => {
                 return (
                   <li key={objectID}>
                     <LocalizedLink
                       onClick={handleClick}
-                      language="en"
+                      language={locale}
                       to={slug}
                     >
                       <h2 className="line-clamp-1 font-bold">{title}</h2>

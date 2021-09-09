@@ -17,7 +17,7 @@ const Inner: FC<{
   locale: Locale
 }> = ({ originalPath, currentPath, locale }) => {
   const localizedNavs = useLocalizedNavigations(locale)
-  const [_, toggleSearch] = useSearchShow()
+  const [_, changeShow] = useSearchShow()
 
   return (
     <div
@@ -45,7 +45,7 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <SearchButton onClick={toggleSearch} />
+        <SearchButton onClick={() => changeShow(true)} />
 
         <LangSwitcher originalPath={originalPath} />
 
