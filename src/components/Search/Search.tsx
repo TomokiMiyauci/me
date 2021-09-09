@@ -73,7 +73,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           <body data-fullscreen="true" />
         </Helmet>
       )}
-      <div className="p-2 bg-gray-50 dark:bg-blue-gray-800 h-full md:max-h-[600px] mx-auto md:max-w-4xl flex flex-col cursor-auto rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+      <div className="p-2 dark:border dark:border-blue-gray-700 bg-gray-50 dark:bg-blue-gray-800 h-full md:max-h-[600px] mx-auto md:max-w-4xl flex flex-col cursor-auto rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
         <div className="flex space-x-2  px-2">
           <button
             className="hover:text-accent transition-colors duration-300"
@@ -108,7 +108,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           <div className="hidden md:flex items-center">
             <button
               onClick={() => changeShow(false)}
-              className="border hover:shadow transition-shadow duration-300 rounded-md bg-gray-100 text-gray-500 px-1"
+              className="border dark:border-blue-gray-700 hover:shadow transition-shadow duration-300 rounded-md bg-gray-100 dark:bg-blue-gray-900 text-gray-400 px-1"
             >
               esc
             </button>
