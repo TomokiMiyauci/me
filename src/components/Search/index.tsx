@@ -2,9 +2,10 @@ import { useSearchShow } from '@/components/Search/hooks'
 import Overlay from '@/components/Overlay'
 import loadable from '@loadable/component'
 import type { FC } from 'react'
+import type { Locale } from 'config/types'
 const Search = loadable(() => import('@/components/Search/Search'))
 
-const Index: FC = () => {
+const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, toggleSearch] = useSearchShow()
 
   return (
@@ -26,7 +27,7 @@ const Index: FC = () => {
       }}
       data-fullscreen="true"
     >
-      <Search />
+      <Search locale={locale} />
     </Overlay>
   )
 }
