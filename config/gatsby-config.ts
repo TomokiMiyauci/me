@@ -1,6 +1,5 @@
 import { GatsbyConfig } from 'gatsby'
 import { SITE_URL as siteUrl, SITE_NAME as name } from './constants'
-// import { queries } from '../src/utils/algolia_queries'
 import { config as _config } from 'dotenv'
 import { SiteMetaData } from './types'
 import plugins from './gatsby-plugins'
