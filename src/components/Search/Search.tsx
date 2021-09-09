@@ -1,11 +1,14 @@
 import algoliasearch from 'algoliasearch/lite'
 import { useSearchShow } from '@/components/Search/hooks'
-import close from '@iconify-icons/mdi/arrow-back'
+import back from '@iconify-icons/mdi/arrow-back'
+import close from '@iconify-icons/mdi/close'
+import magnify from '@iconify-icons/mdi/magnify'
+
 import { Helmet } from 'react-helmet'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import type { SearchIndex, SearchClient } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
 import type { FC, MouseEventHandler } from 'react'
@@ -20,6 +23,7 @@ type SearchResult = {
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, toggleSearch] = useSearchShow()
   const [query, setQuery] = useState<string>('')
+  const ref = useRef<HTMLInputElement>(null)
 
   const searchClient = useMemo<SearchClient>(
     () =>
@@ -58,18 +62,35 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       )}
       <div className="p-2 bg-gray-50 dark:bg-blue-gray-800 h-full md:max-h-[600px] mx-auto md:max-w-4xl flex flex-col cursor-auto rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
         <div className="flex space-x-2  px-2">
-          <button onClick={toggleSearch}>
-            <Icon className="w-7 h-7" icon={close} />
+          <button
+            className="hover:text-accent transition-colors duration-300"
+            onClick={toggleSearch}
+          >
+            <Icon className="w-7 h-7" icon={back} />
           </button>
 
           <input
             placeholder="Search"
+            aria-label="Search"
             spellCheck="false"
             autoFocus
+            ref={ref}
             className="flex-1 bg-transparent py-3 pl-2 h-full "
             value={query}
             onChange={({ target }) => setQuery(target.value)}
           />
+
+          {!!query && (
+            <button
+              className="hover:text-accent transition-colors duration-300"
+              onClick={() => {
+                setQuery('')
+                ref.current?.focus()
+              }}
+            >
+              <Icon className="w-7 h-7" icon={close} />
+            </button>
+          )}
         </div>
 
         <hr className="border-gray-200 dark:border-blue-gray-700" />
@@ -78,7 +99,13 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           {result && <span>{result.nbHits} Hits</span>}
         </div>
 
-        <div className="flex-1 overflow-y-scroll p-2">
+        <div className="flex-1 overflow-y-scroll flex items-center justify-center p-2">
+          {!query && (
+            <Icon
+              icon={magnify}
+              className="h-24 w-24 text-accent animate-pulse"
+            />
+          )}
           <ul className="space-y-3">
             {result &&
               result.hits.map(({ title, objectID, slug, excerpt }) => {
