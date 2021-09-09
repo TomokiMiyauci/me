@@ -9,6 +9,7 @@ import { useState, useMemo } from 'react'
 import type { SearchIndex, SearchClient } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
 import type { FC, MouseEventHandler } from 'react'
+import type { Locale } from 'config/types'
 
 type SearchResult = {
   slug: string
@@ -16,7 +17,7 @@ type SearchResult = {
   excerpt: string
 }
 
-const Index: FC = () => {
+const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, toggleSearch] = useSearchShow()
   const [query, setQuery] = useState<string>('')
 
@@ -43,8 +44,10 @@ const Index: FC = () => {
     SearchResponse<SearchResult> | undefined
   >(async () => {
     if (!query) return undefined
-    return await searchIndex.search<SearchResult>(query, {})
-  }, [query])
+    return await searchIndex.search<SearchResult>(query, {
+      facetFilters: `locale:${locale}`
+    })
+  }, [query, locale])
 
   return (
     <>
@@ -61,6 +64,8 @@ const Index: FC = () => {
 
           <input
             placeholder="Search"
+            spellCheck="false"
+            autoFocus
             className="flex-1 bg-transparent py-3 pl-2 h-full "
             value={query}
             onChange={({ target }) => setQuery(target.value)}
@@ -93,9 +98,11 @@ const Index: FC = () => {
           </ul>
         </div>
 
+        <hr className="border-gray-200 dark:border-blue-gray-700" />
+
         <div className="text-right pt-1 px-2">
           <a
-            href="https://www.algolia.com/docsearch"
+            href="https://algolia.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="space-x-2"

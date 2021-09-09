@@ -2,6 +2,7 @@ import AppFrame from '@/components/AppFrame'
 import { useFirebase } from '@/hooks/firebase'
 import { useEffect } from 'react'
 import loadable from '@loadable/component'
+
 const Notice = loadable(() => import('@/components/Notice'))
 const Search = loadable(() => import('@/components/Search'))
 
@@ -30,7 +31,7 @@ const Layout: FC<{
         originalPath={originalPath}
       />
 
-      <Search />
+      <Search locale={locale} />
       <Notice />
     </>
   )

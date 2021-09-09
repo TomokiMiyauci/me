@@ -20,6 +20,9 @@ const pagesQuery = `{
         title
         slug
       }
+      fields {
+        locale
+      }
       excerpt(pruneLength: 5000)
     }
   }
@@ -29,10 +32,11 @@ const queries = [
   {
     query: pagesQuery,
     transformer: ({ data }) =>
-      data.pages.nodes.map(({ id, frontmatter, ...rest }) => {
+      data.pages.nodes.map(({ id, frontmatter, fields, ...rest }) => {
         return {
           objectID: id,
           ...frontmatter,
+          ...fields,
           ...rest
         }
       }),
@@ -147,7 +151,8 @@ const plugins: GatsbyConfig['plugins'] = [
     options: {
       appId: process.env.GATSBY_ALGOLIA_APP_ID,
       apiKey: process.env.ALGOLIA_ADMIN_KEY,
-      queries
+      queries,
+      settings: { attributesForFaceting: ['filterOnly(locale)'] }
     }
   },
   'gatsby-plugin-robots-txt',
