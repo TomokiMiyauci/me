@@ -3,6 +3,44 @@ import { resolve } from 'path'
 import emoji from 'remark-emoji'
 import remarkExternalLinks from 'remark-external-links'
 import { SITE_URL as siteUrl, SITE_NAME as name } from './constants'
+import { config } from 'dotenv'
+
+config()
+
+const pagesQuery = `{
+  pages: allMdx(
+    filter: {
+      fileAbsolutePath: { regex: "//posts//" }
+    }
+    sort: { fields: frontmatter___date, order: DESC }
+  ) {
+    nodes {
+      id
+      frontmatter {
+        title
+        slug
+      }
+      excerpt(pruneLength: 5000)
+    }
+  }
+}`
+
+const queries = [
+  {
+    query: pagesQuery,
+    transformer: ({ data }) =>
+      data.pages.nodes.map(({ id, frontmatter, ...rest }) => {
+        return {
+          objectID: id,
+          ...frontmatter,
+          ...rest
+        }
+      }),
+    indexName: 'Pages',
+
+    matchFields: ['slug', 'title']
+  }
+]
 
 const plugins: GatsbyConfig['plugins'] = [
   'gatsby-plugin-postcss',
@@ -104,14 +142,14 @@ const plugins: GatsbyConfig['plugins'] = [
       }
     }
   },
-  // {
-  //   resolve: `gatsby-plugin-algolia`,
-  //   options: {
-  //     appId: process.env.GATSBY_ALGOLIA_APP_ID,
-  //     apiKey: process.env.ALGOLIA_ADMIN_KEY,
-  //     queries
-  //   }
-  // },
+  {
+    resolve: `gatsby-plugin-algolia`,
+    options: {
+      appId: process.env.GATSBY_ALGOLIA_APP_ID,
+      apiKey: process.env.ALGOLIA_ADMIN_KEY,
+      queries
+    }
+  },
   'gatsby-plugin-robots-txt',
   {
     resolve: `gatsby-plugin-sitemap`,
