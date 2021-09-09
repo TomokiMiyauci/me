@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 body {
+  &[data-fullscreen] {
+    @apply overflow-hidden;
+  }
   &::-webkit-scrollbar {
     @apply hidden;
   }
