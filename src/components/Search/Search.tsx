@@ -9,6 +9,7 @@ import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useState, useMemo, useRef } from 'react'
+import { useSafeLogEvent } from '@/hooks/analytics'
 import type { SearchIndex, SearchClient } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
 import type { FC, MouseEventHandler } from 'react'
@@ -23,6 +24,7 @@ type SearchResult = {
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, changeShow] = useSearchShow()
   const [query, setQuery] = useState<string>('')
+  const { safeLogEvent } = useSafeLogEvent()
   const ref = useRef<HTMLInputElement>(null)
 
   const searchClient = useMemo<SearchClient>(
@@ -34,6 +36,17 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     []
   )
 
+  const clearSearch = (): void => {
+    setQuery('')
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'select_content', {
+        content_type: 'search_clear',
+        action: 'clear',
+        target: 'search'
+      })
+    })
+  }
+
   const searchIndex = useMemo<SearchIndex>(
     () => searchClient.initIndex('Pages'),
     [searchClient]
@@ -41,12 +54,24 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
 
   const handleClick: MouseEventHandler = () => {
     changeShow(false)
-    setQuery('')
+    safeLogEvent((analytics, logEvent) =>
+      logEvent(analytics, 'engagement', {
+        event: 'click',
+        content_type: 'search_result'
+      })
+    )
   }
 
   const fn = ({ code }: KeyboardEvent) => {
     if (code === 'Escape') {
       changeShow(false)
+      safeLogEvent((analytics, logEvent) => {
+        logEvent(analytics, 'clear_content', {
+          event: 'keydown',
+          key: code,
+          target: 'search'
+        })
+      })
     }
   }
 
@@ -56,6 +81,17 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       document.removeEventListener('keydown', fn)
     }
   }, [])
+
+  useEffect(() => {
+    if (!query) return
+
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'search', {
+        search_term: query,
+        search_by: 'algolia'
+      })
+    })
+  }, [query])
 
   const result = useAsyncMemo<
     SearchResponse<SearchResult> | undefined
@@ -87,6 +123,8 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
             aria-label="Search"
             spellCheck="false"
             autoFocus
+            required
+            maxLength={100}
             ref={ref}
             className="flex-1 bg-transparent py-3 pl-2 h-full "
             value={query}
@@ -97,7 +135,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
             <button
               className="hover:text-accent transition-colors duration-300"
               onClick={() => {
-                setQuery('')
+                clearSearch()
                 ref.current?.focus()
               }}
             >
