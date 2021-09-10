@@ -1,12 +1,12 @@
-import { useSearchShow } from '@/components/Search/hooks'
+import SearchCard from '@/components/Search/SearchCard'
 import Overlay from '@/components/Overlay'
+import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
-import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
+import { useSearchShow } from '@/components/Search/hooks'
 
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
-const SearchCard = loadable(() => import('@/components/Search/SearchCard'))
 
 const Search = loadable(
   () => delay(import('@/components/Search/Search'), 500),
@@ -41,9 +41,12 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       data-fullscreen="true"
     >
-      <SearchCard className="h-full md:max-h-[600px] mx-auto md:max-w-4xl">
-        <Search locale={locale} />
-      </SearchCard>
+      <div className="h-full md:max-h-[600px] relative md:max-w-4xl mx-auto">
+        <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
+        <SearchCard className="h-full relative">
+          <Search locale={locale} />
+        </SearchCard>
+      </div>
     </Overlay>
   )
 }

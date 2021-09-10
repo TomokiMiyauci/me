@@ -1,8 +1,8 @@
 import { defineComponent } from '@/utils/component'
 import { classNames } from '@/utils/class_name'
-import type { ReactElement } from 'react'
+import type { ReactNode } from 'react'
 
-const SearchCard = defineComponent<{ children: ReactElement }>(
+const SearchCard = defineComponent<{ children: ReactNode }>(
   ({ className, children }) => {
     return (
       <div
