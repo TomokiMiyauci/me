@@ -43,7 +43,7 @@ const Circle: FC<CircleProps> = ({
 
 const ProgressCircle: FC = () => {
   return (
-    <span className="animate-spin">
+    <span className="inline-block animate-spin">
       <Circle
         strokeDashoffset={240}
         className="w-20 h-20 animate-pulse"

@@ -1,9 +1,23 @@
 import { useSearchShow } from '@/components/Search/hooks'
 import Overlay from '@/components/Overlay'
 import loadable from '@loadable/component'
+import delay from 'p-min-delay'
+import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
+
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
-const Search = loadable(() => import('@/components/Search/Search'))
+const SearchCard = loadable(() => import('@/components/Search/SearchCard'))
+
+const Search = loadable(
+  () => delay(import('@/components/Search/Search'), 500),
+  {
+    fallback: (
+      <div className="self-center">
+        <ProgressCircle />
+      </div>
+    )
+  }
+)
 
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, changeShow] = useSearchShow()
@@ -27,7 +41,9 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       data-fullscreen="true"
     >
-      <Search locale={locale} />
+      <SearchCard className="h-full md:max-h-[600px] mx-auto md:max-w-4xl">
+        <Search locale={locale} />
+      </SearchCard>
     </Overlay>
   )
 }
