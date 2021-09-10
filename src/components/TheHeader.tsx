@@ -45,13 +45,17 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <SearchButton onClick={() => changeShow(true)} />
+        <span className="tooltip" data-tooltip="Search">
+          <SearchButton onClick={() => changeShow(true)} />
+        </span>
 
         <LangSwitcher originalPath={originalPath} />
 
         <AccentColor />
 
-        <DarkMode />
+        <span className="tooltip" data-tooltip="Dark mode">
+          <DarkMode />
+        </span>
       </div>
     </div>
   )

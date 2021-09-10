@@ -110,13 +110,15 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           <body data-fullscreen="true" />
         </Helmet>
       )}
-      <div className="flex space-x-2 px-2 py-1">
-        <button
-          className="hover:text-accent transition-colors duration-300"
-          onClick={() => changeShow(false)}
-        >
-          <Icon className="w-7 h-7" icon={back} />
-        </button>
+      <div className="flex items-center space-x-2 px-2 py-1">
+        <span className="tooltip" data-tooltip="Close">
+          <button
+            className="hover:text-accent transition-colors duration-300"
+            onClick={() => changeShow(false)}
+          >
+            <Icon className="w-7 h-7" icon={back} />
+          </button>
+        </span>
 
         <input
           placeholder="Search"
@@ -132,18 +134,23 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
         />
 
         {!!query && (
-          <button
-            className="hover:text-accent transition-colors duration-300"
-            onClick={() => {
-              clearSearch()
-              ref.current?.focus()
-            }}
-          >
-            <Icon className="w-7 h-7" icon={close} />
-          </button>
+          <span className="tooltip" data-tooltip="Clear">
+            <button
+              className="hover:text-accent transition-colors duration-300"
+              onClick={() => {
+                clearSearch()
+                ref.current?.focus()
+              }}
+            >
+              <Icon className="w-7 h-7" icon={close} />
+            </button>
+          </span>
         )}
 
-        <div className="hidden md:flex items-center">
+        <div
+          className="tooltip hidden md:block"
+          data-tooltip="Close on keydown escape"
+        >
           <button
             onClick={() => changeShow(false)}
             className="border dark:border-blue-gray-700 hover:shadow transition-shadow duration-300 rounded-md bg-gray-100 dark:bg-blue-gray-900 text-gray-400 px-1"

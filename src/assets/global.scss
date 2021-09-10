@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .tooltip {
+    @apply relative inline;
+
+    &::before,
+    &::after {
+      @apply transition-all select-none duration-700 invisible opacity-0 absolute delay-300;
+    }
+
+    &::after {
+      @apply bottom-0 left-1/2 rounded-md text-gray-50 dark:text-gray-900 font-bold bg-accent px-2 py-1 whitespace-nowrap;
+      content: attr(data-tooltip);
+      transform: translate(-50%, calc(100% + 6px));
+    }
+
+    &::before {
+      @apply h-0 bottom-0 w-0 left-1/2;
+      border-width: 0 6px 6px 6px;
+      border-color: transparent transparent var(--accent-color) transparent;
+      content: '';
+      transform: translate(-50%, calc(100%));
+    }
+
+    &:hover {
+      &::before,
+      &::after {
+        @apply md:opacity-100 md:visible;
+      }
+
+      &::before {
+        transform: translate(-50%, calc(100% + 6px));
+      }
+      &::after {
+        transform: translate(-50%, calc(100% + 11px));
+      }
+    }
+  }
+}
+
 body {
   &[data-fullscreen] {
     @apply overflow-hidden;
