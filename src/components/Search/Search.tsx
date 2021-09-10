@@ -110,7 +110,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           <body data-fullscreen="true" />
         </Helmet>
       )}
-      <div className="flex items-center space-x-2 px-2 py-1">
+      <div className="flex items-center space-x-2 px-3 py-1">
         <span className="tooltip" data-tooltip="Close">
           <button
             className="hover:text-accent transition-colors duration-300"
