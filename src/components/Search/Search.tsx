@@ -10,6 +10,7 @@ import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useState, useMemo, useRef } from 'react'
 import { useSafeLogEvent } from '@/hooks/analytics'
+
 import type { SearchIndex, SearchClient } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
 import type { FC, MouseEventHandler } from 'react'
@@ -109,7 +110,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           <body data-fullscreen="true" />
         </Helmet>
       )}
-      <div className="flex space-x-2  px-2">
+      <div className="flex space-x-2 px-2 py-1">
         <button
           className="hover:text-accent transition-colors duration-300"
           onClick={() => changeShow(false)}
@@ -165,7 +166,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
             className="h-24 w-24 text-accent animate-pulse"
           />
         )}
-        <ul className="space-y-3 pb-2 h-full overflow-y-auto">
+        <ul className="space-y-3 px-2 pb-2 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-accent">
           {result &&
             result.hits.map(({ title, objectID, slug, excerpt }) => {
               return (
@@ -186,7 +187,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
 
       <hr className="border-gray-200 dark:border-blue-gray-700" />
 
-      <div className="text-right pt-1 px-2">
+      <div className="text-right py-1.5 px-3">
         <a
           href="https://algolia.com/"
           target="_blank"
