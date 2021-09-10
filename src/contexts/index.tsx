@@ -5,19 +5,19 @@ import { useNoticeProvider } from '../hooks/notice'
 import DarkModeContext from './dark_mode'
 import { useDarkModeProvider } from '@/hooks/dark_mode'
 import SearchContext from '@/components/Search/context'
-import { useState } from 'react'
 import { useSafeLogEvent } from '@/hooks/analytics'
+import { useHash } from '@/hooks/hash'
 
 import type { FC } from 'react'
 
 const ProvideSearchContext: FC = ({ children }) => {
-  const [isShowSearch, changeShowSearch] = useState(false)
   const { safeLogEvent } = useSafeLogEvent()
+  const [isShowSearch, changeHash] = useHash('#search')
 
-  const loggedChangeShowSearch = (
-    val: Parameters<typeof changeShowSearch>[0]
-  ): ReturnType<typeof changeShowSearch> => {
-    changeShowSearch(val)
+  const loggedChangeHash = (
+    val: Parameters<typeof changeHash>[0]
+  ): ReturnType<typeof changeHash> => {
+    changeHash(val)
     const action = val ? 'show' : 'hide'
     safeLogEvent((analytics, logEvent) =>
       logEvent(analytics, 'select_content', {
@@ -27,7 +27,7 @@ const ProvideSearchContext: FC = ({ children }) => {
     )
   }
   return (
-    <SearchContext.Provider value={[isShowSearch, loggedChangeShowSearch]}>
+    <SearchContext.Provider value={[isShowSearch, loggedChangeHash]}>
       {children}
     </SearchContext.Provider>
   )
