@@ -53,7 +53,7 @@ justify-between flex"
 
         <AccentColor />
 
-        <span className="tooltip" data-tooltip="Dark mode">
+        <span className="tooltip w-[32px] h-[32px]" data-tooltip="Dark mode">
           <DarkMode />
         </span>
       </div>
