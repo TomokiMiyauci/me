@@ -1,4 +1,3 @@
-import PoweredBy from '@/components/Search/PoweredBy'
 import Swipe from '@/components/Swipe'
 import back from '@iconify-icons/mdi/arrow-back'
 import close from '@iconify-icons/mdi/close'
@@ -10,6 +9,17 @@ import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useState, useRef } from 'react'
 import { useSafeLogEvent } from '@/hooks/analytics'
 import { useSearchShow } from '@/components/Search/hooks'
+import loadable from '@loadable/component'
+import dalay from 'p-min-delay'
+
+const PoweredBy = loadable(
+  () => dalay(import('@/components/Search/PoweredBy'), 1000),
+  {
+    fallback: (
+      <span className="h-4 w-40 inline-block align-middle animate-pulse rounded-full bg-gray-400 opacity-80" />
+    )
+  }
+)
 
 import type { SearchIndex } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
