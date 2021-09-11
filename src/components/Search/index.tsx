@@ -4,6 +4,11 @@ import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
 import { useSearchShow } from '@/components/Search/hooks'
+import { memo } from 'react'
+import { Helmet } from 'react-helmet'
+import { SwipeContext } from '@/components/Swipe/Context'
+import { useSwipe } from '@/components/Swipe/hooks'
+import { classNames } from '@/utils/class_name'
 
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
@@ -18,6 +23,39 @@ const Search = loadable(
     )
   }
 )
+
+const Memo = memo<{
+  locale: Locale
+}>(({ locale }) => {
+  return (
+    <>
+      <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
+      <SearchCard className={`h-full relative transition-shadow duration-300`}>
+        <Search locale={locale} />
+      </SearchCard>
+    </>
+  )
+})
+
+const Inner: FC<{ locale: Locale }> = ({ locale }) => {
+  const { diff, translate, ...rest } = useSwipe()
+
+  return (
+    <SwipeContext.Provider value={{ diff, translate, ...rest }}>
+      <div
+        style={{
+          ...translate
+        }}
+        className={classNames(
+          'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
+          diff === 0 ? 'transition-transform duration-300' : ''
+        )}
+      >
+        <Memo locale={locale} />
+      </div>
+    </SwipeContext.Provider>
+  )
+}
 
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, changeShow] = useSearchShow()
@@ -41,12 +79,12 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       data-fullscreen="true"
     >
-      <div className="h-full md:max-h-[600px] relative md:max-w-4xl mx-auto">
-        <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
-        <SearchCard className="h-full relative">
-          <Search locale={locale} />
-        </SearchCard>
-      </div>
+      {searchShow && (
+        <Helmet>
+          <body data-fullscreen="true" />
+        </Helmet>
+      )}
+      <Inner locale={locale} />
     </Overlay>
   )
 }
