@@ -1,7 +1,5 @@
 import PoweredBy from '@/components/Search/PoweredBy'
 import Swipe from '@/components/Swipe'
-import algoliasearch from 'algoliasearch/lite'
-import { useSearchShow } from '@/components/Search/hooks'
 import back from '@iconify-icons/mdi/arrow-back'
 import close from '@iconify-icons/mdi/close'
 import magnify from '@iconify-icons/mdi/text-box-search-outline'
@@ -9,10 +7,11 @@ import { useEffect } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
-import { useState, useMemo, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSearchShow } from '@/components/Search/hooks'
 
-import type { SearchIndex, SearchClient } from 'algoliasearch/lite'
+import type { SearchIndex } from 'algoliasearch/lite'
 import type { SearchResponse } from '@algolia/client-search'
 import type { FC, MouseEventHandler } from 'react'
 import type { Locale } from 'config/types'
@@ -23,20 +22,42 @@ type SearchResult = {
   excerpt: string
 }
 
+const useAlgolia = () => {
+  const algolia = useRef<SearchIndex | undefined>(undefined)
+
+  const init = async () => {
+    const module = await import('algoliasearch/lite').then(
+      ({ default: _ }) => _
+    )
+
+    const algoliasearch = module(
+      process.env.GATSBY_ALGOLIA_APP_ID!,
+      process.env.GATSBY_ALGOLIA_SEARCH_KEY!
+    )
+
+    const searchIndex = algoliasearch.initIndex('Pages')
+    algolia.current = searchIndex
+  }
+
+  const getAlgolia = async (): Promise<SearchIndex> => {
+    if (!algolia.current) {
+      await init()
+    }
+    return algolia.current!
+  }
+
+  return {
+    getAlgolia
+  }
+}
+
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [_, changeShow] = useSearchShow()
   const [query, setQuery] = useState<string>('')
   const { safeLogEvent } = useSafeLogEvent()
   const ref = useRef<HTMLInputElement>(null)
 
-  const searchClient = useMemo<SearchClient>(
-    () =>
-      algoliasearch(
-        process.env.GATSBY_ALGOLIA_APP_ID!,
-        process.env.GATSBY_ALGOLIA_SEARCH_KEY!
-      ),
-    []
-  )
+  const { getAlgolia } = useAlgolia()
 
   const clearSearch = (): void => {
     setQuery('')
@@ -48,11 +69,6 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       })
     })
   }
-
-  const searchIndex = useMemo<SearchIndex>(
-    () => searchClient.initIndex('Pages'),
-    [searchClient]
-  )
 
   const handleClick: MouseEventHandler = () => {
     changeShow(false)
@@ -99,7 +115,8 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     SearchResponse<SearchResult> | undefined
   >(async () => {
     if (!query) return undefined
-    return await searchIndex.search<SearchResult>(query, {
+    const algolia = await getAlgolia()
+    return await algolia.search<SearchResult>(query, {
       facetFilters: `locale:${locale}`
     })
   }, [query, locale])
