@@ -4,7 +4,7 @@ import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
 import { useSearchShow } from '@/components/Search/hooks'
-import { memo } from 'react'
+import { memo, useContext, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 import { SwipeContext } from '@/components/Swipe/Context'
 import { useSwipe } from '@/components/Swipe/hooks'
@@ -38,27 +38,50 @@ const Memo = memo<{
 })
 
 const Inner: FC<{ locale: Locale }> = ({ locale }) => {
-  const { diff, translate, ...rest } = useSwipe()
+  const { diff, translate, reset } = useContext(SwipeContext)
+
+  useEffect(() => {
+    return reset
+  }, [])
 
   return (
-    <SwipeContext.Provider value={{ diff, translate, ...rest }}>
-      <div
-        style={{
-          ...translate
-        }}
-        className={classNames(
-          'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
-          diff === 0 ? 'transition-transform duration-300' : ''
-        )}
-      >
-        <Memo locale={locale} />
-      </div>
-    </SwipeContext.Provider>
+    <div
+      style={{
+        ...translate
+      }}
+      className={classNames(
+        'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
+        diff === 0 ? 'a transition-transform duration-300' : ''
+      )}
+    >
+      <Memo locale={locale} />
+    </div>
   )
 }
 
+const MemoHelmet = memo(() => (
+  <Helmet>
+    <body data-fullscreen="true" />
+  </Helmet>
+))
+
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
   const [searchShow, changeShow] = useSearchShow()
+  const Init = 12
+  const { touch, diff, ...rest } = useSwipe()
+
+  const ratio = useMemo(() => {
+    if (!touch || diff === 0) return 1
+    if (touch.pageY > window.innerHeight) return 0
+
+    return 1 - touch.pageY / window.innerHeight
+  }, [touch, diff])
+
+  const backdropFilter = useMemo(() => {
+    return {
+      backdropFilter: `blur(${Number(Init * ratio).toFixed(2)}px)`
+    }
+  }, [ratio])
 
   return (
     <Overlay
@@ -68,6 +91,9 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
       show={searchShow}
       className="inset-0 p-4 md:p-40 fixed backdrop-blur-md cursor-pointer"
+      style={{
+        ...backdropFilter
+      }}
       onClick={(e: Event) => {
         e.stopPropagation()
         if (e.target) {
@@ -79,12 +105,10 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       data-fullscreen="true"
     >
-      {searchShow && (
-        <Helmet>
-          <body data-fullscreen="true" />
-        </Helmet>
-      )}
-      <Inner locale={locale} />
+      <MemoHelmet />
+      <SwipeContext.Provider value={{ touch, diff, ...rest }}>
+        <Inner locale={locale} />
+      </SwipeContext.Provider>
     </Overlay>
   )
 }

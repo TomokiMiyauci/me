@@ -4,17 +4,20 @@ import SwipeBar from '@/components/Swipe/SwipeBar'
 import { useContext } from 'react'
 import { useSearchShow } from '@/components/Search/hooks'
 import { SwipeContext } from '@/components/Swipe/Context'
-
 import type { FC } from 'react'
 
 const Index: FC = () => {
-  const { diff, changeInitState, changeMidState } = useContext(SwipeContext)
+  const { diff, changeInitState, changeMidState, changeTouch } =
+    useContext(SwipeContext)
   const [_, changeShow] = useSearchShow()
 
   return (
     <SwipeArea
-      onTouchStart={(ev) => changeInitState(ev.touches[0].pageY)}
-      onTouchMove={({ touches }) => changeMidState(touches[0].pageY)}
+      onTouchStart={({ touches }) => changeInitState(touches[0].pageY)}
+      onTouchMove={({ touches }) => {
+        changeTouch(touches[0])
+        changeMidState(touches[0].pageY)
+      }}
       onTouchEnd={() => {
         if (diff > 30) {
           changeShow(false)
@@ -23,8 +26,9 @@ const Index: FC = () => {
           changeMidState(0)
         }
       }}
+      className="group"
     >
-      <SwipeBar className="w-24" />
+      <SwipeBar className="w-24 transition-transform duration-500 animate-pulse-bit-slow group-active:translate-y-1" />
     </SwipeArea>
   )
 }
