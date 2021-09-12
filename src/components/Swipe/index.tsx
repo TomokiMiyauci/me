@@ -26,7 +26,7 @@ const Index: FC = () => {
           changeMidState(0)
         }
       }}
-      className="group"
+      className="group md:hidden"
     >
       <SwipeBar className="w-24 transition-transform duration-500 animate-pulse-bit-slow group-active:translate-y-1" />
     </SwipeArea>
