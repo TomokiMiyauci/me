@@ -14,6 +14,7 @@ import Clap from './Clap'
 import Circle from '@/components/ProgressCircle'
 import { useSequence } from '@/hooks/state'
 import { useNotice } from '@/hooks/notice'
+import { useAuth } from '@/hooks/auth'
 
 const useWait = (initState?: boolean) => {
   const [isWaiting, changeWaiting] = useState(initState ?? false)
@@ -42,18 +43,19 @@ const useWait = (initState?: boolean) => {
 }
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
-  const [{ firestore, uid, isReady }] = useFirebase()
+  const [{ firestore, hasInitialized }] = useFirebase()
+  const [{ uid, isLoggedIn }] = useAuth()
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
   const [_, sequence] = useSequence()
   const notice = useNotice()
   const liked = useMemo<boolean>(() => {
-    if (!postMeta.likeBy || !isReady) return false
+    if (!postMeta.likeBy || !hasInitialized || !uid) return false
 
     return postMeta.likeBy.some(({ id }) => {
       return id === uid
     })
-  }, [postMeta, uid])
+  }, [postMeta, hasInitialized, uid])
 
   const On = () => {
     const fn = liked ? decrement : increment
@@ -107,7 +109,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   }
 
   useEffect(() => {
-    if (!isReady) return
+    if (!hasInitialized || !isLoggedIn) return
     const document = doc(firestore!, 'posts', slug) as DocumentReference<Post>
     getDoc(document)
       .then((e) => {
@@ -116,17 +118,17 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
       .catch(() => {
         changePostMeta({ like: 0, likeBy: [] })
       })
-  }, [isReady])
+  }, [hasInitialized, isLoggedIn])
 
   const disabledClass = useMemo<string>(() => {
     if (isWaiting) {
       return 'disabled:cursor-wait'
     }
-    if (!isReady) {
+    if (!hasInitialized || !isLoggedIn) {
       return 'disabled:cursor-not-allowed'
     }
     return ''
-  }, [isReady, isWaiting])
+  }, [hasInitialized, isLoggedIn, isWaiting])
 
   return (
     <span>
@@ -138,7 +140,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
 
       <Clap
         fill={liked}
-        disabled={!isReady || isWaiting}
+        disabled={!hasInitialized || !isLoggedIn || isWaiting}
         on={On}
         success={() => {}}
         error={() => {}}

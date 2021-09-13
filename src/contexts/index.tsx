@@ -7,6 +7,8 @@ import { useDarkModeProvider } from '@/hooks/dark_mode'
 import SearchContext from '@/components/Search/context'
 import { useSafeLogEvent } from '@/hooks/analytics'
 import { useHash } from '@/hooks/hash'
+import AuthContext from '@/contexts/auth'
+import { useAuthProvider } from '@/hooks/auth'
 
 import type { FC } from 'react'
 
@@ -34,18 +36,21 @@ const ProvideSearchContext: FC = ({ children }) => {
 }
 
 const Index: FC = ({ children }) => {
+  const auth = useAuthProvider()
   const firebase = useFirebaseProvider()
   const notice = useNoticeProvider()
   const darkMode = useDarkModeProvider()
 
   return (
-    <FirebaseContext.Provider value={firebase}>
-      <NoticeContext.Provider value={notice}>
-        <DarkModeContext.Provider value={darkMode}>
-          <ProvideSearchContext>{children}</ProvideSearchContext>
-        </DarkModeContext.Provider>
-      </NoticeContext.Provider>
-    </FirebaseContext.Provider>
+    <AuthContext.Provider value={auth}>
+      <FirebaseContext.Provider value={firebase}>
+        <NoticeContext.Provider value={notice}>
+          <DarkModeContext.Provider value={darkMode}>
+            <ProvideSearchContext>{children}</ProvideSearchContext>
+          </DarkModeContext.Provider>
+        </NoticeContext.Provider>
+      </FirebaseContext.Provider>
+    </AuthContext.Provider>
   )
 }
 

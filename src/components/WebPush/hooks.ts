@@ -31,7 +31,7 @@ const useIsSupported = () => {
 const useUnsubscribe = () => {
   const [hasSubscribed, changeHasSubscribed] = useState(false)
   const [{ uid }] = useAuth()
-  const [{ firestore, isReady }] = useFirebase()
+  const [{ firestore, hasInitialized }] = useFirebase()
 
   const retrieveStatus = async (): Promise<void> => {
     if (!firestore || !uid) return
@@ -43,7 +43,7 @@ const useUnsubscribe = () => {
 
   useEffect(() => {
     retrieveStatus()
-  }, [isReady, uid])
+  }, [hasInitialized, uid])
 
   return [hasSubscribed, retrieveStatus] as const
 }

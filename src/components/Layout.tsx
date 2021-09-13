@@ -1,5 +1,6 @@
 import AppFrame from '@/components/AppFrame'
 import { useFirebase } from '@/hooks/firebase'
+import { useAuth } from '@/hooks/auth'
 import { useEffect } from 'react'
 import loadable from '@loadable/component'
 
@@ -14,14 +15,15 @@ const Layout: FC<{
   currentPath: string
   locale: Locale
 }> = ({ children, currentPath, originalPath, locale }) => {
-  const [{ uid, analytics }] = useFirebase()
+  const [{ analytics }] = useFirebase()
+  const [{ uid }] = useAuth()
 
   useEffect(() => {
-    if (!analytics) return
+    if (!analytics || !uid) return
     import('firebase/analytics').then(({ setUserId }) => {
-      setUserId(analytics, uid!)
+      setUserId(analytics, uid)
     })
-  }, [analytics])
+  }, [analytics, uid])
   return (
     <>
       <main className="p-4 min-h-[90vh] mt-14 md:mt-[5.5rem]">{children}</main>
