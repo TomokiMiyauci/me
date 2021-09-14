@@ -1,6 +1,7 @@
 import WebPush from '@/components/WebPush/WebPush'
 import TestWebPush from '@/components/WebPush/TestWebPush'
-import { useFirebase } from '@/hooks/firebase'
+import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
+import { useMessaging } from '@/hooks/firebase/messaging'
 import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
 import { useAuth } from '@/hooks/auth'
@@ -14,7 +15,8 @@ const NOT_GRANTED =
   'The notification permission was not granted. Please check browser settings'
 
 const Index = defineComponent(({ className }) => {
-  const [{ messaging, firestore }] = useFirebase()
+  const firestore = useFirestoreLite()
+  const messaging = useMessaging()
   const notice = useNotice()
   const [{ uid, isLoggedIn }] = useAuth()
   const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()

@@ -9,7 +9,7 @@ import {
   deleteDoc
 } from 'firebase/firestore/lite'
 import type { PostsField, Post } from '@/types/firestore'
-import { useFirebase } from '@/hooks/firebase'
+import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import Clap from './Clap'
 import Circle from '@/components/ProgressCircle'
 import { useSequence } from '@/hooks/state'
@@ -43,19 +43,19 @@ const useWait = (initState?: boolean) => {
 }
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
-  const [{ firestore, hasInitialized }] = useFirebase()
+  const firestore = useFirestoreLite()
   const [{ uid, isLoggedIn }] = useAuth()
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
   const [_, sequence] = useSequence()
   const notice = useNotice()
   const liked = useMemo<boolean>(() => {
-    if (!postMeta.likeBy || !hasInitialized || !uid) return false
+    if (!postMeta.likeBy || !firestore || !uid) return false
 
     return postMeta.likeBy.some(({ id }) => {
       return id === uid
     })
-  }, [postMeta, hasInitialized, uid])
+  }, [postMeta, firestore, uid])
 
   const On = () => {
     const fn = liked ? decrement : increment
@@ -109,7 +109,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   }
 
   useEffect(() => {
-    if (!hasInitialized || !isLoggedIn) return
+    if (!firestore || !isLoggedIn) return
     const document = doc(firestore!, 'posts', slug) as DocumentReference<Post>
     getDoc(document)
       .then((e) => {
@@ -118,17 +118,17 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
       .catch(() => {
         changePostMeta({ like: 0, likeBy: [] })
       })
-  }, [hasInitialized, isLoggedIn])
+  }, [firestore, isLoggedIn])
 
   const disabledClass = useMemo<string>(() => {
     if (isWaiting) {
       return 'disabled:cursor-wait'
     }
-    if (!hasInitialized || !isLoggedIn) {
+    if (!firestore || !isLoggedIn) {
       return 'disabled:cursor-not-allowed'
     }
     return ''
-  }, [hasInitialized, isLoggedIn, isWaiting])
+  }, [firestore, isLoggedIn, isWaiting])
 
   return (
     <span>
@@ -140,7 +140,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
 
       <Clap
         fill={liked}
-        disabled={!hasInitialized || !isLoggedIn || isWaiting}
+        disabled={!firestore || !isLoggedIn || isWaiting}
         on={On}
         success={() => {}}
         error={() => {}}

@@ -1,5 +1,3 @@
-import FirebaseContext from './firebase'
-import { useFirebaseProvider } from '../hooks/firebase'
 import NoticeContext from './notice'
 import { useNoticeProvider } from '../hooks/notice'
 import DarkModeContext from './dark_mode'
@@ -7,8 +5,18 @@ import { useDarkModeProvider } from '@/hooks/dark_mode'
 import SearchContext from '@/components/Search/context'
 import { useSafeLogEvent } from '@/hooks/analytics'
 import { useHash } from '@/hooks/hash'
-import AuthContext from '@/contexts/auth'
+import UserContext from '@/contexts/auth'
 import { useAuthProvider } from '@/hooks/auth'
+import { useProvideFirebaseApp } from '@/hooks/firebase/app'
+import { useProviderFirestoreLite } from '@/hooks/firebase/firestore_lite'
+import { useProviderMessaging } from '@/hooks/firebase/messaging'
+import { useProviderAnalytics } from '@/hooks/firebase/analytics'
+import { useProviderAuth } from '@/hooks/firebase/auth'
+import AppContext from '@/contexts/firebase/app'
+import FirestoreLiteContext from '@/contexts/firebase/firestore_lite'
+import MessagingContext from '@/contexts/firebase/messaging'
+import AnalyticsContext from '@/contexts/firebase/analytics'
+import AuthContext from '@/contexts/firebase/auth'
 
 import type { FC } from 'react'
 
@@ -37,20 +45,35 @@ const ProvideSearchContext: FC = ({ children }) => {
 
 const Index: FC = ({ children }) => {
   const auth = useAuthProvider()
-  const firebase = useFirebaseProvider()
   const notice = useNoticeProvider()
   const darkMode = useDarkModeProvider()
 
+  const [app] = useProvideFirebaseApp()
+  const [firestoreLite] = useProviderFirestoreLite(app)
+  const [messaging] = useProviderMessaging(app)
+  const [analytics] = useProviderAnalytics(app)
+  const aut = useProviderAuth()
+
   return (
-    <AuthContext.Provider value={auth}>
-      <FirebaseContext.Provider value={firebase}>
-        <NoticeContext.Provider value={notice}>
-          <DarkModeContext.Provider value={darkMode}>
-            <ProvideSearchContext>{children}</ProvideSearchContext>
-          </DarkModeContext.Provider>
-        </NoticeContext.Provider>
-      </FirebaseContext.Provider>
-    </AuthContext.Provider>
+    <UserContext.Provider value={auth}>
+      <AppContext.Provider value={app}>
+        <FirestoreLiteContext.Provider value={firestoreLite}>
+          <MessagingContext.Provider value={messaging}>
+            <AnalyticsContext.Provider value={analytics}>
+              <NoticeContext.Provider value={notice}>
+                <DarkModeContext.Provider value={darkMode}>
+                  <ProvideSearchContext>
+                    <AuthContext.Provider value={aut}>
+                      {children}
+                    </AuthContext.Provider>
+                  </ProvideSearchContext>
+                </DarkModeContext.Provider>
+              </NoticeContext.Provider>
+            </AnalyticsContext.Provider>
+          </MessagingContext.Provider>
+        </FirestoreLiteContext.Provider>
+      </AppContext.Provider>
+    </UserContext.Provider>
   )
 }
 

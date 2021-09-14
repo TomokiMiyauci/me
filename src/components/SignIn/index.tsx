@@ -4,10 +4,11 @@ import {
   signInWithEmailAndPassword,
   EmailAuthProvider
 } from 'firebase/auth'
-import { useFirebase } from '@/hooks/firebase'
+import { useFirebaseApp } from '@/hooks/firebase/app'
+import { useAuth } from '@/hooks/firebase/auth'
 import { Fragment, useEffect } from 'react'
-import { getUser } from '@/utils/auth'
-import { useAuth } from '@/hooks/auth'
+import { getUser } from '@/utils/firebase/auth'
+import { useAuth as useUser } from '@/hooks/auth'
 import googleIcon from '@iconify/icons-grommet-icons/google'
 import { Icon } from '@iconify/react/dist/offline'
 import emailIcon from '@iconify-icons/mdi/email-outline'
@@ -21,14 +22,15 @@ import { navigate } from 'gatsby'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import { useNotice } from '@/hooks/notice'
 import { useSafeLogEvent } from '@/hooks/analytics'
-import { initializeAuth } from '@/utils/auth'
+import { initializeAuth } from '@/utils/firebase/auth'
 
 import type { AuthProvider, AuthError } from 'firebase/auth'
 
 const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
-  const [{ app, auth }, setFirebase] = useFirebase()
+  const app = useFirebaseApp()
+  const [auth, setAuth] = useAuth()
   const [overlay, { on: show, off: hide }] = useSwitch()
-  const [_, setUser] = useAuth()
+  const [_, setUser] = useUser()
   const notice = useNotice()
   const { safeLogEvent } = useSafeLogEvent()
 
@@ -52,9 +54,7 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
     if (!app || auth) return
     const _auth = initializeAuth(app)
 
-    setFirebase({
-      auth: _auth
-    })
+    setAuth(_auth)
   }, [app])
 
   const passProvider = async (provider: AuthProvider) => {

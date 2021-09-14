@@ -1,7 +1,7 @@
 import AppFrame from '@/components/AppFrame'
-import { useFirebase } from '@/hooks/firebase'
+import { useAnalytics } from '@/hooks/firebase/analytics'
 import { useAuth } from '@/hooks/auth'
-import { useEffect } from 'react'
+import { useAsyncEffect } from 'use-async-effect'
 import loadable from '@loadable/component'
 
 const Notice = loadable(() => import('@/components/Notice'))
@@ -15,15 +15,16 @@ const Layout: FC<{
   currentPath: string
   locale: Locale
 }> = ({ children, currentPath, originalPath, locale }) => {
-  const [{ analytics }] = useFirebase()
+  const analytics = useAnalytics()
   const [{ uid }] = useAuth()
 
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (!analytics || !uid) return
-    import('firebase/analytics').then(({ setUserId }) => {
-      setUserId(analytics, uid)
-    })
+
+    const { setUserId } = await import('firebase/analytics')
+    setUserId(analytics, uid)
   }, [analytics, uid])
+
   return (
     <>
       <main className="p-4 min-h-[90vh] mt-14 md:mt-[5.5rem]">{children}</main>

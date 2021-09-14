@@ -1,11 +1,11 @@
-import { useFirebase } from '@/hooks/firebase'
+import { useAnalytics } from '@/hooks/firebase/analytics'
 import type { Analytics, logEvent as _logEvent } from 'firebase/analytics'
 
 /**
  * @remarks firebase analytics of `logEvent` types is made with override. Types is not portable.
  */
 const useSafeLogEvent = () => {
-  const [{ analytics }] = useFirebase()
+  const analytics = useAnalytics()
 
   const safeLogEvent = async (
     safeCall: (
