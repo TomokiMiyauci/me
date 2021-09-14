@@ -1,4 +1,4 @@
-import SingIn from '@/components/SignIn'
+import SignIn from '@/components/SignIn'
 import homeOutlined from '@iconify/icons-ant-design/home-outlined'
 import { Icon } from '@iconify/react/dist/offline'
 import { navigate } from 'gatsby'
@@ -12,7 +12,7 @@ const Login: FC<PageProps> = ({ location }) => {
   return (
     <>
       <main className="h-screen w-screen flex justify-center">
-        <SingIn redirect={redirect ?? '/'} />
+        <SignIn redirect={redirect ?? '/'} />
       </main>
 
       <span className="fixed top-4 left-4 ">

@@ -1,15 +1,8 @@
 import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
   signInWithPopup,
-  initializeAuth,
-  indexedDBLocalPersistence,
-  connectAuthEmulator,
-  browserPopupRedirectResolver,
   linkWithCredential,
   signInWithEmailAndPassword,
-  EmailAuthProvider,
-  signOut
+  EmailAuthProvider
 } from 'firebase/auth'
 import { useFirebase } from '@/hooks/firebase'
 import { Fragment, useEffect } from 'react'
@@ -26,23 +19,23 @@ import { useSwitch } from '@/hooks/state'
 import { Transition } from '@headlessui/react'
 import { navigate } from 'gatsby'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
+import { useNotice } from '@/hooks/notice'
+import { useSafeLogEvent } from '@/hooks/analytics'
+import { initializeAuth } from '@/utils/auth'
 
-const email = 'aaa@a.com'
-const password = 'password!'
+import type { AuthProvider, AuthError } from 'firebase/auth'
 
 const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
-  const [{ app, auth }, change] = useFirebase()
+  const [{ app, auth }, setFirebase] = useFirebase()
   const [overlay, { on: show, off: hide }] = useSwitch()
   const [_, setUser] = useAuth()
+  const notice = useNotice()
+  const { safeLogEvent } = useSafeLogEvent()
 
-  const f: MouseEventHandler = async () => {
+  const signUp: MouseEventHandler = async () => {
     if (!auth) return
 
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    )
+    const userCredential = await signInWithEmailAndPassword(auth, '', '')
     setUser(userCredential.user)
   }
 
@@ -56,30 +49,29 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
   }
 
   useEffect(() => {
-    if (!app) return
-    const auth = initializeAuth(app, {
-      persistence: indexedDBLocalPersistence,
-      popupRedirectResolver: browserPopupRedirectResolver
-    })
-    connectAuthEmulator(auth, 'http://localhost:9099', {
-      disableWarnings: true
-    })
+    if (!app || auth) return
+    const _auth = initializeAuth(app)
 
-    change({
-      auth
-    })
-
-    getUser(auth).then((user) => {
-      console.log(user)
+    setFirebase({
+      auth: _auth
     })
   }, [app])
 
-  const handleClick: MouseEventHandler = () => {
+  const passProvider = async (provider: AuthProvider) => {
     if (!auth) return
-    const provider = new GithubAuthProvider()
+
     show()
-    signInWithPopup(auth, provider)
+    return signInWithPopup(auth, provider)
       .then((userCredential) => {
+        notice({
+          type: 'success',
+          field: <div>Success login</div>
+        })
+        safeLogEvent((analytics, logEvent) =>
+          logEvent(analytics, 'login', {
+            providerId: provider.providerId
+          })
+        )
         if (userCredential) {
           setUser(userCredential.user)
         }
@@ -88,19 +80,24 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
           navigate(redirect)
         }
       })
-      .catch((e) => {
-        console.log(e)
+      .catch(({ code, message, name, appName }: AuthError) => {
+        if (code !== 'auth/popup-closed-by-user') {
+          notice({
+            type: 'alert',
+            field: <div>{message}</div>
+          })
+          safeLogEvent((analytics, logEvent) =>
+            logEvent(analytics, 'exception', {
+              name,
+              appName,
+              description: message
+            })
+          )
+        }
       })
-      .finally(() => {
-        hide()
-      })
+      .finally(hide)
   }
 
-  const handleGoogle: MouseEventHandler = () => {
-    if (!auth) return
-    const provider = new GoogleAuthProvider()
-    signInWithPopup(auth, provider)
-  }
   return (
     <>
       <div className="flex flex-col justify-center items-center">
@@ -110,7 +107,10 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
             <div className="flex flex-col justify-center items-center space-y-4">
               <button
                 className="rounded-md bg-gray-900 py-2 px-4 space-x-4"
-                onClick={handleClick}
+                onClick={async () => {
+                  const { GithubAuthProvider } = await import('firebase/auth')
+                  passProvider(new GithubAuthProvider())
+                }}
               >
                 <Icon className="w-6 h-6 text-white" icon={githubIcon} />
                 <span>Sign in with GitHub</span>
@@ -118,7 +118,10 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
 
               <button
                 className="rounded-md bg-gray-900 py-2 px-4 space-x-4"
-                onClick={handleGoogle}
+                onClick={async () => {
+                  const { GoogleAuthProvider } = await import('firebase/auth')
+                  passProvider(new GoogleAuthProvider())
+                }}
               >
                 <Icon className="w-6 h-6" icon={googleIcon} />
                 <span className="align-middle">Sign in with Google</span>
@@ -168,7 +171,7 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
         as={Fragment}
         show={overlay}
       >
-        <div className="inset-0 fixed backdrop-blur flex flex-col items-center space-y-4 justify-center">
+        <div className="inset-0 fixed backdrop-blur flex flex-col items-center space-y-6 justify-center">
           <ProgressCircle />
           <span>waiting for sign in...</span>
         </div>
