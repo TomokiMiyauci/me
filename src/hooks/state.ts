@@ -26,6 +26,16 @@ const useToggle = (
   return [state, toggle]
 }
 
+const useSwitch = (
+  initialState?: boolean | (() => boolean)
+): [boolean, { on: () => void; off: () => void }] => {
+  const [state, changeState] = useState<boolean>(initialState ?? false)
+  const on = (): void => changeState(true)
+  const off = (): void => changeState(false)
+
+  return [state, { on, off }]
+}
+
 /**
  * Hooks for sequential function
  * @param initState - Initial state for sequence
@@ -86,4 +96,4 @@ const usePromiseState = () => {
   }
 }
 
-export { useToggle, useSequence, usePromiseState }
+export { useToggle, useSequence, usePromiseState, useSwitch }

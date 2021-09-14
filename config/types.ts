@@ -13,4 +13,14 @@ type SiteMetaData = {
 
 type Locale = 'en' | 'ja'
 
-export type { SiteMetaData, Locale }
+type PageContext = {
+  previousPostSlug: string
+  nextPostSlug: string
+  slug: string
+  locale: Locale
+  hrefLang: 'en-US' | 'jp-JA'
+  originalPath: string
+  dateFormat: string
+}
+
+export type { SiteMetaData, Locale, PageContext }
