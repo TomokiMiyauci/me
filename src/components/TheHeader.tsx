@@ -1,7 +1,6 @@
-import { FC, memo } from 'react'
+import { memo } from 'react'
 import { useLocalizedNavigations } from './BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
-import type { Locale } from '@/../config/types'
 import SearchButton from '@/components/Search/SearchButton'
 import { useSearchShow } from '@/components/Search/hooks'
 import Logo from '@/components/Logo'
@@ -10,6 +9,10 @@ import LangSwitcher from '@/components/LangSwitcher'
 import Navigation from '@/components/BottomNavigation/Navigation'
 import DarkMode from '@/components/DarkMode'
 import IconWith from '@/components/IconWith'
+import { classNames } from '@/utils/class_name'
+
+import type { FC } from 'react'
+import type { Locale } from '@/../config/types'
 
 const Inner: FC<{
   originalPath: string
@@ -21,7 +24,7 @@ const Inner: FC<{
 
   return (
     <div
-      className="container max-w-8xl py-2 md:py-0 px-3 mx-auto items-center
+      className="container max-w-8xl mx-auto items-center
 justify-between flex"
     >
       <span className="flex space-x-2 lg:space-x-6 items-center">
@@ -71,16 +74,10 @@ const TheHeader: FC<{
 }> = ({ originalPath, className, currentPath, locale }) => {
   return (
     <header
-      className={`
-      fixed
-      top-0
-      border-b
-      md:border-none
-      w-full
-      bg-gray-50
-      dark:bg-blue-gray-900
-      backdrop-blur-md
-      dark:border-gray-800 ${className}`}
+      className={classNames(
+        'h-[56px] md:h-[84px] fixed top-0 w-full py-1 md:py-0 px-3 border-b md:border-none bg-gray-50 dark:bg-blue-gray-900 backdrop-blur-md dark:border-gray-800',
+        className
+      )}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
       <MemoInner

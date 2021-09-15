@@ -43,9 +43,9 @@
     @apply rounded-full hover:bg-gray-100 dark:hover:bg-blue-gray-700 dark:hover:bg-opacity-80;
   }
   .main {
-    @apply mt-[56px] mb-[50px];
+    @apply mt-[56px] mb-[60px];
 
-    height: calc(100vh - 56px - 50px);
+    height: calc(100vh - 56px - 60px);
   }
   .gradation {
     @apply bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500;

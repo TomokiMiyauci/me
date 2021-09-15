@@ -13,7 +13,9 @@ const Layout: FC<{
 }> = ({ children, currentPath, originalPath, locale }) => {
   return (
     <>
-      <main className="p-4 min-h-[90vh] mt-14 md:mt-[5.5rem]">{children}</main>
+      <main className="p-4 min-h-[90vh] mt-[56px] md:mt-[84px]">
+        {children}
+      </main>
       <AppFrame
         locale={locale}
         currentPath={currentPath}
