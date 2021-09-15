@@ -19,7 +19,7 @@ import ArticleHeadline from '@/components/ArticleHeadline'
 import Tag from '@/components/Tag'
 import type { Order } from '@/components/ArticleHeadline/types'
 import { makeAreaComponent } from '@/components/ArticleHeadline/util'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import Intersection from '@/components/Intersection'
 import loadable from '@loadable/component'
 const Subscribe = loadable(() => import('@/components/Subscribe'))

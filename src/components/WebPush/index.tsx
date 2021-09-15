@@ -6,7 +6,7 @@ import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
 import { useAuth } from '@/hooks/auth'
 import { useLocalization } from 'gatsby-theme-i18n'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { defineComponent } from '@/utils/component'
 
 import type { Locale } from 'config/types'

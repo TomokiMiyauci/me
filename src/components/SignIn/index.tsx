@@ -21,7 +21,7 @@ import { Transition } from '@headlessui/react'
 import { navigate } from 'gatsby'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import { useNotice } from '@/hooks/notice'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { initializeAuth } from '@/utils/firebase/auth'
 
 import type { AuthProvider, AuthError } from 'firebase/auth'
