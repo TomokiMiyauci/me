@@ -1,9 +1,9 @@
-import Base from '@/layout/Base'
-import Global from '@/layout/Global'
+import Base from '@/layouts/Base'
+import Global from '@/layouts/Global'
 import loadable from '@loadable/component'
 
-const ChatLayout = loadable(() => import('@/layout/Chat'))
-const PlainLayout = loadable(() => import('@/layout/Plain'))
+const ChatLayout = loadable(() => import('@/layouts/Chat'))
+const PlainLayout = loadable(() => import('@/layouts/Plain'))
 
 import type { FC, ReactNode } from 'react'
 import type { PageProps } from 'gatsby'
