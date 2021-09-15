@@ -1,5 +1,5 @@
-import NoticeContext from './notice'
-import UserContext from '@/contexts/auth'
+import NoticeContext from '@/contexts/notice'
+import UserContext from '@/contexts/user'
 import DarkModeContext from '@/contexts/dark_mode'
 import SearchContext from '@/components/Search/context'
 import AppContext from '@/contexts/firebase/app'
@@ -13,7 +13,7 @@ import { useNoticeProvider } from '@/hooks/notice'
 import { useDarkModeProvider } from '@/hooks/dark_mode'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { useHash } from '@/hooks/hash'
-import { useAuthProvider } from '@/hooks/auth'
+import { useProviderUser } from '@/hooks/user'
 import { useProvideFirebaseApp } from '@/hooks/firebase/app'
 import { useProviderFirestore } from '@/hooks/firebase/firestore'
 import { useProviderFirestoreLite } from '@/hooks/firebase/firestore_lite'
@@ -48,7 +48,7 @@ const ProvideSearchContext: FC = ({ children }) => {
 }
 
 const Index: FC = ({ children }) => {
-  const [user, changeUser] = useAuthProvider()
+  const [user, changeUser] = useProviderUser()
   const notice = useNoticeProvider()
   const darkMode = useDarkModeProvider()
   const [app] = useProvideFirebaseApp()

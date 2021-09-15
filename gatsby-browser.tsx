@@ -2,7 +2,7 @@ import '@/assets/global.scss'
 import '@/assets/prose.scss'
 import type { GatsbyBrowser } from 'gatsby'
 import Context from '@/contexts'
-import Layout from '@/layout'
+import Layout from '@/layouts'
 
 import type { PageContext } from 'config/types'
 

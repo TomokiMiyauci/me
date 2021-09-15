@@ -1,11 +1,11 @@
-import AuthContext from '@/contexts/auth'
+import UserContext from '@/contexts/user'
 import { useState, useMemo, useEffect, useContext } from 'react'
-import type { UserContext, User } from '@/types/user'
+import type { UserState, MaybeUser } from '@/types/user'
 
-const useAuth = (): UserContext => useContext(AuthContext)
+const useUser = (): UserState[0] => useContext(UserContext)[0]
 
-const useAuthProvider = (): UserContext => {
-  const [user, changeUser] = useState<User | undefined>()
+const useProviderUser = (): UserState => {
+  const [user, changeUser] = useState<MaybeUser>()
   const isLoggedIn = useMemo<boolean>(() => !!user && !!user.uid, [user])
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const useAuthProvider = (): UserContext => {
 
       sw.addEventListener(
         'message',
-        ({ data }: MessageEvent<User>) => {
+        ({ data }: MessageEvent<MaybeUser>) => {
           changeUser(data)
         },
         {
@@ -36,4 +36,4 @@ const useAuthProvider = (): UserContext => {
   ]
 }
 
-export { useAuth, useAuthProvider }
+export { useUser, useProviderUser }

@@ -6,9 +6,8 @@ import {
 } from 'firebase/auth'
 import { useFirebaseApp } from '@/hooks/firebase/app'
 import { useAuth } from '@/hooks/firebase/auth'
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useContext } from 'react'
 import { getUser } from '@/utils/firebase/auth'
-import { useAuth as useUser } from '@/hooks/auth'
 import googleIcon from '@iconify/icons-grommet-icons/google'
 import { Icon } from '@iconify/react/dist/offline'
 import emailIcon from '@iconify-icons/mdi/email-outline'
@@ -23,6 +22,7 @@ import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import { useNotice } from '@/hooks/notice'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { initializeAuth } from '@/utils/firebase/auth'
+import UserContext from '@/contexts/user'
 
 import type { AuthProvider, AuthError } from 'firebase/auth'
 
@@ -30,7 +30,7 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
   const app = useFirebaseApp()
   const [auth, setAuth] = useAuth()
   const [overlay, { on: show, off: hide }] = useSwitch()
-  const [_, setUser] = useUser()
+  const [_, setUser] = useContext(UserContext)
   const notice = useNotice()
   const { safeLogEvent } = useSafeLogEvent()
 

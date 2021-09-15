@@ -3,13 +3,13 @@ import { Icon } from '@iconify/react/dist/offline'
 import chevronLeft from '@iconify/icons-akar-icons/chevron-left'
 import { StepContext } from '@/contexts/step'
 import { useState, useLayoutEffect } from 'react'
-import { useAuth } from '@/hooks/auth'
+import { useUser } from '@/hooks/user'
 
 import type { FC, ReactNode } from 'react'
 
 const Chat: FC<{ children: ReactNode }> = ({ children }) => {
   const [step, changeStep] = useState(0)
-  const [{ isAnonymous }] = useAuth()
+  const { isAnonymous } = useUser()
 
   useLayoutEffect(() => {
     if (isAnonymous) {

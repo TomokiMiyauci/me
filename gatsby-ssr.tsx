@@ -1,6 +1,6 @@
 import Context from '@/contexts'
 import { isProd } from '@/utils/environment'
-import Layout from '@/layout'
+import Layout from '@/layouts'
 
 import type { GatsbySSR } from 'gatsby'
 import type { PageContext } from 'config/types'

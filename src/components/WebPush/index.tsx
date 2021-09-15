@@ -4,7 +4,7 @@ import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import { useMessaging } from '@/hooks/firebase/messaging'
 import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
-import { useAuth } from '@/hooks/auth'
+import { useUser } from '@/hooks/user'
 import { useLocalization } from 'gatsby-theme-i18n'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { defineComponent } from '@/utils/component'
@@ -18,7 +18,7 @@ const Index = defineComponent(({ className }) => {
   const firestore = useFirestoreLite()
   const messaging = useMessaging()
   const notice = useNotice()
-  const [{ uid, isLoggedIn }] = useAuth()
+  const { uid, isLoggedIn } = useUser()
   const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()
   const { locale } = useLocalization()
   const { safeLogEvent } = useSafeLogEvent()

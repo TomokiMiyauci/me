@@ -14,7 +14,7 @@ import Clap from './Clap'
 import Circle from '@/components/ProgressCircle'
 import { useSequence } from '@/hooks/state'
 import { useNotice } from '@/hooks/notice'
-import { useAuth } from '@/hooks/auth'
+import { useUser } from '@/hooks/user'
 
 const useWait = (initState?: boolean) => {
   const [isWaiting, changeWaiting] = useState(initState ?? false)
@@ -44,7 +44,7 @@ const useWait = (initState?: boolean) => {
 
 const Index: FC<{ slug: string }> = ({ slug }) => {
   const firestore = useFirestoreLite()
-  const [{ uid, isLoggedIn }] = useAuth()
+  const { uid, isLoggedIn } = useUser()
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
   const [_, sequence] = useSequence()
