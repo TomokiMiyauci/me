@@ -8,11 +8,13 @@ import { useHash } from '@/hooks/hash'
 import UserContext from '@/contexts/auth'
 import { useAuthProvider } from '@/hooks/auth'
 import { useProvideFirebaseApp } from '@/hooks/firebase/app'
+import { useProviderFirestore } from '@/hooks/firebase/firestore'
 import { useProviderFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import { useProviderMessaging } from '@/hooks/firebase/messaging'
 import { useProviderAnalytics } from '@/hooks/firebase/analytics'
 import { useProviderAuth } from '@/hooks/firebase/auth'
 import AppContext from '@/contexts/firebase/app'
+import FirestoreContext from '@/contexts/firebase/firestore'
 import FirestoreLiteContext from '@/contexts/firebase/firestore_lite'
 import MessagingContext from '@/contexts/firebase/messaging'
 import AnalyticsContext from '@/contexts/firebase/analytics'
@@ -53,6 +55,7 @@ const Index: FC = ({ children }) => {
   const [messaging] = useProviderMessaging(app)
   const [analytics] = useProviderAnalytics(app)
   const aut = useProviderAuth()
+  const firestore = useProviderFirestore()
 
   return (
     <UserContext.Provider value={auth}>
@@ -60,15 +63,17 @@ const Index: FC = ({ children }) => {
         <FirestoreLiteContext.Provider value={firestoreLite}>
           <MessagingContext.Provider value={messaging}>
             <AnalyticsContext.Provider value={analytics}>
-              <NoticeContext.Provider value={notice}>
-                <DarkModeContext.Provider value={darkMode}>
-                  <ProvideSearchContext>
-                    <AuthContext.Provider value={aut}>
-                      {children}
-                    </AuthContext.Provider>
-                  </ProvideSearchContext>
-                </DarkModeContext.Provider>
-              </NoticeContext.Provider>
+              <FirestoreContext.Provider value={firestore}>
+                <NoticeContext.Provider value={notice}>
+                  <DarkModeContext.Provider value={darkMode}>
+                    <ProvideSearchContext>
+                      <AuthContext.Provider value={aut}>
+                        {children}
+                      </AuthContext.Provider>
+                    </ProvideSearchContext>
+                  </DarkModeContext.Provider>
+                </NoticeContext.Provider>
+              </FirestoreContext.Provider>
             </AnalyticsContext.Provider>
           </MessagingContext.Provider>
         </FirestoreLiteContext.Provider>
