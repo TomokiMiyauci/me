@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react/dist/offline'
 import globalOutlined from '@iconify/icons-ant-design/global-outlined'
 import flagForJapan from '@iconify/icons-emojione/flag-for-japan'
 import { classNames } from '@/utils/class_name'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 
 const Index: FC<{
   enabled: boolean

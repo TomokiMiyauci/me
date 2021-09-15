@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useFirebase } from '@/hooks/firebase'
+import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import { PostsField } from '@/types/firestore'
 import {
   doc,
@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore/lite'
 
 const useAccessCounter = (slug: string) => {
-  const [{ firestore }] = useFirebase()
+  const firestore = useFirestoreLite()
   useEffect(() => {
     if (!firestore) return
     const document = doc(firestore, slug) as DocumentReference<PostsField>

@@ -1,7 +1,7 @@
 import { useNotice } from '@/hooks/notice'
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import Newsletter from '@/components/Newsletter/Newsletter'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { defineComponent } from '@/utils/component'
 import type { HTTPError, TimeoutError } from 'ky'
 import type { Locale } from 'config/types'

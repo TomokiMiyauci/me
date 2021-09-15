@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useState, useRef } from 'react'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { useSearchShow } from '@/components/Search/hooks'
 import loadable from '@loadable/component'
 import dalay from 'p-min-delay'
@@ -134,10 +134,10 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
   return (
     <>
       <Swipe />
-      <div className="flex items-center space-x-2 px-3 py-1">
+      <div className="flex items-center space-x-2 px-3 py-1 md:py-2">
         <span className="tooltip" data-tooltip="Close">
           <button
-            className="hover:text-accent transition-colors duration-300"
+            className="hover:text-accent transition-colors duration-300 btn-circle p-2"
             onClick={() => changeShow(false)}
           >
             <Icon className="w-7 h-7" icon={back} />
@@ -152,7 +152,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           required
           maxLength={100}
           ref={ref}
-          className="flex-1 bg-transparent py-3 pl-2 h-full "
+          className="flex-1 bg-transparent py-2 h-full text-xl"
           value={query}
           onChange={({ target }) => setQuery(target.value)}
         />
@@ -160,7 +160,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
         {!!query && (
           <span className="tooltip" data-tooltip="Clear">
             <button
-              className="hover:text-accent transition-colors duration-300"
+              className="hover:text-accent transition-colors duration-300 btn-circle p-2"
               onClick={() => {
                 clearSearch()
                 ref.current?.focus()

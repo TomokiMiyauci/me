@@ -1,5 +1,5 @@
-import { useAuth } from '@/hooks/auth'
-import { useFirebase } from '@/hooks/firebase'
+import { useUser } from '@/hooks/user'
+import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import { useEffect, useState } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePromiseState } from '@/hooks/state'
@@ -30,20 +30,20 @@ const useIsSupported = () => {
 
 const useUnsubscribe = () => {
   const [hasSubscribed, changeHasSubscribed] = useState(false)
-  const [{ uid }] = useAuth()
-  const [{ firestore, isReady }] = useFirebase()
+  const { uid } = useUser()
+  const firestore = useFirestoreLite()
 
   const retrieveStatus = async (): Promise<void> => {
     if (!firestore || !uid) return
     const { getDocs, collection } = await import('firebase/firestore/lite')
-    const col = collection(firestore!, 'users', uid, 'fcm')
+    const col = collection(firestore, 'users', uid, 'fcm')
     const docs = await getDocs(col)
     changeHasSubscribed(!docs.empty)
   }
 
   useEffect(() => {
     retrieveStatus()
-  }, [isReady, uid])
+  }, [firestore, uid])
 
   return [hasSubscribed, retrieveStatus] as const
 }

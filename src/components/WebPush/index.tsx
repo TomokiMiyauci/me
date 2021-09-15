@@ -1,11 +1,12 @@
 import WebPush from '@/components/WebPush/WebPush'
 import TestWebPush from '@/components/WebPush/TestWebPush'
-import { useFirebase } from '@/hooks/firebase'
+import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
+import { useMessaging } from '@/hooks/firebase/messaging'
 import { useNotice } from '@/hooks/notice'
 import { useUnsubscribe } from '@/components/WebPush/hooks'
-import { useAuth } from '@/hooks/auth'
+import { useUser } from '@/hooks/user'
 import { useLocalization } from 'gatsby-theme-i18n'
-import { useSafeLogEvent } from '@/hooks/analytics'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { defineComponent } from '@/utils/component'
 
 import type { Locale } from 'config/types'
@@ -14,9 +15,10 @@ const NOT_GRANTED =
   'The notification permission was not granted. Please check browser settings'
 
 const Index = defineComponent(({ className }) => {
-  const [{ messaging, firestore }] = useFirebase()
+  const firestore = useFirestoreLite()
+  const messaging = useMessaging()
   const notice = useNotice()
-  const [{ uid, isLoggedIn }] = useAuth()
+  const { uid, isLoggedIn } = useUser()
   const [hasSubscribed, changeHasSubscribed] = useUnsubscribe()
   const { locale } = useLocalization()
   const { safeLogEvent } = useSafeLogEvent()
