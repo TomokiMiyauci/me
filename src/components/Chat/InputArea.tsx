@@ -38,6 +38,8 @@ const InputArea: FC = () => {
   const isValidMessage = useMemo<boolean>(() => !!message.trim(), [message])
 
   const handleSend: MouseEventHandler = async () => {
+    if (!isValidMessage) return
+    changeMessage('')
     const col = collection(
       firestore!,
       'publicChatRooms',
@@ -49,13 +51,9 @@ const InputArea: FC = () => {
       value: message,
       createdAt: serverTimestamp(),
       userRef: doc(firestore!, 'users', uid!)
+    }).catch((e) => {
+      console.log(e)
     })
-      .then(() => {
-        changeMessage('')
-      })
-      .catch((e) => {
-        console.log(e)
-      })
   }
 
   return (

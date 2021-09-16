@@ -46,7 +46,7 @@ const Chat: FC = () => {
       'messages'
     ) as CollectionReference<MessageData<Timestamp>>
 
-    const q = query(col, orderBy('createdAt', 'desc'), limit(5))
+    const q = query(col, orderBy('createdAt', 'desc'))
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const shot = snapshot.docs.map((d) => {
@@ -68,25 +68,49 @@ const Chat: FC = () => {
     return unsubscribe
   }, [firestore])
 
+  const groupedMessage = useMemo(() => {
+    const group = messages.reduce((acc, cur) => {
+      const date = cur.createdAt.toDateString()
+
+      acc = { [date]: [...(acc[date] ?? []), cur] }
+      return acc
+    }, {} as { [k in string]: Message[] })
+
+    return group
+  }, [messages])
+
+  console.log(groupedMessage)
+
   return (
     <div className="flex-1 p-4">
-      <section className="flex flex-col-reverse">
-        {messages.map(({ value, id, createdAt }) => {
-          return (
-            <div className="my-1 space-x-2" key={id}>
-              <div className="rounded-xl max-w-[80vw] inline-block bg-gray-400 break-words whitespace-pre-wrap bg-opacity-20 py-1 px-3">
-                {value}
-              </div>
-
-              <span className="align-bottom text-gray-400 text-xs">
-                {createdAt.toLocaleTimeString('ja', {
-                  timeStyle: 'short'
-                })}
+      {Object.entries(groupedMessage).map(([date, messages]) => {
+        return (
+          <section className="space-y-1" key={date}>
+            <div className="text-center sticky top-[24px]">
+              <span className="bg-gray-400 bg-opacity-20 rounded-full px-3 py-1">
+                {date}
               </span>
             </div>
-          )
-        })}
-      </section>
+            <div className="flex flex-col-reverse">
+              {messages.map(({ value, id, createdAt }) => {
+                return (
+                  <div className="my-1 space-x-2" key={id}>
+                    <div className="rounded-xl max-w-[80vw] inline-block bg-gray-400 break-words whitespace-pre-wrap bg-opacity-20 py-1 px-3">
+                      {value}
+                    </div>
+
+                    <span className="align-bottom text-gray-400 text-xs">
+                      {createdAt.toLocaleTimeString('ja', {
+                        timeStyle: 'short'
+                      })}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })}
     </div>
   )
 }
