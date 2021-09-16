@@ -12,6 +12,7 @@ import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
 import WorkerPlugin from 'worker-plugin'
 import { safeGetAccessNumbers } from './scripts/access_counter'
 import { safeGetLike } from './scripts/like_counter'
+import { CHATROOM_TYPES } from './config/constants'
 
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 
@@ -78,6 +79,14 @@ const createPages: GatsbyNode['createPages'] = async ({
         slug: frontmatter.slug,
         tags: fields.lowerCaseTags
       }
+    })
+  })
+
+  CHATROOM_TYPES.forEach((type) => {
+    createPage({
+      path: join('/chat/', type, '/'),
+      component: resolve('./src/templates/ChatRoom.tsx'),
+      context: {}
     })
   })
 

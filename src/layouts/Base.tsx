@@ -1,7 +1,4 @@
 import AppFrame from '@/components/AppFrame'
-import loadable from '@loadable/component'
-
-const Search = loadable(() => import('@/components/Search'))
 
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
@@ -21,8 +18,6 @@ const Layout: FC<{
         currentPath={currentPath}
         originalPath={originalPath}
       />
-
-      <Search locale={locale} />
     </>
   )
 }
