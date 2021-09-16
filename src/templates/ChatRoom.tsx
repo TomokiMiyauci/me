@@ -1,3 +1,6 @@
+import InputArea from '@/components/Chat/InputArea'
+import Loading from '@/components/Chat/Loading'
+import MustSignin from '@/components/SignIn/MustSignin'
 import { Transition } from '@headlessui/react'
 import { Fragment, useState, useEffect } from 'react'
 import { Timestamp } from '@firebase/firestore/dist/lite'
@@ -7,35 +10,22 @@ import {
   collection,
   onSnapshot,
   limit,
-  FieldValue,
-  CollectionReference,
-  DocumentReference,
   query,
   orderBy
 } from 'firebase/firestore'
-import InputArea from '@/components/Chat/InputArea'
-import Loading from '@/components/Chat/Loading'
-import MustSignin from '@/components/SignIn/MustSignin'
 import { useStep } from '@/components/Chat/hooks'
-
-type MessageData<T extends FieldValue = FieldValue> = {
-  createdAt: T
-  type: string
-  value: string
-  userRef: DocumentReference
-}
-
-type Message = Pick<MessageData, 'type' | 'value'> & {
-  id: string
-  createdAt: Date
-}
-
-import type { FC } from 'react'
 import { useMemo } from 'react'
+
+import type { Message, MessageData } from '@/components/Chat/types'
+import type { CollectionReference } from 'firebase/firestore'
+import type { FC } from 'react'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
   const [firestore] = useFirestore()
+  const user = useUser()
+
+  console.log(user, 'ff')
 
   useEffect(() => {
     if (!firestore) return
@@ -92,18 +82,23 @@ const Chat: FC = () => {
               </span>
             </div>
             <div className="flex flex-col-reverse">
-              {messages.map(({ value, id, createdAt }) => {
+              {messages.map(({ value, id, createdAt, user }) => {
                 return (
-                  <div className="my-1 space-x-2" key={id}>
-                    <div className="rounded-xl max-w-[80vw] inline-block bg-gray-400 break-words whitespace-pre-wrap bg-opacity-20 py-1 px-3">
-                      {value}
+                  <div className="my-1.5 ml-2 space-y-1" key={id}>
+                    <div className="text-xs">
+                      {user.displayName ?? 'Anonymous'}
                     </div>
+                    <div className="space-x-2">
+                      <div className="rounded-xl max-w-[80vw] inline-block bg-gray-400 break-words whitespace-pre-wrap bg-opacity-20 py-1 px-3">
+                        {value}
+                      </div>
 
-                    <span className="align-bottom text-gray-400 text-xs">
-                      {createdAt.toLocaleTimeString('ja', {
-                        timeStyle: 'short'
-                      })}
-                    </span>
+                      <span className="align-bottom text-gray-400 text-xs">
+                        {createdAt.toLocaleTimeString('ja', {
+                          timeStyle: 'short'
+                        })}
+                      </span>
+                    </div>
                   </div>
                 )
               })}

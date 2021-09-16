@@ -10,15 +10,21 @@ type Writable<
 } & { [k in Exclude<keyof T, U>]: T[k] }
 
 type UserState = [
-  Partial<User> & Pick<UserInfo, 'isLoggedIn'>,
+  Partial<User> &
+    Pick<
+      User & {
+        isLoggedIn: boolean
+      },
+      'isLoggedIn'
+    >,
   Dispatch<SetStateAction<User | undefined>>
 ]
 
-type User = Writable<Pick<U, 'uid' | 'isAnonymous'>>
+type User = Writable<
+  Pick<U, 'uid' | 'isAnonymous' | 'displayName' | 'emailVerified' | 'photoURL'>
+>
 type MaybeUser = Maybe<User>
 
-type UserInfo = User & {
-  isLoggedIn: boolean
-}
+type UserInfo = Pick<User, 'uid' | 'displayName' | 'photoURL'>
 
 export type { UserState, UserInfo, User, MaybeUser }

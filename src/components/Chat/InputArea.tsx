@@ -2,32 +2,21 @@ import { Icon } from '@iconify/react/dist/offline'
 import send28Filled from '@iconify/icons-fluent/send-28-filled'
 import { useFirestore } from '@/hooks/firebase/firestore'
 import { useUser } from '@/hooks/user'
-import {
-  collection,
-  doc,
-  addDoc,
-  serverTimestamp,
-  FieldValue,
-  CollectionReference,
-  DocumentReference
-} from 'firebase/firestore'
+import { collection, doc, addDoc, serverTimestamp } from 'firebase/firestore'
 import { useState, useMemo } from 'react'
 import Textarea from 'react-autosize-textarea'
+
+import type { CollectionReference } from 'firebase/firestore'
 import type {
   FC,
   MouseEventHandler,
   FormEventHandler,
   ChangeEvent
 } from 'react'
-type MessageData<T extends FieldValue = FieldValue> = {
-  createdAt: T
-  type: string
-  value: string
-  userRef: DocumentReference
-}
+import type { MessageData } from '@/components/Chat/types'
 
 const InputArea: FC = () => {
-  const { uid } = useUser()
+  const user = useUser()
   const [firestore] = useFirestore()
   const [message, changeMessage] = useState<string>('')
 
@@ -50,7 +39,12 @@ const InputArea: FC = () => {
       type: 'text',
       value: message,
       createdAt: serverTimestamp(),
-      userRef: doc(firestore!, 'users', uid!)
+      userRef: doc(firestore!, 'users', user.uid!),
+      user: {
+        uid: user.uid!,
+        photoURL: user.photoURL ?? null,
+        displayName: user.displayName ?? null
+      }
     }).catch((e) => {
       console.log(e)
     })
