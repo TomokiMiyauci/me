@@ -71,12 +71,18 @@ const Chat: FC = () => {
   return (
     <div className="flex-1 p-4">
       <section className="flex flex-col-reverse">
-        {messages.map(({ value, id }) => {
+        {messages.map(({ value, id, createdAt }) => {
           return (
-            <div className="my-1" key={id}>
-              <div className="rounded-xl inline-flex bg-gray-400 bg-opacity-20 py-1 px-3">
+            <div className="my-1 space-x-2" key={id}>
+              <div className="rounded-xl max-w-[80vw] inline-block bg-gray-400 break-words whitespace-pre-wrap bg-opacity-20 py-1 px-3">
                 {value}
               </div>
+
+              <span className="align-bottom text-gray-400 text-xs">
+                {createdAt.toLocaleTimeString('ja', {
+                  timeStyle: 'short'
+                })}
+              </span>
             </div>
           )
         })}
