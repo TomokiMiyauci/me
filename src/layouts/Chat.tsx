@@ -22,7 +22,7 @@ const Chat: FC<{
         currentPath={currentPath}
         locale={locale}
       />
-      <main className="main container mx-auto overflow-x-hidden overflow-y-scroll w-screen">
+      <main className="main overflow-x-hidden overflow-y-scroll w-screen">
         {children}
       </main>
 

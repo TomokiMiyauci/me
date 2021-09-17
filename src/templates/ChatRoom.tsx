@@ -14,8 +14,7 @@ import {
   orderBy
 } from 'firebase/firestore'
 import { useStep } from '@/components/Chat/hooks'
-import { useMemo } from 'react'
-
+import { useMemo, useRef } from 'react'
 import type { Message, MessageData } from '@/components/Chat/types'
 import type { CollectionReference } from 'firebase/firestore'
 import type { FC } from 'react'
@@ -24,8 +23,6 @@ const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
   const [firestore] = useFirestore()
   const user = useUser()
-
-  console.log(user, 'ff')
 
   useEffect(() => {
     if (!firestore) return
@@ -69,22 +66,33 @@ const Chat: FC = () => {
     return group
   }, [messages])
 
-  console.log(groupedMessage)
+  const ref = useRef<(HTMLDivElement | null)[]>([])
+
+  useEffect(() => {
+    ref.current[0]?.scrollIntoView({
+      behavior: 'smooth'
+    })
+  }, [messages])
 
   return (
-    <div className="flex-1 p-4">
+    <div className="flex-1 px-2 pb-1">
       {Object.entries(groupedMessage).map(([date, messages]) => {
         return (
-          <section className="space-y-1" key={date}>
-            <div className="text-center sticky top-[24px]">
+          <section className="space-y-1 relative" key={date}>
+            <div className="text-center sticky top-2">
               <span className="bg-gray-400 bg-opacity-20 rounded-full px-3 py-1">
                 {date}
               </span>
             </div>
             <div className="flex flex-col-reverse">
-              {messages.map(({ value, id, createdAt, user }) => {
+              {messages.map(({ value, id, createdAt, user }, i) => {
                 return (
-                  <div className="my-1.5 ml-2 space-y-1" key={id}>
+                  <div
+                    ref={(r) => (ref.current[i] = r)}
+                    className="my-1.5 ml-2 space-y-1"
+                    key={id}
+                    data-id={i}
+                  >
                     <div className="text-xs">
                       {user.displayName ?? 'Anonymous'}
                     </div>
