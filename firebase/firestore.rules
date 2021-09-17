@@ -9,6 +9,10 @@ service cloud.firestore {
       return isAuthenticated() && userId == request.auth.uid;
     }
 
+    function isOnymous() {
+      return isAuthenticated() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
     function isValidFcm(fcm, token) {
       return fcm.size() == 3
       && 'token' in fcm && fcm.token is string && fcm.token == token
@@ -35,6 +39,13 @@ service cloud.firestore {
       match /likePosts/{slug} {
         allow create: if isUserAuthenticated(userId) && isValidLikePost(request.resource.data);
         allow delete: if isUserAuthenticated(userId);
+      }
+    }
+
+    match /publicChatRooms/0 {
+      match /messages/{messageId} {
+        allow create: if isOnymous();
+        allow read: if isAuthenticated();
       }
     }
   }

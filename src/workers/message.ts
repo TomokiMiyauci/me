@@ -8,9 +8,13 @@ self.addEventListener('message', async ({ source }) => {
   const user = await getUser(auth)
 
   if (user) {
+    const { displayName, uid, isAnonymous, emailVerified, photoURL } = user
     const message: User = {
-      uid: user.uid,
-      isAnonymous: user.isAnonymous
+      displayName,
+      uid,
+      isAnonymous,
+      emailVerified,
+      photoURL
     }
     const _source = source as ServiceWorker
     _source.postMessage(message)

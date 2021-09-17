@@ -27,7 +27,8 @@ const Index = defineComponent(({ className }) => {
     if (!messaging || !firestore) {
       return
     }
-    const { requestFcmToken, postFCMToken } = await import('@/utils/firebase')
+    const { postFCMToken } = await import('@/utils/firebase/firestore_lite')
+    const { requestFcmToken } = await import('@/utils/firebase/messaging')
     const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 
@@ -78,7 +79,7 @@ const Index = defineComponent(({ className }) => {
       'firebase/firestore/lite'
     )
 
-    const { requestFcmToken } = await import('@/utils/firebase')
+    const { requestFcmToken } = await import('@/utils/firebase/messaging')
     const { getServiceWorker } = await import('@/utils/service_worker')
     const sw = await getServiceWorker('/sw.js')
 

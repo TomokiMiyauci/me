@@ -1,12 +1,19 @@
 import loadable from '@loadable/component'
 const Notice = loadable(() => import('@/components/Notice'))
-import type { FC, ReactNode } from 'react'
+const Search = loadable(() => import('@/components/Search'))
 
-const Global: FC<{ children: ReactNode }> = ({ children }) => {
+import type { FC, ReactNode } from 'react'
+import type { Locale } from 'config/types'
+
+const Global: FC<{ children: ReactNode; locale: Locale }> = ({
+  children,
+  locale
+}) => {
   return (
     <>
       {children}
       <Notice />
+      <Search locale={locale} />
     </>
   )
 }

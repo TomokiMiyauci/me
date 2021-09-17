@@ -8,12 +8,12 @@ const Logo: FC<{ shrink?: boolean; locale: Locale }> = ({ shrink, locale }) => {
     <LocalizedLink
       aria-label="Home"
       language={locale}
-      className="text-4xl space-x-4"
+      className="text-4xl space-x-4 whitespace-nowrap"
       to="/"
     >
-      <LogoSvg className="w-10 fill-current text-accent align-middle h-10" />
+      <LogoSvg className="w-9 fill-current text-accent align-middle h-10" />
 
-      <span className={`text-accent ${shrink && 'hidden lg:inline'}`}>
+      <span className={`text-accent ${shrink && 'hidden xl:inline'}`}>
         miyauci.me
       </span>
     </LocalizedLink>

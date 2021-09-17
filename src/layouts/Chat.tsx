@@ -1,42 +1,37 @@
-import { navigate } from 'gatsby'
-import { Icon } from '@iconify/react/dist/offline'
-import chevronLeft from '@iconify/icons-akar-icons/chevron-left'
-import { StepContext } from '@/contexts/step'
-import { useState, useLayoutEffect } from 'react'
-import { useUser } from '@/hooks/user'
+import TheHeader from '@/components/TheHeader'
+import BottomNavigation from '@/components/BottomNavigation'
+import { useInitializerFirestore } from '@/hooks/firebase/firestore'
+import { useFirebaseApp } from '@/hooks/firebase/app'
 
 import type { FC, ReactNode } from 'react'
+import type { Locale } from 'config/types'
 
-const Chat: FC<{ children: ReactNode }> = ({ children }) => {
-  const [step, changeStep] = useState(0)
-  const { isAnonymous } = useUser()
-
-  useLayoutEffect(() => {
-    if (isAnonymous) {
-      navigate('/login/?redirect=/chat/')
-    }
-  }, [isAnonymous])
+const Chat: FC<{
+  children: ReactNode
+  originalPath: string
+  currentPath: string
+  locale: Locale
+}> = ({ children, originalPath, currentPath, locale }) => {
+  const app = useFirebaseApp()
+  useInitializerFirestore(app)
 
   return (
-    <StepContext.Provider value={[step, changeStep]}>
-      <header className="fixed inset-x-0 border-b h-[56px] p-2 backdrop-blur border-gray-500 top-0 flex items-center">
-        <button
-          className="btn-circle p-1 md:p-2"
-          onClick={() => {
-            if (step === 0) {
-              navigate('/')
-            } else {
-              changeStep(step - 1)
-            }
-          }}
-        >
-          <Icon icon={chevronLeft} className="w-6 h-6 md:w-7 md:h-7" />
-        </button>
-      </header>
+    <>
+      <TheHeader
+        originalPath={originalPath}
+        currentPath={currentPath}
+        locale={locale}
+      />
       <main className="main container mx-auto overflow-x-hidden overflow-y-scroll w-screen">
         {children}
       </main>
-    </StepContext.Provider>
+
+      <BottomNavigation
+        className="md:hidden"
+        currentPath={currentPath}
+        locale={locale}
+      />
+    </>
   )
 }
 

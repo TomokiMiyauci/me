@@ -13,3 +13,5 @@ export const firebaseOptions: FirebaseOptions = {
   appId: '1:205944386882:web:f48733fc94e54f0de244db',
   measurementId: 'G-DWBGDDWNR9'
 }
+
+export const CHATROOM_TYPES = ['job', 'public']
