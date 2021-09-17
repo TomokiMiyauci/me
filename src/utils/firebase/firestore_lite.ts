@@ -21,4 +21,31 @@ const initializeFirestore = (app: FirebaseApp): Firestore => {
   return firestore
 }
 
-export { initializeFirestore }
+type FCMData = {
+  token: string
+  topics: ('article' | 'en' | 'ja')[]
+}
+
+const postFCMToken = async (
+  firestore: Firestore,
+  { token, topics }: FCMData,
+  userId: string
+): Promise<boolean> => {
+  const { doc, setDoc, arrayUnion, serverTimestamp } = await import(
+    'firebase/firestore/lite'
+  )
+
+  const _doc = doc(firestore, 'users', userId, 'fcm', token)
+  return setDoc(_doc, {
+    token,
+    topics: arrayUnion(...topics),
+    createdAt: serverTimestamp()
+  })
+    .then(() => true)
+    .catch((e) => {
+      console.error(e)
+      return false
+    })
+}
+
+export { initializeFirestore, postFCMToken }
