@@ -24,6 +24,7 @@ const useInitializerFirestore = (app: MaybeApp): void => {
   useAsyncEffect(async () => {
     if (!app || firestore) return
     const { initialize } = await import('@/utils/firebase/firestore')
+    console.log(initialize, 'fn')
     const _firestore = initialize(app)
     setFirestore(_firestore)
   }, [])
@@ -31,6 +32,7 @@ const useInitializerFirestore = (app: MaybeApp): void => {
   useAsyncEffect(async () => {
     if (!app || firestore) return
     const { initialize } = await import('@/utils/firebase/firestore')
+    console.log(initialize, 'fn')
     const _firestore = initialize(app)
     setFirestore(_firestore)
   }, [app])

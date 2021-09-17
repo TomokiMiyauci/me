@@ -12,8 +12,8 @@ import type { FirebaseApp } from 'firebase/app'
  * @returns A newly initialized Firestore instance.
  */
 const initialize = (app: FirebaseApp): Firestore => {
-  console.log(app, 'init')
   const firestore = initializeFirestore(app, {})
+  console.log(app, 'init', initializeFirestore)
 
   if (!isProd) {
     connectFirestoreEmulator(firestore, 'localhost', 8080)
