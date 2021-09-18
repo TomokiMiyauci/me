@@ -3,11 +3,9 @@ import { Icon } from '@iconify/react/dist/offline'
 import { Link } from 'gatsby'
 import { useState } from 'react'
 import { getDoc, doc } from 'firebase/firestore'
-import { useAsyncEffect } from 'use-async-effect'
-import { useFirestore } from '@/hooks/firebase/firestore'
 import Timestamp from '@/components/Chat/Timestamp'
 import bxsMessageSquareDots from '@iconify/icons-bx/bxs-message-square-dots'
-
+import { useSafeFirestoreEffect } from '@/hooks/firebase/firestore'
 import type { FC } from 'react'
 import type { PageProps } from 'gatsby'
 import type {
@@ -17,30 +15,27 @@ import type {
 import type { DocumentReference } from 'firebase/firestore'
 
 const Main: FC = () => {
-  const firestore = useFirestore()
   const [chatRoom, changeChatRoom] = useState<Partial<PublicChatRoom>>({})
 
-  useAsyncEffect(async () => {
-    if (!firestore) return
-
-    const snapshot = await getDoc(
+  useSafeFirestoreEffect((firestore) => {
+    getDoc(
       doc(
         firestore,
         'publicChatRooms',
         '0'
       ) as DocumentReference<PublicChatRoomData>
-    )
+    ).then((snapshot) => {
+      if (!snapshot.exists()) return
 
-    if (!snapshot.exists()) return
+      const { createdAt, createdAtOrigin, ...rest } = snapshot.data()
 
-    const { createdAt, createdAtOrigin, ...rest } = snapshot.data()
-
-    changeChatRoom({
-      ...rest,
-      createdAt: createdAt.toDate(),
-      createdAtOrigin: createdAtOrigin.toDate()
+      changeChatRoom({
+        ...rest,
+        createdAt: createdAt.toDate(),
+        createdAtOrigin: createdAtOrigin.toDate()
+      })
     })
-  }, [firestore])
+  }, [])
 
   return (
     <div className="w-full h-full flex space-x-4">

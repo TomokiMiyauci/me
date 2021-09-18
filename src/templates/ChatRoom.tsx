@@ -4,7 +4,10 @@ import MustSignin from '@/components/SignIn/MustSignin'
 import { Transition } from '@headlessui/react'
 import { Fragment, useState, useEffect } from 'react'
 import { Timestamp } from '@firebase/firestore/dist/lite'
-import { useFirestore } from '@/hooks/firebase/firestore'
+import {
+  useFirestore,
+  useSafeFirestoreEffect
+} from '@/hooks/firebase/firestore'
 import { useUser } from '@/hooks/user'
 import {
   collection,
@@ -21,11 +24,9 @@ import type { FC } from 'react'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
-  const firestore = useFirestore()
-  const user = useUser()
+  const { uid } = useUser()
 
-  useEffect(() => {
-    if (!firestore) return
+  useSafeFirestoreEffect((firestore) => {
     const col = collection(
       firestore,
       'publicChatRooms',
@@ -53,7 +54,7 @@ const Chat: FC = () => {
     })
 
     return unsubscribe
-  }, [firestore])
+  }, [])
 
   const groupedMessage = useMemo(() => {
     const group = messages.reduce((acc, cur) => {

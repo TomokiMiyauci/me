@@ -1,8 +1,5 @@
 import TheHeader from '@/components/TheHeader'
 import BottomNavigation from '@/components/BottomNavigation'
-import { useInitializeFirestore } from '@/hooks/firebase/firestore'
-import { useFirebaseApp } from '@/hooks/firebase/app'
-
 import type { FC, ReactNode } from 'react'
 import type { Locale } from 'config/types'
 
@@ -12,9 +9,6 @@ const Chat: FC<{
   currentPath: string
   locale: Locale
 }> = ({ children, originalPath, currentPath, locale }) => {
-  const app = useFirebaseApp()
-  useInitializeFirestore(app)
-
   return (
     <>
       <TheHeader

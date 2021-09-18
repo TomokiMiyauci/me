@@ -1,9 +1,15 @@
 import FirestoreContext from '@/contexts/firebase/firestore'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
+import AppContext from '@/contexts/firebase/app'
+import { initialize } from '@/utils/firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { firebaseOptions } from '@/../config/constants'
 
 import type { MaybeFirestore, MaybeApp } from '@/types/firebase'
 import type { StateSet } from '@/types/state'
+import type { Firestore } from 'firebase/firestore'
+import type { DependencyList, EffectCallback } from 'react'
 
 const useFirestore = (): MaybeFirestore => useContext(FirestoreContext)[0]
 const useStateFirestore = (): StateSet<MaybeFirestore> =>
@@ -27,4 +33,32 @@ const useInitializeFirestore = (app: MaybeApp): void => {
   }, [app])
 }
 
-export { useInitializeFirestore, useStateFirestore, useFirestore }
+const useSafeFirestoreEffect = (
+  fn: (firestore: Firestore) => ReturnType<EffectCallback>,
+  deps?: DependencyList
+) => {
+  const [app, setApp] = useContext(AppContext)
+  const [firestore, setFirestore] = useContext(FirestoreContext)
+
+  useEffect(() => {
+    const _app = app ? app : initializeApp(firebaseOptions)
+    if (!app) {
+      setApp(_app)
+    }
+
+    const _firestore = firestore ? firestore : initialize(_app)
+
+    if (!firestore) {
+      setFirestore(_firestore)
+    }
+
+    return fn(_firestore)
+  }, deps)
+}
+
+export {
+  useInitializeFirestore,
+  useStateFirestore,
+  useFirestore,
+  useSafeFirestoreEffect
+}
