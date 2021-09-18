@@ -21,7 +21,7 @@ import type { FC } from 'react'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
-  const [firestore] = useFirestore()
+  const firestore = useFirestore()
   const user = useUser()
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const Chat: FC = () => {
 
 const useChat = () => {
   const { isAnonymous, isLoggedIn } = useUser()
-  const [firestore] = useFirestore()
+  const firestore = useFirestore()
 
   useEffect(() => {
     if (!isLoggedIn) return

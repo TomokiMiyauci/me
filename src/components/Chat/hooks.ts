@@ -4,7 +4,7 @@ import { useUser } from '@/hooks/user'
 
 type Step = 'INIT' | 'LOGIN' | 'AUTHED'
 const useStep = (): Step => {
-  const [firestore] = useFirestore()
+  const firestore = useFirestore()
   const { isAnonymous, isLoggedIn } = useUser()
 
   const step = useMemo<Step>(() => {

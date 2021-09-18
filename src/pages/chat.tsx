@@ -17,7 +17,7 @@ import type {
 import type { DocumentReference } from 'firebase/firestore'
 
 const Main: FC = () => {
-  const [firestore] = useFirestore()
+  const firestore = useFirestore()
   const [chatRoom, changeChatRoom] = useState<Partial<PublicChatRoom>>({})
 
   useAsyncEffect(async () => {

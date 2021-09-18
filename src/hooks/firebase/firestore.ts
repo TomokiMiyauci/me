@@ -3,28 +3,18 @@ import { useState, useContext } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 
 import type { MaybeFirestore, MaybeApp } from '@/types/firebase'
-import type { Dispatch, SetStateAction } from 'react'
+import type { StateSet } from '@/types/state'
 
-const useFirestore = (): [
-  MaybeFirestore,
-  Dispatch<SetStateAction<MaybeFirestore>>
-] => useContext(FirestoreContext)
+const useFirestore = (): MaybeFirestore => useContext(FirestoreContext)[0]
+const useStateFirestore = (): StateSet<MaybeFirestore> =>
+  useState<MaybeFirestore>()
 
-const useProviderFirestore = (): [
-  MaybeFirestore,
-  Dispatch<SetStateAction<MaybeFirestore>>
-] => {
-  const firestore = useState<MaybeFirestore>()
-  return firestore
-}
-
-const useInitializerFirestore = (app: MaybeApp): void => {
-  const [firestore, setFirestore] = useFirestore()
+const useInitializeFirestore = (app: MaybeApp): void => {
+  const [firestore, setFirestore] = useContext(FirestoreContext)
 
   useAsyncEffect(async () => {
     if (!app || firestore) return
     const { initialize } = await import('@/utils/firebase/firestore')
-    console.log(initialize, 'fn')
     const _firestore = initialize(app)
     setFirestore(_firestore)
   }, [])
@@ -32,10 +22,9 @@ const useInitializerFirestore = (app: MaybeApp): void => {
   useAsyncEffect(async () => {
     if (!app || firestore) return
     const { initialize } = await import('@/utils/firebase/firestore')
-    console.log(initialize, 'fn')
     const _firestore = initialize(app)
     setFirestore(_firestore)
   }, [app])
 }
 
-export { useProviderFirestore, useFirestore, useInitializerFirestore }
+export { useInitializeFirestore, useStateFirestore, useFirestore }

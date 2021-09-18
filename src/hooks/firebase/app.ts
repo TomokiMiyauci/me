@@ -6,20 +6,18 @@ import { isLength0 } from '@/utils/is'
 import { pipe } from 'fonction'
 import { useLazy } from '@/utils/lazy'
 
-import type { Dispatch, SetStateAction } from 'react'
 import type { MaybeApp } from '@/types/firebase'
+import type { StateSet } from '@/types/state'
 
-const useFirebaseApp = (): MaybeApp => useContext(AppContext)
+const useFirebaseApp = (): MaybeApp => useContext(AppContext)[0]
 const notInitialized = pipe(getApps, isLength0)
+const useStateFirebaseApp = (): StateSet<MaybeApp> => useState<MaybeApp>()
 
-const useProvideFirebaseApp = (): [
-  MaybeApp,
-  Dispatch<SetStateAction<MaybeApp>>
-] => {
-  const [app, setApp] = useState<MaybeApp>()
+const useInitializeFirebaseApp = (): void => {
+  const [app, setApp] = useContext(AppContext)
 
   useLazy(async () => {
-    if (notInitialized()) {
+    if (notInitialized() && !app) {
       const { initializeApp } = await import('firebase/app')
       const { firebaseOptions } = await import('@/../config/constants')
       const app = initializeApp(firebaseOptions)
@@ -27,8 +25,6 @@ const useProvideFirebaseApp = (): [
       setApp(app)
     }
   })
-
-  return [app, setApp]
 }
 
-export { useProvideFirebaseApp, useFirebaseApp }
+export { useInitializeFirebaseApp, useFirebaseApp, useStateFirebaseApp }

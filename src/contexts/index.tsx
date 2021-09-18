@@ -11,18 +11,32 @@ import AuthContext from '@/contexts/firebase/auth'
 
 import { useNoticeProvider } from '@/hooks/notice'
 import { useDarkModeProvider } from '@/hooks/dark_mode'
-import { useSafeLogEvent } from '@/hooks/firebase/analytics'
+import {
+  useSafeLogEvent,
+  useStateAnalytics,
+  useInitializeAnalytics,
+  useAnalytics
+} from '@/hooks/firebase/analytics'
 import { useHash } from '@/hooks/hash'
-import { useProviderUser } from '@/hooks/user'
-import { useProvideFirebaseApp } from '@/hooks/firebase/app'
-import { useProviderFirestore } from '@/hooks/firebase/firestore'
-import { useProviderFirestoreLite } from '@/hooks/firebase/firestore_lite'
-import { useProviderMessaging } from '@/hooks/firebase/messaging'
-import { useProviderAnalytics } from '@/hooks/firebase/analytics'
-import { useProviderAuth } from '@/hooks/firebase/auth'
+import { useProviderUser, useUser } from '@/hooks/user'
+import {
+  useInitializeFirebaseApp,
+  useStateFirebaseApp,
+  useFirebaseApp
+} from '@/hooks/firebase/app'
+import { useStateFirestore } from '@/hooks/firebase/firestore'
+import {
+  useInitializeFirestoreLite,
+  useStateFirebaseLite
+} from '@/hooks/firebase/firestore_lite'
+import {
+  useStateMessaging,
+  useInitializeMessaging
+} from '@/hooks/firebase/messaging'
+import { useStateAuth } from '@/hooks/firebase/auth'
 import { useAsyncEffect } from 'use-async-effect'
 
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 
 const ProvideSearchContext: FC = ({ children }) => {
   const { safeLogEvent } = useSafeLogEvent()
@@ -47,16 +61,15 @@ const ProvideSearchContext: FC = ({ children }) => {
   )
 }
 
-const Index: FC = ({ children }) => {
-  const [user, changeUser] = useProviderUser()
-  const notice = useNoticeProvider()
-  const darkMode = useDarkModeProvider()
-  const [app] = useProvideFirebaseApp()
-  const [firestoreLite] = useProviderFirestoreLite(app)
-  const [messaging] = useProviderMessaging(app)
-  const [analytics] = useProviderAnalytics(app)
-  const auth = useProviderAuth()
-  const firestore = useProviderFirestore()
+const InitializerContext: FC<{ children: ReactNode }> = ({ children }) => {
+  useInitializeFirebaseApp()
+  const app = useFirebaseApp()
+  useInitializeAnalytics(app)
+  useInitializeFirestoreLite(app)
+  useInitializeMessaging(app)
+
+  const analytics = useAnalytics()
+  const user = useUser()
 
   useAsyncEffect(async () => {
     if (!analytics || !user.uid) return
@@ -64,6 +77,20 @@ const Index: FC = ({ children }) => {
     const { setUserId } = await import('firebase/analytics')
     setUserId(analytics, user.uid)
   }, [analytics, user.uid])
+
+  return <>{children}</>
+}
+
+const Index: FC = ({ children }) => {
+  const [user, changeUser] = useProviderUser()
+  const notice = useNoticeProvider()
+  const darkMode = useDarkModeProvider()
+  const app = useStateFirebaseApp()
+  const firestoreLite = useStateFirebaseLite()
+  const firestore = useStateFirestore()
+  const messaging = useStateMessaging()
+  const auth = useStateAuth()
+  const analytics = useStateAnalytics()
 
   return (
     <UserContext.Provider value={[user, changeUser]}>
@@ -76,7 +103,7 @@ const Index: FC = ({ children }) => {
                   <DarkModeContext.Provider value={darkMode}>
                     <ProvideSearchContext>
                       <AuthContext.Provider value={auth}>
-                        {children}
+                        <InitializerContext>{children}</InitializerContext>
                       </AuthContext.Provider>
                     </ProvideSearchContext>
                   </DarkModeContext.Provider>

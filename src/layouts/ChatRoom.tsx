@@ -2,7 +2,7 @@ import TheHeader from '@/components/TheHeader'
 import { navigate } from 'gatsby'
 import { Icon } from '@iconify/react/dist/offline'
 import chevronLeft from '@iconify/icons-akar-icons/chevron-left'
-import { useInitializerFirestore } from '@/hooks/firebase/firestore'
+import { useInitializeFirestore } from '@/hooks/firebase/firestore'
 import { useFirebaseApp } from '@/hooks/firebase/app'
 
 import type { FC, ReactNode } from 'react'
@@ -15,7 +15,7 @@ const ChatRoom: FC<{
   locale: Locale
 }> = ({ children, originalPath, currentPath, locale }) => {
   const app = useFirebaseApp()
-  useInitializerFirestore(app)
+  useInitializeFirestore(app)
 
   return (
     <>

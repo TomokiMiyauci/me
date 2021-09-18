@@ -3,15 +3,15 @@ import { useState, useContext } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 
 import type { MaybeFirestoreLite, MaybeApp } from '@/types/firebase'
-import type { Dispatch, SetStateAction } from 'react'
+import type { StateSet } from '@/types/state'
 
 const useFirestoreLite = (): MaybeFirestoreLite =>
-  useContext(FirestoreLiteContext)
+  useContext(FirestoreLiteContext)[0]
+const useStateFirebaseLite = (): StateSet<MaybeFirestoreLite> =>
+  useState<MaybeFirestoreLite>()
 
-const useProviderFirestoreLite = (
-  app: MaybeApp
-): [MaybeFirestoreLite, Dispatch<SetStateAction<MaybeFirestoreLite>>] => {
-  const [firebaseLite, setFirebaseLite] = useState<MaybeFirestoreLite>()
+const useInitializeFirestoreLite = (app: MaybeApp): void => {
+  const [firebaseLite, setFirebaseLite] = useContext(FirestoreLiteContext)
 
   useAsyncEffect(async () => {
     if (app && !firebaseLite) {
@@ -22,8 +22,6 @@ const useProviderFirestoreLite = (
       setFirebaseLite(firestore)
     }
   }, [app])
-
-  return [firebaseLite, setFirebaseLite]
 }
 
-export { useProviderFirestoreLite, useFirestoreLite }
+export { useStateFirebaseLite, useInitializeFirestoreLite, useFirestoreLite }
