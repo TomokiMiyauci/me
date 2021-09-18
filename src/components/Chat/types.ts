@@ -26,6 +26,8 @@ type PublicChatRoomData<T extends Record<PropertyKey, any> = Timestamp> = {
   user: UserInfo
 }
 
-type PublicChatRoom = PublicChatRoomData<Date>
+type PublicChatRoom = PublicChatRoomData<Date> & {
+  unreadMessages: number
+}
 
 export type { Message, MessageData, PublicChatRoom, PublicChatRoomData }

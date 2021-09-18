@@ -1,6 +1,6 @@
 import {
-  signInWithPopup,
   linkWithCredential,
+  linkWithPopup,
   signInWithEmailAndPassword,
   EmailAuthProvider
 } from 'firebase/auth'
@@ -59,9 +59,11 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
 
   const passProvider = async (provider: AuthProvider) => {
     if (!auth) return
+    const user = await getUser(auth)
+    if (!user) return
 
     show()
-    return signInWithPopup(auth, provider)
+    return linkWithPopup(user, provider)
       .then((userCredential) => {
         notice({
           type: 'success',

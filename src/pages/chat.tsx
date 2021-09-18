@@ -13,26 +13,35 @@ import type {
   PublicChatRoom
 } from '@/components/Chat/types'
 import type { DocumentReference } from 'firebase/firestore'
+import { useUser } from '@/hooks/user'
 
 const Main: FC = () => {
   const [chatRoom, changeChatRoom] = useState<Partial<PublicChatRoom>>({})
+  const { uid } = useUser()
 
   useSafeFirestoreEffect((firestore) => {
+    if (!uid) return
     getDoc(
       doc(
         firestore,
         'publicChatRooms',
         '0'
       ) as DocumentReference<PublicChatRoomData>
-    ).then((snapshot) => {
+    ).then(async (snapshot) => {
       if (!snapshot.exists()) return
 
       const { createdAt, createdAtOrigin, ...rest } = snapshot.data()
+      const documentData = await getDoc(
+        doc(firestore, 'users', uid, 'relatedPublicRooms', '0')
+      )
+
+      const unreadMessages = documentData.get('unreadMessages')
 
       changeChatRoom({
         ...rest,
         createdAt: createdAt.toDate(),
-        createdAtOrigin: createdAtOrigin.toDate()
+        createdAtOrigin: createdAtOrigin.toDate(),
+        unreadMessages: unreadMessages ? unreadMessages.length : 0
       })
     })
   }, [])
@@ -57,8 +66,16 @@ const Main: FC = () => {
                     <Timestamp date={chatRoom.createdAtOrigin} />
                   )}
                 </h3>
-                <div className="text-gray-400 text-sm inline-block max-w-[70vw] line-clamp-2 font-light break-words whitespace-pre-wrap leading-none">
-                  {chatRoom.value ?? 'Public messaging room'}
+                <div className="flex justify-between">
+                  <span className="text-gray-400 font-light leading-none text-sm flex-1 line-clamp-2 max-w-[70vw] break-words whitespace-pre-wrap">
+                    {chatRoom.value ?? 'Public messaging room'}
+                  </span>
+
+                  {!!chatRoom.unreadMessages && (
+                    <span className="rounded-full bg-green-500 font-bold px-2">
+                      {chatRoom.unreadMessages}
+                    </span>
+                  )}
                 </div>
               </div>
             </Link>
