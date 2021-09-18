@@ -1,6 +1,4 @@
 import InputArea from '@/components/Chat/InputArea'
-import Loading from '@/components/Chat/Loading'
-import MustSignin from '@/components/SignIn/MustSignin'
 import { Transition } from '@headlessui/react'
 import { Fragment, useState, useEffect } from 'react'
 import { Timestamp } from '@firebase/firestore/dist/lite'
@@ -137,23 +135,16 @@ const useChat = () => {
 
 const ChatRoom: FC = () => {
   const { writable } = useChat()
-  const step = useStep()
 
   return (
     <>
-      {['INIT', 'LOGIN'].includes(step) && (
-        <div className="h-full grid place-items-center">
-          {step === 'INIT' && <Loading />}
-          {step === 'LOGIN' && <MustSignin />}
-        </div>
-      )}
-
       <Transition
-        enterFrom="opacity-0 translate-x-full"
+        enterFrom="opacity-0 translate-x-20"
         enter="transition transform duration-1000"
         leave="transition transform duration-1000"
-        leaveTo="opacity-0 translate-x-full"
-        show={step === 'AUTHED'}
+        leaveTo="opacity-0 translate-x-20"
+        appear
+        show
       >
         <Chat />
       </Transition>
@@ -162,8 +153,8 @@ const ChatRoom: FC = () => {
         enter="transition transform duration-1000"
         leave="transition transform duration-1000"
         leaveTo="opacity-0 translate-y-full"
-        show={true}
-        appear={true}
+        show
+        appear
         as={Fragment}
       >
         <div className="fixed bottom-0 container mx-auto w-full flex space-x-3 items-end p-2">

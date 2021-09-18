@@ -4,9 +4,31 @@ import { Icon } from '@iconify/react/dist/offline'
 import chevronLeft from '@iconify/icons-akar-icons/chevron-left'
 import { useInitializeFirestore } from '@/hooks/firebase/firestore'
 import { useFirebaseApp } from '@/hooks/firebase/app'
+import { useStep } from '@/components/Chat/hooks'
+import loadable from '@loadable/component'
+
+const Loading = loadable(() => import('@/components/Chat/Loading'))
+const MustSignin = loadable(() => import('@/components/SignIn/MustSignin'))
 
 import type { FC, ReactNode } from 'react'
 import type { Locale } from 'config/types'
+
+const Main: FC<{ children: ReactNode }> = ({ children }) => {
+  const step = useStep()
+  return (
+    <>
+      {step === 'AUTHED' ? (
+        <main className="main container mx-auto overflow-x-hidden overflow-y-scroll w-screen">
+          {children}
+        </main>
+      ) : (
+        <main className="h-screen w-screen grid place-items-center">
+          {step === 'INIT' ? <Loading /> : <MustSignin />}
+        </main>
+      )}
+    </>
+  )
+}
 
 const ChatRoom: FC<{
   children: ReactNode
@@ -36,9 +58,8 @@ const ChatRoom: FC<{
         </button>
         <span className="text-xl">Public Chat</span>
       </header>
-      <main className="main container mx-auto overflow-x-hidden overflow-y-scroll w-screen">
-        {children}
-      </main>
+
+      <Main>{children}</Main>
     </>
   )
 }
