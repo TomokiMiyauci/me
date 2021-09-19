@@ -5,11 +5,14 @@ import Seo from '@/components/seo'
 import MainMenu from '@/components/MainMenu'
 import loadable from '@loadable/component'
 import Static from '@/components/Static'
-import GitHubCalendar from 'react-github-calendar'
-import ReactTooltip from 'react-tooltip'
 
 const Me = loadable(() => import('@/components/Me'))
-
+const ReactTooltip = loadable(() => import('react-tooltip'), {
+  ssr: false
+})
+const GitHubCalendar = loadable(() => import('react-github-calendar'), {
+  ssr: false
+})
 const IndexPage: FC<PageProps> = ({ data, location }) => {
   const {
     site: { siteMetadata }
