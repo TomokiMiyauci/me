@@ -1,9 +1,10 @@
 import { createContext } from 'react'
-import type { Dispatch, SetStateAction } from 'react'
+import { DEFAULT_CONTEXT_STATE } from '@/constants/state'
 import type { MaybeFirestore } from '@/types/firebase'
+import type { StateSet } from '@/types/state'
 
-const FirestoreContext = createContext<
-  [MaybeFirestore, Dispatch<SetStateAction<MaybeFirestore>>]
->([undefined, () => {}])
+const FirestoreContext = createContext<StateSet<MaybeFirestore>>(
+  DEFAULT_CONTEXT_STATE
+)
 
 export default FirestoreContext

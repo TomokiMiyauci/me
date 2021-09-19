@@ -17,7 +17,7 @@ import type { MessageData } from '@/components/Chat/types'
 
 const InputArea: FC = () => {
   const user = useUser()
-  const [firestore] = useFirestore()
+  const firestore = useFirestore()
   const [message, changeMessage] = useState<string>('')
 
   const handleChange: FormEventHandler = async ({

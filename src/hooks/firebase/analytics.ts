@@ -4,14 +4,14 @@ import { useAsyncEffect } from 'use-async-effect'
 
 import type { Analytics, logEvent as _logEvent } from 'firebase/analytics'
 import type { MaybeApp, MaybeAnalytics } from '@/types/firebase'
-import type { Dispatch, SetStateAction } from 'react'
+import type { StateSet } from '@/types/state'
 
-const useAnalytics = (): MaybeAnalytics => useContext(AnalyticsContext)
+const useAnalytics = (): MaybeAnalytics => useContext(AnalyticsContext)[0]
+const useStateAnalytics = (): StateSet<MaybeAnalytics> =>
+  useState<MaybeAnalytics>()
 
-const useProviderAnalytics = (
-  app: MaybeApp
-): [MaybeAnalytics, Dispatch<SetStateAction<MaybeAnalytics>>] => {
-  const [analytics, setAnalytics] = useState<MaybeAnalytics>()
+const useInitializeAnalytics = (app: MaybeApp): void => {
+  const [analytics, setAnalytics] = useContext(AnalyticsContext)
 
   useAsyncEffect(async () => {
     if (app && !analytics) {
@@ -24,8 +24,6 @@ const useProviderAnalytics = (
       setAnalytics(_analytics)
     }
   }, [app])
-
-  return [analytics, setAnalytics]
 }
 
 /**
@@ -57,4 +55,9 @@ const useSafeLogEvent = (): {
   }
 }
 
-export { useProviderAnalytics, useAnalytics, useSafeLogEvent }
+export {
+  useInitializeAnalytics,
+  useAnalytics,
+  useStateAnalytics,
+  useSafeLogEvent
+}

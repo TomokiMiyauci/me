@@ -22,7 +22,15 @@ const Index: FC<
 
   const layout = (): JSX.Element => {
     if (CHATROOM_TYPES.map(joinPath).includes(originalPath)) {
-      return <ChatRoomLayout>{children}</ChatRoomLayout>
+      return (
+        <ChatRoomLayout
+          originalPath={pageContext.originalPath}
+          currentPath={location.pathname}
+          locale={pageContext.locale}
+        >
+          {children}
+        </ChatRoomLayout>
+      )
     } else if (originalPath === '/chat/') {
       return (
         <ChatLayout

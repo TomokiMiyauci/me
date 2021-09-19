@@ -3,14 +3,14 @@ import { useState, useContext } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 
 import type { MaybeApp, MaybeMessaging } from '@/types/firebase'
-import type { Dispatch, SetStateAction } from 'react'
+import type { StateSet } from '@/types/state'
 
-const useMessaging = (): MaybeMessaging => useContext(MessagingContext)
+const useMessaging = (): MaybeMessaging => useContext(MessagingContext)[0]
+const useStateMessaging = (): StateSet<MaybeMessaging> =>
+  useState<MaybeMessaging>()
 
-const useProviderMessaging = (
-  app: MaybeApp
-): [MaybeMessaging, Dispatch<SetStateAction<MaybeMessaging>>] => {
-  const [messaging, setMessaging] = useState<MaybeMessaging>()
+const useInitializeMessaging = (app: MaybeApp): void => {
+  const [messaging, setMessaging] = useContext(MessagingContext)
 
   useAsyncEffect(async () => {
     if (app && !messaging) {
@@ -21,8 +21,6 @@ const useProviderMessaging = (
       setMessaging(_messaging)
     }
   }, [app])
-
-  return [messaging, setMessaging]
 }
 
-export { useProviderMessaging, useMessaging }
+export { useStateMessaging, useInitializeMessaging, useMessaging }

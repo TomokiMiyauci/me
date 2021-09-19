@@ -1,15 +1,15 @@
 import {
-  signInWithPopup,
   linkWithCredential,
+  linkWithPopup,
   signInWithEmailAndPassword,
   EmailAuthProvider
 } from 'firebase/auth'
 import { useFirebaseApp } from '@/hooks/firebase/app'
-import { useAuth } from '@/hooks/firebase/auth'
 import { Fragment, useEffect, useContext } from 'react'
 import { getUser } from '@/utils/firebase/auth'
 import googleIcon from '@iconify/icons-grommet-icons/google'
 import { Icon } from '@iconify/react/dist/offline'
+import AuthContext from '@/contexts/firebase/auth'
 import emailIcon from '@iconify-icons/mdi/email-outline'
 import shieldKeyOutline from '@iconify-icons/mdi/shield-key-outline'
 import sendAlt from '@iconify-icons/carbon/send-alt'
@@ -28,7 +28,7 @@ import type { AuthProvider, AuthError } from 'firebase/auth'
 
 const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
   const app = useFirebaseApp()
-  const [auth, setAuth] = useAuth()
+  const [auth, setAuth] = useContext(AuthContext)
   const [overlay, { on: show, off: hide }] = useSwitch()
   const [_, setUser] = useContext(UserContext)
   const notice = useNotice()
@@ -59,9 +59,11 @@ const SignIn: FC<{ redirect?: string }> = ({ redirect }) => {
 
   const passProvider = async (provider: AuthProvider) => {
     if (!auth) return
+    const user = await getUser(auth)
+    if (!user) return
 
     show()
-    return signInWithPopup(auth, provider)
+    return linkWithPopup(user, provider)
       .then((userCredential) => {
         notice({
           type: 'success',

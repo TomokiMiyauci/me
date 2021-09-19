@@ -5,8 +5,16 @@ import Layout from '@/layouts'
 import type { GatsbySSR } from 'gatsby'
 import type { PageContext } from 'config/types'
 
+import { ChunkExtractor } from '@loadable/server'
+import { resolve } from 'path'
+
+const extractor = new ChunkExtractor({
+  statsFile: resolve('./.cache/loadable-stats-build-javascript.json'),
+  entrypoints: []
+})
+
 const wrapRootElement: GatsbySSR['wrapRootElement'] = ({ element }) => {
-  return <Context>{element}</Context>
+  return <Context>{extractor.collectChunks(element)}</Context>
 }
 
 const onRenderBody: GatsbySSR['onRenderBody'] = ({ setHeadComponents }) => {
@@ -32,4 +40,5 @@ const wrapPageElement: GatsbySSR<
 >['wrapPageElement'] = ({ props, element }) => {
   return <Layout {...props}>{element}</Layout>
 }
+
 export { wrapRootElement, wrapPageElement, onRenderBody }

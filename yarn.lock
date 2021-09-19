@@ -1784,7 +1784,7 @@
     core-js-pure "^3.16.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.8", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.6":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.14.8", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
   integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
@@ -3980,14 +3980,14 @@
     hoist-non-react-statics "^3.3.1"
     react-is "^16.12.0"
 
-"@loadable/server@^5.15.0":
+"@loadable/server@^5.15.1":
   version "5.15.1"
   resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.15.1.tgz#fe8e8b2a631ad0ae48dfb765ec96d758ed5206dd"
   integrity sha512-LdwzskjMtCMDJoz73JhbkBzTfaopx8U/Bfb0uKkqTxrsjH0uC+h4+cPo5mqKYyHz/dwPRf7aJsvQNcLQZdKHHw==
   dependencies:
     lodash "^4.17.15"
 
-"@loadable/webpack-plugin@^5.15.0":
+"@loadable/webpack-plugin@^5.15.1":
   version "5.15.1"
   resolved "https://registry.yarnpkg.com/@loadable/webpack-plugin/-/webpack-plugin-5.15.1.tgz#826891c76611d22b5e8259709664f9f18ab91526"
   integrity sha512-DqGJmazsh9XEG4CtMbaR+Ay+6+iw3NvzYqzqVIb7nsTi7UB38gEQJkT/enXdCkMZhLNSYL2HAr4rbFerhfyL2Q==
@@ -5620,6 +5620,20 @@
   integrity sha512-YhoCCxyuvP2XeZNbHbi8Wb9EMaUJuA2VGHxJffcQYrJKIKSkymJrhbzsf9y4zpTmr5pExAAEh5hbF628PAZ8Dg==
   dependencies:
     "@types/react" "*"
+
+"@types/loadable__server@^5.12.6":
+  version "5.12.6"
+  resolved "https://registry.yarnpkg.com/@types/loadable__server/-/loadable__server-5.12.6.tgz#5a64eed56f8d0c5d1e3f636e231f30da20d9eb8d"
+  integrity sha512-LgO5aUQJYFQY5bLuAef4anCZ/SwsEo2hG/D4zfREgUGDXjezBjZCwlUmmpfIQLsR64reLTCijS0m7gsd1k9cKA==
+  dependencies:
+    "@types/react" "*"
+
+"@types/loadable__webpack-plugin@^5.7.3":
+  version "5.7.3"
+  resolved "https://registry.yarnpkg.com/@types/loadable__webpack-plugin/-/loadable__webpack-plugin-5.7.3.tgz#e27b42a4364d13fc34ec752d59ea1f8f75c0a881"
+  integrity sha512-jdOgIovGk9xcbU1Kyveiw9RVCBbHfv9U9AKOveop8Jk4JQQOPrafE7WHaNxotza08pH1YG6vHTV84xUL2W2F1Q==
+  dependencies:
+    "@types/webpack" "^4"
 
 "@types/lodash@^4.14.92":
   version "4.14.172"
@@ -11961,16 +11975,6 @@ gatsby-plugin-image@^1.7.1:
     gatsby-core-utils "^2.13.0"
     objectFitPolyfill "^2.3.0"
     prop-types "^15.7.2"
-
-gatsby-plugin-loadable-components-ssr@^3.2.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-loadable-components-ssr/-/gatsby-plugin-loadable-components-ssr-3.4.0.tgz#48c12ed163e59f049832160fc543058b08ada84a"
-  integrity sha512-Wj55A97mkF6hd2fUquMMgusif0gRMcbrA6CjTu4bKHaKUF6zapHXL6JkXGQRb/85GW8UPo3ggQ9Sft0YO6KIsA==
-  dependencies:
-    "@babel/runtime" "^7.9.6"
-    "@loadable/babel-plugin" "^5.13.2"
-    "@loadable/server" "^5.15.0"
-    "@loadable/webpack-plugin" "^5.15.0"
 
 gatsby-plugin-manifest@^3.7.1:
   version "3.13.0"

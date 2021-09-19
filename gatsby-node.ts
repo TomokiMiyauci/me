@@ -13,6 +13,7 @@ import WorkerPlugin from 'worker-plugin'
 import { safeGetAccessNumbers } from './scripts/access_counter'
 import { safeGetLike } from './scripts/like_counter'
 import { CHATROOM_TYPES } from './config/constants'
+import LoadablePlugin from '@loadable/webpack-plugin'
 
 const parseSlug = exec(/^\/posts\/(?<slug>.*)\//)
 
@@ -187,6 +188,10 @@ const onPostBuild: GatsbyNode['onPostBuild'] = async (buildArgs) => {
   await useMetaPoster(buildArgs)
 }
 
+const isWin = process.platform === 'win32'
+const loadableStatsName = 'loadable-stats-build-javascript.json'
+const statsPath = join(process.cwd(), `/.cache/${loadableStatsName}`)
+
 const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
   stage,
   getConfig,
@@ -201,6 +206,22 @@ const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
     plugins: [new WorkerPlugin()]
   })
 
+  if (
+    stage === 'build-javascript' ||
+    stage === 'develop' ||
+    stage === 'develop-html'
+  ) {
+    actions.setWebpackConfig({
+      plugins: [
+        new LoadablePlugin({
+          filename: statsPath,
+          writeToDisk: true,
+          outputAsset: !isWin
+        })
+      ]
+    })
+  }
+
   // // for axe ignore warning
   // if (process.env.NODE_ENV !== 'production') {
   //   const config = getConfig()
@@ -212,8 +233,20 @@ const onCreateWebpackConfig: GatsbyNode['onCreateWebpackConfig'] = ({
   // }
 }
 
+const onCreateBabelConfig: GatsbyNode['onCreateBabelConfig'] = ({
+  actions
+}) => {
+  actions.setBabelPlugin({ name: '@loadable/babel-plugin', options: {} })
+}
+
 const makeFullPath = (path: string, locale: Locale): string => {
   return locale === 'en' ? path : join('/', locale, path)
 }
 
-export { createPages, onCreateNode, onPostBuild, onCreateWebpackConfig }
+export {
+  createPages,
+  onCreateNode,
+  onPostBuild,
+  onCreateWebpackConfig,
+  onCreateBabelConfig
+}

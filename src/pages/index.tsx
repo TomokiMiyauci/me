@@ -1,10 +1,18 @@
 import { FC } from 'react'
 import { PageProps, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
-import Me from '@/components/Me'
 import Seo from '@/components/seo'
 import MainMenu from '@/components/MainMenu'
+import loadable from '@loadable/component'
+import Static from '@/components/Static'
 
+const Me = loadable(() => import('@/components/Me'))
+const ReactTooltip = loadable(() => import('react-tooltip'), {
+  ssr: false
+})
+const GitHubCalendar = loadable(() => import('react-github-calendar'), {
+  ssr: false
+})
 const IndexPage: FC<PageProps> = ({ data, location }) => {
   const {
     site: { siteMetadata }
@@ -22,7 +30,13 @@ const IndexPage: FC<PageProps> = ({ data, location }) => {
       </Helmet>
 
       <div className="container max-w-4xl mx-auto md:p-14">
-        <Me />
+        <Static>
+          <Me />
+        </Static>
+
+        <GitHubCalendar username="tomokimiyauci">
+          <ReactTooltip delayShow={50} html textColor="var(--accent-color)" />
+        </GitHubCalendar>
 
         <section className="mt-10 md:mt-30 grid grid-cols-1 gap-6 md:grid-cols-2">
           <MainMenu />
