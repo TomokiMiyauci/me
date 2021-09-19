@@ -2,7 +2,6 @@ import FirestoreContext from '@/contexts/firebase/firestore'
 import { useState, useContext, useEffect } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import AppContext from '@/contexts/firebase/app'
-import { initialize } from '@/utils/firebase/firestore'
 import { initializeApp } from 'firebase/app'
 import { firebaseOptions } from '@/../config/constants'
 
@@ -20,15 +19,15 @@ const useInitializeFirestore = (app: MaybeApp): void => {
 
   useAsyncEffect(async () => {
     if (!app || firestore) return
-    const { initialize } = await import('@/utils/firebase/firestore')
-    const _firestore = initialize(app)
+    const { initializeFirestore } = await import('@/utils/firebase/firestore')
+    const _firestore = initializeFirestore(app)
     setFirestore(_firestore)
   }, [])
 
   useAsyncEffect(async () => {
     if (!app || firestore) return
-    const { initialize } = await import('@/utils/firebase/firestore')
-    const _firestore = initialize(app)
+    const { initializeFirestore } = await import('@/utils/firebase/firestore')
+    const _firestore = initializeFirestore(app)
     setFirestore(_firestore)
   }, [app])
 }
@@ -46,13 +45,16 @@ const useSafeFirestoreEffect = (
       setApp(_app)
     }
 
-    const _firestore = firestore ? firestore : initialize(_app)
-
-    if (!firestore) {
-      setFirestore(_firestore)
+    if (firestore) {
+      setFirestore(firestore)
+      return fn(firestore)
+    } else {
+      import('@/utils/firebase/firestore').then(({ initializeFirestore }) => {
+        const firestore = initializeFirestore(_app)
+        setFirestore(firestore)
+        return fn(firestore)
+      })
     }
-
-    return fn(_firestore)
   }, deps)
 }
 
