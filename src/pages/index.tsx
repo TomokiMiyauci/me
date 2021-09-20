@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet'
 import Seo from '@/components/seo'
 import MainMenu from '@/components/MainMenu'
 import loadable from '@loadable/component'
-import Static from '@/components/Static'
+import { Static } from 'react-partial-hydration'
 
 const Me = loadable(() => import('@/components/Me'))
 const ReactTooltip = loadable(() => import('react-tooltip'), {

@@ -1,6 +1,6 @@
 import { LocalizedLink, useLocalization } from 'gatsby-theme-i18n'
 import loadable from '@loadable/component'
-import Static from '@/components/Static'
+import { Static } from 'react-partial-hydration'
 
 const MenuCardBlog = loadable(() => import('@/components/MainMenu/MenuCard'), {
   resolveComponent: ({ MenuCardBlog }) => MenuCardBlog

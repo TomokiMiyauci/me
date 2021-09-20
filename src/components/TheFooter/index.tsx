@@ -1,5 +1,5 @@
 import loadable from '@loadable/component'
-import Static from '@/components/Static'
+import { Static } from 'react-partial-hydration'
 import { Icon } from '@iconify/react/dist/offline'
 import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
