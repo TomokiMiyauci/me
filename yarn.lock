@@ -19668,10 +19668,10 @@ react-motion@^0.5.0:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
-react-partial-hydration@^1.0.0-beta.1:
-  version "1.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/react-partial-hydration/-/react-partial-hydration-1.0.0-beta.1.tgz#68d87a8d5d430532abc1f7f8794ec8127f2341d0"
-  integrity sha512-sc3hqhpW7qflYJOADmyntw0JTYOZLSF50mMyX/wqy0fzk/7/yhhU/xs0JxGXgGs3vjPrUisGlVtrij2APcm9Yg==
+react-partial-hydration@^1.0.0-beta.7:
+  version "1.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/react-partial-hydration/-/react-partial-hydration-1.0.0-beta.7.tgz#fcde42294b50fff166eb8be0b2a231d400ddd937"
+  integrity sha512-GFSLv5Yug2Z3Yqn/yb15jqoNREva0y4+xnAwMJJY/JSLIFx/j6EOwiSA/BiOAK5OfO3MfGapRYgGKwMPj/CaUg==
 
 react-popper-tooltip@^3.1.1:
   version "3.1.1"
