@@ -16,7 +16,7 @@ const MenuCard: FC<{
   return (
     <div
       className={classNames(
-        'h-full rounded-md hover:scale-105 hover:-translate-y-2 hover:opacity-80 transition duration-300 transform block bg-gradient-to-r min-h-[260px] p-6 md:p-10 text-2xl shadow relative',
+        'rounded-md hover:scale-105 hover:-translate-y-2 hover:opacity-80 transition duration-300 transform flex flex-col h-full bg-gradient-to-r min-h-[260px] p-6 md:p-10 text-2xl shadow relative',
         className
       )}
     >
@@ -25,7 +25,7 @@ const MenuCard: FC<{
         className="absolute w-full h-full top-0 left-0 fill-current dark:opacity-10 opacity-30"
       />
 
-      <p className="text-gray-200 relative">{description}</p>
+      <p className="text-gray-200 flex-1 relative">{description}</p>
 
       <h2 className="mt-10 text-5xl font-semibold text-white">{title}</h2>
     </div>
