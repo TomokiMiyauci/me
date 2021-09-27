@@ -3,7 +3,7 @@ import { Static } from 'react-partial-hydration'
 import { Icon } from '@iconify/react/dist/offline'
 import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
-import Logo from '@/components/Logo'
+import Logo from '@/components/Logo/Logo'
 
 const Nav = loadable(() => import('@/components/TheFooter/Nav'))
 const By = loadable(() => import('@/components/By/By'))

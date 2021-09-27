@@ -1,4 +1,4 @@
-import TheHeader from '@/components/TheHeader'
+import TheHeader from '@/components/TheHeader/TheHeader'
 import { navigate } from 'gatsby'
 import { Icon } from '@iconify/react/dist/offline'
 import chevronLeft from '@iconify/icons-akar-icons/chevron-left'

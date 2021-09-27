@@ -1,4 +1,4 @@
-import TheHeader from '@/components/TheHeader'
+import TheHeader from '@/components/TheHeader/TheHeader'
 import BottomNavigation from '@/components/BottomNavigation'
 import { useStep } from '@/components/Chat/hooks'
 import { useInitializeFirestore } from '@/hooks/firebase/firestore'

@@ -1,5 +1,5 @@
 import TheFooter from '@/components/TheFooter'
-import TheHeader from '@/components/TheHeader'
+import TheHeader from '@/components/TheHeader/TheHeader'
 import BottomNavigation from '@/components/BottomNavigation'
 import { classNames } from '@/utils/class_name'
 import { useScrollShower } from '@/components/AppFrame/hooks'
