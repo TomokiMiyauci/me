@@ -110,7 +110,7 @@ Also, by picking up `TypeError` and `AbortError`, you can make notifications mor
 try {
   await fetch('https://this-is-not-exist.com')
 } catch (e) {
-  if (e instanceof AbortError) {
+  if (e.name === 'AbortError') {
     // Abort error handling
   } else {
     // Network error handling

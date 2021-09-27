@@ -110,7 +110,7 @@ Uncaught TypeError: error sending request for url (https://this-is-not-exist.com
 try {
   await fetch('https://this-is-not-exist.com')
 } catch (e) {
-  if (e instanceof AbortError) {
+  if (e.name === 'AbortError') {
     // Abort error handling
   } else {
     // Network error handling
