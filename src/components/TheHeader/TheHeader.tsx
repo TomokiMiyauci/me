@@ -1,12 +1,13 @@
 import { memo } from 'react'
-import { useLocalizedNavigations } from './BottomNavigation/hooks'
+import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
 import rss from '@iconify-icons/bi/rss'
-import Logo from '@/components/Logo'
+import Logo from '@/components/Logo/Logo'
 import Navigation from '@/components/BottomNavigation/Navigation'
 import IconWith from '@/components/IconWith'
 import { classNames } from '@/utils/class_name'
 import loadable from '@loadable/component'
 import Suspense from '@/components/Suspense'
+import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
 
 const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
 const DarkMode = loadable(() => import('@/components/DarkMode'))
@@ -49,35 +50,19 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <Suspense
-          fallback={
-            <span className="w-8 h-8 bg-opacity-40 animate-pulse bg-gray-400 cursor-wait rounded-full" />
-          }
-        >
+        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
           <SearchButton />
         </Suspense>
 
-        <Suspense
-          fallback={
-            <span className="w-8 h-8 bg-opacity-40 animate-pulse bg-gray-400 cursor-wait rounded-full" />
-          }
-        >
+        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
           <LangSwitcher originalPath={originalPath} />
         </Suspense>
 
-        <Suspense
-          fallback={
-            <span className="w-8 h-8 bg-opacity-40 animate-pulse bg-gray-400 cursor-wait rounded-full" />
-          }
-        >
+        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
           <AccentColor />
         </Suspense>
 
-        <Suspense
-          fallback={
-            <span className="w-8 h-8 bg-opacity-40 animate-pulse bg-gray-400 cursor-wait rounded-full" />
-          }
-        >
+        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
           <span className="tooltip w-[32px] h-[32px]" data-tooltip="Dark mode">
             <DarkMode />
           </span>
