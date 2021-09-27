@@ -1,25 +1,17 @@
+import { FC } from 'react'
+import { MDXProvider, MDXProviderComponentsProp } from '@mdx-js/react'
+import { MdxLink } from 'gatsby-theme-i18n'
+
 import CodeGroup from '@/components/CodeGroup'
+import CodeBlock from '@/components/CodeBlock'
 import CodeGroups from '@/components/CodeGroups'
 import Alert from '@/components/Alert'
 import MdxH2 from '@/components/MdxH2'
-import { Intersection } from 'react-partial-hydration'
-import { MDXProvider } from '@mdx-js/react'
-import { MdxLink } from 'gatsby-theme-i18n'
-import loadable from '@loadable/component'
-
-const CodeBlock = loadable(() => import('@/components/CodeBlock'))
-
-import type { MDXProviderComponentsProp } from '@mdx-js/react'
-import type { FC } from 'react'
 
 const components: MDXProviderComponentsProp = {
   pre: (props) => <div {...props} />,
   a: MdxLink,
-  code: (props) => (
-    <Intersection>
-      <CodeBlock {...props} />
-    </Intersection>
-  ),
+  code: CodeBlock,
   h2: (props) => {
     const { id, children } = props
     const title = children[1]
