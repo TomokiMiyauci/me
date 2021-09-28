@@ -17,7 +17,7 @@ const LangSwitcher: FC<{ originalPath: string }> = ({ originalPath }) => {
     <div className="relative flex items-center">
       <button
         aria-label="Show language list"
-        className="flex text-accent"
+        className="flex text-accent btn-circle transition-colors duration-300"
         onClick={toggleShow}
       >
         <Icon className="w-8 h-8" icon={translateIcon} />

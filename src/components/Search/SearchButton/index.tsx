@@ -8,7 +8,10 @@ const Index: FC = () => {
 
   return (
     <span className="tooltip" data-tooltip="Search">
-      <SearchButton onClick={() => changeShow(true)} />
+      <SearchButton
+        className="btn-circle transition-colors duration-300"
+        onClick={() => changeShow(true)}
+      />
     </span>
   )
 }

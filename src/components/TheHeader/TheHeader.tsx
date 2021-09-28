@@ -52,20 +52,28 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
           <SearchButton />
         </Suspense>
 
-        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
           <LangSwitcher originalPath={originalPath} />
         </Suspense>
 
-        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
           <AccentColor />
         </Suspense>
 
-        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
-          <span className="tooltip w-[32px] h-[32px]" data-tooltip="Dark mode">
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
+          <span className="tooltip w-[40px] h-[40px]" data-tooltip="Dark mode">
             <DarkMode />
           </span>
         </Suspense>

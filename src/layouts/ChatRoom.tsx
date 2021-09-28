@@ -49,7 +49,7 @@ const ChatRoom: FC<{
       />
       <header className="fixed md:hidden inset-x-0 border-b h-[56px] p-2 backdrop-blur border-gray-500 top-0 flex items-center space-x-2">
         <button
-          className="btn-circle p-1 md:p-2"
+          className="btn-circle md:p-2"
           onClick={() => {
             navigate('/chat/')
           }}
