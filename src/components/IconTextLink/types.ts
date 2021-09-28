@@ -1,7 +1,8 @@
+import type { IconifyIcon } from '@iconify/react'
 type Navi = {
   title: string
   to: string
-  icon: object
+  icon: IconifyIcon
   isActive: boolean
 }
 

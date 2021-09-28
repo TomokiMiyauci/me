@@ -1,6 +1,7 @@
-import { FC, memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { test } from 'core-fn'
 import { Navi } from './constants'
+import type { FC } from 'react'
 
 import IconTextLink from '@/components/IconTextLink'
 

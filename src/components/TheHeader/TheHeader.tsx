@@ -1,13 +1,12 @@
 import { memo } from 'react'
 import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
-import rss from '@iconify-icons/bi/rss'
 import Logo from '@/components/Logo/Logo'
 import Navigation from '@/components/BottomNavigation/Navigation'
-import IconWith from '@/components/IconWith'
 import { classNames } from '@/utils/class_name'
 import loadable from '@loadable/component'
 import Suspense from '@/components/Suspense'
 import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
 const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
 const DarkMode = loadable(() => import('@/components/DarkMode'))
@@ -43,9 +42,12 @@ justify-between flex"
           target="_blank"
           href="/rss.xml"
         >
-          <IconWith icon={rss} className="w-7 h-7 md:w-9 md:h-9">
-            <span className="text-[0.65rem] md:text-xs">RSS</span>
-          </IconWith>
+          <IconSkeltonLoader
+            className="w-7 h-7 md:w-9 md:h-9"
+            fallbackClassName="rounded"
+            icon={() => import('@iconify-icons/bi/rss')}
+          />
+          <span className="text-[0.65rem] md:text-xs">RSS</span>
         </a>
       </span>
 

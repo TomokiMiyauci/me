@@ -1,7 +1,10 @@
-import { FC } from 'react'
 import { Link } from 'gatsby'
 import { Navi } from './types'
-import IconWith from '../IconWith'
+import { Icon } from '@iconify/react/dist/offline'
+import Suspense from '@/components/Suspense'
+import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
+
+import type { FC } from 'react'
 
 const IconTextLink: FC<Navi> = ({ to, icon, title, isActive }) => (
   <Link
@@ -10,9 +13,13 @@ const IconTextLink: FC<Navi> = ({ to, icon, title, isActive }) => (
       isActive ? 'text-accent bg-gray-200 dark:bg-blue-gray-800' : ''
     }`}
   >
-    <IconWith icon={icon} className="w-7 h-7 md:w-9 md:h-9">
-      <span className="text-[0.65rem] md:text-xs">{title}</span>
-    </IconWith>
+    <Suspense
+      fallback={<SkeltonLoader className="w-7 h-7 md:w-9 md:h-9 rounded" />}
+    >
+      <Icon className="w-7 h-7 md:w-9 md:h-9" icon={icon} />
+    </Suspense>
+
+    <span className="text-[0.65rem] md:text-xs">{title}</span>
   </Link>
 )
 
