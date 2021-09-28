@@ -9,9 +9,9 @@ import { Helmet } from 'react-helmet'
 import { SwipeContext } from '@/components/Swipe/Context'
 import { useSwipe } from '@/components/Swipe/hooks'
 import { classNames } from '@/utils/class_name'
+import { useLayoutContext } from '@/layouts/hooks'
 
 import type { FC } from 'react'
-import type { Locale } from 'config/types'
 
 const Search = loadable(
   () => delay(import('@/components/Search/Search'), 500),
@@ -24,9 +24,8 @@ const Search = loadable(
   }
 )
 
-const Memo = memo<{
-  locale: Locale
-}>(({ locale }) => {
+const Memo = memo(() => {
+  const { locale } = useLayoutContext()
   return (
     <>
       <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
@@ -37,7 +36,7 @@ const Memo = memo<{
   )
 })
 
-const Inner: FC<{ locale: Locale }> = ({ locale }) => {
+const Inner: FC = () => {
   const { diff, translate, reset } = useContext(SwipeContext)
 
   useEffect(() => {
@@ -51,10 +50,10 @@ const Inner: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       className={classNames(
         'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
-        diff === 0 ? 'a transition-transform duration-300' : ''
+        diff === 0 ? 'transition-transform duration-300' : ''
       )}
     >
-      <Memo locale={locale} />
+      <Memo />
     </div>
   )
 }
@@ -65,7 +64,7 @@ const MemoHelmet = memo(() => (
   </Helmet>
 ))
 
-const Index: FC<{ locale: Locale }> = ({ locale }) => {
+const Index: FC = () => {
   const [searchShow, changeShow] = useSearchShow()
   const Init = 12
   const { touch, diff, ...rest } = useSwipe()
@@ -107,7 +106,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     >
       <MemoHelmet />
       <SwipeContext.Provider value={{ touch, diff, ...rest }}>
-        <Inner locale={locale} />
+        <Inner />
       </SwipeContext.Provider>
     </Overlay>
   )

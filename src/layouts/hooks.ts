@@ -1,5 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import LayoutContext from '@/layouts/contexts/layout'
+import { useContext, useState, useEffect, useRef } from 'react'
 import { scrollInfoEvent } from '@/utils/scroll'
+import type { LayoutContext as LayoutContextType } from '@/layouts/types'
+
+const useLayoutContext = (): Readonly<LayoutContextType> =>
+  useContext(LayoutContext)
 
 const useScrollShower = (init?: boolean) => {
   const [isShow, changeShow] = useState(init ?? false)
@@ -34,4 +39,4 @@ const useScrollShower = (init?: boolean) => {
   return { isShow, register, unregister }
 }
 
-export { useScrollShower }
+export { useLayoutContext, useScrollShower }
