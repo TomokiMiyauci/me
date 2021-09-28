@@ -1,9 +1,6 @@
 import { FC } from 'react'
 import { StaticImage } from 'gatsby-plugin-image'
-import { Icon } from '@iconify/react/dist/offline'
-import github from '@iconify-icons/uil/github-alt'
-import twitter from '@iconify-icons/uil/twitter-alt'
-import atSign from '@iconify-icons/feather/at-sign'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
 const Me: FC = () => {
   return (
@@ -48,7 +45,11 @@ const Me: FC = () => {
             rel="noopener"
             target="_blank"
           >
-            <Icon className="w-8 h-8" icon={github}></Icon>
+            <IconSkeltonLoader
+              icon={() => import('@iconify-icons/uil/github-alt')}
+              className="w-8 h-8"
+              fallbackClassName="rounded-full"
+            />
           </a>
           <a
             title="Twitter"
@@ -57,7 +58,11 @@ const Me: FC = () => {
             rel="noopener"
             target="_blank"
           >
-            <Icon className="w-8 h-8" icon={twitter}></Icon>
+            <IconSkeltonLoader
+              icon={() => import('@iconify-icons/uil/twitter-alt')}
+              className="w-8 h-8"
+              fallbackClassName="rounded-full"
+            />
           </a>
 
           <a
@@ -65,7 +70,11 @@ const Me: FC = () => {
             className="hover:text-accent transition-colors duration-300"
             href="mailto:contact&#64;miyauchi.dev"
           >
-            <Icon className="w-8 h-8" icon={atSign} />
+            <IconSkeltonLoader
+              icon={() => import('@iconify-icons/feather/at-sign')}
+              className="w-8 h-8"
+              fallbackClassName="rounded-full"
+            />
           </a>
         </div>
       </div>

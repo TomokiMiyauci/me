@@ -1,15 +1,17 @@
 import { memo } from 'react'
-import { useLocalizedNavigations } from './BottomNavigation/hooks'
-import rss from '@iconify-icons/bi/rss'
-import SearchButton from '@/components/Search/SearchButton'
-import { useSearchShow } from '@/components/Search/hooks'
-import Logo from '@/components/Logo'
-import AccentColor from '@/components/AccentColor'
-import LangSwitcher from '@/components/LangSwitcher'
+import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
+import Logo from '@/components/Logo/Logo'
 import Navigation from '@/components/BottomNavigation/Navigation'
-import DarkMode from '@/components/DarkMode'
-import IconWith from '@/components/IconWith'
 import { classNames } from '@/utils/class_name'
+import loadable from '@loadable/component'
+import Suspense from '@/components/Suspense'
+import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
+
+const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
+const DarkMode = loadable(() => import('@/components/DarkMode'))
+const AccentColor = loadable(() => import('@/components/AccentColor'))
+const LangSwitcher = loadable(() => import('@/components/LangSwitcher'))
 
 import type { FC } from 'react'
 import type { Locale } from '@/../config/types'
@@ -20,7 +22,6 @@ const Inner: FC<{
   locale: Locale
 }> = ({ originalPath, currentPath, locale }) => {
   const localizedNavs = useLocalizedNavigations(locale)
-  const [_, changeShow] = useSearchShow()
 
   return (
     <div
@@ -41,24 +42,41 @@ justify-between flex"
           target="_blank"
           href="/rss.xml"
         >
-          <IconWith icon={rss} className="w-7 h-7 md:w-9 md:h-9">
-            <span className="text-[0.65rem] md:text-xs">RSS</span>
-          </IconWith>
+          <IconSkeltonLoader
+            className="w-7 h-7 md:w-9 md:h-9"
+            fallbackClassName="rounded"
+            icon={() => import('@iconify-icons/bi/rss')}
+          />
+          <span className="text-[0.65rem] md:text-xs">RSS</span>
         </a>
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <span className="tooltip" data-tooltip="Search">
-          <SearchButton onClick={() => changeShow(true)} />
-        </span>
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
+          <SearchButton />
+        </Suspense>
 
-        <LangSwitcher originalPath={originalPath} />
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
+          <LangSwitcher originalPath={originalPath} />
+        </Suspense>
 
-        <AccentColor />
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
+          <AccentColor />
+        </Suspense>
 
-        <span className="tooltip w-[32px] h-[32px]" data-tooltip="Dark mode">
-          <DarkMode />
-        </span>
+        <Suspense
+          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
+        >
+          <span className="tooltip w-[40px] h-[40px]" data-tooltip="Dark mode">
+            <DarkMode />
+          </span>
+        </Suspense>
       </div>
     </div>
   )

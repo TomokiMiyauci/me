@@ -1,7 +1,8 @@
-import { FC } from 'react'
 import { Link } from 'gatsby'
 import { Navi } from './types'
-import IconWith from '../IconWith'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
+
+import type { FC } from 'react'
 
 const IconTextLink: FC<Navi> = ({ to, icon, title, isActive }) => (
   <Link
@@ -10,9 +11,13 @@ const IconTextLink: FC<Navi> = ({ to, icon, title, isActive }) => (
       isActive ? 'text-accent bg-gray-200 dark:bg-blue-gray-800' : ''
     }`}
   >
-    <IconWith icon={icon} className="w-7 h-7 md:w-9 md:h-9">
-      <span className="text-[0.65rem] md:text-xs">{title}</span>
-    </IconWith>
+    <IconSkeltonLoader
+      icon={icon}
+      className="w-7 h-7 md:w-9 md:h-9"
+      fallbackClassName="rounded"
+    />
+
+    <span className="text-[0.65rem] md:text-xs">{title}</span>
   </Link>
 )
 

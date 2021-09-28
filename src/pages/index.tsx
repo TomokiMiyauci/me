@@ -4,9 +4,8 @@ import { Helmet } from 'react-helmet'
 import Seo from '@/components/seo'
 import MainMenu from '@/components/MainMenu'
 import loadable from '@loadable/component'
-import { Static } from 'react-partial-hydration'
+import Me from '@/components/Me'
 
-const Me = loadable(() => import('@/components/Me'))
 const ReactTooltip = loadable(() => import('react-tooltip'), {
   ssr: false
 })
@@ -30,9 +29,7 @@ const IndexPage: FC<PageProps> = ({ data, location }) => {
       </Helmet>
 
       <div className="container max-w-4xl mx-auto md:p-14">
-        <Static>
-          <Me />
-        </Static>
+        <Me />
 
         <GitHubCalendar username="tomokimiyauci">
           <ReactTooltip delayShow={50} html textColor="var(--accent-color)" />

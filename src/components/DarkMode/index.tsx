@@ -32,7 +32,7 @@ const DarkMode: FC = () => {
     <OnlyClient placeholder={<span className="w-[32px] h-[32px]" />}>
       <button
         aria-label="Switch dark mode"
-        className="text-accent"
+        className="text-accent btn-circle transition-colors duration-300"
         onClick={toggle}
       >
         <Icon icon={icon} className="w-8 h-8" />

@@ -13,7 +13,7 @@ const AccentColor: FC = () => {
       <button
         title="Accent color"
         aria-label="Show accent color palette"
-        className="flex"
+        className="flex btn-circle transition-colors duration-300"
         onClick={() => changeShow(!isShow)}
       >
         <Icon className="w-8 h-8 text-accent" icon={invertColors} />
