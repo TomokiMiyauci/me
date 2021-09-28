@@ -1,9 +1,9 @@
+import IconTextLink from '@/components/IconTextLink'
 import { memo, useMemo } from 'react'
 import { test } from 'core-fn'
 import { Navi } from './constants'
+import { classNames } from '@/utils/class_name'
 import type { FC } from 'react'
-
-import IconTextLink from '@/components/IconTextLink'
 
 const endsWithPosts = test(/\/posts\/.*$/)
 
@@ -23,7 +23,7 @@ const Inner: FC<{ navigations: Navi[]; currentPath: string }> = ({
     <ul className="flex text-gray-500 dark:text-gray-400 justify-around items-center">
       {navigations.map(({ title, to, icon, className }) => {
         return (
-          <li key={to} className={`w-full ${className ?? ''}`}>
+          <li key={to} className={classNames('w-full', className)}>
             <IconTextLink
               to={to}
               icon={icon}
@@ -45,7 +45,7 @@ const Navigation: FC<{
   currentPath: string
 }> = ({ navigations, currentPath, className }) => {
   return (
-    <nav className={`px-2  ${className}`}>
+    <nav className={classNames('px-2', className)}>
       <MemoInner currentPath={currentPath} navigations={navigations} />
     </nav>
   )
