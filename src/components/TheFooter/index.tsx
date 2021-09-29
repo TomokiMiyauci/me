@@ -1,9 +1,8 @@
 import loadable from '@loadable/component'
 import { Static } from 'react-partial-hydration'
-import { Icon } from '@iconify/react/dist/offline'
-import heart from '@iconify-icons/mdi/heart-outline'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import Logo from '@/components/Logo/Logo'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
 const Nav = loadable(() => import('@/components/TheFooter/Nav'))
 const By = loadable(() => import('@/components/By/By'))
@@ -26,7 +25,11 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
             <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
               <span>
                 <span className="font-semibold text-accent">Made by</span>
-                <Icon icon={heart} className="text-accent w-6 h-6 mx-2" />
+                <IconSkeltonLoader
+                  icon={() => import('@iconify-icons/mdi/heart-outline')}
+                  className="w-6 h-6 mx-2"
+                  iconClassName="text-accent"
+                />
                 TomokiMiyauci
               </span>
               <span className="text-sm">
