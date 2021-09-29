@@ -6,6 +6,8 @@ import Esc from '@/components/Esc'
 import { useLayoutContext } from '@/layouts/hooks'
 import Context from '@/components/LangSwitcher/context'
 import { useContext } from 'react'
+import Tooltip from '@/components/Tooltip'
+
 import type { FC } from 'react'
 
 const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
@@ -19,13 +21,18 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
       <CardDialog className="h-full flex flex-col">
         <header className="flex justify-between items-center py-2 px-3">
           <span className="space-x-4">
-            <button onClick={hide} className="btn-circle">
-              <IconSkeltonLoader
-                icon={() => import('@iconify-icons/mdi/close')}
-                className="w-8 h-8"
-                fallbackClassName="rounded-full"
-              />
-            </button>
+            <Tooltip title="Close">
+              <button
+                onClick={hide}
+                className="btn-circle p-2 hover:text-accent transition-colors duration-300"
+              >
+                <IconSkeltonLoader
+                  icon={() => import('@iconify-icons/mdi/close')}
+                  className="w-8 h-8"
+                  fallbackClassName="rounded-full"
+                />
+              </button>
+            </Tooltip>
 
             <h2 className="inline text-2xl space-x-2 align-middle">
               <IconSkeltonLoader

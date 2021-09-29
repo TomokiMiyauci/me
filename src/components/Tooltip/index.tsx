@@ -1,11 +1,13 @@
+import { classNames } from '@/utils/class_name'
 import type { FC, ReactNode } from 'react'
 
-const Index: FC<{ children: ReactNode; tooltip: string }> = ({
+const Index: FC<{ children: ReactNode; title: string; className?: string }> = ({
   children,
-  tooltip
+  className,
+  title
 }) => {
   return (
-    <span className="tooltip" data-tooltip={tooltip}>
+    <span className={classNames('tooltip', className)} data-tooltip={title}>
       {children}
     </span>
   )
