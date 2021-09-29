@@ -1,7 +1,7 @@
 import SearchButton from '@/components/Search/SearchButton/SearchButton'
 import { useSearchShow } from '@/components/Search/hooks'
 import { useEffect } from 'react'
-import { makeEventListenerPair } from '@/utils/evnet_listener'
+import { makeEventListenerPair } from '@/utils/event_listener'
 
 import type { FC } from 'react'
 
