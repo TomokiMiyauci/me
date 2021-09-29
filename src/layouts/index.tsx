@@ -29,9 +29,9 @@ const Index: FC<
       locale,
       path
     }
-  }, [pageContext, path])
+  }, [originalPath, locale, path])
 
-  const layout = (): JSX.Element => {
+  const layout = useMemo<JSX.Element>(() => {
     if (CHATROOM_TYPES.map(joinPath).includes(originalPath)) {
       return <ChatRoomLayout>{children}</ChatRoomLayout>
     } else if (originalPath === '/chat/') {
@@ -41,11 +41,11 @@ const Index: FC<
     } else {
       return <Base>{children}</Base>
     }
-  }
+  }, [originalPath])
 
   return (
     <LayoutContext.Provider value={layoutContext}>
-      <Global>{layout()}</Global>
+      <Global>{layout}</Global>
     </LayoutContext.Provider>
   )
 }
