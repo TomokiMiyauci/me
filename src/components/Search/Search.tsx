@@ -80,6 +80,10 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     })
   }
 
+  useEffect(() => {
+    ref.current?.focus()
+  }, [])
+
   const handleClick: MouseEventHandler = () => {
     changeShow(false)
     safeLogEvent((analytics, logEvent) =>
@@ -148,7 +152,6 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           placeholder="Search"
           aria-label="Search"
           spellCheck="false"
-          autoFocus
           required
           maxLength={100}
           ref={ref}

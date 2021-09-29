@@ -1,5 +1,4 @@
 import SearchCard from '@/components/Search/SearchCard'
-import Overlay from '@/components/Overlay'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
@@ -10,6 +9,7 @@ import { SwipeContext } from '@/components/Swipe/Context'
 import { useSwipe } from '@/components/Swipe/hooks'
 import { classNames } from '@/utils/class_name'
 import { useLayoutContext } from '@/layouts/hooks'
+import { Transition } from '@headlessui/react'
 
 import type { FC } from 'react'
 
@@ -83,20 +83,21 @@ const Index: FC = () => {
   }, [ratio])
 
   return (
-    <Overlay
+    <Transition
       enter="transition transform duration-500"
       enterFrom="opacity-0 translate-y-full md:translate-y-10"
       leave="transition transform duration-500"
       leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
       show={searchShow}
-      className="inset-0 p-4 md:p-40 fixed backdrop-blur-md cursor-pointer"
+      className="inset-0 fixed p-4 md:p-40 backdrop-blur-md cursor-pointer"
       style={{
         ...backdropFilter
       }}
-      onClick={(e: Event) => {
-        e.stopPropagation()
+      onClick={(e: any) => {
+        const ev = e as Event
+        ev.stopPropagation()
         if (e.target) {
-          const result = (e.target as Element).getAttribute('data-fullscreen')
+          const result = (ev.target as Element).getAttribute('data-fullscreen')
           if (result === 'true') {
             changeShow(false)
           }
@@ -108,7 +109,7 @@ const Index: FC = () => {
       <SwipeContext.Provider value={{ touch, diff, ...rest }}>
         <Inner />
       </SwipeContext.Provider>
-    </Overlay>
+    </Transition>
   )
 }
 export default Index
