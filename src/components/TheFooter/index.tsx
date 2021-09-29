@@ -21,22 +21,21 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
         <span className="flex flex-col md:flex-row items-center space-x-4">
           <Logo locale={locale} />
 
-          <Static>
-            <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
-              <span>
-                <span className="font-semibold text-accent">Made by</span>
-                <IconSkeltonLoader
-                  icon={() => import('@iconify-icons/mdi/heart-outline')}
-                  className="w-6 h-6 mx-2"
-                  iconClassName="text-accent"
-                />
-                TomokiMiyauci
-              </span>
-              <span className="text-sm">
-                ©{new Date().getFullYear()} miyauci.me
-              </span>
+          <span className="p-4 flex text-center md:text-left flex-col space-y-1 md:border-l-2 border-accent  text-gray-500">
+            <span>
+              <span className="font-semibold text-accent">Made by</span>
+              <IconSkeltonLoader
+                icon={() => import('@iconify-icons/mdi/heart-outline')}
+                className="w-6 h-6 mx-2"
+                fallbackClassName="rounded-full"
+                iconClassName="text-accent"
+              />
+              TomokiMiyauci
             </span>
-          </Static>
+            <span className="text-sm">
+              ©{new Date().getFullYear()} miyauci.me
+            </span>
+          </span>
         </span>
 
         <nav className="flex justify-around flex-row lg:space-x-12 lg:flex-wrap gap-2 w-full md:w-auto">
