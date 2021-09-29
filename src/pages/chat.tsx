@@ -1,11 +1,11 @@
 import bxWorld from '@iconify/icons-bx/bx-world'
 import { Icon } from '@iconify/react/dist/offline'
 import { Link } from 'gatsby'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getDoc, doc } from 'firebase/firestore'
 import Timestamp from '@/components/Chat/Timestamp'
 import bxsMessageSquareDots from '@iconify/icons-bx/bxs-message-square-dots'
-import { useSafeFirestoreEffect } from '@/hooks/firebase/firestore'
+import { useFirestore } from '@/hooks/firebase/firestore'
 import type { FC } from 'react'
 import type { PageProps } from 'gatsby'
 import type {
@@ -18,9 +18,10 @@ import { useUser } from '@/hooks/user'
 const Main: FC = () => {
   const [chatRoom, changeChatRoom] = useState<Partial<PublicChatRoom>>({})
   const { uid } = useUser()
+  const firestore = useFirestore()
 
-  useSafeFirestoreEffect((firestore) => {
-    if (!uid) return
+  useEffect(() => {
+    if (!firestore || !uid) return
     getDoc(
       doc(
         firestore,

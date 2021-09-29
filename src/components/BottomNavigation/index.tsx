@@ -2,15 +2,15 @@ import { memo } from 'react'
 import { useLocalizedNavigations } from './hooks'
 import Navigation from '@/components/BottomNavigation/Navigation'
 import { classNames } from '@/utils/class_name'
+import { useLayoutContext } from '@/layouts/hooks'
 
 import type { FC } from 'react'
 import type { Locale } from 'config/types'
 
 const BottomNavigation: FC<{
   className?: string
-  currentPath: string
-  locale: Locale
-}> = ({ currentPath, className, locale }) => {
+}> = ({ className }) => {
+  const { locale, path } = useLayoutContext()
   return (
     <div
       className={classNames(
@@ -19,7 +19,7 @@ const BottomNavigation: FC<{
       )}
       style={{ '--tw-bg-opacity': '0.7' }}
     >
-      <Memo locale={locale} currentPath={currentPath} />
+      <Memo locale={locale} currentPath={path} />
     </div>
   )
 }

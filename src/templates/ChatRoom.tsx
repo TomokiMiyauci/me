@@ -3,10 +3,7 @@ import MessageComponent from '@/components/Chat/Message/Message'
 import { Transition } from '@headlessui/react'
 import { Fragment, useState, useEffect } from 'react'
 import { Timestamp } from '@firebase/firestore/dist/lite'
-import {
-  useFirestore,
-  useSafeFirestoreEffect
-} from '@/hooks/firebase/firestore'
+import { useFirestore } from '@/hooks/firebase/firestore'
 import { useUser } from '@/hooks/user'
 import {
   collection,
@@ -28,8 +25,10 @@ import { useAsyncEffect } from 'use-async-effect'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
+  const firestore = useFirestore()
 
-  useSafeFirestoreEffect((firestore) => {
+  useEffect(() => {
+    if (!firestore) return
     const col = collection(
       firestore,
       'publicChatRooms',

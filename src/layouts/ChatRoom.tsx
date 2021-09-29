@@ -1,4 +1,4 @@
-import TheHeader from '@/components/TheHeader/TheHeader'
+import TheHeader from '@/components/TheHeader'
 import { navigate } from 'gatsby'
 import { Icon } from '@iconify/react/dist/offline'
 import chevronLeft from '@iconify/icons-akar-icons/chevron-left'
@@ -11,7 +11,6 @@ const Loading = loadable(() => import('@/components/Chat/Loading'))
 const MustSignin = loadable(() => import('@/components/SignIn/MustSignin'))
 
 import type { FC, ReactNode } from 'react'
-import type { Locale } from 'config/types'
 
 const Main: FC<{ children: ReactNode }> = ({ children }) => {
   const step = useStep()
@@ -32,21 +31,13 @@ const Main: FC<{ children: ReactNode }> = ({ children }) => {
 
 const ChatRoom: FC<{
   children: ReactNode
-  originalPath: string
-  currentPath: string
-  locale: Locale
-}> = ({ children, originalPath, currentPath, locale }) => {
+}> = ({ children }) => {
   const app = useFirebaseApp()
   useInitializeFirestore(app)
 
   return (
     <>
-      <TheHeader
-        originalPath={originalPath}
-        currentPath={currentPath}
-        locale={locale}
-        className="hidden md:block"
-      />
+      <TheHeader />
       <header className="fixed md:hidden inset-x-0 border-b h-[56px] p-2 backdrop-blur border-gray-500 top-0 flex items-center space-x-2">
         <button
           className="btn-circle md:p-2"

@@ -1,5 +1,4 @@
-import SearchCard from '@/components/Search/SearchCard'
-import Overlay from '@/components/Overlay'
+import CardDialog from '@/components/Card/CardDialog'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
@@ -9,9 +8,10 @@ import { Helmet } from 'react-helmet'
 import { SwipeContext } from '@/components/Swipe/Context'
 import { useSwipe } from '@/components/Swipe/hooks'
 import { classNames } from '@/utils/class_name'
+import { useLayoutContext } from '@/layouts/hooks'
+import { Transition } from '@headlessui/react'
 
 import type { FC } from 'react'
-import type { Locale } from 'config/types'
 
 const Search = loadable(
   () => delay(import('@/components/Search/Search'), 500),
@@ -24,20 +24,16 @@ const Search = loadable(
   }
 )
 
-const Memo = memo<{
-  locale: Locale
-}>(({ locale }) => {
+const Memo = memo(() => {
+  const { locale } = useLayoutContext()
   return (
-    <>
-      <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
-      <SearchCard className={`h-full relative transition-shadow duration-300`}>
-        <Search locale={locale} />
-      </SearchCard>
-    </>
+    <CardDialog className="flex flex-col justify-center cursor-auto h-full">
+      <Search locale={locale} />
+    </CardDialog>
   )
 })
 
-const Inner: FC<{ locale: Locale }> = ({ locale }) => {
+const Inner: FC = () => {
   const { diff, translate, reset } = useContext(SwipeContext)
 
   useEffect(() => {
@@ -51,10 +47,10 @@ const Inner: FC<{ locale: Locale }> = ({ locale }) => {
       }}
       className={classNames(
         'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
-        diff === 0 ? 'a transition-transform duration-300' : ''
+        diff === 0 ? 'transition-transform duration-300' : ''
       )}
     >
-      <Memo locale={locale} />
+      <Memo />
     </div>
   )
 }
@@ -65,7 +61,7 @@ const MemoHelmet = memo(() => (
   </Helmet>
 ))
 
-const Index: FC<{ locale: Locale }> = ({ locale }) => {
+const Index: FC = () => {
   const [searchShow, changeShow] = useSearchShow()
   const Init = 12
   const { touch, diff, ...rest } = useSwipe()
@@ -84,20 +80,21 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
   }, [ratio])
 
   return (
-    <Overlay
+    <Transition
       enter="transition transform duration-500"
       enterFrom="opacity-0 translate-y-full md:translate-y-10"
       leave="transition transform duration-500"
       leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
       show={searchShow}
-      className="inset-0 p-4 md:p-40 fixed backdrop-blur-md cursor-pointer"
+      className="inset-0 fixed p-4 md:p-40 backdrop-blur-md cursor-pointer"
       style={{
         ...backdropFilter
       }}
-      onClick={(e: Event) => {
-        e.stopPropagation()
+      onClick={(e: any) => {
+        const ev = e as Event
+        ev.stopPropagation()
         if (e.target) {
-          const result = (e.target as Element).getAttribute('data-fullscreen')
+          const result = (ev.target as Element).getAttribute('data-fullscreen')
           if (result === 'true') {
             changeShow(false)
           }
@@ -107,9 +104,9 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     >
       <MemoHelmet />
       <SwipeContext.Provider value={{ touch, diff, ...rest }}>
-        <Inner locale={locale} />
+        <Inner />
       </SwipeContext.Provider>
-    </Overlay>
+    </Transition>
   )
 }
 export default Index

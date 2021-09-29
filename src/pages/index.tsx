@@ -1,10 +1,12 @@
-import { FC } from 'react'
-import { PageProps, graphql } from 'gatsby'
+import { graphql } from 'gatsby'
 import { Helmet } from 'react-helmet'
 import Seo from '@/components/seo'
 import MainMenu from '@/components/MainMenu'
 import loadable from '@loadable/component'
 import Me from '@/components/Me'
+
+import type { PageProps } from 'gatsby'
+import type { FC } from 'react'
 
 const ReactTooltip = loadable(() => import('react-tooltip'), {
   ssr: false

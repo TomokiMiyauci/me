@@ -11,6 +11,7 @@ import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { useSearchShow } from '@/components/Search/hooks'
 import loadable from '@loadable/component'
 import dalay from 'p-min-delay'
+import Esc from '@/components/Esc'
 
 const PoweredBy = loadable(
   () => dalay(import('@/components/Search/PoweredBy'), 1000),
@@ -80,6 +81,10 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     })
   }
 
+  useEffect(() => {
+    ref.current?.focus()
+  }, [])
+
   const handleClick: MouseEventHandler = () => {
     changeShow(false)
     safeLogEvent((analytics, logEvent) =>
@@ -89,26 +94,6 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
       })
     )
   }
-
-  const fn = ({ code }: KeyboardEvent) => {
-    if (code === 'Escape') {
-      changeShow(false)
-      safeLogEvent((analytics, logEvent) => {
-        logEvent(analytics, 'clear_content', {
-          event: 'keydown',
-          key: code,
-          target: 'search'
-        })
-      })
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener('keydown', fn)
-    return () => {
-      document.removeEventListener('keydown', fn)
-    }
-  }, [])
 
   useEffect(() => {
     if (!query) return
@@ -131,6 +116,17 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     })
   }, [query, locale])
 
+  const handleKeyDownEscape = ({ code }: KeyboardEvent): void => {
+    changeShow(false)
+    safeLogEvent((analytics, logEvent) => {
+      logEvent(analytics, 'clear_content', {
+        event: 'keydown',
+        key: code,
+        target: 'search'
+      })
+    })
+  }
+
   return (
     <>
       <Swipe />
@@ -148,7 +144,6 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           placeholder="Search"
           aria-label="Search"
           spellCheck="false"
-          autoFocus
           required
           maxLength={100}
           ref={ref}
@@ -171,17 +166,10 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           </span>
         )}
 
-        <div
-          className="tooltip hidden md:block"
-          data-tooltip="Close on keydown escape"
-        >
-          <button
-            onClick={() => changeShow(false)}
-            className="border dark:border-blue-gray-700 hover:shadow transition-shadow duration-300 rounded-md bg-gray-100 dark:bg-blue-gray-900 text-gray-400 px-1"
-          >
-            esc
-          </button>
-        </div>
+        <Esc
+          onKeyDownEscape={handleKeyDownEscape}
+          onClick={() => changeShow(false)}
+        />
       </div>
 
       <hr className="border-gray-200 dark:border-blue-gray-700" />

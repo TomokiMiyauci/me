@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet'
 import { includes, toLowerCase } from 'core-fn'
 import { isEmpty } from '@/utils/is'
 import { pipe } from 'fonction'
-import magnify from '@iconify-icons/mdi/magnify'
 import { Icon } from '@iconify/react/dist/offline'
 import { iconMeta } from '@/utils/tag'
 import { useQueryString } from '@/hooks/location'
@@ -22,7 +21,10 @@ import { makeAreaComponent } from '@/components/ArticleHeadline/util'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import Intersection from '@/components/Intersection'
 import loadable from '@loadable/component'
-const Subscribe = loadable(() => import('@/components/Subscribe'))
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
+const Subscribe = loadable(() => import('@/components/Subscribe'), {
+  ssr: false
+})
 
 const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
   const {
@@ -173,7 +175,12 @@ const Posts: FC<PageProps<BlogPostsQuery>> = (props) => {
         <h1 className="text-center text-5xl p-2 ">Blog</h1>
 
         <span className="rounded-full px-2 hover:shadow-md focus-within:ring ring-accent transition duration-300 py-0.5 space-x-2 shadow inline-flex bg-gray-100 dark:bg-blue-gray-900 border dark:border-blue-gray-700">
-          <Icon icon={magnify} className="w-9 h-9 text-gray-500" />
+          <IconSkeltonLoader
+            icon={() => import('@iconify-icons/mdi/magnify')}
+            className="w-9 h-9"
+            fallbackClassName="rounded-full"
+            iconClassName="text-gray-500"
+          />
 
           <input
             onChange={({ target }) => {
