@@ -29,7 +29,7 @@ const Index: FC<
       locale,
       path
     }
-  }, [originalPath, locale, path])
+  }, [pageContext, path])
 
   const layout = useMemo<JSX.Element>(() => {
     if (CHATROOM_TYPES.map(joinPath).includes(originalPath)) {
@@ -41,7 +41,7 @@ const Index: FC<
     } else {
       return <Base>{children}</Base>
     }
-  }, [originalPath])
+  }, [pageContext])
 
   return (
     <LayoutContext.Provider value={layoutContext}>

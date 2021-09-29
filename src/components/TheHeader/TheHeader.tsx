@@ -11,7 +11,8 @@ import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
 const DarkMode = loadable(() => import('@/components/DarkMode'))
 const AccentColor = loadable(() => import('@/components/AccentColor'))
-const LangSwitcher = loadable(() => import('@/components/LangSwitcher'))
+
+import LangSwitcher from '@/components/LangSwitcher'
 
 import type { FC } from 'react'
 import type { Locale } from '@/../config/types'
@@ -20,7 +21,7 @@ const Inner: FC<{
   originalPath: string
   currentPath: string
   locale: Locale
-}> = ({ originalPath, currentPath, locale }) => {
+}> = ({ currentPath, locale }) => {
   const localizedNavs = useLocalizedNavigations(locale)
 
   return (
@@ -58,18 +59,13 @@ justify-between flex"
           <SearchButton />
         </Suspense>
 
-        <Suspense
-          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
-        >
-          <LangSwitcher originalPath={originalPath} />
-        </Suspense>
+        <LangSwitcher />
 
         <Suspense
           fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
         >
           <AccentColor />
         </Suspense>
-
         <Suspense
           fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
         >

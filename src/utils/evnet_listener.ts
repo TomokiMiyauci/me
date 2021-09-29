@@ -1,5 +1,5 @@
 import type { Maybe } from '@/types/generics'
-const makeEventListenerSet = <K extends keyof WindowEventMap>(
+const makeEventListenerPair = <K extends keyof WindowEventMap>(
   target: Maybe<Window & typeof globalThis>,
   type: K,
   listener: (this: Window, ev: WindowEventMap[K]) => any
@@ -24,4 +24,4 @@ const makeEventListenerSet = <K extends keyof WindowEventMap>(
   }
 }
 
-export { makeEventListenerSet }
+export { makeEventListenerPair }

@@ -1,4 +1,4 @@
-import SearchCard from '@/components/Search/SearchCard'
+import CardDialog from '@/components/Card/CardDialog'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
@@ -27,12 +27,9 @@ const Search = loadable(
 const Memo = memo(() => {
   const { locale } = useLayoutContext()
   return (
-    <>
-      <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r animate-pulse-bit-slow from-purple-500 via-pink-500 to-amber-500 blur-md" />
-      <SearchCard className={`h-full relative transition-shadow duration-300`}>
-        <Search locale={locale} />
-      </SearchCard>
-    </>
+    <CardDialog className="flex flex-col justify-center cursor-auto h-full">
+      <Search locale={locale} />
+    </CardDialog>
   )
 })
 

@@ -1,14 +1,14 @@
 import SearchButton from '@/components/Search/SearchButton/SearchButton'
 import { useSearchShow } from '@/components/Search/hooks'
 import { useEffect } from 'react'
-import { makeEventListenerSet } from '@/utils/evnet_listener'
+import { makeEventListenerPair } from '@/utils/evnet_listener'
 
 import type { FC } from 'react'
 
 const Index: FC = () => {
   const [_, changeShow] = useSearchShow()
 
-  const { register, unregister } = makeEventListenerSet(
+  const { register, unregister } = makeEventListenerPair(
     window,
     'keydown',
     ({ metaKey, key }: KeyboardEvent) => {
