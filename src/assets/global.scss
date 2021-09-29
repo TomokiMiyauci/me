@@ -14,15 +14,15 @@
 
 @layer components {
   .tooltip {
-    @apply relative inline;
+    @apply relative inline-block;
 
     &::before,
     &::after {
-      @apply transition-all pointer-events-none duration-700 invisible opacity-0 absolute delay-300;
+      @apply transition-all pointer-events-none duration-700 invisible opacity-0 absolute delay-300 z-10;
     }
 
     &::after {
-      @apply bottom-0 left-1/2 rounded-md text-gray-50 dark:text-gray-900 font-bold bg-accent px-2 py-1 whitespace-nowrap;
+      @apply bottom-0 left-1/2 rounded-md text-gray-50 dark:text-gray-900 font-bold bg-accent px-2 py-1 whitespace-nowrap shadow-md;
       content: attr(data-tooltip);
       transform: translate(-50%, calc(100% + 6px));
     }

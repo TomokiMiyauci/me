@@ -1,37 +1,30 @@
-import Esc from '@/components/Esc/Esc'
-import { useEffect } from 'react'
-import { makeEventListenerPair } from '@/utils/evnet_listener'
-import type { FC } from 'react'
-
-const useKeydown = (handler: (ev: globalThis.KeyboardEvent) => void) => {
-  const { register, unregister } = makeEventListenerPair(
-    window,
-    'keydown',
-    handler
+import loadable from '@loadable/component'
+import delay from 'p-min-delay'
+import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
+const Esc = loadable(() => delay(import('@/components/Esc/Esc'), 1000), {
+  ssr: false,
+  fallback: (
+    <SkeltonLoader className="border inline-block align-middle w-[35.53px] h-[26px] rounded-md" />
   )
-  useEffect(() => {
-    register()
-
-    return unregister
-  }, [])
-}
+})
+import Tooltip from '@/components/Tooltip'
+import { useEventListener } from '@/hooks/event_listener'
+import type { FC } from 'react'
 
 const Index: FC<
   JSX.IntrinsicElements['button'] & {
     onKeyDownEscape?: (ev: globalThis.KeyboardEvent) => void
   }
 > = ({ onKeyDownEscape, ...props }) => {
-  useKeydown((ev) => {
+  useEventListener('keydown', (ev) => {
     if (ev.code !== 'Escape') return
     onKeyDownEscape?.(ev)
   })
+
   return (
-    <span
-      className="tooltip hidden md:block"
-      data-tooltip="Close on keydown escape"
-    >
+    <Tooltip title="Close on keydown escape">
       <Esc {...props} />
-    </span>
+    </Tooltip>
   )
 }
 
