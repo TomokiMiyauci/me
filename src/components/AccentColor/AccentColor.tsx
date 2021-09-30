@@ -15,7 +15,7 @@ const AccentColor: FC = () => {
   return (
     <CardDialog className="h-full flex flex-col">
       <header className="p-2 flex items-center justify-between">
-        <span className="space-x-2">
+        <span className="space-x-4">
           <Tooltip title="Close">
             <button
               className="btn-circle hover:text-accent transition-colors duration-300"
@@ -28,7 +28,14 @@ const AccentColor: FC = () => {
               />
             </button>
           </Tooltip>
-          <h2 className="inline align-middle text-2xl">Accent color</h2>
+          <h2 className="inline align-middle space-x-2 text-2xl">
+            <IconSkeltonLoader
+              icon={() => import('@iconify/icons-ic/outline-color-lens')}
+              className="w-8 h-8"
+              fallbackClassName="rounded"
+            />
+            <span>Accent color</span>
+          </h2>
         </span>
 
         <Esc
