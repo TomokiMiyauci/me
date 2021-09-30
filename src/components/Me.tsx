@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import { StaticImage } from 'gatsby-plugin-image'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
+import loadable from '@loadable/component'
+const Tooltip = loadable(() => import('@/components/Tooltip'))
 
 const Me: FC = () => {
   return (
@@ -38,44 +40,46 @@ const Me: FC = () => {
         <p>I like travelling, capturing photos and kitchen garden.</p>
 
         <div className="my-4 space-x-4">
-          <a
-            title="GitHub"
-            className="hover:text-accent transition-colors duration-300"
-            href="https://github.com/TomokiMiyauci"
-            rel="noopener"
-            target="_blank"
-          >
-            <IconSkeltonLoader
-              icon={() => import('@iconify-icons/uil/github-alt')}
-              className="w-8 h-8"
-              fallbackClassName="rounded-full"
-            />
-          </a>
-          <a
-            title="Twitter"
-            className="hover:text-accent transition-colors duration-300"
-            href="https://twitter.com/tomoki_miyauci"
-            rel="noopener"
-            target="_blank"
-          >
-            <IconSkeltonLoader
-              icon={() => import('@iconify-icons/uil/twitter-alt')}
-              className="w-8 h-8"
-              fallbackClassName="rounded-full"
-            />
-          </a>
-
-          <a
-            title="Mail"
-            className="hover:text-accent transition-colors duration-300"
-            href="mailto:contact&#64;miyauchi.dev"
-          >
-            <IconSkeltonLoader
-              icon={() => import('@iconify-icons/feather/at-sign')}
-              className="w-8 h-8"
-              fallbackClassName="rounded-full"
-            />
-          </a>
+          <Tooltip title="GitHub">
+            <a
+              className="hover:text-accent transition-colors duration-300"
+              href="https://github.com/TomokiMiyauci"
+              rel="noopener"
+              target="_blank"
+            >
+              <IconSkeltonLoader
+                icon={() => import('@iconify-icons/uil/github-alt')}
+                className="w-8 h-8"
+                fallbackClassName="rounded-full"
+              />
+            </a>
+          </Tooltip>
+          <Tooltip title="Twitter">
+            <a
+              className="hover:text-accent transition-colors duration-300"
+              href="https://twitter.com/tomoki_miyauci"
+              rel="noopener"
+              target="_blank"
+            >
+              <IconSkeltonLoader
+                icon={() => import('@iconify-icons/uil/twitter-alt')}
+                className="w-8 h-8"
+                fallbackClassName="rounded-full"
+              />
+            </a>
+          </Tooltip>
+          <Tooltip title="Mail">
+            <a
+              className="hover:text-accent transition-colors duration-300"
+              href="mailto:contact&#64;miyauchi.dev"
+            >
+              <IconSkeltonLoader
+                icon={() => import('@iconify-icons/feather/at-sign')}
+                className="w-8 h-8"
+                fallbackClassName="rounded-full"
+              />
+            </a>
+          </Tooltip>
         </div>
       </div>
     </div>
