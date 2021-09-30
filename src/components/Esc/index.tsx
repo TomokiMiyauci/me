@@ -22,7 +22,7 @@ const Index: FC<
   })
 
   return (
-    <Tooltip title="Close on keydown escape">
+    <Tooltip className="hidden md:inline-block" title="Close on keydown escape">
       <Esc {...props} />
     </Tooltip>
   )
