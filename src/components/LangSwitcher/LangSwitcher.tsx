@@ -65,10 +65,10 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
               />
             </LocalizedLink>
           </Tooltip>
-          <li className="flex-auto hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 md:rounded-bl-xl">
+          <li className="flex-1 hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 md:rounded-bl-xl">
             <LocalizedLink
               className={classNames(
-                'text-center h-full w-full grid place-items-center',
+                'text-center h-full grid place-items-center',
                 locale === 'en' ? 'text-accent' : ''
               )}
               onClick={hide}
@@ -88,10 +88,10 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
             </LocalizedLink>
           </li>
 
-          <li className="flex-auto hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 rounded-b-xl md:rounded-br-xl">
+          <li className="flex-1 hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 rounded-b-xl md:rounded-br-xl">
             <LocalizedLink
               className={classNames(
-                'space-y-2 text-center h-full w-full grid place-items-center',
+                'space-y-2 text-center h-full grid place-items-center',
                 locale === 'ja' ? 'text-accent' : ''
               )}
               onClick={hide}
