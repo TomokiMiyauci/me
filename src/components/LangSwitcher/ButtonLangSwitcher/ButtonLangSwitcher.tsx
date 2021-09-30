@@ -12,8 +12,9 @@ const ButtonLangSwitcher: FC<
       {...props}
     >
       <IconSkeltonLoader
-        iconClassName="w-8 h-8 text-accent"
-        fallbackClassName="w-10 h-10 rounded-full"
+        className="w-8 h-8"
+        iconClassName="text-accent"
+        fallbackClassName="rounded-full"
         icon={() => import('@iconify-icons/mdi/translate')}
       />
     </button>

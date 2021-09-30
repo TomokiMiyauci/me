@@ -9,10 +9,10 @@ import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
 const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
-const DarkMode = loadable(() => import('@/components/DarkMode'))
-const AccentColor = loadable(() => import('@/components/AccentColor'))
 
 import LangSwitcher from '@/components/LangSwitcher'
+import AccentColor from '@/components/AccentColor'
+import DarkMode from '@/components/DarkMode'
 
 import type { FC } from 'react'
 import type { Locale } from '@/../config/types'
@@ -53,26 +53,15 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <Suspense
-          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
-        >
+        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
           <SearchButton />
         </Suspense>
 
         <LangSwitcher />
 
-        <Suspense
-          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
-        >
-          <AccentColor />
-        </Suspense>
-        <Suspense
-          fallback={<SkeltonLoader className="w-10 h-10 rounded-full" />}
-        >
-          <span className="tooltip w-[40px] h-[40px]" data-tooltip="Dark mode">
-            <DarkMode />
-          </span>
-        </Suspense>
+        <AccentColor />
+
+        <DarkMode />
       </div>
     </div>
   )
