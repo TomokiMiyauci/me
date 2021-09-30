@@ -1,43 +1,33 @@
-import { FC, useMemo, useState, useEffect, ReactNode } from 'react'
 import { useDarkMode } from '@/hooks/dark_mode'
-import sun from '@iconify/icons-jam/sun'
-import { Icon } from '@iconify/react/dist/offline'
-import moon from '@iconify/icons-bx/bx-moon'
-
-const useIsClient = () => {
-  const [isClient, setIsClient] = useState(false)
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  return isClient
-}
-
-const OnlyClient: FC<{ placeholder?: ReactNode }> = ({
-  children,
-  placeholder
-}) => {
-  const isClient = useIsClient()
-
-  return <>{isClient ? <>{children}</> : <>{placeholder}</>}</>
-}
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
+import Tooltip from '@/components/Tooltip'
+import type { FC } from 'react'
 
 const DarkMode: FC = () => {
   const { value, toggle } = useDarkMode()
-  const icon = useMemo(() => {
-    return value ? moon : sun
-  }, [value])
 
   return (
-    <OnlyClient placeholder={<span className="w-[32px] h-[32px]" />}>
+    <Tooltip title="Dark mode">
       <button
         aria-label="Switch dark mode"
         className="text-accent btn-circle transition-colors duration-300"
         onClick={toggle}
       >
-        <Icon icon={icon} className="w-8 h-8" />
+        {value ? (
+          <IconSkeltonLoader
+            className="w-8 h-8"
+            fallbackClassName="rounded-full"
+            icon={() => import('@iconify/icons-bx/bx-moon')}
+          />
+        ) : (
+          <IconSkeltonLoader
+            className="w-8 h-8"
+            fallbackClassName="rounded-full"
+            icon={() => import('@iconify/icons-jam/sun')}
+          />
+        )}
       </button>
-    </OnlyClient>
+    </Tooltip>
   )
 }
 
