@@ -19,7 +19,7 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={classNames(className)}>
       <CardDialog className="h-full flex flex-col">
-        <header className="flex justify-between items-center py-2 px-3">
+        <header className="flex justify-between items-center py-1 px-2">
           <span className="space-x-4">
             <Tooltip title="Close">
               <button
