@@ -19,7 +19,7 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={classNames(className)}>
       <CardDialog className="h-full flex flex-col">
-        <header className="flex justify-between items-center py-2 px-3">
+        <header className="flex justify-between items-center py-1 px-2">
           <span className="space-x-4">
             <Tooltip title="Close">
               <button
@@ -47,20 +47,25 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
         </header>
 
         <hr className="border-gray-200 dark:border-blue-gray-700" />
-        <ul className="flex flex-1 divide-x divide-gray-200 dark:divide-blue-gray-700 relative">
-          <LocalizedLink
-            to={originalPath}
-            language={locale === 'en' ? 'ja' : 'en'}
-            className="absolute bg-gray-50 dark:bg-blue-gray-800 p-2 rounded-full border border-gray-200 dark:border-blue-gray-700 left-1/2 top-3/4 md:top-1/2 transform -translate-x-1/2 -translate-y-1/2 hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition-colors duration-300"
-            onClick={hide}
+        <ul className="flex flex-col md:flex-row flex-1 divide-y md:divide-x divide-gray-200 dark:divide-blue-gray-700 relative">
+          <Tooltip
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            title="Translate"
           >
-            <IconSkeltonLoader
-              icon={() => import('@iconify/icons-akar-icons/arrow-cycle')}
-              className="w-10 h-10 animate-spin-bit-slow"
-              fallbackClassName="rounded-full"
-            />
-          </LocalizedLink>
-          <li className="flex-auto hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 rounded-br-xl">
+            <LocalizedLink
+              to={originalPath}
+              language={locale === 'en' ? 'ja' : 'en'}
+              className="bg-gray-50 dark:bg-blue-gray-800 inline-block rounded-full border border-gray-200 dark:border-blue-gray-700 hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition-colors duration-300"
+              onClick={hide}
+            >
+              <IconSkeltonLoader
+                icon={() => import('@iconify/icons-akar-icons/arrow-cycle')}
+                className="w-10 h-10 animate-spin-bit-slow"
+                fallbackClassName="rounded-full"
+              />
+            </LocalizedLink>
+          </Tooltip>
+          <li className="flex-auto hover:bg-gray-100 dark:hover:bg-blue-gray-900 transition duration-300 rounded-bl-xl">
             <LocalizedLink
               className={classNames(
                 'text-center h-full w-full grid place-items-center',
@@ -78,7 +83,7 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
                   className="w-16 h-16"
                   fallbackClassName="rounded-full"
                 />
-                <div className="text-center text-2xl">English</div>
+                <div className="text-center text-2xl font-bold">English</div>
               </span>
             </LocalizedLink>
           </li>
@@ -99,7 +104,7 @@ const LangSwitcher: FC<{ className?: string }> = ({ className }) => {
                   className="w-16 h-16"
                   fallbackClassName="rounded-full"
                 />
-                <div className="text-center text-2xl">日本語</div>
+                <div className="text-center text-2xl font-bold">日本語</div>
               </span>
             </LocalizedLink>
           </li>
