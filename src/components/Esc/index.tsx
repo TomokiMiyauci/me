@@ -4,7 +4,7 @@ import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
 const Esc = loadable(() => delay(import('@/components/Esc/Esc'), 1000), {
   ssr: false,
   fallback: (
-    <SkeltonLoader className="border inline-block align-middle w-[35.53px] h-[26px] rounded-md" />
+    <SkeltonLoader className="border dark:border-blue-gray-700 inline-block align-middle w-[35.53px] h-[26px] rounded-md" />
   )
 })
 import Tooltip from '@/components/Tooltip'
