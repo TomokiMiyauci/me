@@ -2,7 +2,7 @@ import Portal from '@/components/Portal/Portal'
 import { forwardRef, cloneElement } from 'react'
 import { isBrowser } from '@/utils/environment'
 
-const PortalBody = forwardRef<any, { children: JSX.Element }>(
+const PortalBody = forwardRef<Element, { children: JSX.Element }>(
   ({ children }, ref) => {
     if (!isBrowser) {
       return <></>

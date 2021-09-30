@@ -2,13 +2,13 @@ import { useState, Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 import ButtonAccentColor from '@/components/AccentColor/ButtonAccentColor'
 import Context from '@/components/AccentColor/context'
-import PortalBody from '@/components/Portal/PortalBody'
 
 import { Helmet } from 'react-helmet'
 import loadable from '@loadable/component'
 const AccentColor = loadable(
   () => import('@/components/AccentColor/AccentColor')
 )
+const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
 
 import type { FC } from 'react'
 
@@ -19,15 +19,15 @@ const Index: FC = () => {
     <Context.Provider value={[isShow, changeShow]}>
       <ButtonAccentColor />
 
-      <Transition
-        show={isShow}
-        enter="transition duration-500"
-        enterFrom="backdrop-opacity-0"
-        leave="transition duration-500"
-        leaveTo="backdrop-opacity-0"
-        as={Fragment}
-      >
-        <PortalBody>
+      <PortalBody>
+        <Transition
+          show={isShow}
+          enter="transition duration-500"
+          enterFrom="backdrop-opacity-0"
+          leave="transition duration-500"
+          leaveTo="backdrop-opacity-0"
+          as={Fragment}
+        >
           <div
             onClick={() => changeShow(false)}
             className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
@@ -45,14 +45,14 @@ const Index: FC = () => {
                   ev.stopPropagation()
                 }}
                 role="dialog"
-                className="h-full w-full md:max-h-[600px] md:max-w-4xl relative cursor-auto"
+                className="h-full w-full md:max-h-[600px] md:max-w-4xl relative cursor-auto mx-auto"
               >
                 <AccentColor />
               </div>
             </Transition.Child>
           </div>
-        </PortalBody>
-      </Transition>
+        </Transition>
+      </PortalBody>
     </Context.Provider>
   )
 }
