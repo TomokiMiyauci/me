@@ -2,21 +2,13 @@ import { useState, BaseSyntheticEvent } from 'react'
 import { Transition } from '@headlessui/react'
 import Context from '@/components/LangSwitcher/context'
 import ButtonLangSwitcher from '@/components/LangSwitcher/ButtonLangSwitcher'
-import { createPortal } from 'react-dom'
-import { isBrowser } from '@/utils/environment'
+import PortalBody from '@/components/Portal/PortalBody'
 import loadable from '@loadable/component'
 import { Helmet } from 'react-helmet'
 import type { FC } from 'react'
 const LangSwitcher = loadable(
   () => import('@/components/LangSwitcher/LangSwitcher')
 )
-
-const Portal: FC = ({ children }) => {
-  if (!isBrowser) {
-    return <></>
-  }
-  return createPortal(children, document.getElementsByTagName('body')[0])
-}
 
 const Index: FC = () => {
   const [isShow, changeShow] = useState(false)
@@ -25,7 +17,7 @@ const Index: FC = () => {
     <Context.Provider value={[isShow, changeShow]}>
       <ButtonLangSwitcher />
 
-      <Portal>
+      <PortalBody>
         <Transition
           show={isShow}
           enter="transition transform duration-500"
@@ -46,7 +38,7 @@ const Index: FC = () => {
           </Helmet>
           <LangSwitcher className="h-full md:max-h-[600px] cursor-auto relative md:max-w-4xl mx-auto" />
         </Transition>
-      </Portal>
+      </PortalBody>
     </Context.Provider>
   )
 }
