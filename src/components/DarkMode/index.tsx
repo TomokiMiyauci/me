@@ -1,18 +1,17 @@
 import { useDarkMode } from '@/hooks/dark_mode'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Tooltip from '@/components/Tooltip'
-import { useEventListener } from '@/hooks/event_listener'
+import { useShortcut } from '@/hooks/event_listener'
 import type { FC } from 'react'
 
 const DarkMode: FC = () => {
   const { value, toggle } = useDarkMode()
-  useEventListener(
-    'keydown',
-    ({ metaKey, code }) => {
-      if (metaKey && code === 'KeyM') {
-        toggle()
-      }
+  useShortcut(
+    {
+      metaKey: true,
+      code: 'KeyM'
     },
+    toggle,
     [value]
   )
 
