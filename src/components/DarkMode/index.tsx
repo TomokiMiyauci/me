@@ -19,7 +19,7 @@ const DarkMode: FC = () => {
     <Tooltip title="Dark mode ⌘M">
       <button
         aria-label="Switch dark mode"
-        className="text-accent btn-circle transition-colors duration-300"
+        className="btn-circle transition-colors duration-300"
         onClick={toggle}
       >
         {value ? (
@@ -27,12 +27,14 @@ const DarkMode: FC = () => {
             className="w-8 h-8"
             fallbackClassName="rounded-full"
             icon={() => import('@iconify/icons-bx/bx-moon')}
+            iconClassName="text-accent"
           />
         ) : (
           <IconSkeltonLoader
             className="w-8 h-8"
             fallbackClassName="rounded-full"
             icon={() => import('@iconify/icons-jam/sun')}
+            iconClassName="text-accent"
           />
         )}
       </button>
