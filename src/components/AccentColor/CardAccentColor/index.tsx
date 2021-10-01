@@ -45,26 +45,26 @@ const Index: FC = () => {
   )
 
   return (
-    <ContextTouches.Provider value={touches}>
-      <PortalBody>
-        <Transition
-          show={isShow}
-          enter="transition duration-1000"
-          enterFrom="backdrop-opacity-0"
-          leave="transition duration-1000"
-          leaveTo="backdrop-opacity-0"
-          onClick={hideDialog}
-          className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
-          style={{
-            backdropFilter: blurPx
-          }}
-        >
-          <Helmet bodyAttributes={{ 'data-fullscreen': 'true' }} />
+    <PortalBody>
+      <Transition
+        show={isShow}
+        enter="transition duration-1000"
+        enterFrom="backdrop-opacity-0"
+        leave="transition duration-1000"
+        leaveTo="backdrop-opacity-0"
+        onClick={hideDialog}
+        className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
+        style={{
+          backdropFilter: blurPx
+        }}
+      >
+        <Helmet bodyAttributes={{ 'data-fullscreen': 'true' }} />
 
+        <ContextTouches.Provider value={touches}>
           <CardAccentColor />
-        </Transition>
-      </PortalBody>
-    </ContextTouches.Provider>
+        </ContextTouches.Provider>
+      </Transition>
+    </PortalBody>
   )
 }
 
