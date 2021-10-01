@@ -5,23 +5,19 @@ import Context from '@/components/LangSwitcher/context'
 import type { FC } from 'react'
 
 const Index: FC = () => {
-  const [_, changeShow] = useContext(Context)
+  const [_, { on: showDialog }] = useContext(Context)
 
   useShortcut(
     {
       metaKey: true,
       code: 'KeyI'
     },
-    () => changeShow(true),
+    showDialog,
     []
   )
   return (
     <span className="tooltip" data-tooltip="Translate ⌘I">
-      <ButtonLangSwitcher
-        onClick={() => {
-          changeShow(true)
-        }}
-      />
+      <ButtonLangSwitcher onClick={showDialog} />
     </span>
   )
 }

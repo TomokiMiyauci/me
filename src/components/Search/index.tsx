@@ -45,6 +45,7 @@ const Inner: FC = () => {
       style={{
         ...translate
       }}
+      onClick={(ev) => ev.stopPropagation()}
       className={classNames(
         'h-full md:max-h-[600px] relative md:max-w-4xl mx-auto',
         diff === 0 ? 'transition-transform duration-300' : ''
@@ -56,9 +57,11 @@ const Inner: FC = () => {
 }
 
 const MemoHelmet = memo(() => (
-  <Helmet>
-    <body data-fullscreen="true" />
-  </Helmet>
+  <Helmet
+    bodyAttributes={{
+      'data-fullscreen': 'true'
+    }}
+  />
 ))
 
 const Index: FC = () => {
@@ -90,17 +93,7 @@ const Index: FC = () => {
       style={{
         ...backdropFilter
       }}
-      onClick={(e: any) => {
-        const ev = e as Event
-        ev.stopPropagation()
-        if (e.target) {
-          const result = (ev.target as Element).getAttribute('data-fullscreen')
-          if (result === 'true') {
-            changeShow(false)
-          }
-        }
-      }}
-      data-fullscreen="true"
+      onClick={() => changeShow(false)}
     >
       <MemoHelmet />
       <SwipeContext.Provider value={{ touch, diff, ...rest }}>
