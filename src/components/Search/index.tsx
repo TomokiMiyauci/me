@@ -2,7 +2,6 @@ import CardDialog from '@/components/Card/CardDialog'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
 import loadable from '@loadable/component'
 import delay from 'p-min-delay'
-import { useSearchShow } from '@/components/Search/hooks'
 import { memo, useContext, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 import { SwipeContext } from '@/components/Swipe/Context'
@@ -10,6 +9,10 @@ import { useSwipe } from '@/components/Swipe/hooks'
 import { classNames } from '@/utils/class_name'
 import { useLayoutContext } from '@/layouts/hooks'
 import { Transition } from '@headlessui/react'
+import { useHash } from '@/hooks/hash'
+import SearchButton from '@/components/Search/SearchButton'
+import Context from '@/components/Search/context'
+const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
 
 import type { FC } from 'react'
 
@@ -65,7 +68,12 @@ const MemoHelmet = memo(() => (
 ))
 
 const Index: FC = () => {
-  const [searchShow, changeShow] = useSearchShow()
+  const [isShow, changeHash] = useHash('#search')
+
+  const changeShow = {
+    on: (): void => changeHash(true),
+    off: (): void => changeHash(false)
+  }
   const Init = 12
   const { touch, diff, ...rest } = useSwipe()
 
@@ -83,23 +91,29 @@ const Index: FC = () => {
   }, [ratio])
 
   return (
-    <Transition
-      enter="transition transform duration-500"
-      enterFrom="opacity-0 translate-y-full md:translate-y-10"
-      leave="transition transform duration-500"
-      leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
-      show={searchShow}
-      className="inset-0 fixed p-4 md:p-40 backdrop-blur-md cursor-pointer"
-      style={{
-        ...backdropFilter
-      }}
-      onClick={() => changeShow(false)}
-    >
-      <MemoHelmet />
-      <SwipeContext.Provider value={{ touch, diff, ...rest }}>
-        <Inner />
-      </SwipeContext.Provider>
-    </Transition>
+    <Context.Provider value={[isShow, changeShow]}>
+      <SearchButton />
+
+      <PortalBody>
+        <Transition
+          enter="transition transform duration-500"
+          enterFrom="opacity-0 translate-y-full md:translate-y-10"
+          leave="transition transform duration-500"
+          leaveTo="translate-y-full md:opacity-0 md:translate-y-10"
+          show={isShow}
+          className="inset-0 fixed p-4 md:p-40 backdrop-blur-md cursor-pointer"
+          style={{
+            ...backdropFilter
+          }}
+          onClick={changeShow.off}
+        >
+          <MemoHelmet />
+          <SwipeContext.Provider value={{ touch, diff, ...rest }}>
+            <Inner />
+          </SwipeContext.Provider>
+        </Transition>
+      </PortalBody>
+    </Context.Provider>
   )
 }
 export default Index

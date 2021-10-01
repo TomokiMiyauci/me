@@ -3,13 +3,9 @@ import { useLocalizedNavigations } from '@/components/BottomNavigation/hooks'
 import Logo from '@/components/Logo/Logo'
 import Navigation from '@/components/BottomNavigation/Navigation'
 import { classNames } from '@/utils/class_name'
-import loadable from '@loadable/component'
-import Suspense from '@/components/Suspense'
-import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
-const SearchButton = loadable(() => import('@/components/Search/SearchButton'))
-
+import Search from '@/components/Search'
 import LangSwitcher from '@/components/LangSwitcher'
 import AccentColor from '@/components/AccentColor'
 import DarkMode from '@/components/DarkMode'
@@ -53,9 +49,7 @@ justify-between flex"
       </span>
 
       <div className="flex space-x-5 lg:space-x-8 items-center">
-        <Suspense fallback={<SkeltonLoader className="w-8 h-8 rounded-full" />}>
-          <SearchButton />
-        </Suspense>
+        <Search />
 
         <LangSwitcher />
 

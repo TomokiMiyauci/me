@@ -1,6 +1,10 @@
 import { createContext } from 'react'
+import type { useSwitch } from '@/hooks/state'
 
-export default createContext<[boolean, (val: boolean) => void]>([
+export default createContext<ReturnType<typeof useSwitch>>([
   false,
-  (_: boolean) => {}
+  {
+    on: () => {},
+    off: () => {}
+  }
 ])

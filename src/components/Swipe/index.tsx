@@ -1,15 +1,15 @@
 import SwipeArea from '@/components/Swipe/SwipeArea'
 import SwipeBar from '@/components/Swipe/SwipeBar'
 
-import { useContext } from 'react'
-import { useSearchShow } from '@/components/Search/hooks'
+import SearchContext from '@/components/Search/context'
 import { SwipeContext } from '@/components/Swipe/Context'
+import { useContext } from 'react'
 import type { FC } from 'react'
 
 const Index: FC = () => {
   const { diff, changeInitState, changeMidState, changeTouch } =
     useContext(SwipeContext)
-  const [_, changeShow] = useSearchShow()
+  const [_, { off: hideDialog }] = useContext(SearchContext)
 
   return (
     <SwipeArea
@@ -20,7 +20,7 @@ const Index: FC = () => {
       }}
       onTouchEnd={() => {
         if (diff > 30) {
-          changeShow(false)
+          hideDialog()
         } else {
           changeInitState(0)
           changeMidState(0)

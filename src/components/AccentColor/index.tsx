@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 import ButtonAccentColor from '@/components/AccentColor/ButtonAccentColor'
 import Context from '@/components/AccentColor/context'
@@ -34,9 +34,9 @@ const Index: FC = () => {
       <PortalBody>
         <Transition
           show={isShow}
-          enter="transition duration-500"
+          enter="transition duration-1000"
           enterFrom="backdrop-opacity-0"
-          leave="transition duration-500"
+          leave="transition duration-1000"
           leaveTo="backdrop-opacity-0"
           as={Fragment}
         >

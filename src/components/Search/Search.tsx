@@ -1,14 +1,13 @@
+import Context from '@/components/Search/context'
 import Swipe from '@/components/Swipe'
 import back from '@iconify-icons/mdi/arrow-back'
 import close from '@iconify-icons/mdi/close'
 import magnify from '@iconify-icons/mdi/text-box-search-outline'
-import { useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
-import { useState, useRef } from 'react'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
-import { useSearchShow } from '@/components/Search/hooks'
 import loadable from '@loadable/component'
 import dalay from 'p-min-delay'
 import Esc from '@/components/Esc'
@@ -63,7 +62,7 @@ const useAlgolia = () => {
 }
 
 const Index: FC<{ locale: Locale }> = ({ locale }) => {
-  const [_, changeShow] = useSearchShow()
+  const [_, { off: hideDialog }] = useContext(Context)
   const [query, setQuery] = useState<string>('')
   const { safeLogEvent } = useSafeLogEvent()
   const ref = useRef<HTMLInputElement>(null)
@@ -86,7 +85,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
   }, [])
 
   const handleClick: MouseEventHandler = () => {
-    changeShow(false)
+    hideDialog()
     safeLogEvent((analytics, logEvent) =>
       logEvent(analytics, 'engagement', {
         event: 'click',
@@ -117,7 +116,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
   }, [query, locale])
 
   const handleKeyDownEscape = ({ code }: KeyboardEvent): void => {
-    changeShow(false)
+    hideDialog()
     safeLogEvent((analytics, logEvent) => {
       logEvent(analytics, 'clear_content', {
         event: 'keydown',
@@ -134,7 +133,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
         <span className="tooltip" data-tooltip="Close">
           <button
             className="hover:text-accent transition-colors duration-300 btn-circle p-2"
-            onClick={() => changeShow(false)}
+            onClick={hideDialog}
           >
             <Icon className="w-7 h-7" icon={back} />
           </button>
@@ -166,10 +165,7 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
           </span>
         )}
 
-        <Esc
-          onKeyDownEscape={handleKeyDownEscape}
-          onClick={() => changeShow(false)}
-        />
+        <Esc onKeyDownEscape={handleKeyDownEscape} onClick={hideDialog} />
       </div>
 
       <hr className="border-gray-200 dark:border-blue-gray-700" />

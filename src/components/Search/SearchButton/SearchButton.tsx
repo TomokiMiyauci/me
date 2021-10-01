@@ -1,7 +1,6 @@
 import { FC, ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
-import { Icon } from '@iconify/react/dist/offline'
-import magnify from '@iconify-icons/mdi/magnify'
 import { classNames } from '@/utils/class_name'
+import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 
 const SearchButton: FC<
   DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
@@ -9,10 +8,15 @@ const SearchButton: FC<
   return (
     <button
       aria-label="Show search dialog"
-      className={classNames('text-accent', className)}
+      className={classNames(className)}
       {...props}
     >
-      <Icon icon={magnify} className="w-8 h-8" />
+      <IconSkeltonLoader
+        className="w-8 h-8"
+        icon={() => import('@iconify-icons/mdi/magnify')}
+        fallbackClassName="rounded-full"
+        iconClassName="text-accent"
+      />
     </button>
   )
 }
