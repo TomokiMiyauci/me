@@ -2,15 +2,25 @@ import { useState, Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 import ButtonAccentColor from '@/components/AccentColor/ButtonAccentColor'
 import Context from '@/components/AccentColor/context'
+import CardDialog from '@/components/Card/CardDialog'
+import delay from 'p-min-delay'
 
 import { Helmet } from 'react-helmet'
 import loadable from '@loadable/component'
 const AccentColor = loadable(
-  () => import('@/components/AccentColor/AccentColor')
+  () => delay(import('@/components/AccentColor/AccentColor'), 1000),
+  {
+    fallback: (
+      <div className="h-full grid place-items-center">
+        <ProgressCircle />
+      </div>
+    )
+  }
 )
 const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
 
 import type { FC } from 'react'
+import { ProgressCircle } from '../ProgressCircle/ProgressCircle'
 
 const Index: FC = () => {
   const [isShow, changeShow] = useState(false)
@@ -47,7 +57,9 @@ const Index: FC = () => {
                 role="dialog"
                 className="h-full w-full md:max-h-[600px] md:max-w-4xl relative cursor-auto mx-auto"
               >
-                <AccentColor />
+                <CardDialog className="h-full flex flex-col">
+                  <AccentColor />
+                </CardDialog>
               </div>
             </Transition.Child>
           </div>

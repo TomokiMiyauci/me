@@ -1,4 +1,3 @@
-import CardDialog from '@/components/Card/CardDialog'
 import Esc from '@/components/Esc'
 import Tooltip from '@/components/Tooltip'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
@@ -24,7 +23,7 @@ const AccentColor: FC = () => {
   const [_, changeShow] = useContext(Context)
 
   return (
-    <CardDialog className="h-full flex flex-col">
+    <>
       <header className="p-2 flex items-center justify-between">
         <span className="space-x-4">
           <Tooltip title="Close">
@@ -89,7 +88,7 @@ const AccentColor: FC = () => {
           </Transition>
         ))}
       </section>
-    </CardDialog>
+    </>
   )
 }
 
