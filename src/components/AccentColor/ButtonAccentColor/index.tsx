@@ -6,12 +6,12 @@ import { useContext } from 'react'
 import type { FC } from 'react'
 
 const Index: FC = () => {
-  const [_, changeShow] = useContext(Context)
-  useShortcut({ metaKey: true, code: 'KeyJ' }, () => changeShow(true), [])
+  const [_, { on: showDialog }] = useContext(Context)
+  useShortcut({ metaKey: true, code: 'KeyJ' }, showDialog, [])
 
   return (
     <Tooltip title="Accent color ⌘J">
-      <ButtonAccentColor onClick={() => changeShow(true)} />
+      <ButtonAccentColor onClick={showDialog} />
     </Tooltip>
   )
 }
