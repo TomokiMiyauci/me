@@ -4,9 +4,10 @@ import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Context from '@/components/AccentColor/context'
 import { Transition } from '@headlessui/react'
 import { useAccentColor } from '@/utils/use_accent_color'
-import { useContext } from 'react'
+import { useContext, memo } from 'react'
 import { classNames } from '@/utils/class_name'
 import type { FC } from 'react'
+import { Swipe } from '@/components/Swipe'
 
 const delayMap: Record<number, string> = {
   0: 'delay-100',
@@ -18,12 +19,14 @@ const delayMap: Record<number, string> = {
   6: 'delay-[1300ms]'
 }
 
+const Memo = memo(Swipe)
 const AccentColor: FC = () => {
   const { switchColor, colorPalette } = useAccentColor()
   const [_, { off: hideDialog }] = useContext(Context)
 
   return (
     <>
+      <Memo />
       <header className="p-2 flex items-center justify-between">
         <span className="space-x-4">
           <Tooltip title="Close">
@@ -89,4 +92,4 @@ const AccentColor: FC = () => {
   )
 }
 
-export default AccentColor
+export default memo(AccentColor)
