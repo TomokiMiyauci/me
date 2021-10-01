@@ -1,36 +1,45 @@
 import SearchButton from '@/components/Search/SearchButton/SearchButton'
-import { useSearchShow } from '@/components/Search/hooks'
-import { useEffect } from 'react'
-import { makeEventListenerPair } from '@/utils/event_listener'
+import Context from '@/components/Search/context'
+import loadable from '@loadable/component'
+import { useContext } from 'react'
+import { useShortcut } from '@/hooks/event_listener'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
+
+const Tooltip = loadable(() => import('@/components/Tooltip'))
 
 import type { FC } from 'react'
 
 const Index: FC = () => {
-  const [_, changeShow] = useSearchShow()
+  const [_, { on: showDialog }] = useContext(Context)
+  const { safeLogEvent } = useSafeLogEvent()
 
-  const { register, unregister } = makeEventListenerPair(
-    window,
-    'keydown',
-    ({ metaKey, key }: KeyboardEvent) => {
-      if (metaKey && key === 'k') {
-        changeShow(true)
-      }
-    }
+  const loggedShowDialog = (): void => {
+    showDialog()
+    console.log(showDialog)
+    safeLogEvent((analytics, logEvent) =>
+      logEvent(analytics, 'select_content', {
+        content_type: 'search',
+        action: 'show'
+      })
+    )
+  }
+
+  useShortcut(
+    {
+      metaKey: true,
+      code: 'KeyK'
+    },
+    loggedShowDialog,
+    []
   )
 
-  useEffect(() => {
-    register()
-
-    return unregister
-  }, [])
-
   return (
-    <span className="tooltip" data-tooltip="Search ⌘K">
+    <Tooltip title="Search ⌘K">
       <SearchButton
         className="btn-circle transition-colors duration-300"
-        onClick={() => changeShow(true)}
+        onClick={loggedShowDialog}
       />
-    </span>
+    </Tooltip>
   )
 }
 

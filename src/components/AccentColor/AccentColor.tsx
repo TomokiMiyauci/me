@@ -1,4 +1,3 @@
-import CardDialog from '@/components/Card/CardDialog'
 import Esc from '@/components/Esc'
 import Tooltip from '@/components/Tooltip'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
@@ -21,16 +20,16 @@ const delayMap: Record<number, string> = {
 
 const AccentColor: FC = () => {
   const { switchColor, colorPalette } = useAccentColor()
-  const [_, changeShow] = useContext(Context)
+  const [_, { off: hideDialog }] = useContext(Context)
 
   return (
-    <CardDialog className="h-full flex flex-col">
+    <>
       <header className="p-2 flex items-center justify-between">
         <span className="space-x-4">
           <Tooltip title="Close">
             <button
               className="btn-circle hover:text-accent transition-colors duration-300"
-              onClick={() => changeShow(false)}
+              onClick={hideDialog}
             >
               <IconSkeltonLoader
                 icon={() => import('@iconify-icons/mdi/close')}
@@ -49,10 +48,7 @@ const AccentColor: FC = () => {
           </h2>
         </span>
 
-        <Esc
-          onKeyDownEscape={() => changeShow(false)}
-          onClick={() => changeShow(false)}
-        />
+        <Esc onKeyDownEscape={hideDialog} onClick={hideDialog} />
       </header>
 
       <hr className="border-gray-200 dark:border-blue-gray-700" />
@@ -71,7 +67,7 @@ const AccentColor: FC = () => {
               title={label}
               onClick={() => {
                 switchColor({ label, color })
-                changeShow(false)
+                hideDialog()
               }}
               aria-label={`Switch accent color to ${label}`}
               className="relative hover:scale-[1.2] hover:animate-none transform duration-300 w-20 h-20 md:w-24 md:h-24 animate-pulse-bit-slow transition-transform"
@@ -89,7 +85,7 @@ const AccentColor: FC = () => {
           </Transition>
         ))}
       </section>
-    </CardDialog>
+    </>
   )
 }
 

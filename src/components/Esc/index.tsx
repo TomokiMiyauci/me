@@ -8,7 +8,7 @@ const Esc = loadable(() => delay(import('@/components/Esc/Esc'), 1000), {
   )
 })
 import Tooltip from '@/components/Tooltip'
-import { useEventListener } from '@/hooks/event_listener'
+import { useShortcut } from '@/hooks/event_listener'
 import type { FC } from 'react'
 
 const Index: FC<
@@ -16,10 +16,13 @@ const Index: FC<
     onKeyDownEscape?: (ev: globalThis.KeyboardEvent) => void
   }
 > = ({ onKeyDownEscape, ...props }) => {
-  useEventListener('keydown', (ev) => {
-    if (ev.code !== 'Escape') return
-    onKeyDownEscape?.(ev)
-  })
+  useShortcut(
+    {
+      code: 'Escape'
+    },
+    (ev) => onKeyDownEscape?.(ev),
+    []
+  )
 
   return (
     <Tooltip className="hidden md:inline-block" title="Close on keydown escape">

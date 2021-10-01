@@ -1,7 +1,6 @@
 import NoticeContext from '@/contexts/notice'
 import UserContext from '@/contexts/user'
 import DarkModeContext from '@/contexts/dark_mode'
-import SearchContext from '@/components/Search/context'
 import AppContext from '@/contexts/firebase/app'
 import FirestoreContext from '@/contexts/firebase/firestore'
 import FirestoreLiteContext from '@/contexts/firebase/firestore_lite'
@@ -12,12 +11,10 @@ import AuthContext from '@/contexts/firebase/auth'
 import { useNoticeProvider } from '@/hooks/notice'
 import { useDarkModeProvider } from '@/hooks/dark_mode'
 import {
-  useSafeLogEvent,
   useStateAnalytics,
   useInitializeAnalytics,
   useAnalytics
 } from '@/hooks/firebase/analytics'
-import { useHash } from '@/hooks/hash'
 import { useProviderUser, useUser } from '@/hooks/user'
 import {
   useInitializeFirebaseApp,
@@ -37,29 +34,6 @@ import { useStateAuth } from '@/hooks/firebase/auth'
 import { useAsyncEffect } from 'use-async-effect'
 
 import type { FC, ReactNode } from 'react'
-
-const ProvideSearchContext: FC = ({ children }) => {
-  const { safeLogEvent } = useSafeLogEvent()
-  const [isShowSearch, changeHash] = useHash('#search')
-
-  const loggedChangeHash = (
-    val: Parameters<typeof changeHash>[0]
-  ): ReturnType<typeof changeHash> => {
-    changeHash(val)
-    const action = val ? 'show' : 'hide'
-    safeLogEvent((analytics, logEvent) =>
-      logEvent(analytics, 'select_content', {
-        content_type: 'search',
-        action
-      })
-    )
-  }
-  return (
-    <SearchContext.Provider value={[isShowSearch, loggedChangeHash]}>
-      {children}
-    </SearchContext.Provider>
-  )
-}
 
 const InitializerContext: FC<{ children: ReactNode }> = ({ children }) => {
   useInitializeFirebaseApp()
@@ -101,11 +75,9 @@ const Index: FC = ({ children }) => {
               <FirestoreContext.Provider value={firestore}>
                 <NoticeContext.Provider value={notice}>
                   <DarkModeContext.Provider value={darkMode}>
-                    <ProvideSearchContext>
-                      <AuthContext.Provider value={auth}>
-                        <InitializerContext>{children}</InitializerContext>
-                      </AuthContext.Provider>
-                    </ProvideSearchContext>
+                    <AuthContext.Provider value={auth}>
+                      <InitializerContext>{children}</InitializerContext>
+                    </AuthContext.Provider>
                   </DarkModeContext.Provider>
                 </NoticeContext.Provider>
               </FirestoreContext.Provider>

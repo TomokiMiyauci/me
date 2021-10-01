@@ -1,19 +1,31 @@
-import { useState, Fragment } from 'react'
+import { Fragment } from 'react'
 import { Transition } from '@headlessui/react'
 import ButtonAccentColor from '@/components/AccentColor/ButtonAccentColor'
 import Context from '@/components/AccentColor/context'
+import CardDialog from '@/components/Card/CardDialog'
+import delay from 'p-min-delay'
+import { useSwitch } from '@/hooks/state'
 
 import { Helmet } from 'react-helmet'
 import loadable from '@loadable/component'
 const AccentColor = loadable(
-  () => import('@/components/AccentColor/AccentColor')
+  () => delay(import('@/components/AccentColor/AccentColor'), 1000),
+  {
+    fallback: (
+      <div className="h-full grid place-items-center">
+        <ProgressCircle />
+      </div>
+    )
+  }
 )
 const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
 
 import type { FC } from 'react'
+import { ProgressCircle } from '../ProgressCircle/ProgressCircle'
 
 const Index: FC = () => {
-  const [isShow, changeShow] = useState(false)
+  const [isShow, changeShow] = useSwitch()
+  const { off: hideDialog } = changeShow
 
   return (
     <Context.Provider value={[isShow, changeShow]}>
@@ -22,14 +34,14 @@ const Index: FC = () => {
       <PortalBody>
         <Transition
           show={isShow}
-          enter="transition duration-500"
+          enter="transition duration-1000"
           enterFrom="backdrop-opacity-0"
-          leave="transition duration-500"
+          leave="transition duration-1000"
           leaveTo="backdrop-opacity-0"
           as={Fragment}
         >
           <div
-            onClick={() => changeShow(false)}
+            onClick={hideDialog}
             className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
           >
             <Helmet bodyAttributes={{ 'data-fullscreen': 'true' }} />
@@ -47,7 +59,9 @@ const Index: FC = () => {
                 role="dialog"
                 className="h-full w-full md:max-h-[600px] md:max-w-4xl relative cursor-auto mx-auto"
               >
-                <AccentColor />
+                <CardDialog className="h-full flex flex-col">
+                  <AccentColor />
+                </CardDialog>
               </div>
             </Transition.Child>
           </div>
