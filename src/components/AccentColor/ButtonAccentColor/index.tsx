@@ -7,11 +7,15 @@ import type { FC } from 'react'
 
 const Index: FC = () => {
   const [_, changeShow] = useContext(Context)
-  useEventListener('keydown', ({ metaKey, code }) => {
-    if (metaKey && code === 'KeyJ') {
-      changeShow(true)
-    }
-  })
+  useEventListener(
+    'keydown',
+    ({ metaKey, code }) => {
+      if (metaKey && code === 'KeyJ') {
+        changeShow(true)
+      }
+    },
+    []
+  )
   return (
     <Tooltip title="Accent color ⌘J">
       <ButtonAccentColor onClick={() => changeShow(true)} />

@@ -1,13 +1,23 @@
 import { useDarkMode } from '@/hooks/dark_mode'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Tooltip from '@/components/Tooltip'
+import { useEventListener } from '@/hooks/event_listener'
 import type { FC } from 'react'
 
 const DarkMode: FC = () => {
   const { value, toggle } = useDarkMode()
+  useEventListener(
+    'keydown',
+    ({ metaKey, code }) => {
+      if (metaKey && code === 'KeyM') {
+        toggle()
+      }
+    },
+    [value]
+  )
 
   return (
-    <Tooltip title="Dark mode">
+    <Tooltip title="Dark mode ⌘M">
       <button
         aria-label="Switch dark mode"
         className="text-accent btn-circle transition-colors duration-300"

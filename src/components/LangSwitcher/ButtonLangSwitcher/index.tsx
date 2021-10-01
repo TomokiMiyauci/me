@@ -6,11 +6,15 @@ import type { FC } from 'react'
 
 const Index: FC = () => {
   const [_, changeShow] = useContext(Context)
-  useEventListener('keydown', ({ metaKey, code }) => {
-    if (metaKey && code === 'KeyI') {
-      changeShow(true)
-    }
-  })
+  useEventListener(
+    'keydown',
+    ({ metaKey, code }) => {
+      if (metaKey && code === 'KeyI') {
+        changeShow(true)
+      }
+    },
+    []
+  )
   return (
     <span className="tooltip" data-tooltip="Translate ⌘I">
       <ButtonLangSwitcher

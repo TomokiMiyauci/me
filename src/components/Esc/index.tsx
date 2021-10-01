@@ -16,10 +16,14 @@ const Index: FC<
     onKeyDownEscape?: (ev: globalThis.KeyboardEvent) => void
   }
 > = ({ onKeyDownEscape, ...props }) => {
-  useEventListener('keydown', (ev) => {
-    if (ev.code !== 'Escape') return
-    onKeyDownEscape?.(ev)
-  })
+  useEventListener(
+    'keydown',
+    (ev) => {
+      if (ev.code !== 'Escape') return
+      onKeyDownEscape?.(ev)
+    },
+    []
+  )
 
   return (
     <Tooltip className="hidden md:inline-block" title="Close on keydown escape">
