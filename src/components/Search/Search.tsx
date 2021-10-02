@@ -1,5 +1,5 @@
 import Context from '@/components/Search/context'
-import Swipe from '@/components/Swipe'
+import { Swipe } from '@/components/Swipe'
 import back from '@iconify-icons/mdi/arrow-back'
 import close from '@iconify-icons/mdi/close'
 import magnify from '@iconify-icons/mdi/text-box-search-outline'
