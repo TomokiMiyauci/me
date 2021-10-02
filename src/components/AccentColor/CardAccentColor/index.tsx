@@ -1,42 +1,31 @@
 import { useMemo, useContext } from 'react'
-import { useTouches } from '@/hooks/touch'
+import { useTouches, useTouchUtility } from '@/hooks/touch'
 import Context, { ContextTouches } from '@/components/AccentColor/context'
 import { isUndefined } from '@/utils/is'
 import { Transition } from '@headlessui/react'
 import loadable from '@loadable/component'
 import { Helmet } from 'react-helmet'
+import type { FC } from 'react'
+import type { Maybe } from '@/types/generics'
+
 const CardAccentColor = loadable(
   () => import('@/components/AccentColor/CardAccentColor/CardAccentColor')
 )
 const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
 
-import type { FC } from 'react'
-
 const Index: FC = () => {
   const [isShow, { off: hideDialog }] = useContext(Context)
   const touches = useTouches()
+  const { movePageY } = useTouchUtility(touches)
 
-  const startPositionY = useMemo(
-    () => touches.touchStart[0]?.pageY,
-    [touches.touchStart[0]]
-  )
-  const movePositionY = useMemo(
-    () => touches.touchMove[0]?.pageY,
-    [touches.touchMove[0]]
-  )
+  const ratio = useMemo<Maybe<number>>(() => {
+    if (isUndefined(movePageY)) return undefined
+    if (movePageY > window.innerHeight) return 0
 
-  const diff = useMemo(() => {
-    if (isUndefined(startPositionY) || isUndefined(movePositionY)) return
-    return movePositionY - startPositionY
-  }, [startPositionY, movePositionY])
+    return 1 - movePageY / window.innerHeight
+  }, [movePageY])
 
-  const ratio = useMemo<number | undefined>(() => {
-    if (isUndefined(touches.touchMove[0]) || isUndefined(diff)) return undefined
-    if (touches.touchMove[0].pageY > window.innerHeight) return 0
-
-    return 1 - touches.touchMove[0].pageY / window.innerHeight
-  }, [touches.touchMove[0], diff])
-  const blurPx = useMemo<string | undefined>(
+  const blurPx = useMemo<Maybe<string>>(
     () =>
       isUndefined(ratio)
         ? undefined

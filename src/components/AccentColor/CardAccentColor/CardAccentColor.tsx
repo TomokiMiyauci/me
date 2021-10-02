@@ -1,6 +1,8 @@
 import { useMemo, useEffect, useContext } from 'react'
 import { Transition } from '@headlessui/react'
 import Context, { ContextTouches } from '@/components/AccentColor/context'
+import { useTouchUtility } from '@/hooks/touch'
+
 import CardDialog from '@/components/Card/CardDialog'
 import delay from 'p-min-delay'
 import { isUndefined } from '@/utils/is'
@@ -8,6 +10,8 @@ import { unit } from '@/utils/style'
 import { classNames } from '@/utils/class_name'
 import loadable from '@loadable/component'
 import { ProgressCircle } from '@/components/ProgressCircle/ProgressCircle'
+import type { Maybe } from '@/types/generics'
+
 const AccentColor = loadable(
   () => delay(import('@/components/AccentColor/AccentColor'), 1000),
   {
@@ -21,29 +25,16 @@ const AccentColor = loadable(
 
 const CardAccentColor = () => {
   const touches = useContext(ContextTouches)
+  const { diff } = useTouchUtility(touches)
   const [_, { off: hideDialog }] = useContext(Context)
 
-  const startPositionY = useMemo(
-    () => touches.touchStart[0]?.pageY,
-    [touches.touchStart[0]]
-  )
-  const movePositionY = useMemo(
-    () => touches.touchMove[0]?.pageY,
-    [touches.touchMove[0]]
-  )
-
-  const diff = useMemo(() => {
-    if (isUndefined(startPositionY) || isUndefined(movePositionY)) return
-    return movePositionY - startPositionY
-  }, [startPositionY, movePositionY])
-
-  const translateY = useMemo(() => {
-    if (isUndefined(diff)) return
-    return `translateY(${unit(String(diff.toFixed(1)), 'px')})`
-  }, [diff])
+  const translateY = useMemo<Maybe<string>>(() => {
+    if (isUndefined(diff.y)) return
+    return `translateY(${unit(diff.y.toFixed(1), 'px')})`
+  }, [diff.y])
 
   useEffect(() => {
-    if (typeof diff === 'number' && diff > 30) {
+    if (typeof diff.y === 'number' && diff.y > 30) {
       touches.touchMove[1](undefined)
       hideDialog()
     } else {
@@ -63,7 +54,7 @@ const CardAccentColor = () => {
     }
   }, [])
 
-  const className = useMemo(
+  const className = useMemo<Maybe<string>>(
     () =>
       touches.touchEnd[0] ? 'transition-transform duration-300' : undefined,
     [touches.touchEnd[0]]
