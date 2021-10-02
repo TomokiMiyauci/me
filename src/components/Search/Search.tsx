@@ -9,11 +9,11 @@ import { useAsyncMemo } from 'use-async-memo'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import loadable from '@loadable/component'
-import dalay from 'p-min-delay'
+import delay from 'p-min-delay'
 import Esc from '@/components/Esc'
 
 const PoweredBy = loadable(
-  () => dalay(import('@/components/Search/PoweredBy'), 1000),
+  () => delay(import('@/components/Search/PoweredBy'), 1000),
   {
     fallback: (
       <span className="h-4 w-40 inline-block align-middle animate-pulse rounded-full bg-gray-400 opacity-80" />

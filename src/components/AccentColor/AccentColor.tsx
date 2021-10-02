@@ -3,10 +3,13 @@ import Tooltip from '@/components/Tooltip'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Context from '@/components/AccentColor/context'
 import { Transition } from '@headlessui/react'
-import { useAccentColor } from '@/utils/use_accent_color'
-import { useContext } from 'react'
+import { useContext, memo, useRef } from 'react'
 import { classNames } from '@/utils/class_name'
 import type { FC } from 'react'
+import Swipe from '@/components/Swipe'
+import loadable from '@loadable/component'
+
+const Color = loadable.lib(() => import('@/utils/accent_color'))
 
 const delayMap: Record<number, string> = {
   0: 'delay-100',
@@ -18,12 +21,14 @@ const delayMap: Record<number, string> = {
   6: 'delay-[1300ms]'
 }
 
+const Memo = memo(Swipe)
 const AccentColor: FC = () => {
-  const { switchColor, colorPalette } = useAccentColor()
   const [_, { off: hideDialog }] = useContext(Context)
+  const refs = useRef<(HTMLDivElement | null)[]>([])
 
   return (
     <>
+      <Memo />
       <header className="p-2 flex items-center justify-between">
         <span className="space-x-4">
           <Tooltip title="Close">
@@ -54,39 +59,58 @@ const AccentColor: FC = () => {
       <hr className="border-gray-200 dark:border-blue-gray-700" />
 
       <section className="flex-1 grid grid-cols-2 md:grid-cols-3 place-items-center">
-        {colorPalette.map(({ label, color }, i) => (
-          <Transition
-            enterFrom="scale-0"
-            enter={classNames('transition-transform duration-500', delayMap[i])}
-            appear
-            show
-            key={label}
-            className="text-center"
-          >
-            <button
-              title={label}
-              onClick={() => {
-                switchColor({ label, color })
-                hideDialog()
-              }}
-              aria-label={`Switch accent color to ${label}`}
-              className="relative hover:scale-[1.2] hover:animate-none transform duration-300 w-20 h-20 md:w-24 md:h-24 animate-pulse-bit-slow transition-transform"
-            >
-              <div className="absolute inset-0 blur gradation rounded-full" />
-              <div
-                style={{ backgroundColor: color }}
-                className="relative h-full w-full rounded-full"
-              />
-            </button>
+        <Color>
+          {({ switchColor, colorPalette }) => {
+            return colorPalette.map(({ label, color }, i) => (
+              <Transition
+                enterFrom="scale-0"
+                enter={classNames(
+                  'transition-transform duration-500',
+                  delayMap[i]
+                )}
+                appear
+                show
+                key={label}
+                className="text-center"
+              >
+                <button
+                  title={label}
+                  onClick={async () => {
+                    switchColor({ label, color })
+                    const ref = refs.current[i]
+                    if (!ref) return hideDialog()
+                    const { height, width } = ref.getBoundingClientRect()
 
-            <h3 className="capitalize text-lg font-bold" style={{ color }}>
-              {label}
-            </h3>
-          </Transition>
-        ))}
+                    const longSide = Math.max(
+                      window.innerHeight / height,
+                      window.innerWidth / width
+                    )
+                    const scale = `scale(${Number(longSide * 2).toFixed(0)})`
+                    const animate = ref.animate({ transform: scale }, 1000)
+
+                    animate.onfinish = hideDialog
+                  }}
+                  aria-label={`Switch accent color to ${label}`}
+                  className="relative hover:scale-[1.2] hover:animate-none transform duration-300 w-20 h-20 md:w-24 md:h-24 animate-pulse-bit-slow transition-transform"
+                >
+                  <div className="absolute inset-0 blur gradation rounded-full" />
+                  <div
+                    ref={(el) => (refs.current[i] = el)}
+                    style={{ backgroundColor: color }}
+                    className="relative h-full w-full rounded-full"
+                  />
+                </button>
+
+                <h3 className="capitalize text-lg font-bold" style={{ color }}>
+                  {label}
+                </h3>
+              </Transition>
+            ))
+          }}
+        </Color>
       </section>
     </>
   )
 }
 
-export default AccentColor
+export default memo(AccentColor)
