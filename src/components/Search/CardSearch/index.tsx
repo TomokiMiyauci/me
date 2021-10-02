@@ -12,6 +12,7 @@ import { isUndefined } from '@/utils/is'
 import { ContextTouches } from '@/components/AccentColor/context'
 import Context from '@/components/Search/context'
 import { unit } from '@/utils/style'
+const Overlay = loadable(() => import('@/components/Overlay'))
 
 import type { Maybe } from '@/types/generics'
 import type { FC } from 'react'
@@ -125,25 +126,18 @@ const Index: FC = () => {
   )
 
   return (
-    <PortalBody>
-      <Transition
-        show={isShow}
-        enter="transition duration-1000"
-        enterFrom="backdrop-opacity-0"
-        leave="transition duration-1000"
-        leaveTo="backdrop-opacity-0"
-        onClick={changeShow.off}
-        className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
-        style={{
-          backdropFilter: blur
-        }}
-      >
-        <MemoHelmet />
-        <ContextTouches.Provider value={touches}>
-          <Inner />
-        </ContextTouches.Provider>
-      </Transition>
-    </PortalBody>
+    <Overlay
+      show={isShow}
+      onClick={changeShow.off}
+      className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
+      style={{
+        backdropFilter: blur
+      }}
+    >
+      <ContextTouches.Provider value={touches}>
+        <Inner />
+      </ContextTouches.Provider>
+    </Overlay>
   )
 }
 

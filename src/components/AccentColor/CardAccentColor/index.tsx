@@ -2,16 +2,15 @@ import { useMemo, useContext } from 'react'
 import { useTouches, useTouchUtility } from '@/hooks/touch'
 import Context, { ContextTouches } from '@/components/AccentColor/context'
 import { isUndefined } from '@/utils/is'
-import { Transition } from '@headlessui/react'
 import loadable from '@loadable/component'
-import { Helmet } from 'react-helmet'
 import type { FC } from 'react'
 import type { Maybe } from '@/types/generics'
 
 const CardAccentColor = loadable(
   () => import('@/components/AccentColor/CardAccentColor/CardAccentColor')
 )
-const PortalBody = loadable(() => import('@/components/Portal/PortalBody'))
+
+const Overlay = loadable(() => import('@/components/Overlay'))
 
 const Index: FC = () => {
   const [isShow, { off: hideDialog }] = useContext(Context)
@@ -34,26 +33,17 @@ const Index: FC = () => {
   )
 
   return (
-    <PortalBody>
-      <Transition
-        show={isShow}
-        enter="transition duration-1000"
-        enterFrom="backdrop-opacity-0"
-        leave="transition duration-1000"
-        leaveTo="backdrop-opacity-0"
-        onClick={hideDialog}
-        className="backdrop-blur-md fixed inset-0 cursor-pointer p-4 md:p-40"
-        style={{
-          backdropFilter: blurPx
-        }}
-      >
-        <Helmet bodyAttributes={{ 'data-fullscreen': 'true' }} />
-
-        <ContextTouches.Provider value={touches}>
-          <CardAccentColor />
-        </ContextTouches.Provider>
-      </Transition>
-    </PortalBody>
+    <Overlay
+      show={isShow}
+      onClick={hideDialog}
+      style={{
+        backdropFilter: blurPx
+      }}
+    >
+      <ContextTouches.Provider value={touches}>
+        <CardAccentColor />
+      </ContextTouches.Provider>
+    </Overlay>
   )
 }
 
