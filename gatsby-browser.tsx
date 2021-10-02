@@ -10,11 +10,15 @@ const wrapRootElement: GatsbyBrowser['wrapRootElement'] = ({ element }) => {
   return <Context>{element}</Context>
 }
 
-const onClientEntry: GatsbyBrowser['onClientEntry'] = () => {
+const onClientEntry: GatsbyBrowser['onClientEntry'] = async () => {
   if (process.env.NODE_ENV === 'development') {
     console.log('register service worker')
     window.navigator.serviceWorker.register('/append_script.js')
   }
+
+  const { setAccentColor } = await import('@/utils/accent_color')
+
+  setAccentColor()
 }
 
 const wrapPageElement: GatsbyBrowser<
