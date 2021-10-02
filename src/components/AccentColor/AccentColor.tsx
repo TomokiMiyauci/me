@@ -7,7 +7,7 @@ import { useAccentColor } from '@/utils/use_accent_color'
 import { useContext, memo } from 'react'
 import { classNames } from '@/utils/class_name'
 import type { FC } from 'react'
-import { Swipe } from '@/components/Swipe'
+import Swipe from '@/components/Swipe'
 
 const delayMap: Record<number, string> = {
   0: 'delay-100',
