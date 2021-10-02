@@ -3,7 +3,7 @@ import Tooltip from '@/components/Tooltip'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Context from '@/components/AccentColor/context'
 import { Transition } from '@headlessui/react'
-import { useContext, memo } from 'react'
+import { useContext, memo, useRef } from 'react'
 import { classNames } from '@/utils/class_name'
 import type { FC } from 'react'
 import Swipe from '@/components/Swipe'
@@ -24,6 +24,7 @@ const delayMap: Record<number, string> = {
 const Memo = memo(Swipe)
 const AccentColor: FC = () => {
   const [_, { off: hideDialog }] = useContext(Context)
+  const refs = useRef<(HTMLDivElement | null)[]>([])
 
   return (
     <>
@@ -74,15 +75,27 @@ const AccentColor: FC = () => {
               >
                 <button
                   title={label}
-                  onClick={() => {
+                  onClick={async () => {
                     switchColor({ label, color })
-                    hideDialog()
+                    const ref = refs.current[i]
+                    if (!ref) return hideDialog()
+                    const { height, width } = ref.getBoundingClientRect()
+
+                    const longSide = Math.max(
+                      window.innerHeight / height,
+                      window.innerWidth / width
+                    )
+                    const scale = `scale(${Number(longSide * 2).toFixed(0)})`
+                    const animate = ref.animate({ transform: scale }, 1000)
+
+                    animate.onfinish = hideDialog
                   }}
                   aria-label={`Switch accent color to ${label}`}
                   className="relative hover:scale-[1.2] hover:animate-none transform duration-300 w-20 h-20 md:w-24 md:h-24 animate-pulse-bit-slow transition-transform"
                 >
                   <div className="absolute inset-0 blur gradation rounded-full" />
                   <div
+                    ref={(el) => (refs.current[i] = el)}
                     style={{ backgroundColor: color }}
                     className="relative h-full w-full rounded-full"
                   />
