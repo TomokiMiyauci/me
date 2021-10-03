@@ -19500,6 +19500,11 @@ react-helmet@^6.1.0:
     react-fast-compare "^3.1.1"
     react-side-effect "^2.1.0"
 
+react-hookable@^1.0.0-beta.7:
+  version "1.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/react-hookable/-/react-hookable-1.0.0-beta.7.tgz#6a70db62cbf1f87b08550e299acfd31aa1e625da"
+  integrity sha512-8SpQ+1aAJgYGO0HnLiyPQNAk6i/4bVC4MlX5YjBwWJrJPP1hAAJMifLOW4/Ovb8Uu6YBUpu33FmhAnknPi8jZA==
+
 react-images@^1.2.0-beta.7:
   version "1.2.0-beta.7"
   resolved "https://registry.yarnpkg.com/react-images/-/react-images-1.2.0-beta.7.tgz#8a5804f8a5d08a25e64180eecb43a77d4e023e16"
