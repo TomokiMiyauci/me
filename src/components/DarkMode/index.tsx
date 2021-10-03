@@ -1,22 +1,37 @@
 import { useDarkMode } from '@/hooks/dark_mode'
 import IconSkeltonLoader from '@/components/Icon/IconSkeltonLoader'
 import Tooltip from '@/components/Tooltip'
-import { useShortcut } from '@/hooks/event_listener'
+import { useShortcut } from 'react-hookable'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
+
 import type { FC } from 'react'
 
 const DarkMode: FC = () => {
   const { value, toggle } = useDarkMode()
+  const { safeLogEvent } = useSafeLogEvent()
+
   useShortcut(
     {
-      metaKey: true,
-      code: 'KeyM'
+      cmd: true,
+      key: 'm'
     },
-    toggle,
-    [value]
+    ({ code, metaKey, shiftKey, ctrlKey, key, altKey }) => {
+      toggle()
+      safeLogEvent((analytics, logEvent) =>
+        logEvent(analytics, 'shortcut', {
+          code,
+          metaKey,
+          shiftKey,
+          ctrlKey,
+          key,
+          altKey
+        })
+      )
+    }
   )
 
   return (
-    <Tooltip title="Dark mode ⌘M">
+    <Tooltip title="Dark mode ⌘m">
       <button
         aria-label="Switch dark mode"
         className="btn-circle transition-colors duration-300"

@@ -1,22 +1,37 @@
 import ButtonLangSwitcher from '@/components/LangSwitcher/ButtonLangSwitcher/ButtonLangSwitcher'
 import { useContext } from 'react'
-import { useShortcut } from '@/hooks/event_listener'
+import { useShortcut } from 'react-hookable'
+import { useSafeLogEvent } from '@/hooks/firebase/analytics'
+
 import Context from '@/components/LangSwitcher/context'
 import type { FC } from 'react'
 
 const Index: FC = () => {
   const [_, { on: showDialog }] = useContext(Context)
+  const { safeLogEvent } = useSafeLogEvent()
 
   useShortcut(
     {
-      metaKey: true,
-      code: 'KeyI'
+      cmd: true,
+      key: 'i'
     },
-    showDialog,
-    []
+    ({ code, metaKey, shiftKey, ctrlKey, key, altKey }) => {
+      showDialog()
+      safeLogEvent((analytics, logEvent) =>
+        logEvent(analytics, 'shortcut', {
+          code,
+          metaKey,
+          shiftKey,
+          ctrlKey,
+          key,
+          altKey
+        })
+      )
+    }
   )
+
   return (
-    <span className="tooltip" data-tooltip="Translate ⌘I">
+    <span className="tooltip" data-tooltip="Translate ⌘i">
       <ButtonLangSwitcher onClick={showDialog} />
     </span>
   )

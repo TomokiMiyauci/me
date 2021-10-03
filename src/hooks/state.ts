@@ -2,30 +2,6 @@ import { useState, useMemo } from 'react'
 import { wait } from '@/utils/time'
 import type { AnyFn } from 'fonction'
 
-/**
- * Hooks for `boolean` toggle.
- * @param initialState - Initial state for toggle
- * @returns A stateful value, and a toggle function to update it.
- *
- * @example
- * ```ts
- * const [state, toggle] = useToggle(false)
- * state // false
- * toggle()
- * state // true
- * toggle()
- * state // false
- * ```
- */
-const useToggle = (
-  initialState: boolean | (() => boolean)
-): [boolean, () => void] => {
-  const [state, changeState] = useState<boolean>(initialState)
-  const toggle = (): void => changeState(!state)
-
-  return [state, toggle]
-}
-
 const useSwitch = (
   initialState?: boolean | (() => boolean)
 ): [boolean, { on: () => void; off: () => void }] => {
@@ -96,4 +72,4 @@ const usePromiseState = () => {
   }
 }
 
-export { useToggle, useSequence, usePromiseState, useSwitch }
+export { useSequence, usePromiseState, useSwitch }

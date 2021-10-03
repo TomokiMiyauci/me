@@ -2,8 +2,8 @@ import SearchButton from '@/components/Search/SearchButton/SearchButton'
 import Context from '@/components/Search/context'
 import loadable from '@loadable/component'
 import { useContext } from 'react'
-import { useShortcut } from '@/hooks/event_listener'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
+import { useShortcut } from 'react-hookable'
 
 const Tooltip = loadable(() => import('@/components/Tooltip'))
 
@@ -26,15 +26,14 @@ const Index: FC = () => {
 
   useShortcut(
     {
-      metaKey: true,
-      code: 'KeyK'
+      cmd: true,
+      key: 'k'
     },
-    loggedShowDialog,
-    []
+    loggedShowDialog
   )
 
   return (
-    <Tooltip title="Search ⌘K">
+    <Tooltip title="Search ⌘k">
       <SearchButton
         className="btn-circle transition-colors duration-300"
         onClick={loggedShowDialog}

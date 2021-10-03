@@ -2,37 +2,9 @@
  * @jest-environment jsdom
  */
 
-import { useToggle, useSequence } from '@/hooks/state'
+import { useSequence } from '@/hooks/state'
 import { renderHook, act } from '@testing-library/react-hooks'
 import { wait } from '@/utils/time'
-
-describe('useToggle', () => {
-  const table: [boolean | (() => boolean), boolean][] = [
-    [false, false],
-    [true, true],
-    [() => false, false],
-    [() => true, true]
-  ]
-  it.each(table)('should set initial value', (init, expected) => {
-    const { result } = renderHook(() => useToggle(init))
-    expect(result.current[0]).toBe(expected)
-  })
-  it('should change state on call toggle', () => {
-    const init = false
-    const { result } = renderHook(() => useToggle(init))
-
-    expect(result.current[0]).toBe(init)
-
-    act(() => {
-      result.current[1]()
-    })
-    expect(result.current[0]).toBe(!init)
-    act(() => {
-      result.current[1]()
-    })
-    expect(result.current[0]).toBe(init)
-  })
-})
 
 describe('useSequence', () => {
   const table: [boolean | (() => boolean), boolean][] = [
@@ -42,7 +14,7 @@ describe('useSequence', () => {
     [() => true, true]
   ]
   it.each(table)('should set initial value', (init, expected) => {
-    const { result } = renderHook(() => useToggle(init))
+    const { result } = renderHook(() => useSequence(init))
     expect(result.current[0]).toBe(expected)
   })
 
