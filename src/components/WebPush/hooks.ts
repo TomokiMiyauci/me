@@ -1,7 +1,7 @@
 import { useUser } from '@/hooks/user'
 import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import { useEffect, useState } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 import { usePromiseState } from '@/hooks/state'
 
 const useIsSupported = () => {
