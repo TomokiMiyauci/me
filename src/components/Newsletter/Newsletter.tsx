@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
-import { useAsyncMemo } from 'use-async-memo'
+import { useAsyncMemo } from 'react-hookable'
 import { useSequence } from '@/hooks/state'
 import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'
@@ -59,7 +59,7 @@ const Newsletter = definePromise<{
     }
 
     const isValid = useAsyncMemo(async () => {
-      if (!email) return false
+      if (!email) return
       const { default: isEmail } = await import('is-email')
       return isEmail(email) as boolean
     }, [email])

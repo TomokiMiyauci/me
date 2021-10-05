@@ -1,12 +1,13 @@
 import { createContext } from 'react'
-import type { useSwitch } from '@/hooks/state'
+import { useBoolean } from 'react-hookable'
 import type { useTouches } from '@/hooks/touch'
 
-export default createContext<ReturnType<typeof useSwitch>>([
+export default createContext<ReturnType<typeof useBoolean>>([
   false,
   {
     on: () => {},
-    off: () => {}
+    off: () => {},
+    toggle: () => {}
   }
 ])
 
