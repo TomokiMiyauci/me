@@ -4,7 +4,7 @@ import SkeltonLoader from '@/components/SkeltonLoader/SkeltonLoader'
 import Tooltip from '@/components/Tooltip'
 import { useShortcut } from 'react-hookable'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
-import type { FC } from 'react'
+import { FC, useEffect } from 'react'
 const Esc = loadable(() => delay(import('@/components/Esc/Esc'), 1000), {
   ssr: false,
   fallback: (
@@ -18,26 +18,29 @@ const Index: FC<
   }
 > = ({ onKeyDownEscape, ...props }) => {
   const { safeLogEvent } = useSafeLogEvent()
+  const { bind } = useShortcut()
 
-  useShortcut(
-    {
-      key: 'Escape'
-    },
-    (ev) => {
-      onKeyDownEscape?.(ev)
-      const { code, metaKey, shiftKey, ctrlKey, key, altKey } = ev
-      safeLogEvent((analytics, logEvent) =>
-        logEvent(analytics, 'shortcut', {
-          code,
-          metaKey,
-          shiftKey,
-          ctrlKey,
-          key,
-          altKey
-        })
-      )
-    }
-  )
+  useEffect(() => {
+    bind(
+      {
+        key: 'Escape'
+      },
+      (ev) => {
+        onKeyDownEscape?.(ev)
+        const { code, metaKey, shiftKey, ctrlKey, key, altKey } = ev
+        safeLogEvent((analytics, logEvent) =>
+          logEvent(analytics, 'shortcut', {
+            code,
+            metaKey,
+            shiftKey,
+            ctrlKey,
+            key,
+            altKey
+          })
+        )
+      }
+    )
+  }, [])
 
   return (
     <Tooltip className="hidden md:inline-block" title="Close on keydown escape">
