@@ -2,7 +2,7 @@ import ButtonLangSwitcher from '@/components/LangSwitcher/ButtonLangSwitcher/But
 import { useContext, useEffect } from 'react'
 import { useShortcut } from 'react-hookable'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
-
+import Tooltip from '@/components/Tooltip'
 import Context from '@/components/LangSwitcher/context'
 import type { FC } from 'react'
 
@@ -34,9 +34,9 @@ const Index: FC = () => {
   }, [])
 
   return (
-    <span className="tooltip" data-tooltip="Translate ⌘i">
+    <Tooltip title="Translate ⌘i">
       <ButtonLangSwitcher onClick={showDialog} />
-    </span>
+    </Tooltip>
   )
 }
 

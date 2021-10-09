@@ -1,11 +1,9 @@
 import SearchButton from '@/components/Search/SearchButton/SearchButton'
 import Context from '@/components/Search/context'
-import loadable from '@loadable/component'
 import { useContext, useEffect } from 'react'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { useShortcut } from 'react-hookable'
-
-const Tooltip = loadable(() => import('@/components/Tooltip'))
+import Tooltip from '@/components/Tooltip'
 
 import type { FC } from 'react'
 
