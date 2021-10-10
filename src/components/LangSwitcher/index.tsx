@@ -1,7 +1,7 @@
 import Context from '@/components/LangSwitcher/context'
 import ButtonLangSwitcher from '@/components/LangSwitcher/ButtonLangSwitcher'
 import loadable from '@loadable/component'
-import { useHash } from '@/hooks/hash'
+import { useIsHashState } from '@/hooks/hash'
 import type { FC } from 'react'
 
 const CardLangSwitcher = loadable(
@@ -9,15 +9,15 @@ const CardLangSwitcher = loadable(
 )
 
 const Index: FC = () => {
-  const [isHash, changeHash] = useHash('#language')
+  const [isHash, changeHash] = useIsHashState('language')
 
   return (
     <Context.Provider
       value={[
         isHash,
         {
-          on: (): void => changeHash(true),
-          off: (): void => changeHash(false)
+          on: changeHash.on,
+          off: changeHash.off
         }
       ]}
     >
