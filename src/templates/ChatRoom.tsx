@@ -21,7 +21,7 @@ import { useMemo, useRef } from 'react'
 import type { Message, MessageData } from '@/components/Chat/types'
 import type { CollectionReference } from 'firebase/firestore'
 import type { FC } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])

@@ -1,34 +1,21 @@
-import { useState, useEffect, useMemo } from 'react'
-import { isBrowser } from '@/utils/environment'
+import { useMemo } from 'react'
+import { useHashState } from 'react-hookable'
 
-const safeReplaceHash = (val: string): void => {
-  if ('history' in window) {
-    window.history.replaceState(null, document.title, val)
-  } else {
-    window.location.hash = val
-  }
-}
+const useIsHashState = (value: string) => {
+  const [hash, setHash] = useHashState(undefined, { hashMark: false })
 
-const useHash = <T extends `#${string}`>(val: T) => {
-  const [state, changeState] = useState<T>(() => {
-    return isBrowser ? (window.location.hash as T) : ('' as T)
-  })
-
-  const changeHash = (hash?: T): void => changeState(hash ?? ('' as T))
-
-  const isHashEqualVal = useMemo<boolean>(() => val === state, [state, val])
-  const switchHash = (value: boolean): void =>
-    changeHash(value ? (val as T) : ('' as T))
-
-  useEffect(() => {
-    if (state) {
-      safeReplaceHash(val)
+  const isHash = useMemo<boolean>(() => hash === value, [hash])
+  const changeHash = (val: boolean) => {
+    if (val) {
+      setHash(value)
     } else {
-      safeReplaceHash(' ')
+      setHash('')
     }
-  }, [state])
+  }
+  const on = () => changeHash(true)
+  const off = () => changeHash(false)
 
-  return [isHashEqualVal, switchHash] as const
+  return [isHash, { on, off }] as const
 }
 
-export { useHash }
+export { useIsHashState }

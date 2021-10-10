@@ -1,6 +1,6 @@
 import FirestoreLiteContext from '@/contexts/firebase/firestore_lite'
 import { useState, useContext } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 
 import type { MaybeFirestoreLite, MaybeApp } from '@/types/firebase'
 import type { StateSet } from '@/types/state'

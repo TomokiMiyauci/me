@@ -1,6 +1,6 @@
 import MessagingContext from '@/contexts/firebase/messaging'
 import { useState, useContext } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 
 import type { MaybeApp, MaybeMessaging } from '@/types/firebase'
 import type { StateSet } from '@/types/state'

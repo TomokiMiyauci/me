@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useAsyncMemo } from 'use-async-memo'
+import { useAsyncMemo } from 'react-hookable'
 
 const useResize = (ref?: Element, optimize: boolean = true) => {
   const _fn = useRef<EventListenerOrEventListenerObject>()

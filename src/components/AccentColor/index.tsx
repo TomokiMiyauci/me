@@ -1,23 +1,23 @@
 import ButtonAccentColor from '@/components/AccentColor/ButtonAccentColor'
 import Context from '@/components/AccentColor/context'
 import loadable from '@loadable/component'
-import { useHash } from '@/hooks/hash'
+import { useIsHashState } from '@/hooks/hash'
 const CardAccentColor = loadable(
   () => import('@/components/AccentColor/CardAccentColor')
 )
 
-import type { FC } from 'react'
+import { FC, useMemo } from 'react'
 
 const Index: FC = () => {
-  const [isHash, changeHash] = useHash('#accent-color')
+  const [isHash, setHash] = useIsHashState('accent-color')
 
   return (
     <Context.Provider
       value={[
         isHash,
         {
-          on: (): void => changeHash(true),
-          off: (): void => changeHash(false)
+          on: setHash.on,
+          off: setHash.off
         }
       ]}
     >

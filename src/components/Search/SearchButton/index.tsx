@@ -1,17 +1,16 @@
 import SearchButton from '@/components/Search/SearchButton/SearchButton'
 import Context from '@/components/Search/context'
-import loadable from '@loadable/component'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import { useShortcut } from 'react-hookable'
-
-const Tooltip = loadable(() => import('@/components/Tooltip'))
+import Tooltip from '@/components/Tooltip'
 
 import type { FC } from 'react'
 
 const Index: FC = () => {
   const [_, { on: showDialog }] = useContext(Context)
   const { safeLogEvent } = useSafeLogEvent()
+  const { bind } = useShortcut()
 
   const loggedShowDialog = (): void => {
     showDialog()
@@ -24,13 +23,15 @@ const Index: FC = () => {
     )
   }
 
-  useShortcut(
-    {
-      cmd: true,
-      key: 'k'
-    },
-    loggedShowDialog
-  )
+  useEffect(() => {
+    bind(
+      {
+        cmd: true,
+        key: 'k'
+      },
+      loggedShowDialog
+    )
+  }, [])
 
   return (
     <Tooltip title="Search ⌘k">

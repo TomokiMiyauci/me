@@ -1,6 +1,6 @@
 import AnalyticsContext from '@/contexts/firebase/analytics'
 import { useState, useContext } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 
 import type { Analytics, logEvent as _logEvent } from 'firebase/analytics'
 import type { MaybeApp, MaybeAnalytics } from '@/types/firebase'

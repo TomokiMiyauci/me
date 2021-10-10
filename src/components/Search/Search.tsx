@@ -5,7 +5,7 @@ import close from '@iconify-icons/mdi/close'
 import magnify from '@iconify-icons/mdi/text-box-search-outline'
 import { useState, useRef, useEffect, useContext } from 'react'
 import { Icon } from '@iconify/react/dist/offline'
-import { useAsyncMemo } from 'use-async-memo'
+import { useAsyncMemo } from 'react-hookable'
 import { LocalizedLink } from 'gatsby-theme-i18n'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 import loadable from '@loadable/component'
@@ -105,10 +105,8 @@ const Index: FC<{ locale: Locale }> = ({ locale }) => {
     })
   }, [query])
 
-  const result = useAsyncMemo<
-    SearchResponse<SearchResult> | undefined
-  >(async () => {
-    if (!query) return undefined
+  const result = useAsyncMemo(async () => {
+    if (!query) return
     const algolia = await getAlgolia()
     return await algolia.search<SearchResult>(query, {
       facetFilters: `locale:${locale}`

@@ -4,31 +4,36 @@ import Tooltip from '@/components/Tooltip'
 import { useShortcut } from 'react-hookable'
 import { useSafeLogEvent } from '@/hooks/firebase/analytics'
 
-import type { FC } from 'react'
+import { FC, useEffect } from 'react'
 
 const DarkMode: FC = () => {
   const { value, toggle } = useDarkMode()
   const { safeLogEvent } = useSafeLogEvent()
+  const { bind, unbind } = useShortcut()
 
-  useShortcut(
-    {
-      cmd: true,
-      key: 'm'
-    },
-    ({ code, metaKey, shiftKey, ctrlKey, key, altKey }) => {
-      toggle()
-      safeLogEvent((analytics, logEvent) =>
-        logEvent(analytics, 'shortcut', {
-          code,
-          metaKey,
-          shiftKey,
-          ctrlKey,
-          key,
-          altKey
-        })
-      )
-    }
-  )
+  useEffect(() => {
+    bind(
+      {
+        cmd: true,
+        key: 'm'
+      },
+      ({ code, metaKey, shiftKey, ctrlKey, key, altKey }) => {
+        toggle()
+        safeLogEvent((analytics, logEvent) =>
+          logEvent(analytics, 'shortcut', {
+            code,
+            metaKey,
+            shiftKey,
+            ctrlKey,
+            key,
+            altKey
+          })
+        )
+      }
+    )
+
+    return unbind
+  }, [toggle])
 
   return (
     <Tooltip title="Dark mode ⌘m">

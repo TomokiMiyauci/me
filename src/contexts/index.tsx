@@ -31,7 +31,7 @@ import {
   useInitializeMessaging
 } from '@/hooks/firebase/messaging'
 import { useStateAuth } from '@/hooks/firebase/auth'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from 'react-hookable'
 
 import type { FC, ReactNode } from 'react'
 
