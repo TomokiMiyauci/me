@@ -1,7 +1,7 @@
 import { createContext } from 'react'
-import type { useSwitch } from '@/hooks/state'
+import type { VFn } from 'react-hookable'
 
-export default createContext<ReturnType<typeof useSwitch>>([
+export default createContext<[boolean, { on: VFn; off: VFn }]>([
   false,
   {
     on: () => {},

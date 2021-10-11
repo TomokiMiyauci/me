@@ -1,13 +1,11 @@
 import { createContext } from 'react'
-import { useBoolean } from 'react-hookable'
 import type { useTouches } from '@/hooks/touch'
-
-export default createContext<ReturnType<typeof useBoolean>>([
+import type { VFn } from 'react-hookable'
+export default createContext<[boolean, { on: VFn; off: VFn }]>([
   false,
   {
     on: () => {},
-    off: () => {},
-    toggle: () => {}
+    off: () => {}
   }
 ])
 
