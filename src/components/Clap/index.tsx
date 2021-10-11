@@ -12,7 +12,7 @@ import type { PostsField, Post } from '@/types/firestore'
 import { useFirestoreLite } from '@/hooks/firebase/firestore_lite'
 import Clap from './Clap'
 import Circle from '@/components/ProgressCircle'
-import { useSequence } from '@/hooks/state'
+import { useSequenceState } from 'react-hookable'
 import { useNotice } from '@/hooks/notice'
 import { useUser } from '@/hooks/user'
 
@@ -47,7 +47,7 @@ const Index: FC<{ slug: string }> = ({ slug }) => {
   const { uid, isLoggedIn } = useUser()
   const [postMeta, changePostMeta] = useState<Partial<Post>>({})
   const { isWaiting, waitUntil } = useWait()
-  const [_, sequence] = useSequence()
+  const [, sequence] = useSequenceState()
   const notice = useNotice()
   const liked = useMemo<boolean>(() => {
     if (!postMeta.likeBy || !firestore || !uid) return false

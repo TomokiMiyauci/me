@@ -3,7 +3,7 @@ import { definePromise } from '@/utils/component'
 import LangToggle from '@/components/LangToggle'
 import cancel from '@iconify-icons/mdi/cancel'
 import { Icon } from '@iconify/react/dist/offline'
-import { useSequence } from '@/hooks/state'
+import { useSequenceState, useWait } from 'react-hookable'
 import { useIsSupported } from '@/components/WebPush/hooks'
 import { useToggleLang } from '@/components/LangToggle/hooks'
 import { classNames } from '@/utils/class_name'
@@ -30,16 +30,27 @@ const WebPush = definePromise<{
     onError,
     Test
   }) => {
-    const [isPendingSequence, sequence] = useSequence()
+    const [isPendingSequence, sequence] = useSequenceState()
+    const { use: wait } = useWait()
     const { isPending: isPendingSupported, isRejected } = useIsSupported()
     const [lang, enabled, setEnabled] = useToggleLang(locale)
 
     const handleClickSubscribe: MouseEventHandler = () => {
-      sequence(() => onSubscribe(lang).then(onSuccess).catch(onError), 200)
+      sequence(() =>
+        onSubscribe(lang)
+          .then(onSuccess)
+          .catch(onError)
+          .then(() => wait(200))
+      )
     }
 
     const handleClickUnSubscribe: MouseEventHandler = () => {
-      sequence(() => onUnsubscribe().then(onSuccess).catch(onError), 200)
+      sequence(() =>
+        onUnsubscribe()
+          .then(onSuccess)
+          .catch(onError)
+          .then(() => wait(200))
+      )
     }
 
     const isPending = useMemo<boolean>(
