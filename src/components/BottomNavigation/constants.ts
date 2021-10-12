@@ -26,11 +26,6 @@ const navigations: Navi[] = [
     title: 'Photo',
     to: '/photos/',
     icon: () => import('@iconify-icons/mdi/camera-outline')
-  },
-  {
-    title: 'Beta',
-    to: '/chat/',
-    icon: () => import('@iconify/icons-fluent/chat-multiple-16-regular')
   }
 ]
 
