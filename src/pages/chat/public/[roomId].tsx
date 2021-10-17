@@ -22,6 +22,7 @@ import type { Message, MessageData } from '@/components/Chat/types'
 import type { CollectionReference } from 'firebase/firestore'
 import type { FC } from 'react'
 import { useAsyncEffect } from 'react-hookable'
+import type { PageProps } from 'gatsby'
 
 const Chat: FC = () => {
   const [messages, changeMessages] = useState<Message[]>([])
@@ -147,7 +148,7 @@ const useEnterChatRoom = () => {
   }, [])
 }
 
-const ChatRoom: FC = () => {
+const ChatRoom: FC<PageProps> = () => {
   const { writable } = useChat()
   useEnterChatRoom()
 

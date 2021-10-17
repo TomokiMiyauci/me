@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import emailIcon from '@iconify-icons/mdi/email'
 import { Icon } from '@iconify/react/dist/offline'
 import { useAsyncMemo } from 'react-hookable'
-import { useSequence } from '@/hooks/state'
+import { useSequenceState } from 'react-hookable'
 import LangToggle from '@/components/LangToggle'
 import { useToggleLang } from '@/components/LangToggle/hooks'
 import { definePromise } from '@/utils/component'
@@ -34,7 +34,7 @@ const Newsletter = definePromise<{
     PrivacyPolicy
   }) => {
     const [email, changeEmail] = useState('')
-    const [isLoading, sequence] = useSequence()
+    const [isLoading, sequence] = useSequenceState()
     const [lang, enabled, setEnabled] = useToggleLang(locale)
 
     const handleClick: MouseEventHandler = () => emitEvent()

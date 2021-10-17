@@ -1,6 +1,7 @@
 node_modules/
 .cache/
 public
+!src/**/public/
 
 .vercel
 *.log

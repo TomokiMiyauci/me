@@ -2,7 +2,6 @@ import Base from '@/layouts/Base'
 import Global from '@/layouts/Global'
 import loadable from '@loadable/component'
 import LayoutContext from '@/layouts/contexts/layout'
-import { CHATROOM_TYPES } from '@/../config/constants'
 import { useMemo } from 'react'
 
 const ChatRoomLayout = loadable(() => import('@/layouts/ChatRoom'))
@@ -13,8 +12,6 @@ import type { FC, ReactNode } from 'react'
 import type { PageProps } from 'gatsby'
 import type { PageContext } from 'config/types'
 import type { LayoutContext as LayoutContextType } from '@/layouts/types'
-
-const joinPath = (path: string) => `/chat/${path}/`
 
 const Index: FC<
   {
@@ -32,7 +29,7 @@ const Index: FC<
   }, [pageContext, path])
 
   const layout = useMemo<JSX.Element>(() => {
-    if (CHATROOM_TYPES.map(joinPath).includes(originalPath)) {
+    if (originalPath === '/chat/public/[roomId]/') {
       return <ChatRoomLayout>{children}</ChatRoomLayout>
     } else if (originalPath === '/chat/') {
       return <ChatLayout>{children}</ChatLayout>

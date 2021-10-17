@@ -1,9 +1,7 @@
-import bxWorld from '@iconify/icons-bx/bx-world'
 import { Icon } from '@iconify/react/dist/offline'
 import { Link } from 'gatsby'
 import { useEffect, useState } from 'react'
 import { getDoc, doc } from 'firebase/firestore'
-import Timestamp from '@/components/Chat/Timestamp'
 import bxsMessageSquareDots from '@iconify/icons-bx/bxs-message-square-dots'
 import { useFirestore } from '@/hooks/firebase/firestore'
 import type { FC } from 'react'
@@ -14,6 +12,7 @@ import type {
 } from '@/components/Chat/types'
 import type { DocumentReference } from 'firebase/firestore'
 import { useUser } from '@/hooks/user'
+import Room from '@/components/Chat/Room/Room'
 
 const Main: FC = () => {
   const [chatRoom, changeChatRoom] = useState<Partial<PublicChatRoom>>({})
@@ -50,35 +49,16 @@ const Main: FC = () => {
   return (
     <div className="w-full h-full flex space-x-4">
       <aside className="md:w-72 flex-1 md:flex-none">
-        <div className="mb-2 px-4 text-sm text-gray-400">Public</div>
+        <div className="px-8 text-sm text-gray-400">Public</div>
         <ul>
           <li className="dark:hover:bg-blue-gray-800 hover:bg-gray-100 transition-colors duration-300">
-            <Link to="/chat/public/" className="flex p-2 space-x-3">
-              <div className="flex-none">
-                <Icon
-                  className="w-12 h-12 bg-gray-400 bg-opacity-20 p-1 rounded-md text-accent"
-                  icon={bxWorld}
-                />
-              </div>
-              <div className="flex-1 space-y-1">
-                <h3 className="flex leading-tight items-center justify-between">
-                  <span className="font-semibold flex-1">Public Chat</span>
-                  {chatRoom.createdAtOrigin && (
-                    <Timestamp date={chatRoom.createdAtOrigin} />
-                  )}
-                </h3>
-                <div className="flex justify-between">
-                  <span className="text-gray-400 font-light leading-none text-sm flex-1 line-clamp-2 max-w-[70vw] break-words whitespace-pre-wrap">
-                    {chatRoom.value ?? 'Public messaging room'}
-                  </span>
-
-                  {!!chatRoom.unreadMessages && (
-                    <span className="rounded-full bg-green-500 font-bold px-2">
-                      {chatRoom.unreadMessages}
-                    </span>
-                  )}
-                </div>
-              </div>
+            <Link to="/chat/public/fff" className="flex p-2 space-x-3">
+              <Room
+                title={'Public Chat'}
+                message={chatRoom.value}
+                date={chatRoom.createdAtOrigin}
+                icon={() => import('@iconify/icons-bx/bx-world')}
+              />
             </Link>
           </li>
         </ul>
