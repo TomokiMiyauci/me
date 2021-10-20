@@ -1,0 +1,696 @@
+---
+title: Frontend library development with vite and tailwindcss
+description: Shows how to develop a library using vite and tailwindcss. We'll show you how to generate typedefs, set path aliases, and configure tailwindcss as a library.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-10-20
+slug: /posts/lib-vite-tailwindcss/
+tags:
+  - library
+  - vite
+  - tailwindcss
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    node:
+      - name: autoprefixer
+        version: 10.3.7
+      - name: npm-run-all
+        version: 4.1.5
+      - name: postcss
+        version: 8.3.9
+      - name: react
+        version: 17.0.2
+      - name: sass
+        version: 1.43.2
+      - name: tailwindcss
+        version: 3.0.0-alpha.1
+      - name: tsc-alias
+        version: 1.3.10
+      - name: typed-css-modules
+        version: 0.7.0
+      - name: typed-scss-modules
+        version: 4.1.1
+      - name: typescript
+        version: 4.3.2
+      - name: vite
+        version: 2.6.4
+---
+
+## Introduction
+
+[vite](https://github.com/vitejs/vite) and [tailwindcss](https://github.com/tailwindlabs/tailwindcss) are mainly used for application development, but can also be used for library development.
+Using vite offers the following advantages:
+
+- Fast preview environment
+- Automatic handling of CSS Modules
+- Easy use of CSS preprocessors
+- Apply path aliases
+- Using vite as a Storybook bundler eliminates the need for an extra bundler
+
+For Storybook, you can use the `vite` bandler instead of `webpack`.
+For more information, see my previous post [Using Vite for Bandler in Storybook](/posts/storybook-vite/).
+
+The focus of library development is often on the test environment and documentation.
+In this article, we'll focus on the library itself, and show you how to create a fast build environment.
+
+We will use the example of react as our code base.
+You may also find it useful to look at other frameworks supported by vite.
+
+## Building the environment
+
+The first step is to generate a project skeleton.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn create vite --template react-ts
+cd project_name
+yarn add -D @types/node
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm init vite@latest --template react-ts
+cd project_name
+npm i -D @types/node
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+We'll also create the following component as a suitable example component.
+
+Create an entry point, or component, under `src`.
+
+```ts:src/index.ts
+export * as SwipeBar from '@/components/swipebar'
+```
+
+```tsx:src/components/swipebar.tsx
+const Swipebar = (): JSX.Element => {
+  return <div className="w-24 h-1 inline-blick bg-gray-200 rounded-full" />
+}
+
+export default Swipebar
+```
+
+The file structure looks like this:
+
+```bash
+.
+├── index.html
+├── package.json
+├── src
+│   ├── components
+│   │   └── swipebar.tsx
+│   ├── index.ts
+│   └── vite-env.d.ts
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## Configuring path aliases
+
+I haven't seen many projects that use path aliases in their libraries.
+However, it's often a good thing, as it means you don't have to modify the import path when refactoring, and it makes the import path easier to find.
+
+I think one of the reasons for the low usage is that `tsc` doesn't resolve path aliases by default when outputting type definition files.
+The tool [tsc-alias](https://github.com/justkey007/tsc-alias), which I'll introduce later, resolves path aliases in typedefs.
+
+This solves the problem of path aliases, so first we need to set up a path alias.
+
+The `tsconfig.json` adds the following settings. This will allow VSCode to use IntelliSense for the import path.
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    ...,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+Also, `vite.config.ts` should look like this:
+
+```ts:vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+})
+```
+
+## Configure tailwindcss for your library
+
+The next step is to install tailwindcss.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D tailwindcss@next postcss@latest autoprefixer@latest
+yarn tailwindcss init
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D tailwindcss@next postcss@latest autoprefixer@latest
+npm run tailwindcss init
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Tailwindcss needs `postcss` and should be set.
+
+```js:postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  }
+}
+```
+
+Also, import `tailwindcss` in your entry file.
+
+```ts:src/index.ts
+import 'tailwindcss/tailwind.css'
+
+export * as SwipeBar from '@/components/swipebar'
+```
+
+The example uses `3.0.0-alpha.1`, which is still an alpha release at the time of this writing, but `2.1` or higher with the `JIT` engine is fine.
+
+Now that `tailwind.config.js` has been created, we can edit it.
+In order to output CSS for the library, we need to make two changes
+
+- Disable preflight to avoid outputting global scope CSS with side effects
+- Set a prefix to adjust the class name output.
+
+Preflight is the default style for tailwindcss, but it is inappropriate to use as a library because it affects the global scope.
+Check [base.css](https://unpkg.com/tailwindcss@2.2.17/dist/base.css) for the default style generated by Preflight.
+
+Also, if no prefix is used, the generated class name will be the same as the **class name used by the application**.
+If the user of the library is using tailwincss and has customized the `theme` field, it is possible to get an unintended style.
+
+In order to deal with this, the `tailwind.config.js` can be modified.
+
+<Alert type="warning">
+  If you are using tailwindcss 2 series, the field name is `purge`, not
+  `content`.
+</Alert>
+
+```js:tailwind.config.js{8-11}
+module.exports = {
+  jit: true,
+  content: ['src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  corePlugins: {
+    preflight: false,
+  },
+  prefix: 'mylib-'
+}
+```
+
+The tailwind class name now needs a prefix.
+
+For example, this would look like:
+
+```tsx:src/components/swipebar.tsx
+<div className="mylib-w-24 mylib-bg-gray-200" />
+```
+
+```css:dist/style.css
+.mylib-w-24{width:6rem}
+.mylib-bg-gray-200{--tw-bg-opacity: 1;background-color:rgb(229 231 235 / var(--tw-bg-opacity))}
+```
+
+CSS custom properties such as `--tw-bg-opacity` should have no side effect, as their scope is closed.
+
+Unfortunately, as a Bandler plugin, it should not be possible to use hash values for prefixes. [^1]
+
+[^1]: maybe `windicss` can do it
+
+So be aware that even with a prefix, there is a chance of duplicate class names.
+
+You can use the following CSS Modules without worrying about that.
+
+## CSS Modules
+
+Vite supports CSS Modules by default.
+
+The `*.module.css` file is recognized as a CSS Modules. [^2]
+
+[^2]: Also supports `.scss` and `.less`. See the [CSS preprocessor](https://vitejs.dev/guide/features.html#css-pre-processors).
+
+Create a file called `swipe.module.css` and add your styles.
+
+```css:src/components/swipe.module.css
+.swipebar {
+  @apply mylib-w-24 mylib-h-1 mylib-inline-block mylib-bg-gray-200 mylib-rounded-full;
+}
+```
+
+To use this style, do the following Path aliases can also be used for CSS imports.
+
+```tsx:src/components/swipe.tsx
+import { swipebar } from '@/components/swipe.module.css'
+const Index = (): JSX.Element => <div className={swipebar} />
+
+export default Index
+```
+
+The output from the build will look something like this:
+
+```css:style.css
+._swipebar_5xd3q_1{display:inline-block;...}
+```
+
+The output is a class name with a hashed suffix.
+In fact, if you only use CSS Modules, you don't need to set the tailwindcss prefix.
+
+However, if you use both inline class notation and CSS Modules, it is safer to set the prefix.
+
+### CSS Modules and type declaration
+
+In the case of TypeScript projects, the above import of CSS Modules results in a lint error.
+This is because there is no type definition for CSS Modules.
+
+To solve this, you need to create a type definition file. To solve this, we need to create a type declaration file, which can be generated automatically by the CLI.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D typed-css-modules
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D typed-css-modules
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+The `tcm` command will be available.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tcm src
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tcm src
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+You can run it in the format `tcm <input directory>`. This will generate a CSS Modules type definition file.
+
+```ts:swipe.module.css.d.ts
+declare const styles: {
+  readonly "swipebar": string;
+};
+export = styles;
+```
+
+This allows you to import class names in a type-safe manner.
+You can also use the `--watch` argument to monitor files. See [typed-css-modules](https://github.com/Quramy/typed-css-modules) for more information.
+
+## CSS preprocessors
+
+CSS preprocessors such as `.scss` and `.less` are also easily available.
+Let's look at an example of using `.scss`.
+
+vite needs to be installed to handle the preprocessor. Also, the `typed-css-modules` mentioned earlier do not support Sass by default.
+There is a library called [typed-scss-modules](https://github.com/skovy/typed-scss-modules) that can be used.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D sass typed-scss-modules
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D sass typed-scss-modules
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Let's change the stylesheet to `.scss`.
+
+```tsx:swipe.tsx{1}
+import { swipebar } from '@/swipe.module.scss'
+const Index = (): JSX.Element => <div className={swipebar} />
+
+export default Index
+```
+
+The CLI interface is pretty same.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tsm src
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tsm src
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Now you can use Sass.
+
+vite itself also supports `.less`, and those type declaration can be output with [typed-less-modules](https://github.com/gruckus-gruckus/typed-less-modules).
+
+## Build for libraries
+
+Finally, let's check the build settings for libraries.
+
+First, we need to clean up the external modules in `package.json`
+
+```json:package.json
+{
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "react": "^16.8.0"
+  },
+  "dependencies": {}
+}
+```
+
+Move `react` from the `dependencies` field to the `peerDependencies` field.
+
+Also, just writing it in `peerDependencies` will not install it in `node_modules`.
+You should also add it to the `devDependencies` field if you need it for development or build.
+
+Next, change `vite.config.ts` to look like this:
+
+```ts:vite.config.ts{9,20}
+import { defineConfig } from 'vite'
+import { resolve } from 'path'
+import { peerDependencies, dependencies } from './package.json'
+import plugin from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [
+    plugin({
+      'jsxRuntime': 'classic'
+    })
+  ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src', 'index.ts'),
+      formats: ['es', 'cjs'],
+      fileName: (ext) => `index.${ext}.js`,
+      // for UMD name: 'GlobalName'
+    },
+    rollupOptions: {
+      external: [...Object.keys(peerDependencies), ...Object.keys(dependencies)]
+    },
+    target: 'esnext',
+    sourcemap: true
+  }
+})
+```
+
+You can configure builds for libraries in the `lib` field of the `build`.
+Also, in the case of the react library, the template for the vite project contains [@vitejs/plugin-react](https://github.com/vitejs/vite/tree/main/packages/plugin-react#readme).
+
+This will generate bloated code in the form of `jsx-runtime` by default.
+As a library, we probably don't see much benefit in `jsx-runtime` style output, so we'll change to classic style output.
+
+### Module format
+
+By default, vite outputs ES Modules and UMDs.
+UMDs require a global namespace; to output in UMD format, set the `lib` `name` field to an appropriate name.
+
+In the example above, ES Modules and CommonJS are output.
+
+### Rename the output file
+
+The default filename for the output is `package.json` with `name` + module format + `.js`.
+
+In the example above, this would be `mylib.es.js` and `mylib.cjs.js`.
+To change the file name of the output, set the `fileName` of the `lib` field.
+
+This will create the files `index.es.js` and `index.cjs.js` under the `dist` directory.
+
+### Disable dependency bundling
+
+As a rule, libraries should not bundle dependencies. vite bundles all dependencies by default, so we'll disable this.
+
+Specify the list of dependencies you want to exclude in the `external` field of `rollupOptions`.
+You can do this by specifying `peerDependencies` and `dependencies` in `package.json`.
+
+### Set the target environment.
+
+You can specify which browser versions and Node.js runtime versions are supported.
+The `target` of `build` can be `chrome58`, `node12`, etc. to generate code for that version.
+
+By default, it targets browsers that natively support dynamic ES Moduls import.
+
+### Output source map
+
+Include the source map in your build. The presence of a source map improves UX for library users, e.g. for debugging.
+
+Set the `build` `sourcemap` field to `true`.
+
+With these settings, you can build by running `vite build`.
+
+The output should look something like this:
+
+```bash
+.
+├── dist
+│   ├── index.cjs.js
+│   ├── index.cjs.js.map
+│   ├── index.es.js
+│   ├── index.es.js.map
+│   └── style.css
+```
+
+## Output type definition files
+
+We recommend using `tsc` and `tsc-alias` to output type definition files.
+
+Path aliases are resolved by using `tsc-alias`.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D tsc-alias
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D tsc-alias
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Change `tsconfig.json` to look like this:
+
+```json:tsconfig.json{17-19}
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsxdev",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["./src"]
+}
+```
+
+Don't forget to set the `declarationMap` as well.
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tsc --emitDeclarationOnly
+yarn tsc-alias
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tsc --emitDeclarationOnly
+npm run tsc-alias
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+Output only type definition files with `tsc`. Then overwrite the path alias with `tsc-alias`.
+
+This will result in the following output.
+
+```bash
+├── dist
+│   ├── components
+│   │   ├── swipebar.d.ts
+│   │   └── swipebar.d.ts.map
+│   ├── index.d.ts
+│   └── index.d.ts.map
+```
+
+### Run commands in parallel
+
+Build and lint commands tend to be multiple.
+If there is no dependency between the order of each command, they can be run in parallel.
+
+Use [npm-run-all](https://github.com/mysticatea/npm-run-all).
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D npm-run-all
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D npm-run-all
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+The shorthand CLI `npm-run-all` and `run-p` will be available.
+An example of a parallel run command might look like this:
+
+```json:package.json
+{
+  "scripts": {
+    "build": "run-p build:*",
+    "build:scripts": "vite build",
+    "build:types": "tsc --emitDeclarationOnly && tsc-alias",
+  }
+}
+```
+
+The build by vite and the type declaration output are independent, so they can be parallelized.
+
+A `run-s` command is also provided for sequential execution.
+However, for short commands, `&&` is sometimes more concise, as above.
+
+## Set the entry point
+
+Finally, we need to set the entry point for `package.json`.
+
+```json:package.json
+{
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js"
+    },
+     "./dist/style.css": "./dist/style.css"
+  },
+  "sideEffects": false,
+
+  "files": [
+    "dist"
+  ]
+}
+```
+
+The `module` field should be set to the path of the ES Modules.
+The `exports` field should be set to the path of the `.css` file, since we are including CSS files.
+
+The `sideEffects` field can be `false` if your library does not contain any modules that affect global, such as polyfill.
+Bundlers such as `webpack` can make better use of tree-shaking.
+
+If it does contain side-effects, see [Mark the file as side-effect-free](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free).
+
+Now you're ready to publish. The only thing left to do is to publish to NPM.
+
+To publish to NPM, please refer to [Publish Typescript Packages with minimal configuration](/posts/typescript-package-release/) which I wrote before.

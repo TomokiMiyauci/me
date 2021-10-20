@@ -1,0 +1,699 @@
+---
+title: viteとtailwindcssでフロントエンドライブラリを開発する
+description: vite と tailwindcss を使ってライブラリ開発を行う方法を紹介します。型定義ファイルの生成やCSS Modules の組み込みなど、ライブラリ開発に必要なビルド環境を構築します。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-10-20
+slug: /posts/lib-vite-tailwindcss/
+tags:
+  - library
+  - vite
+  - tailwindcss
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    node:
+      - name: autoprefixer
+        version: 10.3.7
+      - name: npm-run-all
+        version: 4.1.5
+      - name: postcss
+        version: 8.3.9
+      - name: react
+        version: 17.0.2
+      - name: sass
+        version: 1.43.2
+      - name: tailwindcss
+        version: 3.0.0-alpha.1
+      - name: tsc-alias
+        version: 1.3.10
+      - name: typed-css-modules
+        version: 0.7.0
+      - name: typed-scss-modules
+        version: 4.1.1
+      - name: typescript
+        version: 4.3.2
+      - name: vite
+        version: 2.6.4
+---
+
+## はじめに
+
+[vite](https://github.com/vitejs/vite) や [tailwindcss](https://github.com/tailwindlabs/tailwindcss) は主にアプリケーション開発に利用されますが、ライブラリ開発にも使うことができます。
+tailwindcss はその特徴がそのまま利点になりますが、vite を使うことで、次の利点があります。
+
+- 高速なプレビュー環境の構築
+- CSS Modules の自動処理
+- CSS プリプロセッサの簡単導入
+- パスエイリアスの適用
+- Storybook のバンドラーを vite にすることで、余計なバンドラーが不要
+
+Storybook については、バンドラーに `webpack` ではなく、`vite` を用いることができます。
+詳しくは、以前書いた [Storybook でバンドラーに Vite を使う](/posts/storybook-vite/) をご覧ください。
+
+ライブラリ開発の力点は、テスト環境だったり、ドキュメントだったりするのですが、
+今回は、ライブラリそのものに焦点を当てて、高速なビルド環境の構築方法を紹介します。
+
+なお、コードベースに react を採用した例で説明しますが、
+vite がサポートしている他のフレームワークについても、参考になるかと思います。
+
+## 環境構築
+
+まずは、プロジェクトの雛形を生成します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn create vite --template react-ts
+cd project_name
+yarn add -D @types/node
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm init vite@latest --template react-ts
+cd project_name
+npm i -D @types/node
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+また、今回は適当な例のコンポーネントとして、次のコンポーネントを作ってみます。
+
+`src` 以下にエントリポイントや、コンポーネントを作成します。
+
+```ts:src/index.ts
+export * as SwipeBar from '@/components/swipebar'
+```
+
+```tsx:src/components/swipebar.tsx
+const Swipebar = (): JSX.Element => {
+  return <div className="w-24 h-1 inline-blick bg-gray-200 rounded-full" />
+}
+
+export default Swipebar
+```
+
+ファイル構造は次のようになります。
+
+```bash
+.
+├── index.html
+├── package.json
+├── src
+│   ├── components
+│   │   └── swipebar.tsx
+│   ├── index.ts
+│   └── vite-env.d.ts
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## パスエイリアスの設定
+
+ライブラリでパスエイリアスを利用しているプロジェクトをあまり見たことはありません。
+しかし、リファクタリング時にインポートパスの修正が不要だったり、インポートパスがわかりやすくなったりと、いいことが多いです。
+
+型定義ファイルの出力時に、`tsc` のデフォルトではパスエイリアスを解決してくれないことが、利用率が低い要因の一つだと思っています。
+後ほど紹介する [tsc-alias](https://github.com/justkey007/tsc-alias) は型定義のパスエイリアスを解決してくれるツールです。
+
+これを利用するとパスエイリアスの問題は解決するため、まずはパスエイリアスを設定します。
+
+`tsconfig.json` は次の設定を追加します。これにより、VSCode ではインポートパスにインテリセンスが効くようになります。
+
+```json:tsconfig.json
+{
+  "compilerOptions": {
+    ...,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+また、`vite.config.ts` も次のようにします。
+
+```ts:vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+})
+```
+
+## tailwindcss のライブラリ用の設定
+
+次に tailwindcss を導入します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D tailwindcss@next postcss@latest autoprefixer@latest
+yarn tailwindcss init
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D tailwindcss@next postcss@latest autoprefixer@latest
+npm run tailwindcss init
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+tailwindcss には `postcss` が必要なので設定します。
+
+```js:postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  }
+}
+```
+
+また、エントリーファイルで `tailwindcss` をインポートします。
+
+```ts:src/index.ts
+import 'tailwindcss/tailwind.css'
+
+export * as SwipeBar from '@/components/swipebar'
+```
+
+例ではこの記事の作成時点ではまだアルファリリースの `3.0.0-alpha.1` を使いますが、 `JIT` エンジンが組み込まれた `2.1` 以上であれば問題ありません。
+
+`tailwind.config.js` が作成されたので、それを編集します。
+ライブラリ用の CSS を出力するには、次の２つの変更を加える必要があります。
+
+- Preflight を無効にして、副作用のあるグローバルスコープの CSS を出力しない
+- Prefix を設定し、出力するクラス名を調節する
+
+Preflight は tailwindcss のデフォルトスタイルですが、グローバルに影響を与えるため、ライブラリとしての使用は不適切です。
+Preflight で生成されるデフォルトのスタイルは [base.css](https://unpkg.com/tailwindcss@2.2.17/dist/base.css) を確認してください。
+
+また、Prefix を使用しなければ、生成されるクラス名は、**アプリケーションで利用されるクラス名**と同じです。
+ライブラリの利用者が tailwincss を利用していてかつ `theme` フィールドをカスタマイズした場合、意図しないスタイルになる可能性があります。
+
+これらに対応するために、`tailwind.config.js` を変更します。
+
+<Alert type="warning">
+  tailwindcss 2系を利用している場合、フィールド名は `content` ではなく `purge`
+  です。
+</Alert>
+
+```js:tailwind.config.js{8-11}
+module.exports = {
+  jit: true,
+  content: ['src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  corePlugins: {
+    preflight: false,
+  },
+  prefix: 'mylib-'
+}
+```
+
+これで tailwind のクラス名にはプレフィックスが必要になりました。
+
+例えば次のようになります。
+
+```tsx:src/components/swipebar.tsx
+<div className="mylib-w-24 mylib-bg-gray-200" />
+```
+
+```css:dist/style.css
+.mylib-w-24{width:6rem}
+.mylib-bg-gray-200{--tw-bg-opacity: 1;background-color:rgb(229 231 235 / var(--tw-bg-opacity))}
+```
+
+幸い、VSCode の [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) を使っている場合、プレフィックス付きのクラス名にインテリセンスが効きます。
+また、`--tw-bg-opacity` のような CSS カスタムプロパティはスコープが閉じているため、影響はないはずです。
+
+しかし、残念ながらバンドラーのプラグインとして、プレフィックスにハッシュ値を使うといったことはできないはずです。[^1]
+
+[^1]: もしかしたら `windicss` ではできるかもしれませんが
+
+そのため、プレフィックスを付けたとしてもクラス名が重複する可能性があることには注意してください。
+
+次に紹介する CSS Modules であれば、その心配なく利用できます。
+
+## CSS Modules
+
+vite はデフォルトで CSS Modules に対応しています。
+
+`*.module.css` ファイルは CSS Modules として認識します。[^2]
+
+[^2]: 他にも `.scss` や `.less` などに対応しています。詳しくは [CSS プリプロセッサ](https://ja.vitejs.dev/guide/features.html#css-%E3%83%97%E3%83%AA%E3%83%97%E3%83%AD%E3%82%BB%E3%83%83%E3%82%B5) を確認ください。
+
+`swipe.module.css` というファイルを作成し、スタイルを追加します。
+
+```css:src/components/swipe.module.css
+.swipebar {
+  @apply mylib-w-24 mylib-h-1 mylib-inline-block mylib-bg-gray-200 mylib-rounded-full;
+}
+```
+
+このスタイルの利用は次のようにします。パスエイリアスは CSS のインポートに対しても利用できます。
+
+```tsx:src/components/swipe.tsx
+import { swipebar } from '@/components/swipe.module.css'
+const Index = (): JSX.Element => <div className={swipebar} />
+
+export default Index
+```
+
+ビルドすると次のような出力になります。
+
+```css:style.css
+._swipebar_5xd3q_1{display:inline-block;...}
+```
+
+サフィックスにハッシュ値が付与されたクラス名が出力されます。
+実際には、CSS Modules しか利用しない場合、tailwindcss のプリフェックスの設定は不要です。
+
+ビルド時に tailwindcss のクラス名は、スタイルとして置き換わるためです。
+
+ただし、インラインクラス記法と CSS Modules を併用する場合には、プリフェックスの設定をしたほうが無難です。
+
+### CSS Modules と型定義
+
+TypeScript プロジェクトの場合、上記の CSS Modules のインポートで、リントエラーが発生します。
+CSS Modules の型定義がないためです。
+
+これを解決するには、型定義ファイルを作成する必要があります。自動生成できる CLI があるのでそれを利用します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D typed-css-modules
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D typed-css-modules
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`tcm` コマンドが利用可能になります。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tcm src
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tcm src
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`tcm <input directory>` 形式で実行できます。すると、CSS Modules の型定義ファイルが生成されます。
+
+```ts:swipe.module.css.d.ts
+declare const styles: {
+  readonly "swipebar": string;
+};
+export = styles;
+```
+
+これにより、型安全にクラス名をインポートできるようになります。
+また、他にも `--watch` 引数でファイルの監視などができるようです。詳しくは [typed-css-modules](https://github.com/Quramy/typed-css-modules) を確認ください。
+
+## CSS プリプロセッサ
+
+`.scss` や `.less` などの CSS プリプロセッサも簡単に利用できます。
+`.scss` を利用する例を見てみましょう。
+
+vite がプリプロセッサを処理するためにインストールが必要です。また、先程の `typed-css-modules` はデフォルトでは Sass に対応していません。
+[typed-scss-modules](https://github.com/skovy/typed-scss-modules) というライブラリがあるのでそれを利用します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D sass typed-scss-modules
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D sass typed-scss-modules
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+先程のスタイルシートをそのまま `.scss` に変えてみます。
+
+```tsx:swipe.tsx{1}
+import { swipebar } from '@/swipe.module.scss'
+const Index = (): JSX.Element => <div className={swipebar} />
+
+export default Index
+```
+
+型定義の出力はほとんど同じインターフェイスです。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tsm src
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tsm src
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+これで Sass が利用できました。
+
+vite 自体は `.less` にも対応しており、それらの型定義は　[typed-less-modules](https://github.com/gruckus-gruckus/typed-less-modules) で出力できるようです。
+
+## ライブラリ用のビルド
+
+最後にライブラリ用のビルド設定を確認します。
+
+まず、`package.json` の外部モジュールを整理します。
+
+```json:package.json
+{
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "react": "^16.8.0"
+  },
+  "dependencies": {}
+}
+```
+
+`dependencies` フィールドにある `react` を `peerDependencies` フィールドに移動します。
+`react` モジュールなどは、ライブラリの利用者がすでにインストールしているでしょうから、`dependencies` フィールドは不適切です。
+
+また、`peerDependencies` に書いただけでは、`node_modules` にインストールされません。
+開発やビルドに必要であれば、`devDependencies` フィールドにも追加する必要があります。
+
+続いて、`vite.config.ts` を次のように変更します。
+
+```ts:vite.config.ts{9,20}
+import { defineConfig } from 'vite'
+import { resolve } from 'path'
+import { peerDependencies, dependencies } from './package.json'
+import plugin from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [
+    plugin({
+      'jsxRuntime': 'classic'
+    })
+  ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src')
+    }
+  },
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src', 'index.ts'),
+      formats: ['es', 'cjs'],
+      fileName: (ext) => `index.${ext}.js`,
+      // for UMD name: 'GlobalName'
+    },
+    rollupOptions: {
+      external: [...Object.keys(peerDependencies), ...Object.keys(dependencies)]
+    },
+    target: 'esnext',
+    sourcemap: true
+  }
+})
+```
+
+`build` の `lib` フィールドでライブラリ用のビルドを設定できます。
+また、react ライブラリの場合、vite プロジェクトのテンプレートには [@vitejs/plugin-react](https://github.com/vitejs/vite/tree/main/packages/plugin-react#readme) がプラグインに含まれています。
+
+これは、デフォルトでは　`jsx-runtime` 形式の肥大化したコードが生成されてしまいます。
+ライブラリとしては、恐らく `jsx-runtime` 形式の出力のメリットは薄いため、クラシックスタイルの出力に変更します。
+
+### モジュール形式を変更する
+
+vite のデフォルトでは、ES Modules と UMD を出力します。
+UMD はグローバルな名前空間が必要です。UMD 形式を出力するには、`lib` の `name` フィールドに適切な名前を設定します。
+
+上の例では ES Modules と CommonJS を出力しています。
+
+### 出力ファイル名を変更する
+
+出力のファイル名は、デフォルトでは `package.json` の `name` + モジュール形式 + `.js` となります。
+
+上の例の場合は、`mylib.es.js` と `mylib.cjs.js` です。
+出力のファイル名を変更するには、`lib` フィールドの `fileName` を設定します。
+
+これにより、`index.es.js` および `index.cjs.js` というファイルが  `dist` ディレクトリ下に生成されます。
+
+### 依存関係のバンドルを無効にする
+
+ライブラリでは、基本的に依存関係をバンドルすべきではありません。vite はデフォルトで全ての依存関係をバンドルするので、これを無効にします。
+
+`rollupOptions` の `external` フィールドに除外したい依存関係のリストを指定します。
+`package.json` の `peerDependencies` と `dependencies` を指定すればよいでしょう。
+
+### ターゲット環境を設定する
+
+サポートするブラウザのバージョンや Node.js ランタイムのバージョンを指定できます。
+`build` の  `target` に `chrome58` や `node12` など指定することで、そのバージョンを満たすコードを生成できます。
+
+デフォルトでは、動的な ES Moduls のインポートをネイティブでサポートしているブラウザをターゲットにします。
+
+### ソースマップを出力する
+
+ソースマップもビルドに含めましょう。ソースマップがあることで、ライブラリ利用者のデバッグなどの UX が向上します。
+
+`build` の `sourcemap` フィールドを `true` にします。
+
+以上の設定で `vite build` を実行することでビルドできます。
+
+次のように出力されます。
+
+```bash
+.
+├── dist
+│   ├── index.cjs.js
+│   ├── index.cjs.js.map
+│   ├── index.es.js
+│   ├── index.es.js.map
+│   └── style.css
+```
+
+## 型定義ファイルを出力する
+
+型定義ファイルの出力は `tsc` と `tsc-alias` の利用をおすすめします。
+
+パスエイリアスは `tsc-alias` を使うことでパスの解決をします。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D tsc-alias
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D tsc-alias
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`tsconfig.json` を次のように変更します。
+
+```json:tsconfig.json{17-19}
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsxdev",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["./src"]
+}
+```
+
+`declarationMap` も忘れずに設定します。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn tsc --emitDeclarationOnly
+yarn tsc-alias
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm run tsc --emitDeclarationOnly
+npm run tsc-alias
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`tsc` で型定義ファイルのみ出力します。その後、パスエイリアスを `tsc-alias` で上書きします。
+
+これで次のような出力になります。
+
+```bash
+├── dist
+│   ├── components
+│   │   ├── swipebar.d.ts
+│   │   └── swipebar.d.ts.map
+│   ├── index.d.ts
+│   └── index.d.ts.map
+```
+
+### コマンドを並列実行する
+
+ビルドコマンドやリントコマンドは複数になりがちです。
+それぞれのコマンドの順序に依存関係が無ければ、並列実行できます。
+
+[npm-run-all](https://github.com/mysticatea/npm-run-all) を使います。
+
+<CodeGroups>
+  <CodeGroup label="Yarn" active>
+
+```bash
+yarn add -D npm-run-all
+```
+
+  </CodeGroup>
+
+  <CodeGroup label="NPM">
+
+```bash
+npm i -D npm-run-all
+```
+
+  </CodeGroup>
+</CodeGroups>
+
+`npm-run-all` と `run-p` というショートハンドの CLI が利用可能になります。
+並列実行のコマンドの例は次のようになります。
+
+```json:package.json
+{
+  "scripts": {
+    "build": "run-p build:*",
+    "build:scripts": "vite build",
+    "build:types": "tsc --emitDeclarationOnly && tsc-alias",
+  }
+}
+```
+
+vite によるビルドと、型定義の出力は独立しているので並列化できます。
+
+また、逐次実行のコマンドとして `run-s` コマンドも提供されています。
+しかし、短いコマンドであれば、上のように `&&` の方が簡潔だったりします。
+
+## エントリポイントを設定する
+
+最後に `package.json` にエントリポイントなどを設定します。
+
+```json:package.json
+{
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js"
+    },
+     "./dist/style.css": "./dist/style.css"
+  },
+  "sideEffects": false,
+
+  "files": [
+    "dist"
+  ]
+}
+```
+
+`module` フィールドには ES Modules のパスを設定します。また、今回は CSS ファイルを含むため、 `exports` フィールドには、 `.css` のパスを指定します。
+
+`sideEffects` フィールドは、ライブラリが polyfill など global に影響を与えるモジュールを含んでいない場合は `false` にできます。
+`webpack` などのバンドラーが、ツリーシェイキングをより有効に活用できます。
+
+副作用を含む場合は、[Mark the file as side-effect-free](https://webpack.js.org/guides/tree-shaking/#mark-the-file-as-side-effect-free) を参考にしてください。
+
+以上でひとまず公開できる状態になりました。あとは NPM に公開するだけです。
+
+NPM への公開は以前書いた [最小構成で Typescript パッケージを公開する](/posts/typescript-package-release/) を参考にしてください。
