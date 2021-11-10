@@ -1,0 +1,108 @@
+---
+title: Define a specific string or all strings in TypeScript
+description: This section shows how to define 'string' | string in TypeScript. Normally this would be upcast to type string, but we'll solve this in a hacky way.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-11-10
+slug: /posts/typescript-literal-hack/
+tags:
+  - TypeScript
+---
+
+## Introduction
+
+In this article, I'll show you a small story.
+
+Maybe you know that TypeScript doesn't allow `'string' | string`.
+It gets upcasted and becomes a `string` type.
+
+```ts
+type Color = 'red' | string // string
+```
+
+The string literal type is a derivative of the primitive type `string`.
+Therefore, if you use a union type, it will be upcast.
+
+However, there are many situations, such as library, where you want an interface that accepts a particular string or all strings.
+
+This article will show you how to do that.
+
+## Conclusion
+
+To conclude, we can do the following:
+
+```ts
+type Color = 'red' | String
+const color1: Color = 'red' // ok
+const color2: Color = 'blue' // ok
+```
+
+This is what I learned from [chakra-ui's Union types](https://github.com/chakra-ui/chakra-ui/blob/baa6fee280530137548f961db5cb308100bc3920/packages/styled-system/src/utils/types.ts#L14), but the original code looks like this
+
+```ts
+type Union<T> = T | (string & {})
+```
+
+Intersecting with `{}` makes the `string` type **something that is not a derivation of the string literal type**.
+
+`{}` means any non-null value. This makes it a very loose type that can accept non-empty object literals.
+
+```ts
+const obj: {} = {} // ok
+const str: {} = 'string' // ok
+const nul: {} = null // error
+```
+
+Also, using `{}` with intersection types can cause strange behavior.
+
+```ts
+const color = (val: 'red' | {}) => {}
+
+// Intellisense only for `red`, but accepts non-null
+color('red') // ok
+color('yellow') // ok
+color(100) // ok
+color(null) // error
+```
+
+In the above example, the IntelliSense is applied as if there were no `{}`, but accepts anything without `null`.
+
+The above example show that `(string & {})` works well.
+
+As a side note, an empty object literal can be represented as follows
+
+```ts
+type EmptyObject = Record<string, never>
+
+const a: EmptyObject = {} // ok
+const b: EmptyObject = { a: 1 } // error
+const c: EmptyObject = null // error
+```
+
+## String vs string
+
+In TypeScript, `String` stands for a `String` object.
+On the other hand, `string` represents a string type, so they are different.
+
+```ts
+const a = (str: string) => {}
+const b = (Str: String) => {}
+
+a('') // ok
+a(new String('')) // error
+
+b('') // ok
+b(new String('')) // ok
+```
+
+You can assign a `string` type to a `String` object type, but not the other way around.
+
+Also, [Official TypeScript Reference: Do's and Don'ts](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html#general-types) states that.
+
+> Don’t ever use the types `Number`, `String`, `Boolean`, `Symbol`, or `Object` These types refer to non-primitive boxed objects that are almost never used appropriately in JavaScript code.
+
+They say you have to use `string` unless there is a specific reason not to.
+
+On the other hand, `{}` is so `ban-types` in ESLint that you should basically never use either.
+
+In a hacky situation like this, it's better to use the `String` object type, because it's easier to understand.
