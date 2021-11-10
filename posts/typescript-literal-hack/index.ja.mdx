@@ -1,0 +1,108 @@
+---
+title: TypeScriptで特定の文字列または全ての文字列を定義する
+description: TypeScriptで 'string' | string を定義する方法を紹介します。通常はstring型にアップキャストされてしまいますが、ハッキーな方法でこれを解決します。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-11-10
+slug: /posts/typescript-literal-hack/
+tags:
+  - TypeScript
+---
+
+## はじめに
+
+今回は小ネタを紹介します。
+
+TypeScript では `'string' | string` ができないことは結構な人がご存知だと思います。
+これは、アップキャストされて　`string` 型になってしまいます。
+
+```ts
+type Color = 'red' | string // string
+```
+
+文字列リテラル型は、プリミティブ型 `string` の派生です。
+そのため、共用型を使った場合アップキャストされてしまいます。
+
+しかし、ライブラリの開発などでは、特定の文字列または、全ての文字列を受け入れるインターフェイスがほしい場面が結構あります。
+
+今回はその方法を紹介します。
+
+## 結論
+
+結論を書くと次のようにできます。
+
+```ts
+type Color = 'red' | String
+const color1: Color = 'red' // ok
+const color2: Color = 'blue' // ok
+```
+
+これは [chakra-ui の Union types](https://github.com/chakra-ui/chakra-ui/blob/baa6fee280530137548f961db5cb308100bc3920/packages/styled-system/src/utils/types.ts#L14) 見て知ったわけですが、本家のコードは次のようになっています。
+
+```ts
+type Union<T> = T | (string & {})
+```
+
+`{}` と交差させることで、 `string` 型が**文字列リテラル型の派生元ではないなにか**になるようです。
+
+`{}` は null 以外の値を意味します。空オブジェクトリテラル以外も受け入れる事ができる、非常に緩い型となります。
+
+```ts
+const obj: {} = {} // ok
+const str: {} = 'string' // ok
+const nul: {} = null // error
+```
+
+また、`{}` を交差型で使うと不思議な振る舞いをします。
+
+```ts
+const color = (val: 'red' | {}) => {}
+
+// インテリセンスは `red` のみだが、null以外を受け入れる
+color('red') // ok
+color('yellow') // ok
+color(100) // ok
+color(null) // error
+```
+
+上の例では、`{}` がない場合と同じようにインテリセンスは適応されますが、
+`null` 以外を受け入れます。
+
+以上のような特性から、`(string & {})` は上手く動くことがわかります。
+
+余談ですが、空のオブジェクトリテラルの表現は次のようにできます。
+
+```ts
+type EmptyObject = Record<string, never>
+
+const a: EmptyObject = {} // ok
+const b: EmptyObject = { a: 1 } // error
+const c: EmptyObject = null // error
+```
+
+## String vs string
+
+TypeScript において `String` とは `String` オブジェクトを表します。一方、 `string` は文字列型を表すため両者は異なります。
+
+```ts
+const a = (str: string) => {}
+const b = (Str: String) => {}
+
+a('') // ok
+a(new String('')) // error
+
+b('') // ok
+b(new String('')) // ok
+```
+
+`string` 型を `String` オブジェクト型に割り当てできますが、その逆はできません。
+
+また、[TypeScript の公式リファレンス:Do's and Don'ts](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html#general-types) では次のように述べられています。
+
+> Don’t ever use the types `Number`, `String`, `Boolean`, `Symbol`, or `Object` These types refer to non-primitive boxed objects that are almost never used appropriately in JavaScript code.
+
+特別な理由が無い限り `string` を使わなければならないとのことです。
+
+一方、`{}` も ESLint では `ban-types` になっている位なので、どちらも基本的には使うべきでないということです。
+
+今回のようなハッキーな局面では、`String` オブジェクト型を使用したほうが、見た目的にはわかりやすい気がします。
