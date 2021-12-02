@@ -17,6 +17,7 @@ import gatsby from '@iconify-icons/logos/gatsby'
 import twitter from '@iconify-icons/logos/twitter'
 import firebase from '@iconify-icons/logos/firebase'
 import bitly from '@iconify/icons-simple-icons/bitly'
+import deno from '@iconify-icons/logos/deno'
 import cog from '@iconify-icons/mdi/cog'
 import { isUndefined } from '@/utils/is'
 
@@ -45,6 +46,7 @@ const ICON_MAP = {
   twitter,
   tailwindcss,
   gatsby,
+  deno,
   firebase,
   bitly,
   'service-worker': cog
