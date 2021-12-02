@@ -1,0 +1,487 @@
+---
+title: Create a Deno-first dual module with dnt
+description: dnt is a build tool that generates code for Node.js from Deno-based code. This article includes dnt usage and dual-module development for Deno and Node.js.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-12-02
+slug: /posts/dts-deno-module/
+tags:
+  - Deno
+  - package
+  - TypeScript
+---
+
+## Introduction
+
+[dnt](https://github.com/denoland/dnt) is the officially released module builder for Deno.
+It allows you to build modules for NPM from Deno-based code.
+
+This includes outputting type definition files, resolving import maps, etc.
+It is packed with features to boost Deno-first.
+
+I'll show you how to create a deno-first module using `dnt` and release it to deno.land/x and NPM.
+
+As a side note, the whole article is based on the word "module" instead of the broad term library or package.
+Please note that we do not consider the vocabulary to be strict.
+
+## The difference between Deno and Node.js
+
+By switching from Node.js to Deno, the codebase will see the following changes:
+
+- Imports always require an extension
+- URL schema import support
+- No support for type definition files output tools yet.
+
+### Imports always require an extension
+
+One of the guiding principles of Deno is to avoid implicit processing.
+We don't omit `.js` or specialize `index.js` as we could in Node.js.
+
+The presence of this extension is very tricky.
+The build tools in NPM generally don't do well with extensions.
+
+### URL schema import support
+
+Deno can import URL schemas.
+It's a like a browser, but
+This is a result of Deno's philosophy of browser compatibility.
+
+### No support for type definition files output tools yet
+
+If you are only using Deno in the first place, you do not need to output a type definition file.
+However, when shipping dual modules, as described below, it is necessary to output for NPM.
+
+Deno does not yet support a command to output the type definition file.
+You'll have to make do with the [Deno.emit](https://deno.land/manual@v1.11.1/typescript/runtime#denoemit) Runtime API.
+
+On the other hand, NPM `tsc` doesn't handle well if the import path has an extension.
+
+It is very hard to output type definition files from Deno based code.
+
+## The need for dual modules
+
+Dual modules are here defined as modules for the NPM registry and the deno.land/x registry.
+In this section we will explain why dual module development is necessary.
+
+### Deno and the Node.js module system
+
+Deno can make use of NPM assets. As mentioned above, Deno can import URL schemas.
+This means that basically any module in NPM can be used via a CDN, as long as the module is provided in the **ES modules format**.
+
+The most famous CDNs are [skypack](https://www.skypack.dev/) and [esm.sh](https://esm.sh/).
+
+These CDNs also provide type definitions, so you can develop with TypeScript.
+
+For example, `lodash` can be used as follows.
+By the way, lodash is provided by [module for Deno](https://deno.land/x/lodash), so you'd better use it, but just for refer.
+
+```ts:cli.ts
+import { first } from 'https://cdn.skypack.dev/lodash'
+
+first([1, 2, 3]) // 1
+```
+
+`deno run cli.ts`
+
+On the other hand, what about the modules in deno.land/x? Unfortunately, it is highly unlikely that Node.js will be able to use these.
+This is due to the fact that Node.js's module resolution algorithm is closely tied to `package.json`.
+
+As you can imagine, it's quite hard to rework the module system.
+
+Also, it may be possible to import using a loader with `--experimental-loader`, but it's not practical.
+For more information, see [Dynamic import with HTTP URLs in Node.js](https://dev.to/mxfellner/dynamic-import-with-http-urls-in-node-js-7og).
+
+In addition, even with URL schema support, Node.js does not support TypeScript.
+
+### Deno and dual modules
+
+The above means that NPM assets can be used with Deno, but deno.land/x assets cannot be used with Node.js.
+Not even in Deno's compat mode.
+
+Currently, we have to accept this unidirectionality.
+
+At this point, developers have two choices.
+
+- Develop on Node.js as before and release to NPM, or use Deno via CDN
+- Develop based on Deno and release to deno.land/x and NPM.
+
+In a world without dnt, building Deno-based code for Node.js would have been quite time-consuming.
+
+Personally, I think it's a good idea to use Deno as a base for new projects from now on.
+
+## Build with dnt
+
+Now, let's try to build it.
+
+The actual repository is [TomokiMiyauci/isx](https://github.com/TomokiMiyauci/isx/tree/beta), so please refer to it.
+
+I'll use a very small project as an example.
+
+```bash
+.
+├── build_npm.ts
+├── example.ts
+└── mod.ts
+```
+
+It doesn't matter, but the `isx` in the example is a collection of "is?" that I'm owning.
+
+```ts:example.ts
+import { isFunction } from "https://deno.land/x/isx/mod.ts"
+
+export function call(value: unknown) {
+  if(isFunction(value))  {
+    return value()
+  }
+  return value
+}
+```
+
+```ts:mod.ts
+export * from "./example.ts"
+```
+
+In this example we are doing two things:
+
+- Import using the URL schema
+- Import with extensions using file paths
+
+To build this for Node.js, we have the following script:
+
+```ts:build_npm.ts
+import { build } from "https://deno.land/x/dnt@0.7.4/mod.ts";
+
+await build({
+  entryPoints: ["./mod.ts"],
+  outDir: "./npm",
+  package: {
+    name: "<package-name>",
+    version: Deno.args[0]?.replace(/^v/, ""),
+    description: "<discription>",
+    license: "MIT",
+    repository: {
+      type: "git",
+      url: "git+https://github.com/username/package.git",
+    },
+    bugs: {
+      url: "https://github.com/username/package/issues",
+    },
+  },
+});
+```
+
+It is recommended that version information be passed from command arguments.
+
+```bash
+deno run -A build_npm.ts v0.0.1
+```
+
+This will output the build result for NPM under the directory specified by `outDir`.
+
+```bash
+npm
+├── esm
+├── node_modules
+├── package-lock.json
+├── package.json
+├── src
+├── test_runner.js
+├── types
+└── umd
+```
+
+By default, it outputs the ES Modules, CommonJS and type definition files, as well as type checking and testing.
+Also, the `package.json` looks like this:
+
+```json:npm/package.json
+{
+  "module": "./esm/main.js",
+  "main": "./umd/main.js",
+  "types": "./types/main.d.ts",
+  "version": "0.0.1",
+  "name": "<package-name>",
+  "description": "<discription>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/package.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/package/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/main.js",
+      "require": "./umd/main.js",
+      "types": "./types/main.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "node test_runner.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chalk": "4.1.2"
+  }
+}
+```
+
+The output will contain the meta-information you specified in the `package` field of the build script, as well as the entry points and dependencies.
+
+Now that it's ready to publish, you can publish it with `npm publish` or similar.
+
+### dnt and dependencies
+
+Let's see how the dependencies have been resolved. In the example, we were using an external module called `isx`.
+However, the `dependencies` field in `package.json` is empty.
+
+Dependencies are not always the same in NPM, so by default dnt are fetched and included in the artifacts.
+
+For example, under the `esm` directory:
+
+```bash
+npm
+└── esm
+  ├── example.js
+  ├── main.js
+  ├── package.json
+  └── deps
+    └── deno_land_x_isx_v1_0_0-beta_17
+```
+
+The dependencies have been placed under `deps`. Also, dependency references are rewritten to match the file structure.
+
+```js:example.js
+import { isFunction } from "./deps/deno_land_x_isx_v1_0_0-beta_17/mod.js";
+export function safeCall(value) {
+    if (isFunction(value)) {
+        return value();
+    }
+    return value;
+}
+```
+
+Note that the type definitions of dependencies are placed under `types`.
+
+```bash
+npm
+└── types
+    ├── deps
+    │   └── deno_land_x_isx_v1_0_0-beta_17
+    ├── example.d.ts
+    └── main.d.ts
+```
+
+It's fantastic.
+
+### Mapping dependencies
+
+You can also map dependencies.
+The previous module `isx` is hosted at deno.land/x, but we'll change it to `isxx`, which is hosted at NPM [^1].
+
+[^1]: Both are my own, namespaced differently.
+
+Change the build script.
+
+```ts:build_npm.ts{6-11}
+import { build } from "https://deno.land/x/dnt@0.7.4/mod.ts";
+
+await build({
+  entryPoints: ["./main.ts"],
+  outDir: "./npm",
+  mappings: {
+    "https://deno.land/x/isx/mod.ts": {
+      name: "isxx",
+      version: "1.0.0-beta.17 ",
+    },
+  },
+  ...
+});
+```
+
+Map the `mappings` field to the name of the NPM module.
+The build should now look something like this:
+
+```json:package.json
+{
+  ...
+  "dependencies": {
+    "isxx": "1.0.0-beta.17 "
+  },
+}
+```
+
+It was added to the `dependencies` field in `package.json` and no dependency fetch was performed.
+
+When used with Node.js, pre-bundling dependencies can easily lead to double bundling.
+
+Therefore, if the same module exists in NPM, it is better to use the mapping as much as possible.
+
+### Deno.shim injection
+
+The global context of Deno is different from that of Node.js.
+Therefore Deno specific programs will not work in Node.js.
+
+dnt provides a solution for them as well.
+
+For example, consider a program that uses `fetch`.
+
+```ts:example.ts
+async function fetchHello() {
+  const req = await fetch("https://miyauchi.dev/")
+  const html = await req.text()
+
+  return html
+}
+```
+
+Deno supports `fetch`, but Node.js does not.
+
+For this code, dnt will inject [Deno shim](https://github.com/denoland/deno.ns) by default.
+
+Building this code will result in something like this:
+
+```js:exmaple.js{1,3}
+import * as denoShim from "deno.ns";
+export async function fetchHello() {
+    const req = await denoShim.fetch("https://miyauchi.dev/");
+    const html = await req.text();
+    return html;
+}
+```
+
+```json:package.json
+{
+  ...
+  "dependencies": {
+    "deno.ns": "0.7.3"
+  },
+}
+```
+
+The `deno.ns` module makes it possible to run Node.js as well.
+
+You can also disable the injection of deno shim by placing a `// deno-shim-ignore` comment above the code.
+
+```ts:example.ts{2}
+async function fetchHello() {
+  // deno-shim-ignore
+  const req = await fetch("https://miyauchi.dev/")
+  const html = await req.text()
+
+  return html
+}
+```
+
+In addition to this, dnt also supports multiple entry points and the generation of `bin` scripts.
+
+## Release flow for dual modules
+
+This concludes my introduction to dnt, but we will now discuss some of the practical problems.
+
+The first problem is probably the release flow.
+We have to release to two registries and we don't want to release manually.
+
+Deno originally recommended using GitHub's webhook to release third party modules. Please refer to [Publish a module](https://deno.land/x) for more information.
+
+You can configure the webhook to be triggered by the generation of a GitHub release tag.
+
+It's natural to do the same for the release to NPM.
+
+GitHub Actions would look something like this:
+
+```yaml
+name: relase-node
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        deno: [1.16.0]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno }}
+
+      - name: Get tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: version
+        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: npm build
+        run: deno run -A build_npm.ts ${{steps.version.outputs.TAG_VERSION}}
+
+      - uses: apexskier/github-semver-parse@v1
+        id: semver
+        with:
+          version: ${{steps.version.outputs.TAG_VERSION}}
+
+      - name: Set tag
+        id: tag
+        run: |
+          DIRTY_PRELELEASE=${{steps.semver.outputs.prerelease}}
+          PRELEREASE=${DIRTY_PRELELEASE%.*}
+
+          [ "$PRELEREASE" = "" ] && TAG="latest" || TAG=$PRELEREASE
+
+          echo ::set-output name=RELEASE_TAG::$TAG
+
+      - uses: JS-DevTools/npm-publish@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./npm/package.json
+          tag: ${{ steps.tag.outputs.RELEASE_TAG }}
+```
+
+Parsing the release tag is a bit more complicated, but what we are doing is simple.
+For example, let's say a v1.1.0 tag is issued.
+
+We'll extract `v1.1.0` from the context of GitHub Actions and make it the version in `package.json`.
+
+In the previous example, you can replace the version string with `Deno.args[0]? .replace(/^v/, "")` to convert the version string [^2].
+
+[^2]: You can of course convert it on GitHub Actions, though.
+
+We then parse the semver to derive the NPM release tag.
+Normally, you'd just add the `latest` tag, but if it's a pre-release, you'll need to add a tag for it.
+
+This is a bit of a pain, but the GitHub release tag generation allows you to release to two registries.
+
+For reference, in addition to the above, I use [semantic-release](https://github.com/semantic-release/semantic-release) and [conventional commits](https://www.conventionalcommits.org/ja/v1.0.0/) to automatically generate GitHub release tags.
+For more information, see [TomokiMiyauci/isx](https://github.com/TomokiMiyauci/isx).
+
+## Deno and testing
+
+Finally, a promotion.
+
+When you move your codebase to Deno, you will face the problem of testing.
+Deno provides by default a test runner and a standard [assertion module](https://deno.land/std@0.116.0/testing).
+
+This is good enough for a certain amount of testing.
+However, it is not as functional as `jest`, the de facto standard for Node.js.
+
+This is why we are developing a jest like testing framework [unitest](https://github.com/TomokiMiyauci/unitest).
+
+It uses the same `expect` syntax as jest, but it is Deno-first and very conscious of universality and bundle size.
+It will also support a frontend testing environment, which is currently one of the biggest barriers to adopting Deno.
+
+We invite you to try it out.
+
+Also, when creating a dual module, there is the hassle of checking if the namespace is free in both registries.
+We provide a service called [registerable](https://registerable.vercel.app/) which solves this problem.
+
+It allows you to query each module registry to see if namespaces are available.
+
+We hope you find this service useful as well.

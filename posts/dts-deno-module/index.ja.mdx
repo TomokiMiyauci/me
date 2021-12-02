@@ -1,0 +1,490 @@
+---
+title: dntでDeno-firstなデュアルモジュールを作る
+description: dnt は Deno ベースのコードから Node.js 用のコードを生成するビルドツールです。dnt の使い方と、Deno および Node.js のモジュールを開発するデュアルモジュール開発について紹介します。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2021-12-02
+slug: /posts/dts-deno-module/
+tags:
+  - Deno
+  - package
+  - TypeScript
+---
+
+## はじめに
+
+[dnt](https://github.com/denoland/dnt) は Deno で公式にリリースされたモジュールビルダーです。
+Deno ベースのコードから、NPM 用のモジュールをビルドできます。
+
+これには型定義ファイルの出力や、インポートマップの解決など、
+Deno-first を後押しする機能が詰まっています。
+
+今回は `dnt` を使って Deno-first なモジュールを作成し、
+deno.land/x と NPM へのリリースを行う方法を紹介します。
+
+余談ですが、記事全体として、広義のライブラリやパッケージという言葉を
+モジュールという単語で統一しています。
+語彙の厳密性については考慮していませんのでご了承ください。
+
+## Deno と Node.js の違い
+
+Node.js から Deno に変えることで、コードベースに現れる変化としては次のようになります。
+
+- インポートに必ず拡張子が必要
+- URL スキーマインポートのサポート
+- 型定義ファイルの出力ツールがまだサポートされていない
+
+### インポートに必ず拡張子が必要
+
+Deno は暗黙の処理を行わないことを一つの指針としています。
+Node.js ではできた `.js` の省略や `index.js` の特別化はしません。
+
+この拡張子の有無が非常に厄介です。
+NPM にあるビルドツールは、概ね拡張子があると上手く処理できません。
+
+### URL スキーマインポートのサポート
+
+Deno は URL スキーマのインポートが出来ます。
+これはさながらブラウザの様ですが、
+ブラウザとの互換性を重視している Deno の哲学が反映された結果とも言えるでしょう。
+
+### 型定義ファイルの出力ツールがまだサポートされていない
+
+そもそも Deno だけであれば、型定義ファイルの出力は不要ですが、
+後述するデュアルモジュールの出荷する際、NPM 用に出力する必要があります。
+
+Deno ではまだ、型定義ファイルの出力のコマンドをサポートしていません。
+[Deno.emit](https://deno.land/manual@v1.11.1/typescript/runtime#denoemit) Runtime API で、頑張る以外はないはずです。
+
+一方、NPM の `tsc` はインポートパスに拡張子があると上手く処理できません。
+
+Deno ベースのコードから型定義ファイルを出力するには、けっこう大変です。
+
+## デュアルモジュールの必要性
+
+デュアルモジュールとはここでは NPM registry と deno.land/x registry に対するモジュールのことを言います。
+このセクションでは、なぜデュアルモジュール開発が必要なのか説明します。
+
+### Deno と Node.js のモジュールシステム
+
+Deno は NPM の資産を利用できます。前述の通り Deno は URL スキーマのインポートができます。
+そのため、**ES modules 形式でモジュールが提供されていれば**、基本的には NPM にあるモジュールは CDN 経由で利用できます。
+
+CDN として有名なのは [skypack](https://www.skypack.dev/) や [esm.sh](https://esm.sh/) ですね。
+
+また、これらの CDN は型定義の提供もしてくれるため、TypeScript でも問題なく開発できます。
+
+例えば `lodash` は次のように使えます。
+ちなみに lodash は [Deno 用のモジュール](https://deno.land/x/lodash) が提供されているので、そちらを使ったほうがいいですが参考までに。
+
+```ts:cli.ts
+import { first } from 'https://cdn.skypack.dev/lodash'
+
+first([1, 2, 3]) // 1
+```
+
+`deno run cli.ts`
+
+一方、deno.land/x にあるモジュールはどうでしょう。残念ながらこれらを Node.js が使える可能性はかなり低いです。
+これは、Node.js のモジュール解決アルゴリズムが、`package.json` と密接にあることが起因しています。
+
+モジュールシステムを作り変えるのは、かなり大変なことは想像に易いでしょう。
+
+また、`--experimental-loader` でローダーを使ったインポートが出来なくはないようですが、現実的ではないでしょう。
+詳しくは [Dynamic import with HTTP URLs in Node.js](https://dev.to/mxfellner/dynamic-import-with-http-urls-in-node-js-7og)　が参考になるかと思います。
+
+加えて、URL スキーマをサポートしたとしても、Node.js は TypeScript をサポートしていません。
+
+### Deno とデュアルモジュール
+
+上記のことから、NPM の資産は Deno で使えるが、deno.land/x の資産は Node.js で使えません。
+Deno の compat モードでも無理です。
+
+現状はこの一方向性を受け入れなければなりません。
+
+この時点で開発者には２つの選択肢があります。
+
+- 従前どおり Node.js ベースで開発し、NPM にリリースする。Deno での利用は CDN 経由
+- Deno ベースで開発し、deno.land/x と NPM へリリースする。
+
+dnt がない世界では、Deno ベースのコードを Node.js 用にビルドするのにかなり手間がかかりました。
+しかし、ビルドの問題が解決されれば、あとはリリースだけなので、そこまで負担にはなりません。
+
+個人的には、今後新しいプロジェクトは、Deno ベースで運用していくのがいいのではないかと思います。
+
+## dnt でビルドする
+
+さて、前置き長くなりましたが、実際にビルドしてみましょう。
+
+なお、実際に運用しているレポジトリは [TomokiMiyauci/isx](https://github.com/TomokiMiyauci/isx/tree/beta) にあるので、適宜参考にしてください。
+
+とても小さなプロジェクトを例にやってみます。
+
+```bash
+.
+├── build_npm.ts
+├── example.ts
+└── mod.ts
+```
+
+どうでもいいですが、 例中の `isx` というのは私が作っている is? というものを集めたコレクションです。
+
+```ts:example.ts
+import { isFunction } from "https://deno.land/x/isx/mod.ts"
+
+export function call(value: unknown) {
+  if(isFunction(value))  {
+    return value()
+  }
+  return value
+}
+```
+
+```ts:mod.ts
+export * from "./example.ts"
+```
+
+この例では次の２つのことを行っています。
+
+- URL スキーマを利用したインポート
+- ファイルパスを利用した拡張子付きのインポート
+
+これを Node.js 用にビルドするために、次のスクリプトを用意します。
+
+```ts:build_npm.ts
+import { build } from "https://deno.land/x/dnt@0.7.4/mod.ts";
+
+await build({
+  entryPoints: ["./mod.ts"],
+  outDir: "./npm",
+  package: {
+    name: "<package-name>",
+    version: Deno.args[0]?.replace(/^v/, ""),
+    description: "<discription>",
+    license: "MIT",
+    repository: {
+      type: "git",
+      url: "git+https://github.com/username/package.git",
+    },
+    bugs: {
+      url: "https://github.com/username/package/issues",
+    },
+  },
+});
+```
+
+バージョン情報はコマンド引数から渡すことが推奨されています。
+
+```bash
+deno run -A build_npm.ts v0.0.1
+```
+
+これを実行すると、`outDir` で指定したディレクトリ下に NPM 用のビルド結果が出力されます。
+
+```bash
+npm
+├── esm
+├── node_modules
+├── package-lock.json
+├── package.json
+├── src
+├── test_runner.js
+├── types
+└── umd
+```
+
+デフォルトでは、 ES Modules, CommonJS, 型宣言ファイルの出力と、型チェックおよびテストが行われます。
+また、`package.json` は次のようになっています。
+
+```json:npm/package.json
+{
+  "module": "./esm/main.js",
+  "main": "./umd/main.js",
+  "types": "./types/main.d.ts",
+  "version": "0.0.1",
+  "name": "<package-name>",
+  "description": "<discription>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/package.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/package/issues"
+  },
+  "exports": {
+    ".": {
+      "import": "./esm/main.js",
+      "require": "./umd/main.js",
+      "types": "./types/main.d.ts"
+    }
+  },
+  "scripts": {
+    "test": "node test_runner.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chalk": "4.1.2"
+  }
+}
+```
+
+ビルドスクリプトの `package` フィールドに指定したメタ情報および、エントリーポイントや依存関係が追加され出力されます。
+
+すでに公開できる状態になっているので、あとは `npm publish` などで公開するだけです。
+
+### dnt と依存関係
+
+依存関係がどのように解決されたか見てみます。例では `isx` という外部モジュールを利用していました。
+しかし、`package.json` の `dependencies` フィールドは空です。
+
+依存関係は NPM に同じものがあるとは限らないため、デフォルトでは fetch した上で、成果物に含まれます。
+
+例えば `esm` ディレクトリ配下は次のようになります。
+
+```bash
+npm
+└── esm
+  ├── example.js
+  ├── main.js
+  ├── package.json
+  └── deps
+    └── deno_land_x_isx_v1_0_0-beta_17
+```
+
+`deps` 配下に依存関係が配置されました。また、依存関係の参照はファイルストラクチャーに合わせて書き換えられます。
+
+```js:example.js
+import { isFunction } from "./deps/deno_land_x_isx_v1_0_0-beta_17/mod.js";
+export function safeCall(value) {
+    if (isFunction(value)) {
+        return value();
+    }
+    return value;
+}
+```
+
+ちなみに依存関係の型定義は `types` 配下に配置されます。
+
+```bash
+npm
+└── types
+    ├── deps
+    │   └── deno_land_x_isx_v1_0_0-beta_17
+    ├── example.d.ts
+    └── main.d.ts
+```
+
+素晴らしいですね。
+
+### 依存関係のマッピング
+
+依存関係をマッピングすることも出来ます。
+先程の `isx` というモジュールは deno.land/x にホスティングされていますが、 `isxx` という  NPM にあるものに変えてみます[^1]。
+
+[^1]: どちらも私が作ったものです。名前空間が取れず違う名前になりました。
+
+ビルドスクリプトを変更します。
+
+```ts:build_npm.ts{6-11}
+import { build } from "https://deno.land/x/dnt@0.7.4/mod.ts";
+
+await build({
+  entryPoints: ["./main.ts"],
+  outDir: "./npm",
+  mappings: {
+    "https://deno.land/x/isx/mod.ts": {
+      name: "isxx",
+      version: "1.0.0-beta.17 ",
+    },
+  },
+  ...
+});
+```
+
+`mappings` フィールドに NPM のモジュール名をマッピングします。
+これでビルドすると次のようになります。
+
+```json:package.json
+{
+  ...
+  "dependencies": {
+    "isxx": "1.0.0-beta.17 "
+  },
+}
+```
+
+`package.json` の `dependencies` フィールドに加わり、依存関係の fetch は行われませんでした。
+
+Node.js で利用された際、依存関係を事前にバンドルしてしまうと、２重バンドルが起こりやすくなります。
+
+そのため、NPM に同じモジュールがあるなら、できるだけマッピングを利用したほうが良いと思います。
+
+### Deno.shim の注入
+
+Deno のグローバルコンテキストと Node.js のそれは異なります。
+そのため、Deno 固有のプログラムは Node.js では動きません。
+
+dnt はそれらに対しても解決策を提供しています。
+
+例えば `fetch` を使うプログラムを考えます。
+
+```ts:example.ts
+async function fetchHello() {
+  const req = await fetch("https://miyauchi.dev/")
+  const html = await req.text()
+
+  return html
+}
+```
+
+Deno は `fetch` をサポートしていますが、Node.js ではサポートしていません。
+
+このコードに対し dnt は デフォルトで [Deno shim](https://github.com/denoland/deno.ns) を注入します。
+
+このコードをビルドすると次のような結果になります。
+
+```js:exmaple.js{1,3}
+import * as denoShim from "deno.ns";
+export async function fetchHello() {
+    const req = await denoShim.fetch("https://miyauchi.dev/");
+    const html = await req.text();
+    return html;
+}
+```
+
+```json:package.json
+{
+  ...
+  "dependencies": {
+    "deno.ns": "0.7.3"
+  },
+}
+```
+
+`deno.ns` モジュールにより、Node.js でも実行できるようになります。
+
+また、Deno shim の注入を無効にするには、`// deno-shim-ignore` コメントを該当コードの上に付けます。
+
+```ts:example.ts{2}
+async function fetchHello() {
+  // deno-shim-ignore
+  const req = await fetch("https://miyauchi.dev/")
+  const html = await req.text()
+
+  return html
+}
+```
+
+この他にも、マルチエントリーポイントや、 `bin` スクリプトの生成もサポートしています。
+
+## デュアルモジュールのリリースフロー
+
+以上で dnt の紹介は終わりですが、ここからは実運用上問題になる点について触れたいと思います。
+
+最初に悩むのは恐らくリリースフローです。
+2 つのレジストリにリリースしなければならないため、手動でのリリースは避けたいです。
+
+Deno は元々サードパーティモジュールのリリースを GitHub の webhook を使うように推奨しています。詳しくは [Publish a module](https://deno.land/x) を参考にしてください。
+
+GitHub のリリースタグの生成をトリガーに webhook を呼ぶように構成します。
+
+Deno へのリリースはリリースタグの生成なので、NPM へのリリースも同じようにするのが自然でしょう。
+
+GitHub Actions だと次のようになるかと思います。
+
+```yaml
+name: relase-node
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        deno: [1.16.0]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno }}
+
+      - name: Get tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: version
+        run: echo ::set-output name=TAG_VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: npm build
+        run: deno run -A build_npm.ts ${{steps.version.outputs.TAG_VERSION}}
+
+      - uses: apexskier/github-semver-parse@v1
+        id: semver
+        with:
+          version: ${{steps.version.outputs.TAG_VERSION}}
+
+      - name: Set tag
+        id: tag
+        run: |
+          DIRTY_PRELELEASE=${{steps.semver.outputs.prerelease}}
+          PRELEREASE=${DIRTY_PRELELEASE%.*}
+
+          [ "$PRELEREASE" = "" ] && TAG="latest" || TAG=$PRELEREASE
+
+          echo ::set-output name=RELEASE_TAG::$TAG
+
+      - uses: JS-DevTools/npm-publish@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./npm/package.json
+          tag: ${{ steps.tag.outputs.RELEASE_TAG }}
+```
+
+リリースタグのパースが若干複雑ですが、やっていることはシンプルです。
+例えば v1.1.0 タグが発行されたとします。
+
+GitHub Actions のコンテキストから `v1.1.0` を抜き出し、`package.json` のバージョンにします。
+
+先程の例で、バージョン文字列を `Deno.args[0]?.replace(/^v/, "")` で変換していたのはこのためです[^2]。
+
+[^2]: GitHub Actions 上で変換してももちろん OK ですが。
+
+その後、semver のパースをし、NPM のリリースタグを導出します。
+通常は `latest` タグを付ければいいですが、プレリリースの場合はそれ用のタグを付けてあげます。
+
+というように若干面倒ですが、GitHub のリリースタグの生成で 2 つのレジストリへリリースが出来ます。
+
+参考までに、上に加えてわたしは [semantic-release](https://github.com/semantic-release/semantic-release) を使って [conventional commits](https://www.conventionalcommits.org/ja/v1.0.0/) で GitHub リリースタグ の自動生成も行っています。
+詳しくは [TomokiMiyauci/isx](https://github.com/TomokiMiyauci/isx) を参照してください。
+
+## Deno とテスト
+
+最後は宣伝です。
+
+コードベースを Deno に移したときに直面するのがテストの問題です。
+Deno は標準でテストランナーおよび、標準モジュールとして [アサーションモジュール](https://deno.land/std@0.116.0/testing)を提供しています。
+
+これである程度の規模のテストは十分機能します。
+しかし、Node.js のデファクトスタンダードである `jest` には、機能的には劣ります。
+
+そこで jest like なテストフレームワーク [unitest](https://github.com/TomokiMiyauci/unitest) を開発しています。
+
+jest と同じ `expect` 構文を採用しながら、Deno-first でユニバーサル性とバンドルサイズをかなり意識しています。
+現状 Deno を採用する上での最大の障壁の一つである、フロントエンドのテスト環境もサポートする予定です。
+
+ぜひお試しください。
+
+また、デュアルモジュールを作るとき、両方のレジストリで名前空間が空いているのか調べる手間があります。
+これを解決する [registerable](https://registerable.vercel.app/) というサービスを提供しています。
+
+各モジュールレジストリに名前空間が使用可能かどうか問い合わせることが出来ます。
+
+こちらも合わせてご利用いただけると嬉しいです。
