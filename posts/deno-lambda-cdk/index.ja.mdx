@@ -1,0 +1,596 @@
+---
+title: AWS LambdaのカスタムランタイムでDenoを動かす
+description: AWS Lambda を Deno ランタイムで動かす方法を紹介します。デプロイには AWS CDK を用い、マルチランタイムなプロジェクト構成で解説しています。また、コールドスタートを抑制するため、JavaScript へバンドルする方法を紹介しています。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2022-01-11
+slug: /posts/deno-lambda-cdk/
+tags:
+  - deno
+  - lambda
+  - cdk
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    deno:
+      - name: lambda
+        version: 1.17.2
+      - name: ssm
+        version: 0.1.4
+    node:
+      - name: aws-cdk
+        version: 2.4.0
+      - name: '@aws-cdk/aws-iam'
+        version: 1.138.2
+      - name: '@aws-cdk/aws-lambda'
+        version: 1.138.2
+      - name: '@aws-cdk/aws-sam'
+        version: 1.138.2
+      - name: '@aws-cdk/core'
+        version: 1.138.2
+      - name: 'source-map-support'
+        version: 0.5.16
+---
+
+## はじめに
+
+AWS Lambda のカスタムランタイムを利用し、Deno で TypeScript を実行する方法を紹介します。
+また、Lambda 関数のデプロイには、実践的な例として AWS CDK を使用します。
+
+AWS CloudFormation の生成ツールとしては、他にも serverless framework や SAM などのツールがありますが、今回は AWS CDK を利用します。
+ただし、この記事を執筆時点で、これらのツールを Deno と共に利用できません。
+
+例えば、[aws-cdk](https://github.com/aws/aws-cdk) では CommonJS モジュール形式のみ提供されているため、Deno runtime で実行できません。詳しくは [Information for Requesting Deno Support #17386](https://github.com/aws/aws-cdk/issues/17386) を確認してください。
+
+そのため、Lambda 関数は Deno スタイルのコードベースを、AWS スタックは Node.js スタイルのコードベースを採用する方式を紹介します。
+将来的には完全 Deno 化はできると思いますが、それまでのつなぎとして参考になれば幸いです。
+
+また、実際に運用しているプロジェクトとしては [bit-history](https://github.com/coinset/bit-history) を参考にしてください。
+
+## プロジェクト構成
+
+Deno と Node.js の混合プロジェクトの場合、お互いのコードは利用できない場合が多いです。
+Deno のモジュール解決アルゴリズムは Node.js とは異なるためです。よって、互いのコードは独立している必要があります。
+
+幸い、Lambda 関数と AWS スタックは完全に独立した記述をするため、この点が問題になることはありません。
+
+この前提の元、次のディレクトリ構成をおすすめします。
+
+```bash
+.
+├── api
+│   ├── .vscode
+│   └── hello.ts
+└── app
+    ├── bin
+    │   └── app.ts
+    ├── cdk.json
+    ├── lib
+    │   └── app-stack.ts
+    ├── node_modules
+    ├── package.json
+    ├── pnpm-lock.yaml
+    └── tsconfig.json
+```
+
+`api` ディレクトリ以下に Lambda 関数を配置します。`api` という命名は vercel などでお馴染みですね。
+`api` ディレクトリには `.vscode` も配置しています。ここでは Deno 用の VSCode 拡張を有効にしています。
+
+```json:api/.vscode/settings.json
+{
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "deno.enable": true,
+}
+```
+
+Deno と Node.js の混合プロジェクトの場合、Deno 用の VSCode 拡張のスコープに注意が必要です。
+
+また、`app` ディレクトリ以下に、AWS スタックを配置します。
+`cdk init app --language=typescript` などでテンプレートを使っても良いです。
+
+今回は TypeScript 用のテンプレートを利用した前提で進めます。
+
+スタックのエントリーポイントは次のようになります。
+
+```ts:app/bin/app.ts
+#!/usr/bin/env node
+import "source-map-support/register";
+import { AppStack } from "../lib/app-stack";
+import { App } from "@aws-cdk/core";
+
+const app = new App();
+new AppStack(app, "TestAppStack", {});
+```
+
+## Deno と Lambda 関数
+
+Lambda 関数定義に便利な型定義があるので、それを利用します。
+ひとまずデプロイを優先して、適当な関数を定義します。
+
+```ts:api/hello.ts
+import type { APIGatewayProxyResultV2 } from 'https://deno.land/x/lambda@1.17.2/mod.ts'
+
+export function handler(): APIGatewayProxyResultV2 {
+  console.log(Deno.version)
+  return {
+    statusCode: 200
+  }
+}
+```
+
+## カスタムランタイムと AWS CDK
+
+一方、AWS スタックは次のように定義します。
+`@aws-cdk/aws-sam` や `@aws-cdk/aws-lambda` などの外部モジュールを Node.js 環境で利用するため、適宜インストールしてください。
+
+```ts:app/lib/app-stack.ts
+import { Stack, App, StackProps } from '@aws-cdk/core'
+import { CfnApplication } from '@aws-cdk/aws-sam'
+import { Code, Function, LayerVersion, Runtime } from '@aws-cdk/aws-lambda'
+import { resolve } from 'path'
+
+const APPLICATION_ID =
+  'arn:aws:serverlessrepo:us-east-1:390065572566:applications/deno'
+const DENO_VERSION = '1.17.2'
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props)
+
+    const denoRuntime = new CfnApplication(this, `DenoRuntime`, {
+      location: {
+        applicationId: APPLICATION_ID,
+        semanticVersion: DENO_VERSION
+      }
+    })
+
+    const layer = LayerVersion.fromLayerVersionArn(
+      this,
+      `denoRuntimeLayer`,
+      denoRuntime.getAtt('Outputs.LayerArn').toString()
+    )
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+      handler: 'hello.handler',
+      layers: [layer]
+    })
+  }
+}
+```
+
+Deno ランタイムは [deno-lambda](https://github.com/hayd/deno-lambda) を利用します。[SAR application](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:390065572566:applications~deno) として利用可能なため、Lambda layer で使っています。
+
+以上により、最小構成の Deno ランタイム環境が作成できます。また、`semanticVersion` を変更することで、Deno のバージョンを変更できます。
+
+最後に `cdk deploy` でデプロイします。
+
+この Lambda 関数を実行すると次のような出力を得ます。
+
+```bash
+warn: unable to import '.deno_dir/' as DENO_DIR
+Download https://deno.land/x/lambda@1.17.2/mod.ts
+Download https://deno.land/x/lambda@1.17.2/types.d.ts
+
+START RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd Version: $LATEST
+INFO	RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd
+{ deno: "1.17.2", v8: "9.7.106.15", typescript: "4.5.2" }
+END RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd
+```
+
+警告が出ている部分については後述します。
+とにかく、無事 Deno ランタイムで実行できました。
+
+## 高度なロギング
+
+先程の例では `console.log` を利用してログの出力を行いました。
+deno-lambda ランタイムは、ログのテンプレート機能を提供しているので、ログ出力をカスタマイズできます。
+
+`DENO_PREFIX` 環境変数を設定すると、それをログのプリフィックスとして出力可能です。
+せっかくなので AWS CDK を利用して、環境変数を設定してみましょう。
+
+Lambda スタックを変更します。
+
+```ts:app/lib/app-stack.ts{6,7}
+new Function(this, `hello-lambda`, {
+  runtime: Runtime.PROVIDED_AL2,
+  code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+  handler: 'hello.handler',
+  environment: {
+    DENO_PREFIX:
+      "${level}\\t${requestId}\\t${(new Error).stack.split('\\n')[4]}\\r"
+  },
+  ...
+})
+```
+
+上の例では、各ログの前にログレベル、リクエスト ID、行番号が付けられます。
+スタックトレースに含まれる行番号をログに含めることで、デバックが少ししやすくなります。
+
+ちなみに、AWS CDK から設定する場合は、`\\n` のようにエスケープが必要なことに注意が必要です。
+
+これをデプロイし、実行すると次のような出力を得ます。
+
+```bash
+START RequestId: 93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e Version: $LATEST
+INFO	93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e	    at handler (file:///var/task/hello.ts:5:11)
+{ deno: "1.17.2", v8: "9.7.106.15", typescript: "4.5.2" }
+END RequestId: 93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e
+```
+
+## Deno とキャッシング
+
+先程の Lambda 実行時のログを再掲します。
+
+```bash
+warn: unable to import '.deno_dir/' as DENO_DIR
+Download https://deno.land/x/lambda@1.17.2/mod.ts
+Download https://deno.land/x/lambda@1.17.2/types.d.ts
+```
+
+これは実行時に外部モジュールのフェッチが行われたことを表しています。
+また、Deno は実行時に TypeScript のトランスパイルも行っています。
+
+Deno は TypeScript のランタイムですが、TypeScript をそのまま実行しているわけではありません。
+JavaScript の実行には V8 エンジンを利用しているため、JavaScript でなければ実行できません。
+
+内部的には [swc](https://github.com/swc-project/swc) で TypeScript を JavaScript にトランスパイルした上で、V8 で実行しています。
+通常、Deno は実行時にこれらの処理を行い、外部モジュールやトランスパイルした JavaScript をキャッシングします。
+
+このことを確かめるために、次のコードを実行してみます。
+
+```ts:ssm.ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+
+const ssm = new SSM({
+  accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+  secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
+  sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
+  region: Deno.env.get("AWS_REGION") ?? "ap-northeast-1",
+});
+
+const parameter = await ssm.getParameter({
+  "Name": "test",
+  WithDecryption: true,
+}).catch(() => {
+  console.error(`parameter is not exists: test`);
+});
+
+console.log(parameter)
+```
+
+外部モジュールとして AWS の SSM クライアントを使います。パラメータストアから値をフェッチしています。
+Lambda で実行する場合は、環境変数が自動的に設定されますが、それ以外の場合は適宜設定してください。
+
+次のコマンドで実行できます。
+
+```bash
+deno run -A ssm.ts
+```
+
+なお、パラメータストアには AWS コンソールから設定するか、次のコマンドを利用してください。
+
+```bash
+aws ssm put-parameter \
+    --name "test" \
+    --value "test-value" \
+    --type "SecureString" \
+```
+
+さて、無事パラメータが取得できたと思います。
+
+続いて、`DENO_DIR` を環境変数に設定します。適当なディレクトリを指定して実行します。
+
+```bash
+DENO_DIR=deno-dir deno run -A ssm.ts
+```
+
+実行すると、`deno-dir` 直下に２つのディレクトリが生成されます。
+
+```bash
+deno-dir
+├── deps
+└── gen
+```
+
+これらについて少しだけ見てみましょう。
+
+### /deps
+
+`$DENO_DIR/deps` 配下には、リモート URL インポートを介してフェッチされたファイルが保存されます。
+URL スキームと、ドメイン名に基づいて保存されるロケーションが決定されます。
+
+```ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+```
+
+例えば上の URL パスでは `https` URL スキームと `deno.land` ドメイン名がサブディレクトリとして生成されます。
+
+```bash
+$DENO_DIR/deps/https/deno.land/[hash]
+```
+
+なお実際のファイル名はハッシュ値に置き換わります。
+
+### /gen
+
+`$DENO_DIR/gen` 配下には、TypeScript ファイルからトランスパイルされた JavaScript ファイルが保存されます。
+ローカルファイルの場合、`file` ディレクトリ以下に、絶対パスに基づいて保存されます。
+
+```ts:/path/to/ssm.ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+```
+
+上のファイルを実行すると `file` ディレクトリの、 `path`、`to` ディレクトリ配下に保存されます。
+
+```bash
+$DENO_DIR/gen/file/path/to/ssm.js
+```
+
+これは、**キャッシング実行時**の、絶対パスのディレクトリストラクチャーに基づいていることに注意が必要です。
+
+ちなみに Deno にはキャッシングのみを行うコマンドもあります。
+
+```bash
+DENO_DIR=deno-dir deno cache　/path/to/ssm.ts
+```
+
+## Lambda とキャッシング
+
+これらのキャッシュは、ソースファイルが変更されていない限り利用されます。これにより、不要な再コンパイルを防ぐことが出来ます。
+
+これらの処理が Lambda の実行時に行われると、実行時間に影響が出ます。
+Lambda はコンテキストをよく再利用するため、毎回起こるわけではないものの、
+外部モジュールのサイズによってはかなりのコールドスタートとなります。
+
+これを解決する方法を紹介します。
+
+基本的な考え方は、デプロイ時など、実行時とは異なるタイミングでキャッシングを行うことで回避します。
+いくつかの方法が考えられます。
+
+1. 事前に JavaScript ファイルにバンドルする
+2. キャッシュファイルを事前に生成して、それも含めてデプロイする。`DENO_DIR` を変更してキャッシュディレクトリを参照するようにする。
+3. 実行可能形式のファイルを生成し、実行する。
+
+この記事では 1 のみを紹介します。
+
+### 事前に JavaScript ファイルにバンドルする
+
+これは、Node.js を利用したときにもよくあった戦略です。外部モジュールも含めて一つの JavaScript ファイルにバンドルします。
+キャッシュを用意するのではなく、キャッシュが不要な JavaScript ファイルにバンドルしてしまうことで、余計なことを考えなくて済みます。
+
+この方法では、デプロイフローはシンプルなまま、パフォーマンスが向上します。
+
+欠点は、JavaScript ファイルをデプロイすることです。
+AWS コンソールから見えるコードは、実際のソースコードとは異なります。
+
+Deno を利用する利点の一つは、TypeScript をそのまま実行できるということでした。
+この利点を捨てることになるため、実際の運用と相談の上、採用するかどうか決めてください。
+
+私の場合は、AWS コンソールからはデバック程度の作業しかしないため、現状ではこの戦略を採用しています。
+
+さて、例示のために、外部モジュールを利用したコードを使用します。
+先程から登場している AWS SSM クライアントを Lambda で使い、パラメータを取得する例を考えます。
+
+Lambda 関数は次のようになります。
+
+```ts:api/hello.ts{11}
+import { SSM } from "https://deno.land/x/ssm@0.1.4/mod.ts";
+import type { APIGatewayProxyResultV2 } from "https://deno.land/x/lambda@1.17.2/mod.ts";
+
+const ssm = new SSM({
+  accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+  secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
+  sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
+  region: Deno.env.get("AWS_REGION") ?? "ap-northeast-1",
+});
+
+const parameter = await ssm.getParameter({
+  "Name": "test",
+  WithDecryption: true,
+}).catch(() => {
+  console.error(`parameter is not exists: test`);
+});
+
+export function handler(): APIGatewayProxyResultV2 {
+  console.log(parameter)
+  return {
+    statusCode: 200,
+  };
+}
+```
+
+パラメータの取得を Lambda のエクスポート関数の外側で行っています。
+これにより、Lambda の実行毎ではなく、コンテナの初期化時のみパラメータの取得を行います。
+
+一方、SSM を利用する関係で、IAM ロールを付与する必要があります。
+AWS スタックに IAM ロールを追加し、Lambda 関数にアタッチします。
+
+```ts:app/lib/app-stack.ts{22}
+import { ManagedPolicy, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
+import { Code, Function, LayerVersion, Runtime } from "@aws-cdk/aws-lambda";
+
+export class AwsCdkStack extends Stack {
+  constructor(scope: App, id: string, props: CustomProps) {
+    ...
+    const iamRoleForLambda = new Role(this, `IAMRoleForLambda`, {
+      roleName: `ssm-secure-string-role`,
+      assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName(
+          'service-role/AWSLambdaBasicExecutionRole'
+        ),
+        ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMReadOnlyAccess')
+      ]
+    })
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+      handler: 'hello.handler',
+      role: iamRoleForLambda,
+      ...
+    })
+  }
+}
+```
+
+さて、デプロイされたこの関数を実行するとどのようになるでしょう。
+実行時に外部モジュールのフェッチが行われていると思います。
+
+再び関数を実行すると、初回よりも実行速度が早いことが実感できるかと思います。
+
+### コンテナで事前バンドルする
+
+さて、初回にコールドスタートが起きないように変更します。
+AWS CDK の Lambda スタックにはバンドルフックがあるのでそれを利用します。
+
+```ts:app/lib/app-stack.ts{17,24}
+import { App, DockerImage, Stack, StackProps } from '@aws-cdk/core'
+import { Code, Function, LayerVersion, Runtime } from '@aws-cdk/aws-lambda'
+import { resolve } from 'path'
+import { tmpdir } from 'os'
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props)
+    ...
+    const input = `/asset-input/hello.ts`
+    const image = DockerImage.fromRegistry('denoland/deno')
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api'), {
+        bundling: {
+          image,
+          command: ['bundle', '--no-check', input, '/asset-output/hello.js'],
+          volumes: [{ containerPath: '/deno-dir', hostPath: tmpdir() }]
+        }
+      }),
+      handler: 'hello.handler',
+      environment: {
+        HANDLER_EXT: 'js'
+      },
+      ...
+    })
+  }
+}
+```
+
+Lambda スタックの `bundling` フィールドで事前バンドルの処理を定義できます。
+ベースイメージは [deno の公式イメージ](https://hub.docker.com/r/denoland/deno) を使うといいと思います。
+
+バンドル処理としては単純で、`deno bundle` コマンドを Lambda 関数のエクスポートファイルに対して適応しています。
+これにより、外部モジュールも含めた JavaScript ファイルが生成されます。
+
+ただし、deno-lambda ランタイムはデフォルトで `.ts` ファイルを Lambda 関数として認識します。
+この挙動は環境変数の `HANDLER_EXT` を変えることで変更できます。
+バンドル済みの`.js` ファイルを Lambda 関数として扱いたいため、`HANDLER_EXT` を `js` に設定します。
+
+さてこれをデプロイすると、デプロイ時にモジュール解決が行われ、バンドル処理が実行されます。
+
+最後に、例に使用した AWS スタックの定義全体を記載します。
+
+```ts:app/lib/app-stack.ts
+import { App, DockerImage, Stack, StackProps } from "@aws-cdk/core";
+import { CfnApplication } from "@aws-cdk/aws-sam";
+import { Code, Function, LayerVersion, Runtime } from "@aws-cdk/aws-lambda";
+import { resolve } from "path";
+import { tmpdir } from "os";
+import { ManagedPolicy, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
+
+const APPLICATION_ID =
+  "arn:aws:serverlessrepo:us-east-1:390065572566:applications/deno";
+const DENO_VERSION = "1.17.2";
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const denoRuntime = new CfnApplication(
+      this,
+      `DenoRuntime`,
+      {
+        location: {
+          applicationId: APPLICATION_ID,
+          semanticVersion: DENO_VERSION,
+        },
+      },
+    );
+
+    const iamRoleForLambda = new Role(this, `IAMRoleForLambda`, {
+      roleName: `ssm-secure-string-role`,
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaBasicExecutionRole",
+        ),
+        ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMReadOnlyAccess"),
+      ],
+    });
+
+    const layer = LayerVersion.fromLayerVersionArn(
+      this,
+      `denoRuntimeLayer`,
+      denoRuntime.getAtt("Outputs.LayerArn").toString(),
+    );
+
+    const input = `/asset-input/hello.ts`;
+    const image = DockerImage.fromRegistry("denoland/deno");
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(
+        resolve(__dirname, "..", "..", "api"),
+        {
+          bundling: {
+            image,
+            command: [
+              "bundle",
+              "--no-check",
+              input,
+              "/asset-output/hello.js",
+            ],
+            volumes: [
+              { containerPath: "/deno-dir", "hostPath": tmpdir() },
+            ],
+          },
+        },
+      ),
+      handler: "hello.handler",
+      layers: [layer],
+      environment: {
+        DENO_PREFIX:
+          "${level}\\t${requestId}\\t${(new Error).stack.split('\\n')[4]}\\r",
+        HANDLER_EXT: "js",
+      },
+      role: iamRoleForLambda,
+    });
+  }
+}
+```
+
+### その他の選択肢について
+
+前述の通り、コールドスタート対策にはいくつかの方法があります。
+例えば上で紹介した 2 つ目の方法では、キャッシュファイルを事前に用意するだけなため、
+バンドリング方式のような、AWS コンソールとソースファイルが乖離することはありません。
+
+しかし、キャッシュファイルのサイズは、バンドルするよりも大きく膨れるため、コードストレージを大量に消費する可能性があります。
+
+Lambda のコードストレージは 75GB なため、Lambda 関数が増加するとストレージに収まらない懸念がありました。
+また、`bundling` ステップで行うことも少しだけ複雑でした。
+
+一方、上で紹介した 3 番目の方法は、`deno compile` を使えばできそうです。
+`deno compile` は実行可能形式のスクリプトを生成できるコマンドで、記事の執筆時点では unstable です。
+
+この記事では、Lambda で Deno ランタイムを使うということに焦点をおいているため、
+深くは立ち入りませんが、選択肢としては知っていても損はしないと思います。

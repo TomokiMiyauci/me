@@ -1,0 +1,590 @@
+---
+title: AWS Lambda with Deno by AWS CDK
+description: This tutorial shows how to run AWS Lambda with Deno runtime. It uses AWS CDK for deployment and a multi-runtime project structure. It also shows how to bundle it with JavaScript to reduce cold starts.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2022-01-11
+slug: /posts/deno-lambda-cdk/
+tags:
+  - deno
+  - lambda
+  - cdk
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+  packages:
+    deno:
+      - name: lambda
+        version: 1.17.2
+      - name: ssm
+        version: 0.1.4
+    node:
+      - name: aws-cdk
+        version: 2.4.0
+      - name: '@aws-cdk/aws-iam'
+        version: 1.138.2
+      - name: '@aws-cdk/aws-lambda'
+        version: 1.138.2
+      - name: '@aws-cdk/aws-sam'
+        version: 1.138.2
+      - name: '@aws-cdk/core'
+        version: 1.138.2
+      - name: 'source-map-support'
+        version: 0.5.16
+---
+
+## Introduction
+
+This tutorial shows how to use AWS Lambda's custom runtime to run TypeScript in Deno.
+We will also use AWS CDK as a practical example for deploying Lambda functions.
+
+There are other tools for generating AWS CloudFormation, such as serverless framework and SAM, but in this case, we will use AWS CDK.
+Unfortunately, at the time of writing this article, these tools are not available with Deno.
+For example, [aws-cdk](https://github.com/aws/aws-cdk) only provides the CommonJS module format, so it cannot be run in Deno runtime. For more information, please check [Information for Requesting Deno Support #17386](https://github.com/aws/aws-cdk/issues/17386).
+
+For this reason, we will introduce a method that uses a Deno-style code base for Lambda functions and a Node.js-style code base for the AWS stack.
+In the future, it will be possible to completely change to Deno, but I hope this will be helpful as a bridge until then.
+
+Also, please refer to [bit-history](https://github.com/coinset/bit-history) for an actual project in operation.
+
+## Project structure
+
+In the case of a mixed project of Deno and Node.js, it is often the case that they cannot use each other's code.
+This is because Deno's module resolution algorithm is different from Node.js. Therefore, the code needs to be independent of each other.
+
+Fortunately, Lambda functions and the AWS stack are written completely independently, so this should not be a problem.
+
+Based on this assumption, we recommend the following directory structure:
+
+```bash
+.
+├── api
+│   ├── .vscode
+│   └── hello.ts
+└── app
+    ├── bin
+    │   └── app.ts
+    ├── cdk.json
+    ├── lib
+    │   └── app-stack.ts
+    ├── node_modules
+    ├── package.json
+    ├── pnpm-lock.yaml
+    └── tsconfig.json
+```
+
+Place the Lambda functions under the `api` directory. The `api` naming convention is familiar from vercel.
+In the `api` directory, we also put `.vscode`. Here, we enable VSCode extension for Deno.
+
+```json:api/.vscode/settings.json
+{
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "deno.enable": true,
+}
+```
+
+If you have a mixed project of Deno and Node.js, you need to be careful about the scope of the VSCode extension for Deno.
+
+Also, place the AWS stack under the `app` directory.
+You can also use templates with `cdk init app --language=typescript` and so on.
+
+We will proceed under the assumption that we use the template for TypeScript.
+
+The entry point of the stack will look like this.
+
+```ts:app/bin/app.ts
+#!/usr/bin/env node
+import "source-map-support/register";
+import { AppStack } from "../lib/app-stack";
+import { App } from "@aws-cdk/core";
+
+const app = new App();
+new AppStack(app, "TestAppStack", {});
+```
+
+## Deno and Lambda functions
+
+There is a convenient type definition for the Lambda function definition.
+We'll give priority to deployment first, and define the appropriate function.
+
+```ts:api/hello.ts
+import type { APIGatewayProxyResultV2 } from 'https://deno.land/x/lambda@1.17.2/mod.ts'
+
+export function handler(): APIGatewayProxyResultV2 {
+  console.log(Deno.version)
+  return {
+    statusCode: 200
+  }
+}
+```
+
+## Custom runtime and AWS CDK
+
+The AWS stack, on the other hand, is defined as follows.
+External modules such as `@aws-cdk/aws-sam` and `@aws-cdk/aws-lambda` should be installed accordingly for use in Node.js environment.
+
+```ts:app/lib/app-stack.ts
+import { Stack, App, StackProps } from '@aws-cdk/core'
+import { CfnApplication } from '@aws-cdk/aws-sam'
+import { Code, Function, LayerVersion, Runtime } from '@aws-cdk/aws-lambda'
+import { resolve } from 'path'
+
+const APPLICATION_ID =
+  'arn:aws:serverlessrepo:us-east-1:390065572566:applications/deno'
+const DENO_VERSION = '1.17.2'
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props)
+
+    const denoRuntime = new CfnApplication(this, `DenoRuntime`, {
+      location: {
+        applicationId: APPLICATION_ID,
+        semanticVersion: DENO_VERSION
+      }
+    })
+
+    const layer = LayerVersion.fromLayerVersionArn(
+      this,
+      `denoRuntimeLayer`,
+      denoRuntime.getAtt('Outputs.LayerArn').toString()
+    )
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+      handler: 'hello.handler',
+      layers: [layer]
+    })
+  }
+}
+```
+
+The Deno runtime uses [deno-lambda](https://github.com/hayd/deno-lambda). It is available as [SAR application](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:390065572566:applications~deno), so we use it in the Lambda layer.
+
+The above will create a minimal Deno runtime environment. You can also change the version of Deno by changing the `semanticVersion`.
+
+Finally, deploy it with `cdk deploy`.
+
+When you run this Lambda function, you will get the following output.
+
+```bash
+warn: unable to import '.deno_dir/' as DENO_DIR
+Download https://deno.land/x/lambda@1.17.2/mod.ts
+Download https://deno.land/x/lambda@1.17.2/types.d.ts
+
+START RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd Version: $LATEST
+INFO	RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd
+{ deno: "1.17.2", v8: "9.7.106.15", typescript: "4.5.2" }
+END RequestId: e326eded-43e4-4bae-a21f-77a652cde9dd
+```
+
+The part with the warning will be described later.
+Anyway, I was able to run it successfully with Deno runtime.
+
+## Advanced Logging
+
+In the previous example, we used `console.log` to output the log.
+The deno-lambda runtime provides a log template feature, so you can customize the log output.
+
+If you set the `DENO_PREFIX` environment variable, you can output it as the log prefix.
+Since we are going to do this, let's use AWS CDK to set the environment variable.
+
+Modify the Lambda stack.
+
+```ts:app/lib/app-stack.ts{6,7}
+new Function(this, `hello-lambda`, {
+  runtime: Runtime.PROVIDED_AL2,
+  code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+  handler: 'hello.handler',
+  environment: {
+    DENO_PREFIX:
+      "${level}\\t${requestId}\\t${(new Error).stack.split('\\n')[4]}\\r"
+  },
+  ...
+})
+```
+
+In the example above, each log is prefixed with the log level, request ID, and line number.
+Including the line number in the stack trace in the log makes debugging a little easier.
+
+Note that if you are setting this up from the AWS CDK, you will need to escape it, like `\\n`.
+
+If you deploy and run this, you will get the following output:
+
+```bash
+START RequestId: 93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e Version: $LATEST
+INFO	93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e	    at handler (file:///var/task/hello.ts:5:11)
+{ deno: "1.17.2", v8: "9.7.106.15", typescript: "4.5.2" }
+END RequestId: 93a7fc6a-b9d3-4551-9cae-c773bbd0cf0e
+```
+
+## Deno and caching
+
+Here is the log from the previous Lambda run.
+
+```bash
+warn: unable to import '.deno_dir/' as DENO_DIR
+Download https://deno.land/x/lambda@1.17.2/mod.ts
+Download https://deno.land/x/lambda@1.17.2/types.d.ts
+```
+
+This indicates that an external module was fetched at runtime.
+Deno also transpiles TypeScript.
+
+Deno is a TypeScript runtime, but it does not execute TypeScript as is. It uses the V8 engine to execute JavaScript.
+
+Internally, TypeScript is transpiled to JavaScript using [swc](https://github.com/swc-project/swc), and then executed in V8.
+Normally, Deno does these processes at runtime, caching external modules and transpiled JavaScript.
+
+To verify this, let's run the following code.
+
+```ts:ssm.ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+
+const ssm = new SSM({
+  accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+  secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
+  sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
+  region: Deno.env.get("AWS_REGION") ?? "ap-northeast-1",
+});
+
+const parameter = await ssm.getParameter({
+  "Name": "test",
+  WithDecryption: true,
+}).catch(() => {
+  console.error(`parameter is not exists: test`);
+});
+
+console.log(parameter)
+```
+
+We will use the AWS SSM client as an external module. We are fetching values from the parameter store.
+If you are using Lambda, the environment variables will be set automatically, otherwise, set them accordingly.
+
+You can run it with the following command:
+
+```bash
+deno run -A ssm.ts
+```
+
+You can also set the parameter store from the AWS console, or use the following command:
+
+```bash
+aws ssm put-parameter \
+    --name "test" \
+    --value "test-value" \
+    --type "SecureString" \
+```
+
+Now, I think we have successfully obtained the parameter.
+
+Next, set the environment variable to `DENO_DIR`.
+
+```bash
+DENO_DIR=deno-dir deno run -A ssm.ts
+```
+
+When you run it again, two directories will be created directly under `deno-dir`.
+
+```bash
+deno-dir
+├── deps
+└── gen
+```
+
+Let's take a look at a few of these.
+
+### /deps
+
+Under `$DENO_DIR/deps`, files fetched via remote URL import will be saved.
+The location to be saved is determined based on the URL scheme and the domain name.
+
+```ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+```
+
+For example, the URL path above will create a subdirectory with the `https` URL scheme and the `deno.land` domain name.
+
+```bash
+$DENO_DIR/deps/https/deno.land/[hash]
+```
+
+Note that the actual file name will be replaced by the hash value.
+
+### /gen
+
+Under `$DENO_DIR/gen`, JavaScript files transpiled from TypeScript files will be saved.
+In the case of local files, they will be saved under the `file` directory with an absolute path.
+
+```ts:/path/to/ssm.ts
+import { SSM } from 'https://deno.land/x/ssm@0.1.4/mod.ts'
+```
+
+If you run the above file, it will be saved under the `path` and `to` directories of the `file` directory.
+
+```bash
+$DENO_DIR/gen/file/path/to/ssm.js
+```
+
+Note that this is based on the directory structure at **caching runtime**.
+
+Deno also has a command that only does caching.
+
+```bash
+DENO_DIR=deno-dir deno cache　/path/to/ssm.ts
+```
+
+## Lambda and caching
+
+These caches are used as long as the source files have not been modified. This prevents unnecessary recompilation.
+
+If these processes are done at runtime of Lambda, it will affect the execution time.
+Since Lambda often reuses contexts, this may not happen every time, but it can be quite significant depending on the size of the external module.
+
+Here is a way to solve this problem.
+
+The basic idea is to avoid this by caching at a different time than runtime, such as when deploying.
+There are several possible ways to do this.
+
+1. Pre-bundle the JavaScript file
+2. pre-generate the cache file and deploy it including it. Change `DENO_DIR` to refer to the cache directory.
+3. Generate an executable file and run it.
+
+In this article, only 1 will be presented.
+
+### Pre-bundle with JavaScript files
+
+This was a common strategy when we used Node.js. Bundle all external modules into a single JavaScript file.
+Instead of preparing a cache, bundle it into a JavaScript file that doesn't need to be cached, so that you don't have to think about anything else.
+
+In this way, the deployment flow remains simple and performance is improved.
+
+The downside is that you will be deploying a JavaScript file.
+The code you see from the AWS console is different from the actual source code.
+
+One of the advantages of using Deno was the ability to run TypeScript as-is. Since you will be throwing away this advantage, you should consult with your actual operation before deciding whether to adopt it or not.
+
+In my case, I am currently adopting this strategy since I will only be debugging from the AWS console.
+
+Now, I will use a code that uses an external module.
+Let's consider an using the AWS SSM client with Lambda to get parameters.
+
+The Lambda function looks like this:
+
+```ts:api/hello.ts{11}
+import { SSM } from "https://deno.land/x/ssm@0.1.4/mod.ts";
+import type { APIGatewayProxyResultV2 } from "https://deno.land/x/lambda@1.17.2/mod.ts";
+
+const ssm = new SSM({
+  accessKeyID: Deno.env.get("AWS_ACCESS_KEY_ID")!,
+  secretKey: Deno.env.get("AWS_SECRET_ACCESS_KEY")!,
+  sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
+  region: Deno.env.get("AWS_REGION") ?? "ap-northeast-1",
+});
+
+const parameter = await ssm.getParameter({
+  "Name": "test",
+  WithDecryption: true,
+}).catch(() => {
+  console.error(`parameter is not exists: test`);
+});
+
+export function handler(): APIGatewayProxyResultV2 {
+  console.log(parameter)
+  return {
+    statusCode: 200,
+  };
+}
+```
+
+The parameter retrieval is done outside of the Lambda export function.
+This way, the parameters are retrieved only when the container is initialized, not every time Lambda is executed.
+
+On the other hand, due to the use of SSM, it is necessary to grant IAM roles.
+Add the IAM role to the AWS stack and attach it to the Lambda function.
+
+```ts:app/lib/app-stack.ts{22}
+import { ManagedPolicy, Role, ServicePrincipal } from '@aws-cdk/aws-iam'
+import { Code, Function, LayerVersion, Runtime } from "@aws-cdk/aws-lambda";
+
+export class AwsCdkStack extends Stack {
+  constructor(scope: App, id: string, props: CustomProps) {
+    ...
+    const iamRoleForLambda = new Role(this, `IAMRoleForLambda`, {
+      roleName: `ssm-secure-string-role`,
+      assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName(
+          'service-role/AWSLambdaBasicExecutionRole'
+        ),
+        ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMReadOnlyAccess')
+      ]
+    })
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api')),
+      handler: 'hello.handler',
+      role: iamRoleForLambda,
+      ...
+    })
+  }
+}
+```
+
+Now, what happens when you run this deployed function?
+You will see that the external module is fetched at runtime.
+
+When you run the function again, you will notice that the execution speed is faster than the first time.
+
+### Pre-bundling with containers
+
+Now, we will make a change to prevent the cold start from happening the first time.
+The AWS CDK Lambda stack has a bundle hook that we can use.
+
+```ts:app/lib/app-stack.ts{17,24}
+import { App, DockerImage, Stack, StackProps } from '@aws-cdk/core'
+import { Code, Function, LayerVersion, Runtime } from '@aws-cdk/aws-lambda'
+import { resolve } from 'path'
+import { tmpdir } from 'os'
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props)
+    ...
+    const input = `/asset-input/hello.ts`
+    const image = DockerImage.fromRegistry('denoland/deno')
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(resolve(__dirname, '..', '..', 'api'), {
+        bundling: {
+          image,
+          command: ['bundle', '--no-check', input, '/asset-output/hello.js'],
+          volumes: [{ containerPath: '/deno-dir', hostPath: tmpdir() }]
+        }
+      }),
+      handler: 'hello.handler',
+      environment: {
+        HANDLER_EXT: 'js'
+      },
+      ...
+    })
+  }
+}
+```
+
+You can define the pre-bundling process in the `bundling` field of the Lambda stack.
+You can use the [official deno image](https://hub.docker.com/r/denoland/deno) as a base image.
+
+The bundling process is simple: the `deno bundle` command is applied to the export file of a Lambda function.
+This will generate a JavaScript file including external modules.
+
+However, the deno-lambda runtime recognizes `.ts` files as Lambda functions by default.
+This behavior can be changed by changing the `HANDLER_EXT` environment variable.
+Since we want to treat bundled `.js` files as Lambda functions, we will set `HANDLER_EXT` to `js`.
+
+Now, when you deploy this, module resolution will be performed at deployment time and the bundling process will be executed.
+
+Finally, here is the entire definition of the AWS stack used in the example.
+
+```ts:app/lib/app-stack.ts
+import { App, DockerImage, Stack, StackProps } from "@aws-cdk/core";
+import { CfnApplication } from "@aws-cdk/aws-sam";
+import { Code, Function, LayerVersion, Runtime } from "@aws-cdk/aws-lambda";
+import { resolve } from "path";
+import { tmpdir } from "os";
+import { ManagedPolicy, Role, ServicePrincipal } from "@aws-cdk/aws-iam";
+
+const APPLICATION_ID =
+  "arn:aws:serverlessrepo:us-east-1:390065572566:applications/deno";
+const DENO_VERSION = "1.17.2";
+
+export class AppStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const denoRuntime = new CfnApplication(
+      this,
+      `DenoRuntime`,
+      {
+        location: {
+          applicationId: APPLICATION_ID,
+          semanticVersion: DENO_VERSION,
+        },
+      },
+    );
+
+    const iamRoleForLambda = new Role(this, `IAMRoleForLambda`, {
+      roleName: `ssm-secure-string-role`,
+      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaBasicExecutionRole",
+        ),
+        ManagedPolicy.fromAwsManagedPolicyName("AmazonSSMReadOnlyAccess"),
+      ],
+    });
+
+    const layer = LayerVersion.fromLayerVersionArn(
+      this,
+      `denoRuntimeLayer`,
+      denoRuntime.getAtt("Outputs.LayerArn").toString(),
+    );
+
+    const input = `/asset-input/hello.ts`;
+    const image = DockerImage.fromRegistry("denoland/deno");
+
+    new Function(this, `hello-lambda`, {
+      runtime: Runtime.PROVIDED_AL2,
+      code: Code.fromAsset(
+        resolve(__dirname, "..", "..", "api"),
+        {
+          bundling: {
+            image,
+            command: [
+              "bundle",
+              "--no-check",
+              input,
+              "/asset-output/hello.js",
+            ],
+            volumes: [
+              { containerPath: "/deno-dir", "hostPath": tmpdir() },
+            ],
+          },
+        },
+      ),
+      handler: "hello.handler",
+      layers: [layer],
+      environment: {
+        DENO_PREFIX:
+          "${level}\\t${requestId}\\t${(new Error).stack.split('\\n')[4]}\\r",
+        HANDLER_EXT: "js",
+      },
+      role: iamRoleForLambda,
+    });
+  }
+}
+```
+
+### Other options
+
+As mentioned above, there are several ways to prevent cold start.
+In the second method above, for example, the cache file is simply prepared in advance, so there is no divergence between the AWS console and the source file like in the banding method.
+
+However, the size of the cache file will be larger than that of the bundle, which may consume a large amount of code storage.
+
+Since the code storage for Lambda is 75GB, there was a concern that it would not fit in the storage as the number of Lambda functions increased.
+It was also a bit more complicated to do in the `bundling` step.
+
+On the other hand, the third method described above could be done using `deno compile`.
+`deno compile` is a command that can generate an executable script, which is unstable at the time of writing.
+
+This article focuses on using the Deno runtime with Lambda, so I won't go into it in depth, but I think it's a good option to know about.
