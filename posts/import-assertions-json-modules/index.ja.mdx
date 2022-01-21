@@ -1,0 +1,230 @@
+---
+title: import assertionsとJSON modulesまとめ
+description: import assertions について Deno での使用法を中心としてまとめています。Deno 1.17 からサポートされたこの構文を使用し、JSON modules を安全に扱えるようになりました。Chrome でいち早く実装された CSS Module Scripts についても解説します。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2022-01-21
+slug: /posts/import-assertions-json-modules/
+tags:
+  - deno
+  - import assertions
+verification:
+  os:
+    name: macOS
+    family: Big Sur
+    version: 11.2.1
+---
+
+## はじめに
+
+Deno 17.0 から [import assertions](https://github.com/tc39/proposal-import-assertions) がサポートされました。
+
+`import assertions` 自体は、ブラウザでは [Chrome 91](https://chromestatus.com/feature/5749863620804608) で、
+Node.js 環境では [17.1](https://nodejs.org/api/esm.html#import-assertions) ですでにサポートされていました。
+
+また、[TypeScript 4.5](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-5.html#import-assertions) からサポートされるようになりましたね。
+
+今回は `import assertions` と JSON modules について解説します。
+
+## 背景
+
+`import assertions` が必要になった背景を簡単に説明します。
+
+元々は [JSON ES module](https://github.com/WICG/webcomponents/issues/770) として、標準化される予定でした。これは、次のセマンティクスで表現されます。
+
+```ts
+import jsonData from 'https://deno.land/std/deno.json'
+```
+
+これは、非常に簡潔な構文である一方、セキュリティ上の懸念がありました。
+
+ファイル拡張子と、HTTP ヘッダーの Content Type は必ずしも一致しません。
+サーバーは時として、予期せず異なる MIME タイプを提供する可能性があります。
+
+つまり、MIME タイプのみを元にモジュールの種類を決定してしまうと、予期しないコードが実行される恐れがあります。
+
+このことへの解決策として、MIME タイプと合わせて、そのモジュールが JSON モジュールであることを開発者が保証する必要があります。
+
+だからこそ、命名として `assert` が用いられているわけです。
+
+## 従来のアプローチ
+
+はじめに、import assertions がない従来のアプローチを見てみましょう。
+例では Deno ランタイムを想定しています。
+
+Deno 環境では、`node_modules` に依存していないため、ローカルファイルやリモートモジュールを読み込み、`JSON` としてパースします。
+
+```ts
+// remote server
+const response = await fetch('https://deno.land/std/deno.json')
+const jsonData = await response.json()
+console.log(jsonData)
+
+// from local file
+const text = await Deno.readTextFile('./data.json')
+const jsonData = JSON.parse(text)
+console.log(jsonData)
+```
+
+また、Deno ランタイムの場合は、権限の付与をしなければなりません。
+リモートサーバーの読み込みには  `allow-net`、ローカルファイルの読み込みには `allow-read` を付与する必要がありました。
+
+`import assertions` では、静的インポートに関してはこの権限が不要になります。
+
+## import assertions の構文
+
+インポート構文に `assert` キーワードを付け `type` フィールドでモジュールタイプを指定します。
+なお、記事の執筆時点で有効なモジュールタイプは、Deno および Node.js ランタイムでは `json` のみです。
+
+次の JSON ファイルをリモートサーバーやローカルで利用する例を考えてみます。
+
+```json:deno.json
+{
+  "fmt": {
+    "files": {}
+  },
+  "lint": {
+    "files": {
+      "exclude": [
+        ".git",
+      ]
+    }
+  }
+}
+```
+
+次のようになります。
+
+```ts:import_assertions.ts
+import denoJson from "https://deno.land/std/deno.json" assert { type: "json" };
+import localDenoJson from "./deno.json" assert { type: "json" };
+
+denoJson.fmt; // { files: {}}
+```
+
+[Deno for Visual Studio Code](https://github.com/denoland/vscode_deno) を使っている場合、リモートモジュールがキャッシュされていると、型推論が有効になります。
+
+また、Deno の場合、静的インポートでは権限の指定が不要となっています。
+つまり、次のコマンドで実行可能です。
+
+```bash
+deno run import_assertions.ts
+```
+
+動的インポートでも、同じようにフィールド名の引数を指定できます。
+
+```ts:dynamic_import_assertions.ts
+const denoJson = await import("https://deno.land/std/deno.json", { assert: { type: "json" } }).then((module) => module.default);
+```
+
+動的インポートではフラグを与えアクセス許可をする必要があります。
+
+```bash
+deno run --allow-net dynamic_import_assertions.ts
+```
+
+また、ローカルファイルの動的なインポートの場合は、 `allow-read` でアクセス許可が必要です。
+
+## JSON modules とデフォルトエクスポート
+
+JSON modules は、デフォルトエクスポートとなります。
+名前付きエクスポートはサポートされていないため、次のコードはエラーになります。
+
+```ts
+import { fmt } from "https://deno.land/std/deno.json" assert { type: "json" }
+// SyntaxError: The requested module 'https://deno.land/std/deno.json' does not provide an export named 'fmt'
+import { lint } from "./deno.json" assert { type: "json" }
+// SyntaxError: The requested module './deno.json' does not provide an export named 'lint'
+```
+
+一見、型推論はうまくいっているように見える場合もありますができません。
+これは、次の理由によるものです。
+
+> They are not fully general: not all JSON documents are objects, and not all object property keys are JavaScript identifiers that can be bound as named imports.
+> It makes sense to think of a JSON document as conceptually "a single thing" rather than several things that happen to be side-by-side in a file.
+
+## Node.js の場合
+
+Node.js では、モジュール方式によって、JSON モジュールの解決方法が異なりました。
+CommonJS では、`require` 関数により、JSON モジュール解決が出来ます。
+
+```ts:index.js
+const jsonData = require('./path/to/filename.json')
+```
+
+一方、ES modules では、17.1 から import assertions が実装されました。
+なお、実行には `--experimental-json-modules` フラグが必要です。
+
+```js:index.mjs
+import jsonData from './path/to/filename.json' assert { type: 'json' };
+```
+
+```bash
+node --experimental-json-modules index.mjs
+```
+
+なお、それ以前のバージョンでは、次のように [createRequire](https://nodejs.org/api/module.html#modulecreaterequirefilename) を利用することで、JSON モジュールの解決が可能です。
+
+```js:index.mjs
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const packageJson = require("./path/to/filename.json");
+```
+
+## Chrome と CSS module scripts
+
+従前のとおり、Chrome では 91 から import assertions のサポートがされています。
+使い方は、Deno とほぼ同じなため割愛します。
+
+一方、バージョン 93 より、CSS module scripts がサポートされているので、少し見てみましょう。
+
+CSS module scripts は JavaScript モジュールと同じような方法で、ステートメントを含む CSS スタイルシートをロードを行えます。
+import assertions としては、`type` フィールドに `css` と指定する必要があります。
+
+従来からある [CSS Modules](https://github.com/css-modules/css-modules) とは**異なるもの**なので、注意が必要です。
+
+### CSS Modules
+
+CSS Modules とは次のように述べられています。
+
+> A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
+
+JavaScript モジュールから CSS Modules をインポートすると、ローカル名からグローバル名へのすべてのマッピングを含むオブジェクトが取得できるというものです。
+概念的には定義されているものの、実装はそれぞれのバンドラーが行っています。
+
+例えば `vite` では次のようになります。
+
+```css:example.module.css
+.red {
+  color: red;
+}
+```
+
+```js
+import classes from './example.module.css'
+document.getElementById('foo').className = classes.red
+```
+
+このとき、実際にバンドルされるクラス名はハッシュ値になります。これにより、クラス名が競合するのを防ぐことが出来ます。
+
+さて、この機能自体はバンドラーに依存しています。`webpack` をはじめ多くのバンドラーが似たような機能を備えていますが、
+そのアプローチは様々です。例えば vite では、`*.module.css` ファイルのみを CSS Modules として処理します。
+
+### CSS module scripts
+
+CSS module scripts を使うと、JavaScript モジュールのインポート構文で、ステートメントを含む [CSSStyleSheet](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet) をロードできます。
+`CSSStyleSheet` 自体は、1 枚の CSS スタイルシートを表すオブジェクトです。
+
+主な利用法として、[ShadowDOM](https://developers.google.com/web/fundamentals/web-components/shadowdom) に部分的にスタイルを適応できます。
+
+次のように使います。
+
+```html
+<script type="module">
+  import sheet from './styles.css' assert { type: 'css' }
+  document.adoptedStyleSheets = [sheet]
+  shadowRoot.adoptedStyleSheets = [sheet]
+</script>
+```
+
+CSS module scripts により ShadowDOM をより便利に利用できるため、[Web Components](https://developer.mozilla.org/ja/docs/Web/Web_Components) で活躍が期待されます。
