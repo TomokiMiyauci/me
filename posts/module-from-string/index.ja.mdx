@@ -1,0 +1,121 @@
+---
+title: 文字列を JavaScript モジュールとしてインポートする
+description: 文字列からランタイムで利用できる Module を取り出す方法を紹介します。Editor と共に利用することで、ブラウザ上で新たな体験を提供できるかもしれません。
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2022-03-31
+slug: /posts/module-from-string/
+tags:
+  - esmodule
+verification:
+  os:
+    name: macOS
+    family: Monterey
+    version: 12.3.0
+---
+
+## はじめに
+
+`import` 文を利用すると、ライブバインディングを取得でき、ランタイム内で値や JavaScript Object として利用できます。
+
+これは、多くの場合ファイルシステム上で、相対 URL や http スキームと共に利用されます。
+
+また、Import Assertions により例えば json フォーマットは JSON Modules として扱うことができます。詳しくは [import assertions と JSON modules まとめ](/posts/import-assertions-json-modules) を参照してください。
+これは、多くのモダンブラウザではすでに利用可能です。
+
+一方で、次の**文字列**を JavaScript Object として利用したい場合はどうでしょうか。
+
+```txt
+export default { from: "text" }
+```
+
+これが行えると、ブラウザ上で表現できることが多くなります。
+例えばプレイグラウンドの動的構成ができます。
+
+この仕組みを利用して [MapCSS Playground](https://mapcss.miyauchi.dev/playground) を作成しました。
+ぜひお試しください。
+
+## Data URL Scheme でインポートする
+
+実は、import 文は Data URL scheme に対応しています。モダンブラウザはもちろん、
+deno では [v1.7](https://deno.com/blog/v1.7#support-for-importing-data-urls) ですでに実装されています。
+
+`eval` と比べると、import 文は ライブバインディングをランタイムで利用できるという利点があります。
+
+### Data URL scheme の構文
+
+Data URL scheme は次の構文で構成されます。
+
+```bash
+data:[<mediatype>][;base64],<data>
+```
+
+`mediatype` は MIME タイプを指定します。また、`data` が文字であればそのまま記述できます。
+それ以外の場合は、`data` を Base64 にエンコードした上で、`;base64` を指定する必要があります。
+
+省略時は `text/plain;charset=US-ASCII` になるようです。[^1]
+
+[^1]: [データ URL 構文](https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax) 参照
+
+### Base64 エンコード
+
+JavaScript モジュールの表現はスペースやブラケットを含むため、Base64 にエンコードが必要です。
+
+Web API には古くから [btoa](https://developer.mozilla.org/ja/docs/Web/API/btoa) が存在します。ただし、これは純粋な関数ではありません。
+UTF-16 における 2 バイト以上を占める文字が含まれていると、例外が発生します。[^2]
+
+[^2]: [Unicode 文字列](https://developer.mozilla.org/ja/docs/Glossary/Base64) 参照
+
+これのエスケープ方法ですが、よく紹介されているのは次の方法です。
+
+```ts
+btoa(unescape(encodeURIComponent('日本語')))
+```
+
+ただし、`unescape` 関数は ECMAScript の仕様から外れたため、使用が非推奨となっています。[^3]
+
+[^3]: legacy features として、新たに使用すべきでないと明記されています。詳しくは [Annex B](https://262.ecma-international.org/9.0/#sec-additional-ecmascript-features-for-web-browsers) を参照
+
+そもそも純粋な関数でないため、可能であれば他の関数を利用するべきです。
+deno の標準モジュールには、[encoding/base64](https://deno.land/std/encoding#base64) があるため、それを利用するといいと思います。
+
+次のようになります。
+
+<Alert type="warning">
+  次のコードは
+  Denoランタイムで動作します。ブラウザで実行するためには、バンドルが必要です。
+</Alert>
+
+```ts
+import { encode } from 'https://deno.land/std/encoding/base64.ts'
+const code = `const hello = () => console.log("ハロー")
+export default { hello }`
+
+const mod = await import(`data:application/javascript;base64,${encode(code)}`)
+mod.default.hello() // ハロー
+```
+
+## おわりに
+
+文字列を JavaScript モジュールとしてインポートする方法を紹介しました。
+
+これに加え、モナコエディターなどを利用して、
+ブラウザ上で構成可能なプレイグラウンドを作ることができます。
+
+ただし、以下の点について不満が残ります。
+
+- import 文は ブラウザによっては、Worker スレッドで利用できない。
+
+
+- TypeScript で記述されたコードは実行できない。
+
+前者は、ブラウザの互換性の問題です。メインスレッドで import 文を利用する限りにおいて問題はありません。
+Firefox は執筆時現在、ES Modules を Worker で利用できません。
+
+Worker で import 文を利用するには、`import` 用のポリフィルである [shimport](https://github.com/Rich-Harris/shimport) を利用するといいと思います。
+
+後者については、もちろんブラウザでは TypeScript コードは実行できないため、オンデマンドでトランスパイルする必要があります。
+[swc](https://github.com/swc-project/swc) は `wsam` を提供しているため、ブラウザ上で高速にトランスパイルできます。
+
+実は、[MapCSS Playground](https://mapcss.miyauchi.dev/playground) はこれらを全て解決しています。
+それぞれの実装については、また別の記事で紹介しようと思います。
