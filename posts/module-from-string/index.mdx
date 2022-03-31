@@ -1,0 +1,119 @@
+---
+title: Import strings as JavaScript Modules
+description: Show you how to extract a Module from a string that can be used at runtime. Use with the Editor, it may provide a new experience in the browser.
+hero: hero.png
+thumbnail: thumbnail.png
+date: 2022-03-31
+slug: /posts/module-from-string/
+tags:
+  - esmodule
+verification:
+  os:
+    name: macOS
+    family: Monterey
+    version: 12.3.0
+---
+
+## Introduction
+
+The `import` statement can be used to obtain live bindings, which can then be used as values or JavaScript Objects in the runtime.
+
+This is often used with relative URLs or http schemes on the filesystem.
+
+Import Assertions also allows, for example, json format to be treated as a JSON Modules. See [Summary of import assertions and JSON modules](./import-assertions-json-modules) for details.
+This is already available in many modern browsers.
+
+On the other hand, what if you want to use the following **string** as a JavaScript Object?
+
+```txt
+export default { from: "text" }
+```
+
+Once this is done, there is much more that can be expressed in the browser.
+For example, it is possible to dynamically configure the playground.
+
+We have created [MapCSS Playground](https://mapcss.miyauchi.dev/playground) using this mechanism.
+Please try it out.
+
+## Import with Data URL Scheme
+
+In fact, the import statement supports the Data URL scheme. Modern browsers, as well as
+deno has already implemented this in [v1.7](https://deno.com/blog/v1.7#support-for-importing-data-urls).
+
+Compared to `eval`, the import statement has the advantage that live binding is available at runtime.
+
+### Data URL scheme syntax
+
+The Data URL scheme consists of the following syntax:
+
+```bash
+data:[<mediatype>][;base64],<data>
+```
+
+`mediatype` specifies the MIME type. If `data` is a character, it can be written as is.
+Otherwise, `;base64` must be specified after encoding `data` in Base64.
+
+When omitted, `text/plain;charset=US-ASCII` is used. [^1]
+
+[^1]: [Data URL Syntax](https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax)
+
+### Base64 encoding
+
+Expressions in JavaScript modules must be encoded in Base64 because they contain spaces and brackets.
+
+The Web API has long had [btoa](https://developer.mozilla.org/ja/docs/Web/API/btoa). However, it is not a pure function.
+An exception is raised if a character that occupies more than 2 bytes in UTF-16 is included. [^2]
+
+[^2]: [Unicode character string](https://developer.mozilla.org/ja/docs/Glossary/Base64)
+
+The following is a commonly introduced method of escaping this.
+
+```ts
+btoa(unescape(encodeURIComponent('日本語')))
+```
+
+However, the use of the `unescape` function has been deprecated because it is no longer part of the ECMAScript specification. [^3]
+
+[^3]: It is specified as a legacy feature that should not be newly used. See [Annex B](https://262.ecma-international.org/9.0/#sec-additional-ecmascript-features-for-web-browsers) for details.
+
+Since it is not a pure function to begin with, other functions should be used if possible.
+The standard deno module [encoding/base64](https://deno.land/std/encoding#base64) is available and should be used.
+
+It looks like this:
+
+<Alert type="warning">
+  The following code works with the Deno runtime. To run in a browser, a bundle
+  is required.
+</Alert>
+
+```ts
+import { encode } from 'https://deno.land/std/encoding/base64.ts'
+const code = `const hello = () => console.log("ハロー")
+export default { hello }`
+
+const mod = await import(`data:application/javascript;base64,${encode(code)}`)
+mod.default.hello() // ハロー
+```
+
+## Conclusion
+
+We have shown how to import strings as JavaScript Modules.
+
+In addition to this, you can use the Monaco Editor and other tools.
+You can create a configurable playground in the browser.
+
+However, the following points remain unsatisfactory:
+
+- The import statement is not available in the Worker thread in some browsers.
+- Code written in TypeScript cannot be executed.
+
+The former is a browser compatibility issue. There is no problem as long as the import statement is used in the main thread.
+At the time of writing, Firefox cannot use the ES Modules in the Worker.
+
+To use import statements in a worker, you can use [shimport](https://github.com/Rich-Harris/shimport), which is a polyfill for `import`.
+
+For the latter, of course, the TypeScript code cannot be executed in the browser, so it must be transpiled on demand.
+[swc](https://github.com/swc-project/swc) provides `wsam`, so you can transpile it fast in the browser.
+
+Actually, [MapCSS Playground](https://mapcss.miyauchi.dev/playground) solves all these problems.
+I will discuss each implementation in another article.
