@@ -20,7 +20,7 @@ The `import` statement can be used to obtain live bindings, which can then be us
 
 This is often used with relative URLs or http schemes on the filesystem.
 
-Import Assertions also allows, for example, json format to be treated as a JSON Modules. See [Summary of import assertions and JSON modules](./import-assertions-json-modules) for details.
+Import Assertions also allows, for example, json format to be treated as a JSON Modules. See [Summary of import assertions and JSON modules](/posts/import-assertions-json-modules) for details.
 This is already available in many modern browsers.
 
 On the other hand, what if you want to use the following **string** as a JavaScript Object?
@@ -55,16 +55,16 @@ Otherwise, `;base64` must be specified after encoding `data` in Base64.
 
 When omitted, `text/plain;charset=US-ASCII` is used. [^1]
 
-[^1]: [Data URL Syntax](https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax)
+[^1]: [Data URL Syntax](https://developer.mozilla.org/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax)
 
 ### Base64 encoding
 
 Expressions in JavaScript modules must be encoded in Base64 because they contain spaces and brackets.
 
-The Web API has long had [btoa](https://developer.mozilla.org/ja/docs/Web/API/btoa). However, it is not a pure function.
+The Web API has long had [btoa](https://developer.mozilla.org/docs/Web/API/btoa). However, it is not a pure function.
 An exception is raised if a character that occupies more than 2 bytes in UTF-16 is included. [^2]
 
-[^2]: [Unicode character string](https://developer.mozilla.org/ja/docs/Glossary/Base64)
+[^2]: [Unicode character string](https://developer.mozilla.org/docs/Glossary/Base64)
 
 The following is a commonly introduced method of escaping this.
 
