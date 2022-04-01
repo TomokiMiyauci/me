@@ -57,9 +57,28 @@ data:[<mediatype>][;base64],<data>
 
 [^1]: [データ URL 構文](https://developer.mozilla.org/ja/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax) 参照
 
+### text/javascript MIME タイプ
+
+2022/4/1 追記
+
+ライブバインディングを得るなら、`text/javascript` MIME タイプを指定するのが最も簡単です。
+次のようになります。
+
+```js
+const code = `const hello = () => console.log("ハロー")
+export default { hello }`
+
+const mod = await import(`data:text/javascript,${code}`)
+mod.default.hello() // ハロー
+```
+
+エンコードなど不要なため、最もパフォーマンスよい方法だと思います。
+
 ### Base64 エンコード
 
-JavaScript モジュールの表現はスペースやブラケットを含むため、Base64 にエンコードが必要です。
+~~JavaScript モジュールの表現はスペースやブラケットを含むため、Base64 にエンコードが必要です。~~
+
+MIME タイプを `application/javascript` にする場合は、Base64 にエンコードが必要です。
 
 Web API には古くから [btoa](https://developer.mozilla.org/ja/docs/Web/API/btoa) が存在します。ただし、これは純粋な関数ではありません。
 UTF-16 における 2 バイト以上を占める文字が含まれていると、例外が発生します。[^2]

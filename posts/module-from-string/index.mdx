@@ -57,9 +57,28 @@ When omitted, `text/plain;charset=US-ASCII` is used. [^1]
 
 [^1]: [Data URL Syntax](https://developer.mozilla.org/docs/Web/HTTP/Basics_of_HTTP/Data_URIs#syntax)
 
+### text/javascript MIME type
+
+Added 4/1/2022
+
+If you want to get live binding, it is easiest to specify the `text/javascript` MIME type.
+It will look something like this:
+
+```js
+const code = `const hello = () => console.log("ハロー")
+export default { hello }`
+
+const mod = await import(`data:text/javascript,${code}`)
+mod.default.hello() // ハロー
+```
+
+This is the best way because no encoding is required.
+
 ### Base64 encoding
 
-Expressions in JavaScript modules must be encoded in Base64 because they contain spaces and brackets.
+~~Expressions in JavaScript modules must be encoded in Base64 because they contain spaces and brackets.~~
+
+If the MIME type is `application/javascript`, it must be encoded to Base64.
 
 The Web API has long had [btoa](https://developer.mozilla.org/docs/Web/API/btoa). However, it is not a pure function.
 An exception is raised if a character that occupies more than 2 bytes in UTF-16 is included. [^2]
